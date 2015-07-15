@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/left_margin">
+
+        <LinearLayout
+            android:id="@+id/ll__menu_item_entries"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/padding_single"
+            android:paddingRight="@dimen/padding_single">
+
+            <ImageView
+                android:id="@+id/img__menu_item_entries"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/abacus"/>
+
+            <TextView
+                android:id="@+id/tv__menu_item_entries"
+                style="@style/MainMenuTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="@string/tv__menu_item_entries"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll__menu_item_categories"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/padding_single"
+            android:paddingRight="@dimen/padding_single">
+
+            <ImageView
+                android:id="@+id/img__menu_item_categories"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/categories"/>
+
+            <TextView
+                android:id="@+id/tv__menu_item_categories"
+                style="@style/MainMenuTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="@string/tv__menu_item_categories"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.theronin.budgettracker" >
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".pages.main.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".pages.entries.EntriesActivity"
+            android:label="@string/entries_activity"
+            android:parentActivityName=".pages.main.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".pages.main.MainActivity" />
+        </activity>
+        <activity
+            android:name=".pages.categories.CategoriesActivity"
+            android:label="@string/categories_activity"
+            android:parentActivityName=".pages.main.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".pages.main.MainActivity" />
+        </activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <fragment
+        android:id="@+id/fragment__add_entry"
+        android:name="com.theronin.budgettracker.pages.reusable.AddEntryFragment"
+        tools:context="com.theronin.budgettracker.pages.entries.EntriesActivity"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/quick_bar_height">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment__entry_list"
+        android:name="com.theronin.budgettracker.pages.entries.EntryListFragment"
+        tools:context="com.theronin.budgettracker.pages.entries.EntriesActivity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>
+

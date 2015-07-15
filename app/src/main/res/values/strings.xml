@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Budget Tracker</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="entries_activity">Entries</string>
+    <string name="categories_activity">Categories</string>
+
+    <string name="tv__menu_item_entries">Organise Entries</string>
+    <string name="tv__menu_item_categories">Organise Categories</string>
+
+    <string name="tv__add_category_title">New Category</string>
+    <string name="tv__add_entry_title">New Entry</string>
+
+    <string name="btn__add_entry_confirm">Enter</string>
+    <string name="btn__add_category_confirm">Enter</string>
+</resources>
