@@ -9,13 +9,14 @@ public class BudgetContract {
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
-    public static final String PATH_CATEGORIES = "categories";
-    public static final String PATH_ENTRIES = "entries";
-
 
     public static final class EntriesTable implements BaseColumns {
-        public static final String TABLE_NAME = "entries";
 
+        public static final String PROVIDER_PATH = "entries";
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath
+                (PROVIDER_PATH).build();
+
+        public static final String TABLE_NAME = "entries";
         public static final String COL_DATE_ENTERED = "date_entered";
         public static final String COL_CATEGORY_ID = "category_id";
         public static final String COL_AMOUNT_CENTS = "amount_cents";
@@ -34,8 +35,12 @@ public class BudgetContract {
     }
 
     public static final class CategoriesTable implements BaseColumns {
-        public static final String TABLE_NAME = "categories";
 
+        public static final String PROVIDER_PATH = "categories";
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath
+                (PROVIDER_PATH).build();
+
+        public static final String TABLE_NAME = "categories";
         public static final String COL_DATE_CREATED = "date_entered";
         public static final String COL_CATEGORY_NAME = "category_name";
 
