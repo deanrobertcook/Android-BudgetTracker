@@ -32,6 +32,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".pages.main.MainActivity" />
         </activity>
+        
+        <provider
+            android:authorities="com.theronin.budgettracker"
+            android:name=".data.BudgetProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>
