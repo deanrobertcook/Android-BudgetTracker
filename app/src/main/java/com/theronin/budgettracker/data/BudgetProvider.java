@@ -44,13 +44,66 @@ public class BudgetProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
-        return null;
+
+        String id;
+        switch (uriMatcher.match(uri)) {
+            case CATEGORIES:
+                return queryCategories(projection, selection, selectionArgs);
+            case CATEGORY_WITH_ID:
+                id = uri.getLastPathSegment();
+                return queryCategoryWithId(id, projection);
+            case ENTRIES:
+                return queryEntries(projection, selection, selectionArgs);
+            case ENTRY_WITH_ID:
+                id = uri.getLastPathSegment();
+                return queryEntryWithId(id, projection);
+            default: throw new UnsupportedOperationException("Unknown URI: " + uri.toString());
+        }
+    }
+
+    private Cursor queryCategoryWithId(String id, String[] projection) {
+        return dbHelper.getReadableDatabase().query(
+                CategoriesTable.TABLE_NAME,
+                projection,
+                CategoriesTable._ID + " = ?",
+                new String[] {id},
+                null, null, null
+        );
+    }
+
+    private Cursor queryCategories(String[] projection, String selection, String[] selectionArgs) {
+        return dbHelper.getReadableDatabase().query(
+                CategoriesTable.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null, null, null
+        );
+    }
+
+    private Cursor queryEntryWithId(String id, String[] projection) {
+        return dbHelper.getReadableDatabase().query(
+                EntriesTable.TABLE_NAME,
+                projection,
+                EntriesTable._ID + " = ?",
+                new String[] {id},
+                null, null, null
+        );
+    }
+
+    private Cursor queryEntries(String[] projection, String selection, String[] selectionArgs) {
+        return dbHelper.getReadableDatabase().query(
+                EntriesTable.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null, null, null
+        );
     }
 
     @Override
     public String getType(Uri uri) {
-        int matchedCode = uriMatcher.match(uri);
-        switch (matchedCode) {
+        switch (uriMatcher.match(uri)) {
             case CATEGORIES:
                 return CategoriesTable.CONTENT_TYPE;
             case CATEGORY_WITH_ID:
@@ -66,13 +119,28 @@ public class BudgetProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
+        switch (uriMatcher.match(uri)) {
+            case CATEGORIES:
+                return insertCategory(values);
+            case ENTRIES:
+                return insertEntry(values);
+            default:
+                throw new UnsupportedOperationException("Unknown or invalid Uri: " + uri.toString());
+        }
+    }
+
+    private Uri insertCategory(ContentValues values) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.insert(
-                CategoriesTable.TABLE_NAME,
-                null,
-                values
-        );
-        return null;
+        long categoryId = db.insert(CategoriesTable.TABLE_NAME, null, values);
+        return CategoriesTable.CONTENT_URI.buildUpon().appendPath(Long.toString(categoryId))
+                .build();
+    }
+
+    private Uri insertEntry(ContentValues values) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        long entryId = db.insert(EntriesTable.TABLE_NAME, null, values);
+        return EntriesTable.CONTENT_URI.buildUpon().appendPath(Long.toString(entryId))
+                .build();
     }
 
     @Override
