@@ -7,16 +7,12 @@
     <fragment
         android:id="@+id/fragment__add_entry"
         android:name="com.theronin.budgettracker.pages.entries.AddEntryFragment"
-        tools:context="com.theronin.budgettracker.pages.main.MainActivity"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/quick_bar_height">
-
-    </fragment>
+        android:layout_height="@dimen/quick_bar_height"/>
 
     <fragment
         android:id="@+id/fragment__main_menu"
         android:name="com.theronin.budgettracker.pages.main.MainMenuFragment"
-        tools:context="com.theronin.budgettracker.pages.main.MainActivity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

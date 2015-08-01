@@ -21,10 +21,13 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
+import static com.theronin.budgettracker.DatabaseDevUtils.findCategoryId;
+import static com.theronin.budgettracker.DatabaseDevUtils.findCategoryName;
+import static com.theronin.budgettracker.DatabaseDevUtils.insertCategoryDirectlyToDatabase;
+import static com.theronin.budgettracker.DatabaseDevUtils.insertEntryDirectlyToDatabase;
 import static com.theronin.budgettracker.data.BudgetContract.CategoriesTable;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
 public class BudgetProviderTest {
@@ -49,7 +52,8 @@ public class BudgetProviderTest {
         //For some reason, using context.deleteDatabase() spoils the database for subsequent tests
         //instead, it's better to just drop the tables and recreate everything
         dbHelper.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + EntriesTable.TABLE_NAME);
-        dbHelper.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + CategoriesTable.TABLE_NAME);
+        dbHelper.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + CategoriesTable
+                .TABLE_NAME);
         dbHelper.onCreate(dbHelper.getWritableDatabase());
 
     }
@@ -59,60 +63,6 @@ public class BudgetProviderTest {
         Log.d(TAG, "cleaning up");
         dbHelper.close();
         dbHelper = null;
-    }
-
-    private long insertCategoryDirectlyToDatabase(Category category) {
-        ContentValues values = new ContentValues();
-        values.put(CategoriesTable.COL_CATEGORY_NAME, category.name);
-        if (category.date != null) {
-            values.put(CategoriesTable.COL_DATE_CREATED, category.date);
-        }
-
-        long categoryId = dbHelper.getWritableDatabase().insert(CategoriesTable.TABLE_NAME, null,
-                values);
-        if (categoryId == -1) {
-            fail("An error occurred inserting the Category into the DB");
-        }
-        return categoryId;
-    }
-
-    private long insertEntryDirectlyToDatabase(Entry entry) {
-        ContentValues values = new ContentValues();
-        values.put(EntriesTable.COL_CATEGORY_ID, findCategoryId(entry.categoryName));
-        values.put(EntriesTable.COL_DATE_ENTERED, entry.dateEntered);
-        values.put(EntriesTable.COL_AMOUNT_CENTS, entry.amount);
-
-        long entryId = dbHelper.getWritableDatabase().insert(EntriesTable.TABLE_NAME, null, values);
-        if (entryId == -1) {
-            fail("An error occurred inserting the Entry into the DB");
-        }
-        return entryId;
-    }
-
-    private long findCategoryId(String categoryName) {
-        Cursor cursor = dbHelper.getReadableDatabase().query(
-                CategoriesTable.TABLE_NAME,
-                new String[] {CategoriesTable._ID},
-                CategoriesTable.COL_CATEGORY_NAME + "= ?",
-                new String[] {categoryName},
-                null, null, null
-        );
-
-        cursor.moveToFirst();
-        return cursor.getLong(0);
-    }
-
-    private String findCategoryName(long id) {
-        Cursor cursor = dbHelper.getReadableDatabase().query(
-                CategoriesTable.TABLE_NAME,
-                new String[] {CategoriesTable.COL_CATEGORY_NAME},
-                CategoriesTable._ID + "= ?",
-                new String[] {Long.toString(id)},
-                null, null, null
-        );
-
-        cursor.moveToFirst();
-        return cursor.getString(0);
     }
 
     @Test
@@ -158,7 +108,7 @@ public class BudgetProviderTest {
 
         //insert some expectedCategory directly into the database
         Category expectedCategory = new Category("cashews", null);
-        insertCategoryDirectlyToDatabase(expectedCategory);
+        insertCategoryDirectlyToDatabase(dbHelper, expectedCategory);
 
         //query the content provider
         Uri categoryURI = CategoriesTable.CONTENT_URI.buildUpon().appendPath("1").build();
@@ -190,7 +140,7 @@ public class BudgetProviderTest {
         categories.add(new Category("tea", DateUtils.getCurrentDateString()));
 
         for (Category category : categories) {
-            insertCategoryDirectlyToDatabase(category);
+            insertCategoryDirectlyToDatabase(dbHelper, category);
         }
 
         //Query all current categories and check them off of the hashset using the contentProvider
@@ -220,11 +170,11 @@ public class BudgetProviderTest {
 
         //insert a category to satisfy constraints
         String categoryName = "cashews";
-        insertCategoryDirectlyToDatabase(new Category(categoryName, null));
+        insertCategoryDirectlyToDatabase(dbHelper, new Category(categoryName, null));
 
         //insert some expectedCategory directly into the database
         Entry expectedEntry = new Entry(categoryName, DateUtils.getCurrentDateString(), 250);
-        insertEntryDirectlyToDatabase(expectedEntry);
+        insertEntryDirectlyToDatabase(dbHelper, expectedEntry);
 
         //query the content provider
         Uri entryUri = EntriesTable.CONTENT_URI.buildUpon().appendPath("1").build();
@@ -238,8 +188,8 @@ public class BudgetProviderTest {
                 null, null, null);
         result.moveToFirst();
 
-        assertEquals("Unexpected Entry categoryId", expectedEntry.categoryName, findCategoryName(result
-                .getLong(0)));
+        assertEquals("Unexpected Entry categoryId", expectedEntry.categoryName,
+                findCategoryName(dbHelper, result.getLong(0)));
         assertEquals("Unexpected Entry dateEntered", expectedEntry.dateEntered, result.
                 getString(1));
         assertEquals("Unexpected Entry amount", expectedEntry.amount, result.getLong(2));
@@ -251,9 +201,9 @@ public class BudgetProviderTest {
 
         //insert a few categories to satisfy constraints
         String[] categoryNames = {"cashews", "apples", "bananas"};
-        insertCategoryDirectlyToDatabase(new Category(categoryNames[0], null));
-        insertCategoryDirectlyToDatabase(new Category(categoryNames[1], null));
-        insertCategoryDirectlyToDatabase(new Category(categoryNames[2], null));
+        insertCategoryDirectlyToDatabase(dbHelper, new Category(categoryNames[0], null));
+        insertCategoryDirectlyToDatabase(dbHelper, new Category(categoryNames[1], null));
+        insertCategoryDirectlyToDatabase(dbHelper, new Category(categoryNames[2], null));
         //Enter a few categories directly into the database. Store them as a set to check off
         //later
         ArrayList<Entry> entries = new ArrayList<>();
@@ -265,7 +215,7 @@ public class BudgetProviderTest {
         entries.add(new Entry(categoryNames[2], DateUtils.getCurrentDateString(), 420));
 
         for (Entry entry : entries) {
-            insertEntryDirectlyToDatabase(entry);
+            insertEntryDirectlyToDatabase(dbHelper, entry);
         }
 
         //Query all current categories and check them off of the hashset using the contentProvider
@@ -281,7 +231,7 @@ public class BudgetProviderTest {
         while (result.moveToNext()) {
             for (int i = 0; i < entries.size(); i++) {
                 Entry tempEntry = entries.get(i);
-                if (tempEntry.categoryName.equals(findCategoryName(result.getLong(0)))
+                if (tempEntry.categoryName.equals(findCategoryName(dbHelper, result.getLong(0)))
                         && tempEntry.dateEntered.equals(result.getString(1))
                         && tempEntry.amount == result.getLong(2)) {
                     entries.remove(tempEntry);
@@ -336,13 +286,13 @@ public class BudgetProviderTest {
         //Create a category to satisfy constraint
         String categoryName = "cashews";
         Category category = new Category(categoryName, null);
-        insertCategoryDirectlyToDatabase(category);
+        insertCategoryDirectlyToDatabase(dbHelper, category);
 
         //Create a new entry to match the category just added
         Entry entry = new Entry(categoryName, DateUtils.getCurrentDateString(), 100);
         //re-use values object
         ContentValues values = new ContentValues();
-        values.put(EntriesTable.COL_CATEGORY_ID, findCategoryId(entry.categoryName));
+        values.put(EntriesTable.COL_CATEGORY_ID, findCategoryId(dbHelper, entry.categoryName));
         values.put(EntriesTable.COL_DATE_ENTERED, entry.dateEntered);
         values.put(EntriesTable.COL_AMOUNT_CENTS, entry.amount);
 
@@ -370,7 +320,7 @@ public class BudgetProviderTest {
 
         cursor.moveToFirst();
         //Check the name matches and that the date of insertion is saved in the db
-        assertEquals(entry.categoryName, findCategoryName(cursor.getLong(0)));
+        assertEquals(entry.categoryName, findCategoryName(dbHelper, cursor.getLong(0)));
         assertEquals(entry.dateEntered, cursor.getString(1));
         assertEquals(entry.amount, cursor.getLong(2));
     }

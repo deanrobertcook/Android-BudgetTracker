@@ -7,7 +7,6 @@
     <fragment
         android:id="@+id/fragment__add_entry"
         android:name="com.theronin.budgettracker.pages.entries.AddEntryFragment"
-        tools:context="com.theronin.budgettracker.pages.entries.EntriesActivity"
         android:layout_width="match_parent"
         android:layout_height="@dimen/quick_bar_height">
 
@@ -16,7 +15,6 @@
     <fragment
         android:id="@+id/fragment__entry_list"
         android:name="com.theronin.budgettracker.pages.entries.EntryListFragment"
-        tools:context="com.theronin.budgettracker.pages.entries.EntriesActivity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

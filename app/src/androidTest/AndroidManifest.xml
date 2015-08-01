@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.theronin.budgettracker" >
 
+    <uses-permission android:name="android.permission.SET_ANIMATION_SCALE"/>
+
     <application>
         <activity
             android:name=".pages.categories.CategoryListFragmentTestActivity">
