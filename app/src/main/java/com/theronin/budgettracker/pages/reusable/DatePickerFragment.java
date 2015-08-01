@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.DatePicker;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
@@ -33,11 +34,11 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         if (container != null) {
             Calendar calendar = Calendar.getInstance();
             calendar.set(year, month, day);
-            container.onDateSelected(calendar.getTimeInMillis());
+            container.onDateSelected(new Date(calendar.getTimeInMillis()));
         }
     }
 
     public interface Container {
-        void onDateSelected(long utcDate);
+        void onDateSelected(Date date);
     }
 }

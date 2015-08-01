@@ -15,11 +15,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.theronin.budgettracker.R;
-import com.theronin.budgettracker.data.BudgetDbHelper;
 
 public class AddCategoryFragment extends Fragment implements TextView.OnEditorActionListener {
 
-    private BudgetDbHelper dbHelper;
     private EditText categoryEditText;
     private Button confirmNewCategoryButton;
     private Container container;
@@ -52,17 +50,16 @@ public class AddCategoryFragment extends Fragment implements TextView.OnEditorAc
     @Override
     public void onResume() {
         super.onResume();
-        dbHelper = new BudgetDbHelper(getActivity());
     }
 
     @Override
     public void onPause() {
-        dbHelper = null;
         super.onPause();
     }
 
     private void onConfirmNewCategoryButtonPress() {
         String categoryName = categoryEditText.getText().toString();
+        categoryName = categoryName.toLowerCase().trim();
         container.onCategoryAdded(categoryName);
 
         View view = getActivity().getCurrentFocus();

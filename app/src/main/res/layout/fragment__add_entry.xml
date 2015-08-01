@@ -56,12 +56,13 @@
             android:layout_height="match_parent"
             />
 
-        <EditText
-            android:id="@+id/et__entry_date"
+        <TextView
+            android:id="@+id/tv__entry_date"
             android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_height="match_parent"
-            android:inputType="date"/>
+            style="@android:style/Widget.DeviceDefault.Light.Spinner"
+            />
 
 
     </LinearLayout>

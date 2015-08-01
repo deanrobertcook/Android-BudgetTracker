@@ -122,7 +122,7 @@ public class BudgetProviderTest {
         result.moveToFirst();
 
         assertEquals("Unexpected category name", expectedCategory.name, result.getString(0));
-        assertEquals("Unexpected category date", DateUtils.getCurrentDateString(), result
+        assertEquals("Unexpected category date", DateUtils.getStorageFormattedCurrentDate(), result
                 .getString(1));
     }
 
@@ -133,11 +133,11 @@ public class BudgetProviderTest {
         //Enter a few categories directly into the database. Store them as a set to check off
         //later
         ArrayList<Category> categories = new ArrayList<>();
-        categories.add(new Category("cashews", DateUtils.getCurrentDateString()));
-        categories.add(new Category("bananas", DateUtils.getCurrentDateString()));
-        categories.add(new Category("apples", DateUtils.getCurrentDateString()));
-        categories.add(new Category("coffee", DateUtils.getCurrentDateString()));
-        categories.add(new Category("tea", DateUtils.getCurrentDateString()));
+        categories.add(new Category("cashews", DateUtils.getStorageFormattedCurrentDate()));
+        categories.add(new Category("bananas", DateUtils.getStorageFormattedCurrentDate()));
+        categories.add(new Category("apples", DateUtils.getStorageFormattedCurrentDate()));
+        categories.add(new Category("coffee", DateUtils.getStorageFormattedCurrentDate()));
+        categories.add(new Category("tea", DateUtils.getStorageFormattedCurrentDate()));
 
         for (Category category : categories) {
             insertCategoryDirectlyToDatabase(dbHelper, category);
@@ -173,7 +173,7 @@ public class BudgetProviderTest {
         insertCategoryDirectlyToDatabase(dbHelper, new Category(categoryName, null));
 
         //insert some expectedCategory directly into the database
-        Entry expectedEntry = new Entry(categoryName, DateUtils.getCurrentDateString(), 250);
+        Entry expectedEntry = new Entry(categoryName, DateUtils.getStorageFormattedCurrentDate(), 250);
         insertEntryDirectlyToDatabase(dbHelper, expectedEntry);
 
         //query the content provider
@@ -207,12 +207,12 @@ public class BudgetProviderTest {
         //Enter a few categories directly into the database. Store them as a set to check off
         //later
         ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(categoryNames[0], DateUtils.getCurrentDateString(), 200));
-        entries.add(new Entry(categoryNames[0], DateUtils.getCurrentDateString(), 100));
-        entries.add(new Entry(categoryNames[1], DateUtils.getCurrentDateString(), 2000));
-        entries.add(new Entry(categoryNames[1], DateUtils.getCurrentDateString(), 2240));
-        entries.add(new Entry(categoryNames[2], DateUtils.getCurrentDateString(), 230));
-        entries.add(new Entry(categoryNames[2], DateUtils.getCurrentDateString(), 420));
+        entries.add(new Entry(categoryNames[0], DateUtils.getStorageFormattedCurrentDate(), 200));
+        entries.add(new Entry(categoryNames[0], DateUtils.getStorageFormattedCurrentDate(), 100));
+        entries.add(new Entry(categoryNames[1], DateUtils.getStorageFormattedCurrentDate(), 2000));
+        entries.add(new Entry(categoryNames[1], DateUtils.getStorageFormattedCurrentDate(), 2240));
+        entries.add(new Entry(categoryNames[2], DateUtils.getStorageFormattedCurrentDate(), 230));
+        entries.add(new Entry(categoryNames[2], DateUtils.getStorageFormattedCurrentDate(), 420));
 
         for (Entry entry : entries) {
             insertEntryDirectlyToDatabase(dbHelper, entry);
@@ -272,7 +272,7 @@ public class BudgetProviderTest {
         cursor.moveToFirst();
         //Check the name matches and that the date of insertion is saved in the db
         assertEquals(category.name, cursor.getString(0));
-        assertEquals(DateUtils.getCurrentDateString(), cursor.getString(1));
+        assertEquals(DateUtils.getStorageFormattedCurrentDate(), cursor.getString(1));
 
         //Check the ID is returned in the URI from the insert
         int categoryId = Integer.parseInt(newCategoryItemUri.getLastPathSegment());
@@ -289,7 +289,7 @@ public class BudgetProviderTest {
         insertCategoryDirectlyToDatabase(dbHelper, category);
 
         //Create a new entry to match the category just added
-        Entry entry = new Entry(categoryName, DateUtils.getCurrentDateString(), 100);
+        Entry entry = new Entry(categoryName, DateUtils.getStorageFormattedCurrentDate(), 100);
         //re-use values object
         ContentValues values = new ContentValues();
         values.put(EntriesTable.COL_CATEGORY_ID, findCategoryId(dbHelper, entry.categoryName));

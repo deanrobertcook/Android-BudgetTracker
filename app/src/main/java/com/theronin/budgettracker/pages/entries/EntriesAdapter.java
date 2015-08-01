@@ -8,9 +8,12 @@ import android.widget.TextView;
 
 import com.theronin.budgettracker.R;
 import com.theronin.budgettracker.model.Entry;
+import com.theronin.budgettracker.utils.DateUtils;
 import com.theronin.budgettracker.utils.MoneyUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHolder> {
@@ -23,10 +26,21 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
     public EntriesAdapter(List<Entry> entries) {
         this.entries = entries;
+        sortEntriesByDate();
     }
 
     public void setEntries(List<Entry> entries) {
         this.entries = entries;
+        sortEntriesByDate();
+    }
+
+    private void sortEntriesByDate() {
+        Collections.sort(entries, new Comparator<Entry>() {
+            @Override
+            public int compare(Entry lhs, Entry rhs) {
+                return rhs.dateEntered.compareTo(lhs.dateEntered);
+            }
+        });
     }
 
     @Override
@@ -44,7 +58,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         viewHolder.currencySymbolTextView.setText(MoneyUtils.getCurrencySymbol());
         viewHolder.costTextView.setText(MoneyUtils.convertToDollars(entries.get(position).amount));
         viewHolder.categoryTextView.setText(entries.get(position).categoryName);
-        viewHolder.dateTextView.setText(entries.get(position).dateEntered);
+        viewHolder.dateTextView.setText(DateUtils.getDisplayFormattedDate(entries.get(position).dateEntered));
     }
 
     @Override

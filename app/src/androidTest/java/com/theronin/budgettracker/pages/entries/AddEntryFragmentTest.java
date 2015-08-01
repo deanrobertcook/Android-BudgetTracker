@@ -36,7 +36,7 @@ public class AddEntryFragmentTest extends ActivityTestCase<AddEntryFragmentTestA
         DatabaseDevUtils.fillDatabaseWithDummyData(dbHelper, testCategories, numDummyEntries, maxAmount);
 
         String expectedCategory = testCategories[0];
-        String expectedDate = DateUtils.getCurrentDateString();
+        String expectedDate = DateUtils.getStorageFormattedCurrentDate();
         long expectedAmount = 1050; //$10.50
         Entry entryToInsert = new Entry(expectedCategory, expectedDate, expectedAmount);
 

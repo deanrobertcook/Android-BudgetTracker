@@ -30,6 +30,7 @@ import com.theronin.budgettracker.utils.MoneyUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import timber.log.Timber;
@@ -49,7 +50,9 @@ public class AddEntryFragment extends Fragment implements AdapterView.OnItemSele
     private Spinner categorySpinner;
     private ArrayAdapter<String> categorySpinnerAdapter;
 
-    private EditText dateEditText;
+    private TextView dateTextView;
+    private Date currentSelectedDate;
+
     private EditText amountEditText;
     private String lastSelectedCategory;
 
@@ -90,21 +93,26 @@ public class AddEntryFragment extends Fragment implements AdapterView.OnItemSele
         categorySpinner = (Spinner) rootView.findViewById(R.id.spn__entry_category);
         categorySpinnerAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_spinner_item);
-        categorySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinnerAdapter.setDropDownViewResource(android.R.layout
+                .simple_spinner_dropdown_item);
         categorySpinner.setAdapter(categorySpinnerAdapter);
         categorySpinner.setOnItemSelectedListener(this);
 
-        dateEditText = (EditText) rootView.findViewById(R.id.et__entry_date);
-        setDateText(System.currentTimeMillis());
-        dateEditText.setOnLongClickListener(new View.OnLongClickListener() {
+        dateTextView = (TextView) rootView.findViewById(R.id.tv__entry_date);
+        setDateTextView(new Date());
+        dateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View view) {
-                dateEditTextClicked(view);
-                return true;
+            public void onClick(View v) {
+                dateSpinnerClicked();
             }
         });
 
         return rootView;
+    }
+
+    private void setDateTextView(Date date) {
+        this.currentSelectedDate = date;
+        dateTextView.setText(DateUtils.getDisplayFormattedDate(date));
     }
 
     @Override
@@ -113,7 +121,7 @@ public class AddEntryFragment extends Fragment implements AdapterView.OnItemSele
         this.container = (Container) activity;
     }
 
-    private void dateEditTextClicked(View view) {
+    private void dateSpinnerClicked() {
         DatePickerFragment datePickerFragment = new DatePickerFragment();
         datePickerFragment.setContainer(this);
         datePickerFragment.show(getFragmentManager(), TAG);
@@ -122,13 +130,14 @@ public class AddEntryFragment extends Fragment implements AdapterView.OnItemSele
     private void passInputToStore() {
         String amountVal = amountEditText.getText().toString();
         if (amountVal.length() == 0) {
+            Toast.makeText(getActivity(), "Please provide an amount for the entry", Toast.LENGTH_SHORT).show();
             return;
         }
 
         long amount = MoneyUtils.convertToCents(amountVal);
 
         lastSelectedCategory = categorySpinner.getSelectedItem().toString();
-        String dateEnteredVal = dateEditText.getText().toString();
+        String dateEnteredVal = DateUtils.getStorageFormattedDate(currentSelectedDate);
 
         long id = container.getEntryStore().addEntry(new Entry(lastSelectedCategory, dateEnteredVal, amount));
 
@@ -143,13 +152,6 @@ public class AddEntryFragment extends Fragment implements AdapterView.OnItemSele
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
-        }
-    }
-
-    public void setDateText(long utcDate) {
-        String date = DateUtils.formatDate(utcDate);
-        if (dateEditText != null) {
-            dateEditText.setText(date);
         }
     }
 
@@ -175,8 +177,8 @@ public class AddEntryFragment extends Fragment implements AdapterView.OnItemSele
 
 
     @Override
-    public void onDateSelected(long utcDate) {
-        setDateText(utcDate);
+    public void onDateSelected(Date date) {
+        setDateTextView(date);
     }
 
     @Override
