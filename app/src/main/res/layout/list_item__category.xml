@@ -3,27 +3,46 @@
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:padding="@dimen/padding_single">
+              android:paddingRight="@dimen/padding_single"
+              android:paddingTop="@dimen/padding_single"
+              android:paddingBottom="@dimen/padding_single">
 
     <TextView
-        android:id="@+id/name_column"
+        android:id="@+id/tv__name_column"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        style="@style/ListItemStyle"/>
+
+    <TextView
+        android:id="@+id/tv__currency_symbol_total"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         style="@style/ListItemStyle"/>
 
     <TextView
-        android:id="@+id/total_column"
+        android:id="@+id/tv__total_column"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:gravity="right"
+        android:paddingRight="@dimen/padding_single"
+        style="@style/ListItemStyle"/>
+
+    <TextView
+        android:id="@+id/tv__currency_symbol_monthly"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         style="@style/ListItemStyle"/>
 
     <TextView
-        android:id="@+id/monthly_column"
+        android:id="@+id/tv__monthly_column"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="4"
+        android:gravity="right"
         style="@style/ListItemStyle"/>
 
 </LinearLayout>

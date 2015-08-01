@@ -7,15 +7,23 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.theronin.budgettracker.R;
+import com.theronin.budgettracker.model.Category;
+import com.theronin.budgettracker.utils.MoneyUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CategoriesAdapter  extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder> {
 
-    private final List<String[]> categories;
+    private List<Category> categories;
 
-    public CategoriesAdapter(List<String[]> categories) {
+    public CategoriesAdapter() {
+        this.categories = new ArrayList<>();
+    }
+
+    public void setCategories(List<Category> categories) {
         this.categories = categories;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -29,9 +37,12 @@ public class CategoriesAdapter  extends RecyclerView.Adapter<CategoriesAdapter.V
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        viewHolder.nameTextView.setText(categories.get(position)[0]);
-        viewHolder.totalTextView.setText(categories.get(position)[1]);
-        viewHolder.monthlyTextView.setText(categories.get(position)[2]);
+        Category category = categories.get(position);
+        viewHolder.nameTextView.setText(category.name);
+        viewHolder.currencySymbolTotalView.setText(MoneyUtils.getCurrencySymbol());
+        viewHolder.totalTextView.setText(MoneyUtils.convertToDollars(category.total));
+        viewHolder.currencySymbolMonthlyView.setText(MoneyUtils.getCurrencySymbol());
+        viewHolder.monthlyTextView.setText(MoneyUtils.convertToDollars(category.getMonthlyAverage()));
     }
 
     @Override
@@ -41,15 +52,19 @@ public class CategoriesAdapter  extends RecyclerView.Adapter<CategoriesAdapter.V
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
+        public TextView currencySymbolTotalView;
+        public TextView currencySymbolMonthlyView;
         public TextView nameTextView;
         public TextView totalTextView;
         public TextView monthlyTextView;
 
         public ViewHolder(View listItemView) {
             super(listItemView);
-            nameTextView = (TextView) listItemView.findViewById(R.id.name_column);
-            totalTextView = (TextView) listItemView.findViewById(R.id.total_column);
-            monthlyTextView = (TextView) listItemView.findViewById(R.id.monthly_column);
+            nameTextView = (TextView) listItemView.findViewById(R.id.tv__name_column);
+            currencySymbolTotalView = (TextView) listItemView.findViewById(R.id.tv__currency_symbol_total);
+            totalTextView = (TextView) listItemView.findViewById(R.id.tv__total_column);
+            currencySymbolMonthlyView = (TextView) listItemView.findViewById(R.id.tv__currency_symbol_monthly);
+            monthlyTextView = (TextView) listItemView.findViewById(R.id.tv__monthly_column);
         }
     }
 }

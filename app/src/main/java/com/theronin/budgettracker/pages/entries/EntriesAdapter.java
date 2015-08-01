@@ -7,14 +7,25 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.theronin.budgettracker.R;
+import com.theronin.budgettracker.model.Entry;
+import com.theronin.budgettracker.utils.MoneyUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHolder> {
 
-    private final List<String[]> entries;
+    private List<Entry> entries;
 
-    public EntriesAdapter(List<String[]> entries) {
+    public EntriesAdapter() {
+        this(new ArrayList<Entry>());
+    }
+
+    public EntriesAdapter(List<Entry> entries) {
+        this.entries = entries;
+    }
+
+    public void setEntries(List<Entry> entries) {
         this.entries = entries;
     }
 
@@ -24,14 +35,16 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
                 .list_item__entry, parent, false);
 
         ViewHolder viewHolder = new ViewHolder(listItemView);
+
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        viewHolder.costTextView.setText(entries.get(position)[0]);
-        viewHolder.categoryTextView.setText(entries.get(position)[1]);
-        viewHolder.dateTextView.setText(entries.get(position)[2]);
+        viewHolder.currencySymbolTextView.setText(MoneyUtils.getCurrencySymbol());
+        viewHolder.costTextView.setText(MoneyUtils.convertToDollars(entries.get(position).amount));
+        viewHolder.categoryTextView.setText(entries.get(position).categoryName);
+        viewHolder.dateTextView.setText(entries.get(position).dateEntered);
     }
 
     @Override
@@ -41,15 +54,17 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
+        public TextView currencySymbolTextView;
         public TextView costTextView;
         public TextView categoryTextView;
         public TextView dateTextView;
 
         public ViewHolder(View listItemView) {
             super(listItemView);
-            costTextView = (TextView) listItemView.findViewById(R.id.cost_column);
-            categoryTextView = (TextView) listItemView.findViewById(R.id.category_column);
-            dateTextView = (TextView) listItemView.findViewById(R.id.date_column);
+            currencySymbolTextView = (TextView) listItemView.findViewById(R.id.tv__currency_symbol);
+            costTextView = (TextView) listItemView.findViewById(R.id.tv__cost_column);
+            categoryTextView = (TextView) listItemView.findViewById(R.id.tv__category_column);
+            dateTextView = (TextView) listItemView.findViewById(R.id.tv__date_column);
         }
     }
 }

@@ -78,7 +78,7 @@ public class BudgetProviderTest {
 
     private long insertEntryDirectlyToDatabase(Entry entry) {
         ContentValues values = new ContentValues();
-        values.put(EntriesTable.COL_CATEGORY_ID, entry.categoryId);
+        values.put(EntriesTable.COL_CATEGORY_ID, findCategoryId(entry.categoryName));
         values.put(EntriesTable.COL_DATE_ENTERED, entry.dateEntered);
         values.put(EntriesTable.COL_AMOUNT_CENTS, entry.amount);
 
@@ -87,6 +87,32 @@ public class BudgetProviderTest {
             fail("An error occurred inserting the Entry into the DB");
         }
         return entryId;
+    }
+
+    private long findCategoryId(String categoryName) {
+        Cursor cursor = dbHelper.getReadableDatabase().query(
+                CategoriesTable.TABLE_NAME,
+                new String[] {CategoriesTable._ID},
+                CategoriesTable.COL_CATEGORY_NAME + "= ?",
+                new String[] {categoryName},
+                null, null, null
+        );
+
+        cursor.moveToFirst();
+        return cursor.getLong(0);
+    }
+
+    private String findCategoryName(long id) {
+        Cursor cursor = dbHelper.getReadableDatabase().query(
+                CategoriesTable.TABLE_NAME,
+                new String[] {CategoriesTable.COL_CATEGORY_NAME},
+                CategoriesTable._ID + "= ?",
+                new String[] {Long.toString(id)},
+                null, null, null
+        );
+
+        cursor.moveToFirst();
+        return cursor.getString(0);
     }
 
     @Test
@@ -193,10 +219,11 @@ public class BudgetProviderTest {
         Log.d(TAG, "querySingleEntry");
 
         //insert a category to satisfy constraints
-        long categoryId = insertCategoryDirectlyToDatabase(new Category("cashews", null));
+        String categoryName = "cashews";
+        insertCategoryDirectlyToDatabase(new Category(categoryName, null));
 
         //insert some expectedCategory directly into the database
-        Entry expectedEntry = new Entry(categoryId, DateUtils.getCurrentDateString(), 250);
+        Entry expectedEntry = new Entry(categoryName, DateUtils.getCurrentDateString(), 250);
         insertEntryDirectlyToDatabase(expectedEntry);
 
         //query the content provider
@@ -211,7 +238,8 @@ public class BudgetProviderTest {
                 null, null, null);
         result.moveToFirst();
 
-        assertEquals("Unexpected Entry categoryId", expectedEntry.categoryId, result.getLong(0));
+        assertEquals("Unexpected Entry categoryId", expectedEntry.categoryName, findCategoryName(result
+                .getLong(0)));
         assertEquals("Unexpected Entry dateEntered", expectedEntry.dateEntered, result.
                 getString(1));
         assertEquals("Unexpected Entry amount", expectedEntry.amount, result.getLong(2));
@@ -222,18 +250,19 @@ public class BudgetProviderTest {
         Log.d(TAG, "queryAllEntries");
 
         //insert a few categories to satisfy constraints
-        long categoryId1 = insertCategoryDirectlyToDatabase(new Category("cashews", null));
-        long categoryId2 = insertCategoryDirectlyToDatabase(new Category("apples", null));
-        long categoryId3 = insertCategoryDirectlyToDatabase(new Category("bananas", null));
+        String[] categoryNames = {"cashews", "apples", "bananas"};
+        insertCategoryDirectlyToDatabase(new Category(categoryNames[0], null));
+        insertCategoryDirectlyToDatabase(new Category(categoryNames[1], null));
+        insertCategoryDirectlyToDatabase(new Category(categoryNames[2], null));
         //Enter a few categories directly into the database. Store them as a set to check off
         //later
         ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(categoryId1, DateUtils.getCurrentDateString(), 200));
-        entries.add(new Entry(categoryId1, DateUtils.getCurrentDateString(), 100));
-        entries.add(new Entry(categoryId2, DateUtils.getCurrentDateString(), 2000));
-        entries.add(new Entry(categoryId2, DateUtils.getCurrentDateString(), 2240));
-        entries.add(new Entry(categoryId3, DateUtils.getCurrentDateString(), 230));
-        entries.add(new Entry(categoryId3, DateUtils.getCurrentDateString(), 420));
+        entries.add(new Entry(categoryNames[0], DateUtils.getCurrentDateString(), 200));
+        entries.add(new Entry(categoryNames[0], DateUtils.getCurrentDateString(), 100));
+        entries.add(new Entry(categoryNames[1], DateUtils.getCurrentDateString(), 2000));
+        entries.add(new Entry(categoryNames[1], DateUtils.getCurrentDateString(), 2240));
+        entries.add(new Entry(categoryNames[2], DateUtils.getCurrentDateString(), 230));
+        entries.add(new Entry(categoryNames[2], DateUtils.getCurrentDateString(), 420));
 
         for (Entry entry : entries) {
             insertEntryDirectlyToDatabase(entry);
@@ -252,7 +281,7 @@ public class BudgetProviderTest {
         while (result.moveToNext()) {
             for (int i = 0; i < entries.size(); i++) {
                 Entry tempEntry = entries.get(i);
-                if (tempEntry.categoryId == result.getLong(0)
+                if (tempEntry.categoryName.equals(findCategoryName(result.getLong(0)))
                         && tempEntry.dateEntered.equals(result.getString(1))
                         && tempEntry.amount == result.getLong(2)) {
                     entries.remove(tempEntry);
@@ -305,14 +334,15 @@ public class BudgetProviderTest {
     public void addEntry() {
         Log.d(TAG, "addEntry");
         //Create a category to satisfy constraint
-        Category category = new Category("cashews", null);
-        long categoryId = insertCategoryDirectlyToDatabase(category);
+        String categoryName = "cashews";
+        Category category = new Category(categoryName, null);
+        insertCategoryDirectlyToDatabase(category);
 
         //Create a new entry to match the category just added
-        Entry entry = new Entry(categoryId, DateUtils.getCurrentDateString(), 100);
+        Entry entry = new Entry(categoryName, DateUtils.getCurrentDateString(), 100);
         //re-use values object
         ContentValues values = new ContentValues();
-        values.put(EntriesTable.COL_CATEGORY_ID, entry.categoryId);
+        values.put(EntriesTable.COL_CATEGORY_ID, findCategoryId(entry.categoryName));
         values.put(EntriesTable.COL_DATE_ENTERED, entry.dateEntered);
         values.put(EntriesTable.COL_AMOUNT_CENTS, entry.amount);
 
@@ -340,7 +370,7 @@ public class BudgetProviderTest {
 
         cursor.moveToFirst();
         //Check the name matches and that the date of insertion is saved in the db
-        assertEquals(entry.categoryId, cursor.getLong(0));
+        assertEquals(entry.categoryName, findCategoryName(cursor.getLong(0)));
         assertEquals(entry.dateEntered, cursor.getString(1));
         assertEquals(entry.amount, cursor.getLong(2));
     }

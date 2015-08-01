@@ -2,7 +2,6 @@ package com.theronin.budgettracker.pages.entries;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,12 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.theronin.budgettracker.R;
+import com.theronin.budgettracker.model.Entry;
+import com.theronin.budgettracker.model.EntryStore;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class EntryListFragment extends Fragment {
-    @Nullable
+public class EntryListFragment extends Fragment implements EntryStore.Observer {
+
+    private EntriesAdapter adapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
@@ -27,20 +29,14 @@ public class EntryListFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        EntriesAdapter adapter = new EntriesAdapter(dummyData());
+        adapter = new EntriesAdapter();
         recyclerView.setAdapter(adapter);
         return rootView;
     }
 
-    private List<String[]> dummyData () {
-        ArrayList<String[]> dummyData = new ArrayList<>();
-        dummyData.add(new String[]{"3.00", "bananas", "2015/06/07"});
-        dummyData.add(new String[]{"1.00", "apples", "2015/06/06"});
-        dummyData.add(new String[]{"2.00", "cashews", "2015/06/05"});
-        dummyData.add(new String[]{"5.00", "bananas", "2015/06/04"});
-        dummyData.add(new String[]{"2.00", "apples", "2015/06/03"});
-        dummyData.add(new String[]{"1.00", "olives", "2015/06/02"});
-        dummyData.add(new String[]{"2.00", "peaches", "2015/06/01"});
-        return dummyData;
+    @Override
+    public void onEntriesLoaded(List<Entry> entries) {
+        adapter.setEntries(entries);
+        adapter.notifyDataSetChanged();
     }
 }
