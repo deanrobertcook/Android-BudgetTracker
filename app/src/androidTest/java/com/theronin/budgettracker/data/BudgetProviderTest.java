@@ -11,7 +11,6 @@ import android.util.Log;
 import com.theronin.budgettracker.data.BudgetContract.EntriesTable;
 import com.theronin.budgettracker.model.Category;
 import com.theronin.budgettracker.model.Entry;
-import com.theronin.budgettracker.utils.DateUtils;
 
 import org.junit.After;
 import org.junit.Before;
@@ -26,6 +25,7 @@ import static com.theronin.budgettracker.DatabaseDevUtils.findCategoryName;
 import static com.theronin.budgettracker.DatabaseDevUtils.insertCategoryDirectlyToDatabase;
 import static com.theronin.budgettracker.DatabaseDevUtils.insertEntryDirectlyToDatabase;
 import static com.theronin.budgettracker.data.BudgetContract.CategoriesTable;
+import static com.theronin.budgettracker.utils.DateUtils.getStorageFormattedCurrentDate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -122,7 +122,7 @@ public class BudgetProviderTest {
         result.moveToFirst();
 
         assertEquals("Unexpected category name", expectedCategory.name, result.getString(0));
-        assertEquals("Unexpected category date", DateUtils.getStorageFormattedCurrentDate(), result
+        assertEquals("Unexpected category date", getStorageFormattedCurrentDate(), result
                 .getString(1));
     }
 
@@ -133,11 +133,11 @@ public class BudgetProviderTest {
         //Enter a few categories directly into the database. Store them as a set to check off
         //later
         ArrayList<Category> categories = new ArrayList<>();
-        categories.add(new Category("cashews", DateUtils.getStorageFormattedCurrentDate()));
-        categories.add(new Category("bananas", DateUtils.getStorageFormattedCurrentDate()));
-        categories.add(new Category("apples", DateUtils.getStorageFormattedCurrentDate()));
-        categories.add(new Category("coffee", DateUtils.getStorageFormattedCurrentDate()));
-        categories.add(new Category("tea", DateUtils.getStorageFormattedCurrentDate()));
+        categories.add(new Category("cashews", getStorageFormattedCurrentDate()));
+        categories.add(new Category("bananas", getStorageFormattedCurrentDate()));
+        categories.add(new Category("apples", getStorageFormattedCurrentDate()));
+        categories.add(new Category("coffee", getStorageFormattedCurrentDate()));
+        categories.add(new Category("tea", getStorageFormattedCurrentDate()));
 
         for (Category category : categories) {
             insertCategoryDirectlyToDatabase(dbHelper, category);
@@ -173,7 +173,7 @@ public class BudgetProviderTest {
         insertCategoryDirectlyToDatabase(dbHelper, new Category(categoryName, null));
 
         //insert some expectedCategory directly into the database
-        Entry expectedEntry = new Entry(categoryName, DateUtils.getStorageFormattedCurrentDate(), 250);
+        Entry expectedEntry = new Entry(categoryName, getStorageFormattedCurrentDate(), 250);
         insertEntryDirectlyToDatabase(dbHelper, expectedEntry);
 
         //query the content provider
@@ -207,12 +207,12 @@ public class BudgetProviderTest {
         //Enter a few categories directly into the database. Store them as a set to check off
         //later
         ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(categoryNames[0], DateUtils.getStorageFormattedCurrentDate(), 200));
-        entries.add(new Entry(categoryNames[0], DateUtils.getStorageFormattedCurrentDate(), 100));
-        entries.add(new Entry(categoryNames[1], DateUtils.getStorageFormattedCurrentDate(), 2000));
-        entries.add(new Entry(categoryNames[1], DateUtils.getStorageFormattedCurrentDate(), 2240));
-        entries.add(new Entry(categoryNames[2], DateUtils.getStorageFormattedCurrentDate(), 230));
-        entries.add(new Entry(categoryNames[2], DateUtils.getStorageFormattedCurrentDate(), 420));
+        entries.add(new Entry(categoryNames[0], getStorageFormattedCurrentDate(), 200));
+        entries.add(new Entry(categoryNames[0], getStorageFormattedCurrentDate(), 100));
+        entries.add(new Entry(categoryNames[1], getStorageFormattedCurrentDate(), 2000));
+        entries.add(new Entry(categoryNames[1], getStorageFormattedCurrentDate(), 2240));
+        entries.add(new Entry(categoryNames[2], getStorageFormattedCurrentDate(), 230));
+        entries.add(new Entry(categoryNames[2], getStorageFormattedCurrentDate(), 420));
 
         for (Entry entry : entries) {
             insertEntryDirectlyToDatabase(dbHelper, entry);
@@ -272,7 +272,7 @@ public class BudgetProviderTest {
         cursor.moveToFirst();
         //Check the name matches and that the date of insertion is saved in the db
         assertEquals(category.name, cursor.getString(0));
-        assertEquals(DateUtils.getStorageFormattedCurrentDate(), cursor.getString(1));
+        assertEquals(getStorageFormattedCurrentDate(), cursor.getString(1));
 
         //Check the ID is returned in the URI from the insert
         int categoryId = Integer.parseInt(newCategoryItemUri.getLastPathSegment());
@@ -289,7 +289,7 @@ public class BudgetProviderTest {
         insertCategoryDirectlyToDatabase(dbHelper, category);
 
         //Create a new entry to match the category just added
-        Entry entry = new Entry(categoryName, DateUtils.getStorageFormattedCurrentDate(), 100);
+        Entry entry = new Entry(categoryName, getStorageFormattedCurrentDate(), 100);
         //re-use values object
         ContentValues values = new ContentValues();
         values.put(EntriesTable.COL_CATEGORY_ID, findCategoryId(dbHelper, entry.categoryName));
@@ -323,6 +323,31 @@ public class BudgetProviderTest {
         assertEquals(entry.categoryName, findCategoryName(dbHelper, cursor.getLong(0)));
         assertEquals(entry.dateEntered, cursor.getString(1));
         assertEquals(entry.amount, cursor.getLong(2));
+    }
+
+    @Test
+    public void deleteEntry() {
+        //set up an entry with a category
+        String categoryName = "cashews";
+        insertCategoryDirectlyToDatabase(dbHelper, new Category(categoryName));
+        long entryId = insertEntryDirectlyToDatabase(dbHelper,
+                new Entry(categoryName, getStorageFormattedCurrentDate(), 100));
+
+        //do the deletion
+        int numDeleted = context.getContentResolver().delete(
+                EntriesTable.CONTENT_URI.buildUpon().appendPath(Long.toString(entryId)).build(),
+                null, null
+        );
+
+        //query everything from the entries table
+        Cursor cursor = dbHelper.getReadableDatabase().query(
+                EntriesTable.TABLE_NAME,
+                null, null, null, null, null, null
+        );
+
+        //assert the cursor contains nothing
+        assertEquals("The number of deleted items is incorrect", 1, numDeleted);
+        assertEquals("The entry was not deleted properly", 0, cursor.getCount());
     }
 
 }

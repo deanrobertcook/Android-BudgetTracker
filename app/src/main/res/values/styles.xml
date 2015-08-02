@@ -26,10 +26,9 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="OptionsDialogStyle">
-        <item name="android:textSize">@dimen/font_size_medium</item>
-        <item name="android:textColor">@color/blue</item>
-        <item name="android:layout_gravity">center_vertical</item>
+    <style name="OptionsDialogStyle" parent="android:Theme.Material.Dialog">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
     </style>
 
 </resources>

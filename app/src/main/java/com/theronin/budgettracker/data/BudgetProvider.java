@@ -57,7 +57,8 @@ public class BudgetProvider extends ContentProvider {
             case ENTRY_WITH_ID:
                 id = uri.getLastPathSegment();
                 return queryEntryWithId(id, projection);
-            default: throw new UnsupportedOperationException("Unknown URI: " + uri.toString());
+            default:
+                throw new UnsupportedOperationException("Unknown URI: " + uri.toString());
         }
     }
 
@@ -66,7 +67,7 @@ public class BudgetProvider extends ContentProvider {
                 CategoriesTable.TABLE_NAME,
                 projection,
                 CategoriesTable._ID + " = ?",
-                new String[] {id},
+                new String[]{id},
                 null, null, null
         );
     }
@@ -86,7 +87,7 @@ public class BudgetProvider extends ContentProvider {
                 EntriesTable.TABLE_NAME,
                 projection,
                 EntriesTable._ID + " = ?",
-                new String[] {id},
+                new String[]{id},
                 null, null, null
         );
     }
@@ -125,7 +126,8 @@ public class BudgetProvider extends ContentProvider {
             case ENTRIES:
                 return insertEntry(values);
             default:
-                throw new UnsupportedOperationException("Unknown or invalid Uri: " + uri.toString());
+                throw new UnsupportedOperationException("Unknown or invalid Uri: " + uri.toString
+                        ());
         }
     }
 
@@ -145,7 +147,18 @@ public class BudgetProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+        switch (uriMatcher.match(uri)) {
+            case ENTRY_WITH_ID:
+                String entryId = uri.getLastPathSegment();
+                return dbHelper.getWritableDatabase().delete(
+                        EntriesTable.TABLE_NAME,
+                        EntriesTable._ID + " = ?",
+                        new String[]{entryId});
+
+            default:
+                throw new UnsupportedOperationException("Unknown or invalid Uri: " +
+                        uri.toString());
+        }
     }
 
     @Override

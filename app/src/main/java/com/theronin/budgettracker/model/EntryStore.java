@@ -42,6 +42,7 @@ public class EntryStore {
         Cursor cursor = application.getContentResolver().query(
                 EntriesTable.CONTENT_URI,
                 new String[]{
+                        EntriesTable._ID,
                         EntriesTable.COL_CATEGORY_ID,
                         EntriesTable.COL_DATE_ENTERED,
                         EntriesTable.COL_AMOUNT_CENTS
@@ -52,12 +53,12 @@ public class EntryStore {
         while (cursor.moveToNext()) {
             String categoryName = null;
             try {
-                categoryName = application.getCategoryStore().findCategoryById(cursor.getLong(0)).name;
+                categoryName = application.getCategoryStore().findCategoryById(cursor.getLong(1)).name;
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            Entry entry = new Entry(categoryName, cursor.getString(1), cursor.getLong(2));
+            Entry entry = new Entry(cursor.getLong(0), categoryName, cursor.getString(2), cursor.getLong(3));
             entries.add(entry);
         }
 
@@ -88,6 +89,16 @@ public class EntryStore {
         fetchEntries();
         return newRowId;
     }
+
+    public int deleteEntry(Entry entry) {
+        int numDeleted = application.getContentResolver().delete(
+                EntriesTable.CONTENT_URI.buildUpon().appendPath(Long.toString(entry.id)).build(),
+                null, null
+        );
+        fetchEntries();
+        return numDeleted;
+    }
+
     public void tearDown() {
         application = null;
         observers = null;

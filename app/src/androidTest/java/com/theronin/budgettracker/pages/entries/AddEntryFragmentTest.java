@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.theronin.budgettracker.DatabaseDevUtils;
 import com.theronin.budgettracker.R;
@@ -43,7 +44,7 @@ public class AddEntryFragmentTest extends ActivityTestCase<AddEntryFragmentTestA
         View rootView = activity.addEntryFragment.getView();
         EditText amountEditText = (EditText) rootView.findViewById(R.id.et__entry_amount);
         Spinner categorySpinner = (Spinner) rootView.findViewById(R.id.spn__entry_category);
-        EditText dateEditText = (EditText) rootView.findViewById(R.id.et__entry_date);
+        TextView dateEditText = (TextView) rootView.findViewById(R.id.tv__entry_date);
 
         amountEditText.setText(MoneyUtils.convertToDollars(entryToInsert.amount));
         categorySpinner.setSelection(((ArrayAdapter) categorySpinner.getAdapter()).getPosition

@@ -1,5 +1,6 @@
 package com.theronin.budgettracker.pages.entries;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,9 +19,18 @@ import java.util.List;
 
 public class EntryListFragment extends Fragment implements EntryStore.Observer,
         View.OnClickListener,
-        EntriesAdapter.OnItemClickListener {
+        EntriesAdapter.OnItemClickListener,
+        EntryOptionsDialogFragment.Container {
 
     private EntriesAdapter adapter;
+    private Entry entrySelected;
+    private Container container;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.container = (Container) activity;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
@@ -52,7 +62,26 @@ public class EntryListFragment extends Fragment implements EntryStore.Observer,
 
     @Override
     public void onItemClicked(Entry entrySelected) {
-        EntryOptionsDialogFragment fragment = EntryOptionsDialogFragment.newInstance();
+        this.entrySelected = entrySelected;
+        EntryOptionsDialogFragment fragment = EntryOptionsDialogFragment.newInstance(this);
         fragment.show(getFragmentManager(), "entryClickedDialog");
+    }
+
+    @Override
+    public void onDeleteClicked() {
+        if (entrySelected != null) {
+            int numDeleted = container.getEntryStore().deleteEntry(entrySelected);
+            if (numDeleted == 1) {
+                Toast.makeText(getActivity(), "Entry deleted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        entrySelected = null;
+    }
+
+    public interface Container {
+        EntryStore getEntryStore();
     }
 }

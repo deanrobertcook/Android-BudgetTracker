@@ -7,7 +7,9 @@ import com.theronin.budgettracker.BudgetTrackerApplication;
 import com.theronin.budgettracker.R;
 import com.theronin.budgettracker.model.EntryStore;
 
-public class EntriesActivity extends AppCompatActivity implements AddEntryFragment.Container {
+public class EntriesActivity extends AppCompatActivity implements
+        AddEntryFragment.Container,
+        EntryListFragment.Container {
 
     private BudgetTrackerApplication application;
     private EntryListFragment entryListFragment;
@@ -36,7 +38,6 @@ public class EntriesActivity extends AppCompatActivity implements AddEntryFragme
         application.getCategoryStore().addObserver(addEntryFragment);
         application.getCategoryStore().notifyObservers();
     }
-
 
 
     @Override
