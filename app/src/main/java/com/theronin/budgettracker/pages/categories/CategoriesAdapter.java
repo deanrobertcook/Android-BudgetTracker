@@ -13,7 +13,7 @@ import com.theronin.budgettracker.utils.MoneyUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoriesAdapter  extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder> {
+public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder> {
 
     private List<Category> categories;
 
@@ -40,9 +40,11 @@ public class CategoriesAdapter  extends RecyclerView.Adapter<CategoriesAdapter.V
         Category category = categories.get(position);
         viewHolder.nameTextView.setText(category.name);
         viewHolder.currencySymbolTotalView.setText(MoneyUtils.getCurrencySymbol());
-        viewHolder.totalTextView.setText(MoneyUtils.convertToDollars(category.total));
+        viewHolder.totalTextView.setText(
+                MoneyUtils.convertCentsToDisplayAmount(category.total));
         viewHolder.currencySymbolMonthlyView.setText(MoneyUtils.getCurrencySymbol());
-        viewHolder.monthlyTextView.setText(MoneyUtils.convertToDollars(category.getMonthlyAverage()));
+        viewHolder.monthlyTextView.setText(
+                MoneyUtils.convertCentsToDisplayAmount(category.getMonthlyAverage()));
     }
 
     @Override
@@ -61,9 +63,11 @@ public class CategoriesAdapter  extends RecyclerView.Adapter<CategoriesAdapter.V
         public ViewHolder(View listItemView) {
             super(listItemView);
             nameTextView = (TextView) listItemView.findViewById(R.id.tv__name_column);
-            currencySymbolTotalView = (TextView) listItemView.findViewById(R.id.tv__currency_symbol_total);
+            currencySymbolTotalView = (TextView) listItemView.findViewById(R.id
+                    .tv__currency_symbol_total);
             totalTextView = (TextView) listItemView.findViewById(R.id.tv__total_column);
-            currencySymbolMonthlyView = (TextView) listItemView.findViewById(R.id.tv__currency_symbol_monthly);
+            currencySymbolMonthlyView = (TextView) listItemView.findViewById(R.id
+                    .tv__currency_symbol_monthly);
             monthlyTextView = (TextView) listItemView.findViewById(R.id.tv__monthly_column);
         }
     }

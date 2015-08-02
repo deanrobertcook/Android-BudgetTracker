@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +40,8 @@ import timber.log.Timber;
 public class AddEntryFragment extends Fragment implements AdapterView.OnItemSelectedListener,
         DatePickerFragment.Container,
         CategoryStore.Observer,
-        TextView.OnEditorActionListener {
+        TextView.OnEditorActionListener,
+        TextWatcher {
 
     private static final String TAG = AddEntryFragment.class.getName();
 
@@ -49,12 +52,13 @@ public class AddEntryFragment extends Fragment implements AdapterView.OnItemSele
 
     private Spinner categorySpinner;
     private ArrayAdapter<String> categorySpinnerAdapter;
+    private String lastSelectedCategory;
 
     private TextView dateTextView;
     private Date currentSelectedDate;
 
     private EditText amountEditText;
-    private String lastSelectedCategory;
+    private String currentAmountText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,7 +92,9 @@ public class AddEntryFragment extends Fragment implements AdapterView.OnItemSele
         });
 
         amountEditText = (EditText) rootView.findViewById(R.id.et__entry_amount);
+        setAmountEditText(0);
         amountEditText.setOnEditorActionListener(this);
+        amountEditText.addTextChangedListener(this);
 
         categorySpinner = (Spinner) rootView.findViewById(R.id.spn__entry_category);
         categorySpinnerAdapter = new ArrayAdapter<>(getActivity(),
@@ -110,6 +116,22 @@ public class AddEntryFragment extends Fragment implements AdapterView.OnItemSele
         return rootView;
     }
 
+    private void setAmountEditText(long amount) {
+        amountEditText.removeTextChangedListener(this);
+
+        currentAmountText = MoneyUtils.convertCentsToDisplayAmount(amount);
+
+        amountEditText.setText(currentAmountText);
+        amountEditText.setSelection(currentAmountText.length());
+
+        amountEditText.addTextChangedListener(this);
+    }
+
+    private long getAmountEditText() {
+        String displayAmount = amountEditText.getText().toString();
+        return MoneyUtils.convertDisplayAmountToCents(displayAmount);
+    }
+
     private void setDateTextView(Date date) {
         this.currentSelectedDate = date;
         dateTextView.setText(DateUtils.getDisplayFormattedDate(date));
@@ -128,28 +150,29 @@ public class AddEntryFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     private void passInputToStore() {
-        String amountVal = amountEditText.getText().toString();
-        if (amountVal.length() == 0) {
-            Toast.makeText(getActivity(), "Please provide an amount for the entry", Toast.LENGTH_SHORT).show();
+        long amount = getAmountEditText();
+        if (amount == 0) {
+            Toast.makeText(getActivity(), "Please provide an amount for the entry", Toast
+                    .LENGTH_SHORT).show();
             return;
         }
-
-        long amount = MoneyUtils.convertToCents(amountVal);
 
         lastSelectedCategory = categorySpinner.getSelectedItem().toString();
         String dateEnteredVal = DateUtils.getStorageFormattedDate(currentSelectedDate);
 
-        long id = container.getEntryStore().addEntry(new Entry(lastSelectedCategory, dateEnteredVal, amount));
+        long id = container.getEntryStore().addEntry(new Entry(lastSelectedCategory,
+                dateEnteredVal, amount));
 
         if (id == -1) {
             Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "All G", Toast.LENGTH_SHORT).show();
-            amountEditText.setText("");
+            setAmountEditText(0);
 
             View view = getActivity().getCurrentFocus();
             if (view != null) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService
+                        (Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         }
@@ -201,9 +224,11 @@ public class AddEntryFragment extends Fragment implements AdapterView.OnItemSele
         categorySpinnerAdapter.notifyDataSetChanged();
 
         if (lastSelectedCategory != null) {
-            int lastSelectedCategoryNewPosition = categorySpinnerAdapter.getPosition(lastSelectedCategory);
+            int lastSelectedCategoryNewPosition = categorySpinnerAdapter.getPosition
+                    (lastSelectedCategory);
             categorySpinner.setSelection(lastSelectedCategoryNewPosition);
-            //If you don't set this back to null, then there are cases where the lastSelectedCategory
+            //If you don't set this back to null, then there are cases where the
+            // lastSelectedCategory
             //gets out of date.
             lastSelectedCategory = null;
         }
@@ -218,6 +243,29 @@ public class AddEntryFragment extends Fragment implements AdapterView.OnItemSele
             handled = true;
         }
         return handled;
+    }
+
+    //////////////////////////////////////////////////////
+    // EditText watcher methods
+    //////////////////////////////////////////////////////
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence input, int start, int before, int count) {
+        if (!input.toString().equals(currentAmountText) && input.length() != 0) {
+            String cleanString = input.toString().replaceAll("[,.]", "");
+            long cents = Long.parseLong(cleanString);
+            setAmountEditText(cents);
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
     }
 
     public interface Container {

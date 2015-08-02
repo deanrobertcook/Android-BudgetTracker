@@ -59,7 +59,8 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         final Entry boundEntry = entries.get(position);
 
         viewHolder.currencySymbolTextView.setText(MoneyUtils.getCurrencySymbol());
-        viewHolder.amountTextView.setText(MoneyUtils.convertToDollars(boundEntry.amount));
+        viewHolder.amountTextView.setText(
+                MoneyUtils.convertCentsToDisplayAmount(boundEntry.amount));
         viewHolder.categoryTextView.setText(boundEntry.categoryName);
         viewHolder.dateTextView.setText(DateUtils.getDisplayFormattedDate(boundEntry.dateEntered));
 

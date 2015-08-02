@@ -1,5 +1,8 @@
 package com.theronin.budgettracker.utils;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Currency;
 import java.util.Locale;
 
@@ -41,4 +44,33 @@ public class MoneyUtils {
         long dollars = amount / 100;
         return Long.toString(dollars) + "." + centsStr;
     }
+
+    public static String convertCentsToDisplayAmount(long cents){
+        if (cents < 0) {
+            return "-.--";
+        }
+        NumberFormat numberFormat = NumberFormat.getNumberInstance();
+        numberFormat.setMinimumFractionDigits(2);
+        numberFormat.setGroupingUsed(true);
+
+        BigDecimal parsed = new BigDecimal(Long.toString(cents)).setScale(2,BigDecimal.ROUND_FLOOR)
+                .divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
+        return numberFormat.format((parsed));
+    }
+
+    public static long convertDisplayAmountToCents(String displayAmount) {
+        double result = 0;
+        NumberFormat numberFormat = NumberFormat.getNumberInstance();
+        numberFormat.setMinimumFractionDigits(2);
+
+        try {
+            result = numberFormat.parse(displayAmount).doubleValue();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        return (long) (Math.round(result * 100));
+    }
+
 }
