@@ -14,32 +14,33 @@
 
     <TextView
         android:id="@+id/tv__currency_symbol_total"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:paddingRight="@dimen/padding_single"
+        android:paddingLeft="@dimen/padding_single"
         style="@style/ListItemStyle"/>
 
     <TextView
         android:id="@+id/tv__total_column"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="4"
+        android:layout_weight="3"
         android:gravity="right"
-        android:paddingRight="@dimen/padding_single"
         style="@style/ListItemStyle"/>
 
     <TextView
         android:id="@+id/tv__currency_symbol_monthly"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:paddingRight="@dimen/padding_single"
+        android:paddingLeft="@dimen/padding_single"
         style="@style/ListItemStyle"/>
 
     <TextView
         android:id="@+id/tv__monthly_column"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="4"
+        android:layout_weight="3"
         android:gravity="right"
         style="@style/ListItemStyle"/>
 

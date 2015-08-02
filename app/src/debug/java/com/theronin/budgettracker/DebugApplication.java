@@ -10,15 +10,16 @@ public class DebugApplication extends ReleaseApplication {
     public void onCreate() {
         super.onCreate();
 
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
-            BudgetDbHelper dbHelper = new BudgetDbHelper(this);
-            DatabaseDevUtils.clearDatabase(dbHelper);
-            DatabaseDevUtils.fillDatabaseWithDummyData(
-                    dbHelper,
-                    new String[] {"cashews", "bananas", "apples", "coffee", "tea"},
-                    200, 10000);
-            dbHelper.close();
-        }
+        Timber.plant(new Timber.DebugTree());
+        BudgetDbHelper dbHelper = new BudgetDbHelper(this);
+        DatabaseDevUtils.clearDatabase(dbHelper);
+        DatabaseDevUtils.fillDatabaseWithDummyData(
+                dbHelper,
+                new String[] {"cashews", "bananas", "apples", "coffee", "tea",
+                "burritos", "chinese", "climbing", "bagels", "cups", "paper",
+                "pens", "books", "toilet paper", "tissues", "ear phones", "rulers",
+                "irons", "pencils", "spoons", "plane tickets"},
+                200, 10000);
+        dbHelper.close();
     }
 }
