@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,10 +34,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import timber.log.Timber;
-
-public class AddEntryFragment extends Fragment implements AdapterView.OnItemSelectedListener,
-        DatePickerFragment.Container,
+public class AddEntryFragment extends Fragment implements DatePickerFragment.Container,
         CategoryStore.Observer,
         TextView.OnEditorActionListener,
         TextWatcher {
@@ -102,7 +98,6 @@ public class AddEntryFragment extends Fragment implements AdapterView.OnItemSele
         categorySpinnerAdapter.setDropDownViewResource(android.R.layout
                 .simple_spinner_dropdown_item);
         categorySpinner.setAdapter(categorySpinnerAdapter);
-        categorySpinner.setOnItemSelectedListener(this);
 
         dateTextView = (TextView) rootView.findViewById(R.id.tv__entry_date);
         setDateTextView(new Date());
@@ -186,18 +181,6 @@ public class AddEntryFragment extends Fragment implements AdapterView.OnItemSele
 
         super.onDestroyView();
     }
-
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        if (view != null) {
-            Timber.d(((TextView) view).getText() + " selected");
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-    }
-
 
     @Override
     public void onDateSelected(Date date) {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.theronin.budgettracker.BuildConfig;
 import com.theronin.budgettracker.data.BudgetContract.CategoriesTable;
 import com.theronin.budgettracker.data.BudgetContract.EntriesTable;
 
@@ -26,13 +27,32 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         // During development, just drop them and start over
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + EntriesTable.TABLE_NAME);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CategoriesTable.TABLE_NAME);
-        onCreate(sqLiteDatabase);
+        if (BuildConfig.DEBUG) {
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + EntriesTable.TABLE_NAME);
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CategoriesTable.TABLE_NAME);
+            onCreate(sqLiteDatabase);
+        } else {
+            //below is the proper way to handle Database upgrading, steadily working through
+            // upgrades
+            switch (oldVersion) {
+                case 1:
+                    //Upgrade from database version 1 -> 2
+                    //No break!
+                case 2:
+                    //Upgrade from database version 2 -> 3, etc...
+                    break;
+                default:
+                    throw new IllegalStateException("Unknown old version: " + oldVersion);
+            }
+        }
     }
 
     @Override
-    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        onUpgrade(db, oldVersion, newVersion);
+    public void onDowngrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        if (BuildConfig.DEBUG) {
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + EntriesTable.TABLE_NAME);
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CategoriesTable.TABLE_NAME);
+            onCreate(sqLiteDatabase);
+        }
     }
 }

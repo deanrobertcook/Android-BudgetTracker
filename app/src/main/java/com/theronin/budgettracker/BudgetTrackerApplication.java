@@ -29,7 +29,7 @@ public class BudgetTrackerApplication extends Application {
             DatabaseDevUtils.fillDatabaseWithDummyData(
                     dbHelper,
                     new String[] {"cashews", "bananas", "apples", "coffee", "tea"},
-                    200, 2000);
+                    200, 10000);
             dbHelper.close();
         }
 

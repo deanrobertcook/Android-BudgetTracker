@@ -49,7 +49,9 @@ public class DatabaseDevUtils {
         );
 
         cursor.moveToFirst();
-        return cursor.getLong(0);
+        long categoryId =  cursor.getLong(0);
+        cursor.close();
+        return categoryId;
     }
 
     public static String findCategoryName(BudgetDbHelper dbHelper, long id) {
@@ -62,7 +64,9 @@ public class DatabaseDevUtils {
         );
 
         cursor.moveToFirst();
-        return cursor.getString(0);
+        String categoryName =  cursor.getString(0);
+        cursor.close();
+        return categoryName;
     }
 
     public static long insertEntryDirectlyToDatabase(BudgetDbHelper dbHelper, Entry entry) {
