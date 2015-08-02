@@ -18,13 +18,15 @@ import java.util.List;
 
 public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHolder> {
 
+    private final OnItemClickListener itemClickListener;
     private List<Entry> entries;
 
-    public EntriesAdapter() {
-        this(new ArrayList<Entry>());
+    public EntriesAdapter(OnItemClickListener itemClickListener) {
+        this(itemClickListener, new ArrayList<Entry>());
     }
 
-    public EntriesAdapter(List<Entry> entries) {
+    public EntriesAdapter(OnItemClickListener itemClickListener, List<Entry> entries) {
+        this.itemClickListener = itemClickListener;
         this.entries = entries;
         sortEntriesByDate();
     }
@@ -44,11 +46,23 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View listItemView = LayoutInflater.from(parent.getContext()).inflate(R.layout
                 .list_item__entry, parent, false);
+        final ViewHolder viewHolder = new ViewHolder(listItemView);
 
-        ViewHolder viewHolder = new ViewHolder(listItemView);
+        listItemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Entry entrySelected = new Entry(
+                        viewHolder.categoryTextView.getText().toString(),
+                        viewHolder.dateTextView.getText().toString(),
+                        MoneyUtils.convertToCents(viewHolder.amountTextView.getText().toString())
+                );
+                itemClickListener.onItemClicked(entrySelected);
+            }
+        });
+
 
         return viewHolder;
     }
@@ -56,7 +70,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         viewHolder.currencySymbolTextView.setText(MoneyUtils.getCurrencySymbol());
-        viewHolder.costTextView.setText(MoneyUtils.convertToDollars(entries.get(position).amount));
+        viewHolder.amountTextView.setText(MoneyUtils.convertToDollars(entries.get(position).amount));
         viewHolder.categoryTextView.setText(entries.get(position).categoryName);
         viewHolder.dateTextView.setText(DateUtils.getDisplayFormattedDate(entries.get(position).dateEntered));
     }
@@ -68,17 +82,21 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView currencySymbolTextView;
-        public TextView costTextView;
-        public TextView categoryTextView;
-        public TextView dateTextView;
+        public final TextView currencySymbolTextView;
+        public final TextView amountTextView;
+        public final TextView categoryTextView;
+        public final TextView dateTextView;
 
         public ViewHolder(View listItemView) {
             super(listItemView);
             currencySymbolTextView = (TextView) listItemView.findViewById(R.id.tv__currency_symbol);
-            costTextView = (TextView) listItemView.findViewById(R.id.tv__cost_column);
+            amountTextView = (TextView) listItemView.findViewById(R.id.tv__cost_column);
             categoryTextView = (TextView) listItemView.findViewById(R.id.tv__category_column);
             dateTextView = (TextView) listItemView.findViewById(R.id.tv__date_column);
         }
+    }
+
+    interface OnItemClickListener {
+        void onItemClicked(Entry entrySelected);
     }
 }
