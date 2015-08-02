@@ -3,9 +3,7 @@
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:paddingRight="@dimen/padding_single"
-              android:paddingTop="@dimen/padding_single"
-              android:paddingBottom="@dimen/padding_single">
+              android:padding="@dimen/padding_single">
 
     <TextView
         android:id="@+id/tv__name_column"
