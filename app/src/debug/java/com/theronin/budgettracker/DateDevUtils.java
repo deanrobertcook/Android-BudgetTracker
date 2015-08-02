@@ -15,7 +15,7 @@ public class DateDevUtils {
 
     public static String getRandomDate() {
         //Return a random date from within the last five years
-        return getDaysAgo(new Random().nextInt(10000));
+        return getDaysAgo(new Random().nextInt(2000));
     }
 
 }
