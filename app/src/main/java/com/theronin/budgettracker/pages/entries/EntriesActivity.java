@@ -3,7 +3,7 @@ package com.theronin.budgettracker.pages.entries;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
-import com.theronin.budgettracker.BudgetTrackerApplication;
+import com.theronin.budgettracker.ReleaseApplication;
 import com.theronin.budgettracker.R;
 import com.theronin.budgettracker.model.EntryStore;
 
@@ -11,7 +11,7 @@ public class EntriesActivity extends FragmentActivity implements
         AddEntryFragment.Container,
         EntryListFragment.Container {
 
-    private BudgetTrackerApplication application;
+    private ReleaseApplication application;
     private EntryListFragment entryListFragment;
     private AddEntryFragment addEntryFragment;
 
@@ -20,7 +20,7 @@ public class EntriesActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__entries);
 
-        application = (BudgetTrackerApplication) getApplication();
+        application = (ReleaseApplication) getApplication();
 
         entryListFragment = (EntryListFragment) getFragmentManager()
                 .findFragmentById(R.id.fragment__entry_list);

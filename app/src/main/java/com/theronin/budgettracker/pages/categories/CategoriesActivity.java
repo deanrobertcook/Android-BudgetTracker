@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
-import com.theronin.budgettracker.BudgetTrackerApplication;
+import com.theronin.budgettracker.ReleaseApplication;
 import com.theronin.budgettracker.R;
 import com.theronin.budgettracker.model.Category;
 
@@ -12,14 +12,14 @@ public class CategoriesActivity extends FragmentActivity implements AddCategoryF
 
     private CategoryListFragment categoryListFragment;
     private AddCategoryFragment addCategoryFragment;
-    private BudgetTrackerApplication application;
+    private ReleaseApplication application;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__categories);
 
-        application = (BudgetTrackerApplication) getApplication();
+        application = (ReleaseApplication) getApplication();
 
         categoryListFragment = (CategoryListFragment) getFragmentManager()
                 .findFragmentById(R.id.fragment__category_list);

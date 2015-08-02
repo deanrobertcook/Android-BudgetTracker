@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 
-import com.theronin.budgettracker.BudgetTrackerApplication;
+import com.theronin.budgettracker.ReleaseApplication;
 import com.theronin.budgettracker.data.BudgetContract.EntriesTable;
 
 import java.util.ArrayList;
@@ -15,11 +15,11 @@ import timber.log.Timber;
 
 public class EntryStore {
 
-    private BudgetTrackerApplication application;
+    private ReleaseApplication application;
     private HashSet<Observer> observers;
     private List<Entry> entries;
 
-    public EntryStore(BudgetTrackerApplication application) {
+    public EntryStore(ReleaseApplication application) {
         this.application = application;
         this.observers = new HashSet<>();
     }

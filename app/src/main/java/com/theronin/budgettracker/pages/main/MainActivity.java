@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.theronin.budgettracker.BudgetTrackerApplication;
+import com.theronin.budgettracker.ReleaseApplication;
 import com.theronin.budgettracker.R;
 import com.theronin.budgettracker.model.EntryStore;
 import com.theronin.budgettracker.pages.categories.CategoriesActivity;
@@ -19,14 +19,14 @@ public class MainActivity extends FragmentActivity implements
         AddEntryFragment.Container {
 
     private static final String TAG = MainActivity.class.getName();
-    private BudgetTrackerApplication application;
+    private ReleaseApplication application;
     private AddEntryFragment addEntryFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__main);
-        application = (BudgetTrackerApplication) getApplication();
+        application = (ReleaseApplication) getApplication();
 
         addEntryFragment = (AddEntryFragment)
                 getFragmentManager().findFragmentById(R.id.fragment__add_entry);
