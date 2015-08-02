@@ -1,31 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+<LinearLayout style="@style/QuickBarStyle"
+              xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingTop="@dimen/padding_single"
+        android:orientation="horizontal"
         android:paddingLeft="@dimen/padding_single"
         android:paddingRight="@dimen/padding_single"
-        android:orientation="horizontal">
+        android:paddingTop="@dimen/padding_single">
 
         <TextView
             android:id="@+id/tv__add_entry_title"
+            style="@style/TitleStyle"
             android:layout_width="0dp"
-            android:layout_weight="3"
             android:layout_height="match_parent"
-            android:text="@string/tv__add_entry_title"
-            style="@style/TitleStyle"/>
+            android:layout_weight="3"
+            android:text="@string/tv__add_entry_title"/>
 
         <Button
             android:id="@+id/btn__add_entry_confirm"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:text="@string/btn__add_entry_confirm"/>
 
     </LinearLayout>
@@ -37,31 +38,31 @@
 
         <TextView
             android:id="@+id/tv__currency_symbol"
-            android:layout_width="@dimen/left_margin"
-            android:layout_height="match_parent"
-            style="@style/CurrencyStyle"/>
+            style="@style/CurrencyStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
 
         <EditText
             android:id="@+id/et__entry_amount"
             android:layout_width="0dp"
-            android:layout_weight="2"
-            android:inputType="numberDecimal"
             android:layout_height="match_parent"
-            android:imeOptions="actionDone"/>
+            android:layout_weight="3"
+            android:imeOptions="actionDone"
+            android:inputType="number"/>
 
         <Spinner
             android:id="@+id/spn__entry_category"
             android:layout_width="0dp"
-            android:layout_weight="2"
             android:layout_height="match_parent"
+            android:layout_weight="5"
             />
 
         <TextView
             android:id="@+id/tv__entry_date"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="match_parent"
             style="@android:style/Widget.DeviceDefault.Light.Spinner"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
             />
 
 

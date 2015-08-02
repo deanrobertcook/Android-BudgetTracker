@@ -8,7 +8,8 @@
         android:id="@+id/fragment__add_entry"
         android:name="com.theronin.budgettracker.pages.entries.AddEntryFragment"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/quick_bar_height"/>
+        android:layout_height="@dimen/quick_bar_height"
+        />
 
     <fragment
         android:id="@+id/fragment__main_menu"

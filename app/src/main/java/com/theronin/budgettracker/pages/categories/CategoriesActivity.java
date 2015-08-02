@@ -1,14 +1,14 @@
 package com.theronin.budgettracker.pages.categories;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.theronin.budgettracker.BudgetTrackerApplication;
 import com.theronin.budgettracker.R;
 import com.theronin.budgettracker.model.Category;
 
-public class CategoriesActivity extends AppCompatActivity implements AddCategoryFragment.Container {
+public class CategoriesActivity extends FragmentActivity implements AddCategoryFragment.Container {
 
     private CategoryListFragment categoryListFragment;
     private AddCategoryFragment addCategoryFragment;

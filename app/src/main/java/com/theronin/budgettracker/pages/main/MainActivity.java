@@ -2,7 +2,7 @@ package com.theronin.budgettracker.pages.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,7 +14,7 @@ import com.theronin.budgettracker.pages.entries.AddEntryFragment;
 import com.theronin.budgettracker.pages.entries.EntriesActivity;
 
 
-public class MainActivity extends AppCompatActivity implements
+public class MainActivity extends FragmentActivity implements
         MainMenuFragment.Listener,
         AddEntryFragment.Container {
 

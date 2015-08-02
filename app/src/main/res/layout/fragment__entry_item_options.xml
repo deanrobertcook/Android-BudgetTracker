@@ -3,8 +3,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:orientation="vertical"
-              android:padding="@dimen/padding_single"
-    android:background="@color/green">
+              android:padding="@dimen/padding_single">
 
     <TextView
         android:id="@+id/tv__delete"
@@ -12,15 +11,14 @@
         android:layout_height="wrap_content"
         android:text="@string/delete_entry"
         android:textSize="@dimen/font_size_medium"
-        android:textColor="@color/white"
         />
 
-    <TextView
-        android:id="@+id/tv__edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/edit_entry"
-        android:textSize="@dimen/font_size_medium"
-        android:textColor="@color/white"/>
+    <!--<TextView-->
+        <!--android:id="@+id/tv__edit"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/edit_entry"-->
+        <!--android:textSize="@dimen/font_size_medium"-->
+        <!--android:textColor="@color/white"/>-->
 
 </LinearLayout>

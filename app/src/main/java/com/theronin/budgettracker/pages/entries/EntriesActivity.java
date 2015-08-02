@@ -1,13 +1,13 @@
 package com.theronin.budgettracker.pages.entries;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
 
 import com.theronin.budgettracker.BudgetTrackerApplication;
 import com.theronin.budgettracker.R;
 import com.theronin.budgettracker.model.EntryStore;
 
-public class EntriesActivity extends AppCompatActivity implements
+public class EntriesActivity extends FragmentActivity implements
         AddEntryFragment.Container,
         EntryListFragment.Container {
 
