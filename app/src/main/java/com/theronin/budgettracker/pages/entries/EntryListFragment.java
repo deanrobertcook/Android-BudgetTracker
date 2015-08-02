@@ -52,6 +52,7 @@ public class EntryListFragment extends Fragment implements EntryStore.Observer,
 
     @Override
     public void onItemClicked(Entry entrySelected) {
-        Toast.makeText(getActivity(), "Entry: " + entrySelected.amount + ", " + entrySelected.categoryName, Toast.LENGTH_SHORT).show();
+        EntryOptionsDialogFragment fragment = EntryOptionsDialogFragment.newInstance();
+        fragment.show(getFragmentManager(), "entryClickedDialog");
     }
 }
