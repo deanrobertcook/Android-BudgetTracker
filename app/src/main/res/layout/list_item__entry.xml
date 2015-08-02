@@ -2,39 +2,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@drawable/list_item_selector"
               android:orientation="horizontal"
+              android:paddingBottom="@dimen/padding_single"
               android:paddingRight="@dimen/padding_single"
-              android:paddingTop="@dimen/padding_single"
-              android:paddingBottom="@dimen/padding_single">
-    
+              android:paddingTop="@dimen/padding_single">
+
     <TextView
         android:id="@+id/tv__currency_symbol"
+        style="@style/ListItemStyle"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        style="@style/ListItemStyle"/>
+        android:layout_weight="1"/>
 
     <TextView
         android:id="@+id/tv__cost_column"
+        style="@style/ListItemStyle"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="4"
         android:gravity="right"
-        android:paddingRight="@dimen/padding_single"
-        style="@style/ListItemStyle"/>
+        android:paddingRight="@dimen/padding_single"/>
 
     <TextView
         android:id="@+id/tv__category_column"
+        style="@style/ListItemStyle"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="4"
-        style="@style/ListItemStyle"/>
+        android:layout_weight="4"/>
 
     <TextView
         android:id="@+id/tv__date_column"
+        style="@style/ListItemStyle"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="4"
-        style="@style/ListItemStyle"/>
+        android:layout_weight="4"/>
 
 </LinearLayout>
