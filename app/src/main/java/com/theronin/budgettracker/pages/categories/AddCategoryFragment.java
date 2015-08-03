@@ -16,7 +16,8 @@ import android.widget.TextView;
 
 import com.theronin.budgettracker.R;
 
-public class AddCategoryFragment extends Fragment implements TextView.OnEditorActionListener {
+public class AddCategoryFragment extends Fragment implements
+        TextView.OnEditorActionListener {
 
     private EditText categoryEditText;
     private Button confirmNewCategoryButton;

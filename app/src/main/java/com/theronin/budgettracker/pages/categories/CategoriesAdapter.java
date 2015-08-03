@@ -30,8 +30,9 @@ public class CategoriesAdapter extends CursorRecyclerViewAdapter<CategoriesAdapt
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor) {
-//        Category category = categories.get(position);
-        Category category = null;
+        cursor.moveToNext();
+        Category category = Category.fromCursor(cursor);
+
         viewHolder.nameTextView.setText(category.name);
         viewHolder.currencySymbolTotalView.setText(MoneyUtils.getCurrencySymbol());
         viewHolder.totalTextView.setText(

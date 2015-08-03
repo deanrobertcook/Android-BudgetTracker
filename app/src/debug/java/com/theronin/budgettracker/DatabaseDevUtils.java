@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.theronin.budgettracker.data.BudgetContractV2;
+import com.theronin.budgettracker.data.BudgetContract;
 import com.theronin.budgettracker.data.BudgetDbHelper;
 import com.theronin.budgettracker.model.Category;
 import com.theronin.budgettracker.model.Entry;
@@ -20,9 +20,9 @@ public class DatabaseDevUtils {
     public static void clearDatabase(SQLiteDatabase database) {
         //For some reason, using context.deleteDatabase() spoils the database for subsequent tests
         //instead, it's better to just drop the tables and recreate everything
-        database.execSQL("DROP TABLE IF EXISTS " + BudgetContractV2.EntriesTable.TABLE_NAME);
+        database.execSQL("DROP TABLE IF EXISTS " + BudgetContract.EntriesTable.TABLE_NAME);
         database.execSQL("DROP TABLE IF EXISTS " +
-                BudgetContractV2.CategoriesTable.TABLE_NAME);
+                BudgetContract.CategoriesTable.TABLE_NAME);
     }
 
     public static long insertCategoryDirectlyToDatabase(BudgetDbHelper dbHelper, Category
@@ -33,12 +33,12 @@ public class DatabaseDevUtils {
     public static long insertCategoryDirectlyToDatabase(SQLiteDatabase database, Category
             category) {
         ContentValues values = new ContentValues();
-        values.put(BudgetContractV2.CategoriesTable.COL_CATEGORY_NAME, category.name);
+        values.put(BudgetContract.CategoriesTable.COL_CATEGORY_NAME, category.name);
         if (category.date != null) {
-            values.put(BudgetContractV2.CategoriesTable.COL_FIRST_ENTRY_DATE, category.date);
+            values.put(BudgetContract.CategoriesTable.COL_FIRST_ENTRY_DATE, category.date);
         }
 
-        long categoryId = database.insert(BudgetContractV2.CategoriesTable
+        long categoryId = database.insert(BudgetContract.CategoriesTable
                         .TABLE_NAME, null,
                 values);
         if (categoryId == -1) {
@@ -53,9 +53,9 @@ public class DatabaseDevUtils {
 
     public static long findCategoryId(SQLiteDatabase database, String categoryName) {
         Cursor cursor = database.query(
-                BudgetContractV2.CategoriesTable.TABLE_NAME,
-                new String[]{BudgetContractV2.CategoriesTable._ID},
-                BudgetContractV2.CategoriesTable.COL_CATEGORY_NAME + "= ?",
+                BudgetContract.CategoriesTable.TABLE_NAME,
+                new String[]{BudgetContract.CategoriesTable._ID},
+                BudgetContract.CategoriesTable.COL_CATEGORY_NAME + "= ?",
                 new String[]{categoryName},
                 null, null, null
         );
@@ -72,9 +72,9 @@ public class DatabaseDevUtils {
 
     public static String findCategoryName(SQLiteDatabase database, long id) {
         Cursor cursor = database.query(
-                BudgetContractV2.CategoriesTable.TABLE_NAME,
-                new String[]{BudgetContractV2.CategoriesTable.COL_CATEGORY_NAME},
-                BudgetContractV2.CategoriesTable._ID + "= ?",
+                BudgetContract.CategoriesTable.TABLE_NAME,
+                new String[]{BudgetContract.CategoriesTable.COL_CATEGORY_NAME},
+                BudgetContract.CategoriesTable._ID + "= ?",
                 new String[]{Long.toString(id)},
                 null, null, null
         );
@@ -91,12 +91,12 @@ public class DatabaseDevUtils {
 
     public static long insertEntryDirectlyToDatabase(SQLiteDatabase database, Entry entry) {
         ContentValues values = new ContentValues();
-        values.put(BudgetContractV2.EntriesTable.COL_CATEGORY_ID, findCategoryId(database, entry
+        values.put(BudgetContract.EntriesTable.COL_CATEGORY_ID, findCategoryId(database, entry
                 .categoryName));
-        values.put(BudgetContractV2.EntriesTable.COL_DATE_ENTERED, entry.dateEntered);
-        values.put(BudgetContractV2.EntriesTable.COL_AMOUNT_CENTS, entry.amount);
+        values.put(BudgetContract.EntriesTable.COL_DATE_ENTERED, entry.dateEntered);
+        values.put(BudgetContract.EntriesTable.COL_AMOUNT_CENTS, entry.amount);
 
-        long entryId = database.insert(BudgetContractV2.EntriesTable
+        long entryId = database.insert(BudgetContract.EntriesTable
                 .TABLE_NAME, null, values);
         if (entryId == -1) {
             throw new RuntimeException("An error occurred inserting the Entry into the DB");

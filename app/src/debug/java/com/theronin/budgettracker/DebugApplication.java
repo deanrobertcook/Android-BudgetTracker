@@ -12,14 +12,15 @@ public class DebugApplication extends ReleaseApplication {
 
         Timber.plant(new Timber.DebugTree());
         BudgetDbHelper dbHelper = new BudgetDbHelper(this);
-        DatabaseDevUtils.clearDatabase(dbHelper);
-        DatabaseDevUtils.fillDatabaseWithDummyData(
-                dbHelper,
-                new String[] {"cashews", "bananas", "apples", "coffee", "tea",
-                "burritos", "chinese", "climbing", "bagels", "cups", "paper",
-                "pens", "books", "toilet paper", "tissues", "ear phones", "rulers",
-                "irons", "pencils", "spoons", "plane tickets"},
-                200, 10000);
-        dbHelper.close();
+        BudgetDbHelper.dropTables(dbHelper.getWritableDatabase());
+        BudgetDbHelper.createTables(dbHelper.getWritableDatabase());
+//        DatabaseDevUtils.fillDatabaseWithDummyData(
+//                dbHelper,
+//                new String[] {"cashews", "bananas", "apples", "coffee", "tea",
+//                "burritos", "chinese", "climbing", "bagels", "cups", "paper",
+//                "pens", "books", "toilet paper", "tissues", "ear phones", "rulers",
+//                "irons", "pencils", "spoons", "plane tickets"},
+//                200, 10000);
+//        dbHelper.close();
     }
 }

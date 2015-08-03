@@ -2,6 +2,7 @@ package com.theronin.budgettracker.model;
 
 import android.database.Cursor;
 
+import com.theronin.budgettracker.data.BudgetContract.CategoriesTable;
 import com.theronin.budgettracker.utils.DateUtils;
 
 public class Category {
@@ -11,8 +12,26 @@ public class Category {
     public final long total;
     public final long frequency;
 
+    public static final String [] projection = {
+            CategoriesTable._ID,
+            CategoriesTable.COL_CATEGORY_NAME,
+            CategoriesTable.COL_FIRST_ENTRY_DATE,
+            CategoriesTable.COL_TOTAL_AMOUNT,
+            CategoriesTable.COL_ENTRY_FREQUENCY
+    };
+
     public static Category fromCursor(Cursor cursor) {
-        return null;
+        if (cursor.getColumnCount() != projection.length) {
+            throw new IllegalArgumentException("The cursor supplied does not have all of the columns necessary");
+        }
+
+        return new Category(
+                cursor.getLong(0),
+                cursor.getString(1),
+                cursor.getString(2),
+                cursor.getLong(3),
+                cursor.getLong(4)
+        );
     }
 
     public Category(String name) {

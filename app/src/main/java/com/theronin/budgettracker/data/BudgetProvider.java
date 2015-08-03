@@ -7,8 +7,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
-import com.theronin.budgettracker.data.BudgetContractV2.CategoriesTable;
-import com.theronin.budgettracker.data.BudgetContractV2.EntriesTable;
+import com.theronin.budgettracker.data.BudgetContract.CategoriesTable;
+import com.theronin.budgettracker.data.BudgetContract.EntriesTable;
 
 public class BudgetProvider extends ContentProvider {
 
@@ -25,7 +25,7 @@ public class BudgetProvider extends ContentProvider {
 
     public static UriMatcher buildUriMatcher() {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
-        String authority = BudgetContractV2.CONTENT_AUTHORITY;
+        String authority = BudgetContract.CONTENT_AUTHORITY;
 
         matcher.addURI(authority, CategoriesTable.PROVIDER_PATH, CATEGORIES);
         matcher.addURI(authority, CategoriesTable.PROVIDER_PATH + "/#", CATEGORY_WITH_ID);

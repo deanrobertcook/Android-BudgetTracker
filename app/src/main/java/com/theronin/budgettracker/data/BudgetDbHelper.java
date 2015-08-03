@@ -5,8 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.theronin.budgettracker.BuildConfig;
-import com.theronin.budgettracker.data.BudgetContractV2.CategoriesTable;
-import com.theronin.budgettracker.data.BudgetContractV2.EntriesTable;
+import com.theronin.budgettracker.data.BudgetContract.CategoriesTable;
+import com.theronin.budgettracker.data.BudgetContract.EntriesTable;
 
 public class BudgetDbHelper extends SQLiteOpenHelper {
 

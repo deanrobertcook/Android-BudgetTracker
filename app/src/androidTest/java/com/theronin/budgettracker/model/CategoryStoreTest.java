@@ -6,8 +6,8 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
-import com.theronin.budgettracker.data.BudgetContractV2;
-import com.theronin.budgettracker.data.BudgetContractV2.CategoriesTable;
+import com.theronin.budgettracker.data.BudgetContract;
+import com.theronin.budgettracker.data.BudgetContract.CategoriesTable;
 import com.theronin.budgettracker.data.BudgetDbHelper;
 
 import org.junit.After;
@@ -34,7 +34,7 @@ public class CategoryStoreTest {
 
         //For some reason, using context.deleteDatabase() spoils the database for subsequent tests
         //instead, it's better to just drop the tables and recreate everything
-        dbHelper.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + BudgetContractV2
+        dbHelper.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + BudgetContract
                 .EntriesTable.TABLE_NAME);
         dbHelper.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + CategoriesTable
                 .TABLE_NAME);
