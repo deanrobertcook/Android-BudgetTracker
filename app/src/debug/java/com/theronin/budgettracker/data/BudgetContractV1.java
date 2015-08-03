@@ -4,7 +4,7 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-public class BudgetContract {
+public class BudgetContractV1 {
 
     public static final String CONTENT_AUTHORITY = "com.theronin.budgettracker";
 

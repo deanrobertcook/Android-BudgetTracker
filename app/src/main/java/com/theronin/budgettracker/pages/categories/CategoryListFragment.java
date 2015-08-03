@@ -29,7 +29,7 @@ public class CategoryListFragment extends Fragment implements CategoryStore.Obse
         RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new CategoriesAdapter();
+        adapter = new CategoriesAdapter(null, null);
         recyclerView.setAdapter(adapter);
 
         return rootView;
@@ -38,7 +38,7 @@ public class CategoryListFragment extends Fragment implements CategoryStore.Obse
     @Override
     public void onCategoriesLoaded(List<Category> categories) {
         if (adapter != null) {
-            adapter.setCategories(categories);
+
         }
     }
 }

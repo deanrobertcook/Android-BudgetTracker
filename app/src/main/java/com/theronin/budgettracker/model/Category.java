@@ -1,5 +1,7 @@
 package com.theronin.budgettracker.model;
 
+import android.database.Cursor;
+
 import com.theronin.budgettracker.utils.DateUtils;
 
 public class Category {
@@ -8,6 +10,10 @@ public class Category {
     public final String date;
     public final long total;
     public final long frequency;
+
+    public static Category fromCursor(Cursor cursor) {
+        return null;
+    }
 
     public Category(String name) {
         this(name, null);

@@ -6,8 +6,8 @@ import android.net.Uri;
 
 import com.theronin.budgettracker.ReleaseApplication;
 import com.theronin.budgettracker.R;
-import com.theronin.budgettracker.data.BudgetContract.CategoriesTable;
-import com.theronin.budgettracker.data.BudgetContract.EntriesTable;
+import com.theronin.budgettracker.data.BudgetContractV2.CategoriesTable;
+import com.theronin.budgettracker.data.BudgetContractV2.EntriesTable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -71,7 +71,7 @@ public class CategoryStore {
                 new String[]{
                         CategoriesTable._ID,
                         CategoriesTable.COL_CATEGORY_NAME,
-                        CategoriesTable.COL_DATE_CREATED
+                        CategoriesTable.COL_FIRST_ENTRY_DATE
                 }, null, null, null);
     }
 
@@ -94,7 +94,7 @@ public class CategoryStore {
         values.put(CategoriesTable.COL_CATEGORY_NAME, category.name);
 
         if (category.date != null) {
-            values.put(CategoriesTable.COL_DATE_CREATED, category.date);
+            values.put(CategoriesTable.COL_FIRST_ENTRY_DATE, category.date);
         }
 
         Uri newCategoryURI = application.getContentResolver().insert(CategoriesTable.CONTENT_URI,
@@ -114,7 +114,7 @@ public class CategoryStore {
                 new String[]{
                         CategoriesTable._ID,
                         CategoriesTable.COL_CATEGORY_NAME,
-                        CategoriesTable.COL_DATE_CREATED},
+                        CategoriesTable.COL_FIRST_ENTRY_DATE},
                 CategoriesTable._ID + " = ?", new String[]{Long.toString(categoryId)},
                 null);
 

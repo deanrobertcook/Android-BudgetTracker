@@ -32,8 +32,8 @@ public class BudgetDbHelperTest {
     @Test
     public void testCreateDatabase() {
         final HashSet<String> tableNameHashSet = new HashSet<>();
-        tableNameHashSet.add(BudgetContract.EntriesTable.TABLE_NAME);
-        tableNameHashSet.add(BudgetContract.CategoriesTable.TABLE_NAME);
+        tableNameHashSet.add(BudgetContractV2.EntriesTable.TABLE_NAME);
+        tableNameHashSet.add(BudgetContractV2.CategoriesTable.TABLE_NAME);
 
         Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
         cursor.moveToFirst();
@@ -48,11 +48,11 @@ public class BudgetDbHelperTest {
     @Test
     public void testCategoriesTableColumns() {
         HashSet<String> categoriesColumnNames = new HashSet<>();
-        categoriesColumnNames.add(BudgetContract.CategoriesTable.COL_CATEGORY_NAME);
-        categoriesColumnNames.add(BudgetContract.CategoriesTable.COL_DATE_CREATED);
+        categoriesColumnNames.add(BudgetContractV2.CategoriesTable.COL_CATEGORY_NAME);
+        categoriesColumnNames.add(BudgetContractV2.CategoriesTable.COL_FIRST_ENTRY_DATE);
 
         Cursor cursor = db.rawQuery("PRAGMA table_info (" +
-                BudgetContract.CategoriesTable.TABLE_NAME + ")", null);
+                BudgetContractV2.CategoriesTable.TABLE_NAME + ")", null);
 
         cursor.moveToFirst();
 
@@ -66,12 +66,12 @@ public class BudgetDbHelperTest {
     @Test
     public void testEntriesTableColumns() {
         HashSet<String> entriesColumnNames = new HashSet<>();
-        entriesColumnNames.add(BudgetContract.EntriesTable.COL_CATEGORY_ID);
-        entriesColumnNames.add(BudgetContract.EntriesTable.COL_DATE_ENTERED);
-        entriesColumnNames.add(BudgetContract.EntriesTable.COL_AMOUNT_CENTS);
+        entriesColumnNames.add(BudgetContractV2.EntriesTable.COL_CATEGORY_ID);
+        entriesColumnNames.add(BudgetContractV2.EntriesTable.COL_DATE_ENTERED);
+        entriesColumnNames.add(BudgetContractV2.EntriesTable.COL_AMOUNT_CENTS);
 
         Cursor cursor = db.rawQuery("PRAGMA table_info (" +
-                BudgetContract.EntriesTable.TABLE_NAME + ")", null);
+                BudgetContractV2.EntriesTable.TABLE_NAME + ")", null);
 
         cursor.moveToFirst();
 

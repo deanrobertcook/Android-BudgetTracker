@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.theronin.budgettracker.ReleaseApplication;
-import com.theronin.budgettracker.data.BudgetContract.EntriesTable;
+import com.theronin.budgettracker.data.BudgetContractV2.EntriesTable;
 
 import java.util.ArrayList;
 import java.util.HashSet;

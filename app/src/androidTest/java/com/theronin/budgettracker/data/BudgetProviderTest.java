@@ -8,7 +8,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
-import com.theronin.budgettracker.data.BudgetContract.EntriesTable;
+import com.theronin.budgettracker.data.BudgetContractV2.EntriesTable;
 import com.theronin.budgettracker.model.Category;
 import com.theronin.budgettracker.model.Entry;
 
@@ -24,7 +24,7 @@ import static com.theronin.budgettracker.DatabaseDevUtils.findCategoryId;
 import static com.theronin.budgettracker.DatabaseDevUtils.findCategoryName;
 import static com.theronin.budgettracker.DatabaseDevUtils.insertCategoryDirectlyToDatabase;
 import static com.theronin.budgettracker.DatabaseDevUtils.insertEntryDirectlyToDatabase;
-import static com.theronin.budgettracker.data.BudgetContract.CategoriesTable;
+import static com.theronin.budgettracker.data.BudgetContractV2.CategoriesTable;
 import static com.theronin.budgettracker.utils.DateUtils.getStorageFormattedCurrentDate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -117,7 +117,7 @@ public class BudgetProviderTest {
                 categoryURI,
                 new String[]{
                         CategoriesTable.COL_CATEGORY_NAME,
-                        CategoriesTable.COL_DATE_CREATED},
+                        CategoriesTable.COL_FIRST_ENTRY_DATE},
                 null, null, null);
         result.moveToFirst();
 
@@ -149,7 +149,7 @@ public class BudgetProviderTest {
                 categoriesUri,
                 new String[]{
                         CategoriesTable.COL_CATEGORY_NAME,
-                        CategoriesTable.COL_DATE_CREATED},
+                        CategoriesTable.COL_FIRST_ENTRY_DATE},
                 null, null, null);
 
         while (result.moveToNext()) {
@@ -261,7 +261,7 @@ public class BudgetProviderTest {
                 CategoriesTable.TABLE_NAME,
                 new String[]{
                         CategoriesTable.COL_CATEGORY_NAME,
-                        CategoriesTable.COL_DATE_CREATED},
+                        CategoriesTable.COL_FIRST_ENTRY_DATE},
                 CategoriesTable.COL_CATEGORY_NAME + " = ?",
                 new String[]{category.name},
                 null, null, null);
