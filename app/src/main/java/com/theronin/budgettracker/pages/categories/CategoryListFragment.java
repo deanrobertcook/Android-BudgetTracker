@@ -1,9 +1,6 @@
 package com.theronin.budgettracker.pages.categories;
 
 import android.app.Fragment;
-import android.app.LoaderManager;
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,14 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.theronin.budgettracker.R;
-import com.theronin.budgettracker.data.BudgetContract;
-import com.theronin.budgettracker.model.Category;
-import com.theronin.budgettracker.model.CategoryStore;
 
-import java.util.List;
-
-public class CategoryListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
-        CategoryStore.Observer {
+public class CategoryListFragment extends Fragment {
 
     private CategoriesAdapter adapter;
 
@@ -42,35 +33,8 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
         return rootView;
     }
 
-    @Override
-    public void onCategoriesLoaded(List<Category> categories) {
-        if (adapter != null) {
-
-        }
-    }
-
-    //////////////////////////////
-    // Loader Callbacks
-    //////////////////////////////
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(
-                getActivity(),
-                BudgetContract.CategoriesTable.CONTENT_URI,
-                Category.projection,
-                null,
-                null,
-                null
-        );
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    public void updateAdapter(Cursor cursor) {
         adapter.changeCursor(cursor);
     }
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.changeCursor(null);
-    }
 }

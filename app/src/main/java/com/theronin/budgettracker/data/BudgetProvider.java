@@ -140,6 +140,9 @@ public class BudgetProvider extends ContentProvider {
 
     private Uri insertEntry(ContentValues values) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+
+
         long entryId = db.insert(EntriesTable.TABLE_NAME, null, values);
         return EntriesTable.CONTENT_URI.buildUpon().appendPath(Long.toString(entryId))
                 .build();

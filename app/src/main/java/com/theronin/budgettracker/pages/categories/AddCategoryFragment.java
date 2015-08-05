@@ -87,6 +87,6 @@ public class AddCategoryFragment extends Fragment implements
     }
 
     public interface Container {
-        public void onCategoryAdded(String categoryName);
+        void onCategoryAdded(String categoryName);
     }
 }

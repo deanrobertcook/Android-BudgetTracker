@@ -33,19 +33,12 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        // During development, just drop them and start over
-        if (BuildConfig.DEBUG) {
-            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + EntriesTable.TABLE_NAME);
-            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CategoriesTable.TABLE_NAME);
-            onCreate(sqLiteDatabase);
-        } else {
-            switch (oldVersion) {
-                case 1:
-                    sqLiteDatabase.execSQL(upgrade1To2());
-                    break;
-                default:
-                    throw new IllegalStateException("Unknown old version: " + oldVersion);
-            }
+        switch (oldVersion) {
+            case 1:
+                sqLiteDatabase.execSQL(upgrade1To2());
+                break;
+            default:
+                throw new IllegalStateException("Unknown old version: " + oldVersion);
         }
     }
 

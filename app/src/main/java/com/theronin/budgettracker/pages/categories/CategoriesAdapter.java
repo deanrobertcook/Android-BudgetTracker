@@ -30,7 +30,6 @@ public class CategoriesAdapter extends CursorRecyclerViewAdapter<CategoriesAdapt
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor) {
-        cursor.moveToNext();
         Category category = Category.fromCursor(cursor);
 
         viewHolder.nameTextView.setText(category.name);
