@@ -18,7 +18,6 @@ public class Entry {
             EntriesTable.COL_AMOUNT_CENTS
     };
 
-
     public static final int _ID = 0;
     public static final int COL_CATEGORY_NAME = 1;
     public static final int COL_DATE_ENTERED = 2;

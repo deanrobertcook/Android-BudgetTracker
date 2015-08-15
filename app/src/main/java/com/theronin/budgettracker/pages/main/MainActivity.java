@@ -6,30 +6,20 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.theronin.budgettracker.ReleaseApplication;
 import com.theronin.budgettracker.R;
-import com.theronin.budgettracker.model.EntryStore;
 import com.theronin.budgettracker.pages.categories.CategoriesActivity;
-import com.theronin.budgettracker.pages.entries.AddEntryFragment;
 import com.theronin.budgettracker.pages.entries.EntriesActivity;
 
 
 public class MainActivity extends FragmentActivity implements
-        MainMenuFragment.Listener,
-        AddEntryFragment.Container {
+        MainMenuFragment.Listener {
 
     private static final String TAG = MainActivity.class.getName();
-    private ReleaseApplication application;
-    private AddEntryFragment addEntryFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__main);
-        application = (ReleaseApplication) getApplication();
-
-        addEntryFragment = (AddEntryFragment)
-                getFragmentManager().findFragmentById(R.id.fragment__add_entry);
     }
 
     @Override
@@ -57,20 +47,15 @@ public class MainActivity extends FragmentActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        application.getCategoryStore().addObserver(addEntryFragment);
-        application.getCategoryStore().notifyObservers();
     }
 
     @Override
     protected void onPause() {
-        application.getCategoryStore().removeObserver(addEntryFragment);
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        addEntryFragment = null;
-        application = null;
         super.onDestroy();
     }
 
@@ -84,10 +69,5 @@ public class MainActivity extends FragmentActivity implements
     public void onCategoriesMenuItemClicked() {
         Intent intent = new Intent(this, CategoriesActivity.class);
         startActivity(intent);
-    }
-
-    @Override
-    public EntryStore getEntryStore() {
-        return application.getEntryStore();
     }
 }

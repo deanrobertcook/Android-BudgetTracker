@@ -20,6 +20,12 @@ public class Category {
             CategoriesTable.COL_ENTRY_FREQUENCY
     };
 
+    public static final int _ID = 0;
+    public static final int COL_CATEGORY_NAME = 1;
+    public static final int COL_FIRST_ENTRY_DATE = 2;
+    public static final int COL_TOTAL_AMOUNT = 3;
+    public static final int COL_ENTRY_FREQUENCY = 3;
+
     public static Category fromCursor(Cursor cursor) {
         if (cursor.getColumnCount() != projection.length) {
             throw new IllegalArgumentException("The cursor supplied does not have all of the columns necessary");

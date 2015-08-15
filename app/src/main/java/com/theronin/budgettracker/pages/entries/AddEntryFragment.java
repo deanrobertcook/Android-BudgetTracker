@@ -1,8 +1,11 @@
 package com.theronin.budgettracker.pages.entries;
 
-import android.app.Activity;
 import android.app.Fragment;
+import android.app.LoaderManager;
 import android.content.Context;
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,28 +23,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.theronin.budgettracker.R;
+import com.theronin.budgettracker.data.BudgetContract;
 import com.theronin.budgettracker.model.Category;
-import com.theronin.budgettracker.model.CategoryStore;
-import com.theronin.budgettracker.model.Entry;
-import com.theronin.budgettracker.model.EntryStore;
 import com.theronin.budgettracker.pages.reusable.DatePickerFragment;
 import com.theronin.budgettracker.utils.DateUtils;
 import com.theronin.budgettracker.utils.MoneyUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 public class AddEntryFragment extends Fragment implements DatePickerFragment.Container,
-        CategoryStore.Observer,
         TextView.OnEditorActionListener,
-        TextWatcher {
+        TextWatcher,
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = AddEntryFragment.class.getName();
-
-    private Container container;
+    private static final int CATEGORY_LOADER_ID = 0;
 
     private TextView currencySymbolTextView;
     private Button confirmEntryButton;
@@ -59,16 +57,7 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
+        getLoaderManager().initLoader(CATEGORY_LOADER_ID, null, this);
     }
 
     @Override
@@ -132,12 +121,6 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
         dateTextView.setText(DateUtils.getDisplayFormattedDate(date));
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.container = (Container) activity;
-    }
-
     private void dateSpinnerClicked() {
         DatePickerFragment datePickerFragment = new DatePickerFragment();
         datePickerFragment.setContainer(this);
@@ -155,8 +138,7 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
         lastSelectedCategory = categorySpinner.getSelectedItem().toString();
         String dateEnteredVal = DateUtils.getStorageFormattedDate(currentSelectedDate);
 
-        long id = container.getEntryStore().addEntry(new Entry(lastSelectedCategory,
-                dateEnteredVal, amount));
+        long id = 0; //TODO insert Entry
 
         if (id == -1) {
             Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
@@ -185,36 +167,6 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
     @Override
     public void onDateSelected(Date date) {
         setDateTextView(date);
-    }
-
-    @Override
-    public void onCategoriesLoaded(List<Category> categories) {
-
-        Collections.sort(categories, new Comparator<Category>() {
-            @Override
-            public int compare(Category lhs, Category rhs) {
-                return (int) (rhs.frequency - lhs.frequency);
-            }
-        });
-
-        List<String> categoryNames = new ArrayList<>();
-        for (Category category : categories) {
-            categoryNames.add(category.name);
-        }
-
-        categorySpinnerAdapter.clear();
-        categorySpinnerAdapter.addAll(categoryNames);
-        categorySpinnerAdapter.notifyDataSetChanged();
-
-        if (lastSelectedCategory != null) {
-            int lastSelectedCategoryNewPosition = categorySpinnerAdapter.getPosition
-                    (lastSelectedCategory);
-            categorySpinner.setSelection(lastSelectedCategoryNewPosition);
-            //If you don't set this back to null, then there are cases where the
-            // lastSelectedCategory
-            //gets out of date.
-            lastSelectedCategory = null;
-        }
     }
 
     @Override
@@ -251,7 +203,41 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
 
     }
 
-    public interface Container {
-        EntryStore getEntryStore();
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(
+                getActivity(),
+                BudgetContract.CategoriesTable.CONTENT_URI,
+                Category.projection,
+                null, null, null
+        );
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        List<String> categoryNames = new ArrayList<>();
+        while (data.moveToNext()) {
+            categoryNames.add(data.getString(Category.COL_CATEGORY_NAME));
+        }
+
+        categorySpinnerAdapter.clear();
+        categorySpinnerAdapter.addAll(categoryNames);
+        categorySpinnerAdapter.notifyDataSetChanged();
+
+        if (lastSelectedCategory != null) {
+            int lastSelectedCategoryNewPosition = categorySpinnerAdapter.getPosition
+                    (lastSelectedCategory);
+            categorySpinner.setSelection(lastSelectedCategoryNewPosition);
+            //If you don't set this back to null, then there are cases where the
+            // lastSelectedCategory
+            //gets out of date.
+            lastSelectedCategory = null;
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        categorySpinnerAdapter.clear();
+        categorySpinnerAdapter.notifyDataSetChanged();
     }
 }
