@@ -33,11 +33,6 @@ public class EntriesAdapter extends CursorRecyclerViewAdapter<EntriesAdapter.Vie
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, int position) {
-
-    }
-
-    @Override
     public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor) {
         final Entry boundEntry = Entry.fromCursor(cursor);
 

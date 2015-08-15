@@ -42,7 +42,7 @@ public class BudgetProvider extends ContentProvider {
         entryJoinedOnCategoryQueryBuilder = new SQLiteQueryBuilder();
 
         entryJoinedOnCategoryQueryBuilder.setTables(
-                EntriesTable.TABLE_NAME + " INNER JOIN " + CategoriesTable.TABLE_NAME +
+                EntriesTable.TABLE_NAME + " LEFT JOIN " + CategoriesTable.TABLE_NAME +
                         " ON " +
                         EntriesTable.TABLE_NAME + "." + EntriesTable.COL_CATEGORY_ID + " = " +
                         CategoriesTable.TABLE_NAME + "." + CategoriesTable._ID
@@ -58,7 +58,6 @@ public class BudgetProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
-
         String id;
         switch (uriMatcher.match(uri)) {
             case CATEGORIES:
@@ -77,43 +76,51 @@ public class BudgetProvider extends ContentProvider {
     }
 
     private Cursor queryCategoryWithId(String id, String[] projection) {
-        return dbHelper.getReadableDatabase().query(
+        Cursor cursor = dbHelper.getReadableDatabase().query(
                 CategoriesTable.TABLE_NAME,
                 projection,
                 CategoriesTable._ID + " = ?",
                 new String[]{id},
                 null, null, null
         );
+        cursor.setNotificationUri(getContext().getContentResolver(), CategoriesTable.CONTENT_URI);
+        return cursor;
     }
 
     private Cursor queryCategories(String[] projection, String selection, String[] selectionArgs) {
-        return dbHelper.getReadableDatabase().query(
+        Cursor cursor = dbHelper.getReadableDatabase().query(
                 CategoriesTable.TABLE_NAME,
                 projection,
                 selection,
                 selectionArgs,
                 null, null, null
         );
+        cursor.setNotificationUri(getContext().getContentResolver(), CategoriesTable.CONTENT_URI);
+        return cursor;
     }
 
     private Cursor queryEntryWithId(String id, String[] projection) {
-        return  dbHelper.getReadableDatabase().query(
+        Cursor cursor = dbHelper.getReadableDatabase().query(
                 EntriesTable.TABLE_NAME,
                 projection,
                 EntriesTable._ID + " = ?",
                 new String[]{id},
                 null, null, null
         );
+        cursor.setNotificationUri(getContext().getContentResolver(), EntriesTable.CONTENT_URI);
+        return cursor;
     }
 
     private Cursor queryEntries(String[] projection, String selection, String[] selectionArgs) {
-        return entryJoinedOnCategoryQueryBuilder.query(
+        Cursor cursor = entryJoinedOnCategoryQueryBuilder.query(
                 dbHelper.getReadableDatabase(),
                 projection,
                 selection,
                 selectionArgs,
                 null, null, null
         );
+        cursor.setNotificationUri(getContext().getContentResolver(), EntriesTable.CONTENT_URI);
+        return cursor;
     }
 
     @Override
@@ -134,15 +141,24 @@ public class BudgetProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
+        Uri returnUri;
+        Uri notifyUri;
         switch (uriMatcher.match(uri)) {
             case CATEGORIES:
-                return insertCategory(values);
+                returnUri = insertCategory(values);
+                notifyUri = CategoriesTable.CONTENT_URI;
+                break;
             case ENTRIES:
-                return insertEntry(values);
+                returnUri = insertEntry(values);
+                notifyUri = EntriesTable.CONTENT_URI;
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown or invalid Uri: " + uri.toString
                         ());
         }
+
+        getContext().getContentResolver().notifyChange(notifyUri, null);
+        return returnUri;
     }
 
     private Uri insertCategory(ContentValues values) {
@@ -154,7 +170,6 @@ public class BudgetProvider extends ContentProvider {
 
     private Uri insertEntry(ContentValues values) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-
 
 
         long entryId = db.insert(EntriesTable.TABLE_NAME, null, values);

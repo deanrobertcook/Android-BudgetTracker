@@ -2,10 +2,12 @@ package com.theronin.budgettracker.pages.entries;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,12 +26,15 @@ import android.widget.Toast;
 
 import com.theronin.budgettracker.R;
 import com.theronin.budgettracker.data.BudgetContract;
+import com.theronin.budgettracker.data.BudgetContract.EntriesTable;
 import com.theronin.budgettracker.model.Category;
 import com.theronin.budgettracker.pages.reusable.DatePickerFragment;
 import com.theronin.budgettracker.utils.DateUtils;
 import com.theronin.budgettracker.utils.MoneyUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -45,8 +50,8 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
     private Button confirmEntryButton;
 
     private Spinner categorySpinner;
-    private ArrayAdapter<String> categorySpinnerAdapter;
-    private String lastSelectedCategory;
+    private CategorySpinnerAdapter categorySpinnerAdapter;
+    private Category lastSelectedCategory;
 
     private TextView dateTextView;
     private Date currentSelectedDate;
@@ -82,7 +87,7 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
         amountEditText.addTextChangedListener(this);
 
         categorySpinner = (Spinner) rootView.findViewById(R.id.spn__entry_category);
-        categorySpinnerAdapter = new ArrayAdapter<>(getActivity(),
+        categorySpinnerAdapter = new CategorySpinnerAdapter(getActivity(),
                 android.R.layout.simple_spinner_item);
         categorySpinnerAdapter.setDropDownViewResource(android.R.layout
                 .simple_spinner_dropdown_item);
@@ -135,10 +140,18 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
             return;
         }
 
-        lastSelectedCategory = categorySpinner.getSelectedItem().toString();
+        lastSelectedCategory = categorySpinnerAdapter.getCategory(categorySpinner.getSelectedItem().toString());
         String dateEnteredVal = DateUtils.getStorageFormattedDate(currentSelectedDate);
 
-        long id = 0; //TODO insert Entry
+        ContentValues values = new ContentValues();
+        values.put(EntriesTable.COL_CATEGORY_ID, lastSelectedCategory.id);
+        values.put(EntriesTable.COL_DATE_ENTERED, dateEnteredVal);
+        values.put(EntriesTable.COL_AMOUNT_CENTS, amount);
+
+        Uri uri = getActivity().getContentResolver().insert(
+                EntriesTable.CONTENT_URI, values);
+
+        long id = Long.parseLong(uri.getLastPathSegment());
 
         if (id == -1) {
             Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
@@ -215,14 +228,11 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        List<String> categoryNames = new ArrayList<>();
+        List<Category> categories = new ArrayList<>();
         while (data.moveToNext()) {
-            categoryNames.add(data.getString(Category.COL_CATEGORY_NAME));
+            categories.add(Category.fromCursor(data));
         }
-
-        categorySpinnerAdapter.clear();
-        categorySpinnerAdapter.addAll(categoryNames);
-        categorySpinnerAdapter.notifyDataSetChanged();
+        categorySpinnerAdapter.addAll(categories);
 
         if (lastSelectedCategory != null) {
             int lastSelectedCategoryNewPosition = categorySpinnerAdapter.getPosition
@@ -238,6 +248,56 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         categorySpinnerAdapter.clear();
-        categorySpinnerAdapter.notifyDataSetChanged();
+    }
+
+    private class CategorySpinnerAdapter extends ArrayAdapter<String> {
+
+        private List<Category> categories;
+
+        public CategorySpinnerAdapter(Context context, int resource) {
+            super(context, resource);
+        }
+
+        public void addAll(List<Category> categories) {
+            this.categories = categories;
+            super.clear();
+            super.addAll(getCategoryNames());
+            super.notifyDataSetChanged();
+        }
+
+        public Category getCategory(String categoryName) {
+            int pos = super.getPosition(categoryName);
+            return categories.get(pos);
+        }
+
+        public int getPosition(Category category) {
+            return super.getPosition(category.name);
+        }
+
+        public void sortCategories(Comparator<Category> comparator) {
+            Collections.sort(categories, comparator);
+            super.clear();
+            super.addAll(getCategoryNames());
+            super.notifyDataSetChanged();
+        }
+
+        private List<String> getCategoryNames() {
+            List<String> categoryNames = new ArrayList<>();
+            for (Category category : categories) {
+                categoryNames.add(category.name);
+            }
+            return categoryNames;
+        }
+
+        @Override
+        public void clear() {
+            super.clear();
+            super.notifyDataSetChanged();
+        }
+
+        @Override
+        public void sort(Comparator<? super String> comparator) {
+            //prevent sorting of the parent class
+        }
     }
 }
