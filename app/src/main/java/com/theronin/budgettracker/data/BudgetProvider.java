@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
 import com.theronin.budgettracker.data.BudgetContract.CategoriesTable;
@@ -33,6 +34,19 @@ public class BudgetProvider extends ContentProvider {
         matcher.addURI(authority, EntriesTable.PROVIDER_PATH + "/#", ENTRY_WITH_ID);
 
         return matcher;
+    }
+
+    private static final SQLiteQueryBuilder entryJoinedOnCategoryQueryBuilder;
+
+    static {
+        entryJoinedOnCategoryQueryBuilder = new SQLiteQueryBuilder();
+
+        entryJoinedOnCategoryQueryBuilder.setTables(
+                EntriesTable.TABLE_NAME + " INNER JOIN " + CategoriesTable.TABLE_NAME +
+                        " ON " +
+                        EntriesTable.TABLE_NAME + "." + EntriesTable.COL_CATEGORY_ID + " = " +
+                        CategoriesTable.TABLE_NAME + "." + CategoriesTable._ID
+        );
     }
 
     @Override
@@ -83,7 +97,7 @@ public class BudgetProvider extends ContentProvider {
     }
 
     private Cursor queryEntryWithId(String id, String[] projection) {
-        return dbHelper.getReadableDatabase().query(
+        return  dbHelper.getReadableDatabase().query(
                 EntriesTable.TABLE_NAME,
                 projection,
                 EntriesTable._ID + " = ?",
@@ -93,8 +107,8 @@ public class BudgetProvider extends ContentProvider {
     }
 
     private Cursor queryEntries(String[] projection, String selection, String[] selectionArgs) {
-        return dbHelper.getReadableDatabase().query(
-                EntriesTable.TABLE_NAME,
+        return entryJoinedOnCategoryQueryBuilder.query(
+                dbHelper.getReadableDatabase(),
                 projection,
                 selection,
                 selectionArgs,
