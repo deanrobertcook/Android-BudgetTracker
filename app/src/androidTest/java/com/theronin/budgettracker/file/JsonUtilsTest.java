@@ -1,4 +1,4 @@
-package com.theronin.budgettracker.network;
+package com.theronin.budgettracker.file;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -34,8 +34,7 @@ public class JsonUtilsTest {
         context = InstrumentationRegistry.getTargetContext();
         dbHelper = new BudgetDbHelper(context);
 
-        BudgetDbHelper.dropTables(dbHelper.getWritableDatabase());
-        BudgetDbHelper.createTables(dbHelper.getWritableDatabase());
+        DatabaseDevUtils.resetDatabase(dbHelper.getWritableDatabase());
     }
 
     @Test
