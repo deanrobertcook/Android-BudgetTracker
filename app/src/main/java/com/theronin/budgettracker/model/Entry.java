@@ -18,10 +18,10 @@ public class Entry {
             EntriesTable.COL_AMOUNT_CENTS
     };
 
-    public static final int _ID = 0;
-    public static final int COL_CATEGORY_NAME = 1;
-    public static final int COL_DATE_ENTERED = 2;
-    public static final int COL_AMOUNT_CENTS = 3;
+    public static final int INDEX_ID = 0;
+    public static final int INDEX_CATEGORY_NAME = 1;
+    public static final int INDEX_DATE_ENTERED = 2;
+    public static final int INDEX_AMOUNT_CENTS = 3;
 
     public Entry(String categoryName, String dateEntered, long amount) {
         this(-1, categoryName, dateEntered, amount);
@@ -37,10 +37,12 @@ public class Entry {
 
     public static Entry fromCursor(Cursor cursor) {
         return new Entry(
-                cursor.getLong(_ID),
-                cursor.getString(COL_CATEGORY_NAME),
-                cursor.getString(COL_DATE_ENTERED),
-                cursor.getLong(COL_AMOUNT_CENTS)
+                cursor.getLong(INDEX_ID),
+                cursor.getString(INDEX_CATEGORY_NAME),
+                cursor.getString(INDEX_DATE_ENTERED),
+                cursor.getLong(INDEX_AMOUNT_CENTS)
         );
     }
+
+
 }

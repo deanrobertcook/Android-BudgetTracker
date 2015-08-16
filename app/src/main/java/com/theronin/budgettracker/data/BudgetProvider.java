@@ -10,6 +10,11 @@ import android.net.Uri;
 
 import com.theronin.budgettracker.data.BudgetContract.CategoriesTable;
 import com.theronin.budgettracker.data.BudgetContract.EntriesTable;
+import com.theronin.budgettracker.model.Category;
+import com.theronin.budgettracker.model.Entry;
+
+import static com.theronin.budgettracker.data.BudgetProvider.DatabaseUtils.queryCategoryById;
+import static com.theronin.budgettracker.data.BudgetProvider.DatabaseUtils.queryEntryById;
 
 public class BudgetProvider extends ContentProvider {
 
@@ -141,29 +146,21 @@ public class BudgetProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        Uri returnUri;
-        Uri notifyUri;
         switch (uriMatcher.match(uri)) {
             case CATEGORIES:
-                returnUri = insertCategory(values);
-                notifyUri = CategoriesTable.CONTENT_URI;
-                break;
+                return insertCategory(values);
             case ENTRIES:
-                returnUri = insertEntry(values);
-                notifyUri = EntriesTable.CONTENT_URI;
-                break;
+                return insertEntry(values);
             default:
                 throw new UnsupportedOperationException("Unknown or invalid Uri: " + uri.toString
                         ());
         }
-
-        getContext().getContentResolver().notifyChange(notifyUri, null);
-        return returnUri;
     }
 
     private Uri insertCategory(ContentValues values) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         long categoryId = db.insert(CategoriesTable.TABLE_NAME, null, values);
+        getContext().getContentResolver().notifyChange(CategoriesTable.CONTENT_URI, null);
         return CategoriesTable.CONTENT_URI.buildUpon().appendPath(Long.toString(categoryId))
                 .build();
     }
@@ -171,10 +168,43 @@ public class BudgetProvider extends ContentProvider {
     private Uri insertEntry(ContentValues values) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-
         long entryId = db.insert(EntriesTable.TABLE_NAME, null, values);
+        updateCategoryOnInsertEntry(values);
+
+        getContext().getContentResolver().notifyChange(EntriesTable.CONTENT_URI, null);
+        getContext().getContentResolver().notifyChange(CategoriesTable.CONTENT_URI, null);
+
         return EntriesTable.CONTENT_URI.buildUpon().appendPath(Long.toString(entryId))
                 .build();
+    }
+    /**
+     * Updates the earliest Entry date, the Entry frequency and the total sum amount of all
+     * Entries for the given categoryId.
+     * @param entryValues
+     * @return
+     */
+    private void updateCategoryOnInsertEntry(ContentValues entryValues) {
+        String categoryId = entryValues.getAsString(EntriesTable.COL_CATEGORY_ID);
+        String entryDate = entryValues.getAsString(EntriesTable.COL_DATE_ENTERED);
+        Long entryAmount = entryValues.getAsLong(EntriesTable.COL_AMOUNT_CENTS);
+
+        Cursor cursor = queryCategoryById(dbHelper.getReadableDatabase(), categoryId);
+
+        cursor.moveToFirst();
+        Category category = Category.fromCursor(cursor);
+
+        ContentValues categoryValues = new ContentValues();
+        if (entryDate.compareTo(category.date) < 0) {
+            categoryValues.put(CategoriesTable.COL_FIRST_ENTRY_DATE, entryDate);
+        }
+        categoryValues.put(CategoriesTable.COL_ENTRY_FREQUENCY, category.frequency + 1);
+        categoryValues.put(CategoriesTable.COL_TOTAL_AMOUNT, category.total + entryAmount);
+
+        dbHelper.getWritableDatabase().update(
+                CategoriesTable.TABLE_NAME,
+                categoryValues,
+                CategoriesTable._ID + " = ?",
+                new String[]{categoryId});
     }
 
     @Override
@@ -182,12 +212,7 @@ public class BudgetProvider extends ContentProvider {
         switch (uriMatcher.match(uri)) {
             case ENTRY_WITH_ID:
                 String entryId = uri.getLastPathSegment();
-                int numDeleted = dbHelper.getWritableDatabase().delete(
-                        EntriesTable.TABLE_NAME,
-                        EntriesTable._ID + " = ?",
-                        new String[]{entryId});
-                getContext().getContentResolver().notifyChange(EntriesTable.CONTENT_URI, null);
-                return numDeleted;
+                return deleteEntry(entryId);
 
             default:
                 throw new UnsupportedOperationException("Unknown or invalid Uri: " +
@@ -195,8 +220,51 @@ public class BudgetProvider extends ContentProvider {
         }
     }
 
+    private int deleteEntry(String entryId) {
+        updateCategoryOnDeleteEntry(entryId);
+        int numDeleted = dbHelper.getWritableDatabase().delete(
+                EntriesTable.TABLE_NAME,
+                EntriesTable._ID + " = ?",
+                new String[]{entryId});
+        getContext().getContentResolver().notifyChange(EntriesTable.CONTENT_URI, null);
+        return numDeleted;
+    }
+
+    private void updateCategoryOnDeleteEntry(String entryId) {
+        Cursor cursor = queryEntryById(dbHelper.getReadableDatabase(), entryId);
+        if (!cursor.moveToFirst()) {
+            throw new IllegalStateException("Could not find an Entry that matches the id: " + entryId);
+        }
+        Entry entry = Entry.fromCursor(cursor);
+    }
+
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         return 0;
+    }
+
+    /**
+     * A class for very common queries made to the database
+     */
+    public static class DatabaseUtils {
+        public static Cursor queryEntryById(SQLiteDatabase database, String entryId) {
+            return database.query(
+                    EntriesTable.TABLE_NAME,
+                    Entry.projection,
+                    EntriesTable._ID + " = ?",
+                    new String[] {entryId},
+                    null, null, null
+            );
+        }
+
+        public static Cursor queryCategoryById(SQLiteDatabase database, String categoryId) {
+            return database.query(
+                    CategoriesTable.TABLE_NAME,
+                    Category.projection,
+                    CategoriesTable._ID + " = ?",
+                    new String[] {categoryId},
+                    null, null, null
+            );
+        }
     }
 }

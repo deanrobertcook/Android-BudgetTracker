@@ -12,17 +12,13 @@ import com.theronin.budgettracker.model.Entry;
 import java.util.Random;
 
 public class DatabaseDevUtils {
+    public static final String[] SOME_CATEGORIES = {"cashews", "apples", "bananas",
+            "tissues", "beer", "electronics", "schawarma", "pens", "paper", "train tickets"};
 
-    public static void clearDatabase(BudgetDbHelper dbHelper) {
-        clearDatabase(dbHelper.getWritableDatabase());
-    }
 
-    public static void clearDatabase(SQLiteDatabase database) {
-        //For some reason, using context.deleteDatabase() spoils the database for subsequent tests
-        //instead, it's better to just drop the tables and recreate everything
-        database.execSQL("DROP TABLE IF EXISTS " + BudgetContract.EntriesTable.TABLE_NAME);
-        database.execSQL("DROP TABLE IF EXISTS " +
-                BudgetContract.CategoriesTable.TABLE_NAME);
+    public static void resetDatabase(SQLiteDatabase database) {
+        BudgetDbHelper.dropTables(database);
+        BudgetDbHelper.createTables(database);
     }
 
     public static long insertCategoryDirectlyToDatabase(BudgetDbHelper dbHelper, Category
@@ -89,6 +85,12 @@ public class DatabaseDevUtils {
         return insertEntryDirectlyToDatabase(dbHelper.getWritableDatabase(), entry);
     }
 
+    /**
+     * Inserts an Entry into the database and also handles searching for the Category ID
+     * @param database
+     * @param entry
+     * @return
+     */
     public static long insertEntryDirectlyToDatabase(SQLiteDatabase database, Entry entry) {
         ContentValues values = new ContentValues();
         values.put(BudgetContract.EntriesTable.COL_CATEGORY_ID, findCategoryId(database, entry

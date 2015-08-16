@@ -8,6 +8,8 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
+import com.theronin.budgettracker.DatabaseDevUtils;
+import com.theronin.budgettracker.DateDevUtils;
 import com.theronin.budgettracker.data.BudgetContract.EntriesTable;
 import com.theronin.budgettracker.model.Category;
 import com.theronin.budgettracker.model.Entry;
@@ -48,14 +50,7 @@ public class BudgetProviderTest {
     public void clearDatabase() {
         Log.d(TAG, "Clearing database");
         dbHelper = new BudgetDbHelper(context);
-
-        //For some reason, using context.deleteDatabase() spoils the database for subsequent tests
-        //instead, it's better to just drop the tables and recreate everything
-        dbHelper.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + EntriesTable.TABLE_NAME);
-        dbHelper.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + CategoriesTable
-                .TABLE_NAME);
-        dbHelper.onCreate(dbHelper.getWritableDatabase());
-
+        DatabaseDevUtils.resetDatabase(dbHelper.getWritableDatabase());
     }
 
     @After
@@ -348,6 +343,60 @@ public class BudgetProviderTest {
         //assert the cursor contains nothing
         assertEquals("The number of deleted items is incorrect", 1, numDeleted);
         assertEquals("The entry was not deleted properly", 0, cursor.getCount());
+    }
+
+    @Test
+    public void categoryShouldUpdateOnInsertEntry() {
+        String categoryName = "cashews";
+        String date = DateDevUtils.getRandomDate();
+        long amount = 100;
+        insertCategoryDirectlyToDatabase(dbHelper.getWritableDatabase(), new Category(categoryName));
+
+        ContentValues values = new ContentValues();
+        values.put(EntriesTable.COL_DATE_ENTERED, date);
+        values.put(EntriesTable.COL_CATEGORY_ID, findCategoryId(dbHelper.getWritableDatabase(),
+                categoryName));
+        values.put(EntriesTable.COL_AMOUNT_CENTS, amount);
+
+        context.getContentResolver().insert(
+                EntriesTable.CONTENT_URI,
+                values
+        );
+
+        Cursor cursor = context.getContentResolver().query(
+                CategoriesTable.CONTENT_URI,
+                Category.projection,
+                CategoriesTable.COL_CATEGORY_NAME + " = ?",
+                new String[]{categoryName}, null
+        );
+
+        cursor.moveToFirst();
+        Category retrievedCategory = Category.fromCursor(cursor);
+        cursor.close();
+        assertEquals(date, retrievedCategory.date);
+        assertEquals(1, retrievedCategory.frequency);
+        assertEquals(100, retrievedCategory.total);
+
+        String earlierDate = DateDevUtils.getDaysBefore(date, 5);
+
+        values.put(EntriesTable.COL_DATE_ENTERED, earlierDate);
+        context.getContentResolver().insert(
+                EntriesTable.CONTENT_URI,
+                values
+        );
+
+        //The cursor should be notified automatically on dataset change (wooh ContentProviders).
+        cursor = context.getContentResolver().query(
+                CategoriesTable.CONTENT_URI,
+                Category.projection,
+                CategoriesTable.COL_CATEGORY_NAME + " = ?",
+                new String[]{categoryName}, null
+        );
+        cursor.moveToFirst();
+        retrievedCategory = Category.fromCursor(cursor);
+        assertEquals(earlierDate, retrievedCategory.date);
+        assertEquals(2, retrievedCategory.frequency);
+        assertEquals(200, retrievedCategory.total);
     }
 
 }
