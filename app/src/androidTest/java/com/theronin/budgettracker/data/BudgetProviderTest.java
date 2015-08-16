@@ -399,4 +399,50 @@ public class BudgetProviderTest {
         assertEquals(200, retrievedCategory.total);
     }
 
+    @Test
+    public void categoryShouldBeUpdatedOnDeletedEntry() {
+        //set up the category
+        String categoryName = "cashews";
+        insertCategoryDirectlyToDatabase(dbHelper.getWritableDatabase(), new Category(categoryName));
+
+        //Create two entries, one earlier than the other
+        String[] dates = {DateDevUtils.getDaysAgo(10), DateDevUtils.getDaysAgo(5)};
+        long amount = 100;
+
+        //insert the entries
+        for (int i = 0; i < dates.length; i++) {
+            ContentValues values = new ContentValues();
+            values.put(EntriesTable.COL_DATE_ENTERED, dates[i]);
+            values.put(EntriesTable.COL_CATEGORY_ID, findCategoryId(dbHelper.getWritableDatabase(),
+                    categoryName));
+            values.put(EntriesTable.COL_AMOUNT_CENTS, amount);
+
+            context.getContentResolver().insert(
+                    EntriesTable.CONTENT_URI,
+                    values
+            );
+        }
+
+        //Delete the earlier entry
+        context.getContentResolver().delete(
+                EntriesTable.CONTENT_URI.buildUpon().appendPath("1").build(),
+                null, null
+        );
+
+        //Query the categories table
+        Cursor cursor = context.getContentResolver().query(
+                CategoriesTable.CONTENT_URI,
+                Category.projection,
+                CategoriesTable.COL_CATEGORY_NAME + " = ?",
+                new String[]{categoryName}, null
+        );
+        cursor.moveToFirst();
+        Category category = Category.fromCursor(cursor);
+
+        //Check that the date matches the later entry, and that the frequency/totals are correct
+        assertEquals(dates[1], category.date);
+        assertEquals(1, category.frequency);
+        assertEquals(100, category.total);
+    }
+
 }

@@ -46,6 +46,23 @@ public class BudgetContract {
                 COL_ENTRY_FREQUENCY + " INTEGER DEFAULT 0 NOT NULL, " +
 
                 "UNIQUE (" + COL_CATEGORY_NAME + ") ON CONFLICT IGNORE)";
+
+        /**
+         * Helper projections for faster query write-ups
+         */
+        public static final String[] RAW_PROJECTION = {
+                _ID,
+                COL_FIRST_ENTRY_DATE,
+                COL_TOTAL_AMOUNT,
+                COL_ENTRY_FREQUENCY,
+                COL_CATEGORY_NAME
+        };
+
+        public static final int INDEX_ID = 0;
+        public static final int INDEX_FIRST_ENTRY_DATE = 1;
+        public static final int INDEX_TOTAL_AMOUNT = 2;
+        public static final int INDEX_ENTRY_FREQUENCY = 3;
+        public static final int INDEX_CATEGORY_NAME = 4;
     }
 
     public static final class EntriesTable implements BaseColumns {
@@ -67,6 +84,7 @@ public class BudgetContract {
          * SQLite constants
          */
         public static final String TABLE_NAME = "entries";
+
         public static final String COL_DATE_ENTERED = "dateEntered";
         public static final String COL_CATEGORY_ID = "category_id";
         public static final String COL_AMOUNT_CENTS = "amount_cents";
@@ -82,6 +100,21 @@ public class BudgetContract {
 
                 " FOREIGN KEY (" + EntriesTable.COL_CATEGORY_ID + ") REFERENCES " +
                 CategoriesTable.TABLE_NAME + " (" + CategoriesTable._ID + "))";
+
+        /**
+         * Helper projections for faster query write-ups
+         */
+        public static final String[] RAW_PROJECTION = {
+                _ID,
+                COL_DATE_ENTERED,
+                COL_CATEGORY_ID,
+                COL_AMOUNT_CENTS
+        };
+
+        public static final int INDEX_ID = 0;
+        public static final int INDEX_DATE_ENTERED = 1;
+        public static final int INDEX_CATEGORY_ID = 2;
+        public static final int INDEX_AMOUNT_CENTS = 3;
     }
 
 }
