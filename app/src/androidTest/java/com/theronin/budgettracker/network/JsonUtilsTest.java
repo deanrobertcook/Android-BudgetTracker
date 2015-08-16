@@ -36,8 +36,8 @@ public class JsonUtilsTest {
 
     @Test
     public void convertCategoriesToJson() {
-        DatabaseDevUtils.fillDatabaseWithDummyData(
-                dbHelper.getWritableDatabase(),
+        DatabaseDevUtils.fillDatabaseUsingContentProvider(
+                context,
                 DatabaseDevUtils.SOME_CATEGORIES,
                 200, 1000);
 

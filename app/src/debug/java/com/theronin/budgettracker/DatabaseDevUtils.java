@@ -1,10 +1,13 @@
 package com.theronin.budgettracker;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 
 import com.theronin.budgettracker.data.BudgetContract;
+import com.theronin.budgettracker.data.BudgetContract.EntriesTable;
 import com.theronin.budgettracker.data.BudgetDbHelper;
 import com.theronin.budgettracker.model.Category;
 import com.theronin.budgettracker.model.Entry;
@@ -92,14 +95,35 @@ public class DatabaseDevUtils {
      * @return
      */
     public static long insertEntryDirectlyToDatabase(SQLiteDatabase database, Entry entry) {
-        ContentValues values = new ContentValues();
-        values.put(BudgetContract.EntriesTable.COL_CATEGORY_ID, findCategoryId(database, entry
-                .categoryName));
-        values.put(BudgetContract.EntriesTable.COL_DATE_ENTERED, entry.dateEntered);
-        values.put(BudgetContract.EntriesTable.COL_AMOUNT_CENTS, entry.amount);
+        ContentValues values = getEntryValues(database, entry);
 
-        long entryId = database.insert(BudgetContract.EntriesTable
+        long entryId = database.insert(EntriesTable
                 .TABLE_NAME, null, values);
+        if (entryId == -1) {
+            throw new RuntimeException("An error occurred inserting the Entry into the DB");
+        }
+        return entryId;
+    }
+
+    public static ContentValues getEntryValues(SQLiteDatabase database, Entry entry) {
+        ContentValues values = new ContentValues();
+        values.put(EntriesTable.COL_CATEGORY_ID, findCategoryId(database, entry
+                .categoryName));
+        values.put(EntriesTable.COL_DATE_ENTERED, entry.dateEntered);
+        values.put(EntriesTable.COL_AMOUNT_CENTS, entry.amount);
+        return values;
+    }
+
+    public static long insertEntryUsingContentProvider(Context context, Entry entry) {
+        BudgetDbHelper helper = new BudgetDbHelper(context);
+        ContentValues values = getEntryValues(helper.getReadableDatabase(), entry);
+
+        Uri entryUri = context.getContentResolver().insert(
+                EntriesTable.CONTENT_URI,
+                values
+        );
+
+        long entryId = Long.parseLong(entryUri.getLastPathSegment().toString());
         if (entryId == -1) {
             throw new RuntimeException("An error occurred inserting the Entry into the DB");
         }
@@ -120,6 +144,25 @@ public class DatabaseDevUtils {
         for (int i = 0; i < numEntries; i++) {
             insertEntryDirectlyToDatabase(
                     database,
+                    new Entry(
+                            categoryNames[random.nextInt(categoryNames.length)],
+                            DateDevUtils.getRandomDate(),
+                            random.nextInt(maxAmount))
+            );
+        }
+    }
+
+    public static void fillDatabaseUsingContentProvider(Context context, String[] categoryNames, int numEntries, int maxAmount) {
+        Random random = new Random();
+        BudgetDbHelper helper = new BudgetDbHelper(context);
+
+        for (String categoryName : categoryNames) {
+            insertCategoryDirectlyToDatabase(helper.getWritableDatabase(), new Category(categoryName));
+        }
+
+        for (int i = 0; i < numEntries; i++) {
+            insertEntryUsingContentProvider(
+                    context,
                     new Entry(
                             categoryNames[random.nextInt(categoryNames.length)],
                             DateDevUtils.getRandomDate(),
