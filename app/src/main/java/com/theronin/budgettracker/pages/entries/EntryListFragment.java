@@ -40,10 +40,11 @@ public class EntryListFragment extends Fragment implements
             savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment__entry_list, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view__entry_list);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id
+                .recycler_view__entry_list);
         recyclerView.setHasFixedSize(true);
 
-        RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new EntriesAdapter(getActivity(), null, this);
@@ -67,13 +68,15 @@ public class EntryListFragment extends Fragment implements
     @Override
     public void onDeleteClicked() {
         if (entrySelected != null) {
-            int numDeleted = 0; //container.getEntryStore().deleteEntry(entrySelected);
+            int numDeleted = getActivity().getContentResolver().delete(
+                    EntriesTable.CONTENT_URI.buildUpon().appendPath(
+                            Long.toString(entrySelected.id)).build(),
+                    null, null);
             if (numDeleted == 1) {
                 Toast.makeText(getActivity(), "Entry deleted", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
             }
-
         }
         entrySelected = null;
     }

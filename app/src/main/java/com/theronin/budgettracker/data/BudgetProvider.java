@@ -182,10 +182,12 @@ public class BudgetProvider extends ContentProvider {
         switch (uriMatcher.match(uri)) {
             case ENTRY_WITH_ID:
                 String entryId = uri.getLastPathSegment();
-                return dbHelper.getWritableDatabase().delete(
+                int numDeleted = dbHelper.getWritableDatabase().delete(
                         EntriesTable.TABLE_NAME,
                         EntriesTable._ID + " = ?",
                         new String[]{entryId});
+                getContext().getContentResolver().notifyChange(EntriesTable.CONTENT_URI, null);
+                return numDeleted;
 
             default:
                 throw new UnsupportedOperationException("Unknown or invalid Uri: " +
