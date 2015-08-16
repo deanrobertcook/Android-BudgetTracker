@@ -117,7 +117,7 @@ public class BudgetProviderTest {
                 categoryURI,
                 new String[]{
                         CategoriesTable.COL_CATEGORY_NAME,
-                        CategoriesTable.COL_DATE_CREATED},
+                        CategoriesTable.COL_FIRST_ENTRY_DATE},
                 null, null, null);
         result.moveToFirst();
 
@@ -149,7 +149,7 @@ public class BudgetProviderTest {
                 categoriesUri,
                 new String[]{
                         CategoriesTable.COL_CATEGORY_NAME,
-                        CategoriesTable.COL_DATE_CREATED},
+                        CategoriesTable.COL_FIRST_ENTRY_DATE},
                 null, null, null);
 
         while (result.moveToNext()) {
@@ -261,7 +261,7 @@ public class BudgetProviderTest {
                 CategoriesTable.TABLE_NAME,
                 new String[]{
                         CategoriesTable.COL_CATEGORY_NAME,
-                        CategoriesTable.COL_DATE_CREATED},
+                        CategoriesTable.COL_FIRST_ENTRY_DATE},
                 CategoriesTable.COL_CATEGORY_NAME + " = ?",
                 new String[]{category.name},
                 null, null, null);

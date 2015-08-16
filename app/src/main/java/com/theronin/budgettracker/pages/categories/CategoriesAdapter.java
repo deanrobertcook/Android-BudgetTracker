@@ -1,5 +1,7 @@
 package com.theronin.budgettracker.pages.categories;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,22 +10,13 @@ import android.widget.TextView;
 
 import com.theronin.budgettracker.R;
 import com.theronin.budgettracker.model.Category;
+import com.theronin.budgettracker.utils.CursorRecyclerViewAdapter;
 import com.theronin.budgettracker.utils.MoneyUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+public class CategoriesAdapter extends CursorRecyclerViewAdapter<CategoriesAdapter.ViewHolder> {
 
-public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder> {
-
-    private List<Category> categories;
-
-    public CategoriesAdapter() {
-        this.categories = new ArrayList<>();
-    }
-
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
-        notifyDataSetChanged();
+    public CategoriesAdapter(Context context, Cursor cursor) {
+        super(context, cursor);
     }
 
     @Override
@@ -36,8 +29,9 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        Category category = categories.get(position);
+    public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor) {
+        Category category = Category.fromCursor(cursor);
+
         viewHolder.nameTextView.setText(category.name);
         viewHolder.currencySymbolTotalView.setText(MoneyUtils.getCurrencySymbol());
         viewHolder.totalTextView.setText(
@@ -45,11 +39,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         viewHolder.currencySymbolMonthlyView.setText(MoneyUtils.getCurrencySymbol());
         viewHolder.monthlyTextView.setText(
                 MoneyUtils.convertCentsToDisplayAmount(category.getMonthlyAverage()));
-    }
-
-    @Override
-    public int getItemCount() {
-        return categories.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -1,7 +1,10 @@
 package com.theronin.budgettracker.pages.entries;
 
-import android.app.Activity;
 import android.app.Fragment;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,24 +15,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.theronin.budgettracker.R;
+import com.theronin.budgettracker.data.BudgetContract.EntriesTable;
 import com.theronin.budgettracker.model.Entry;
-import com.theronin.budgettracker.model.EntryStore;
 
-import java.util.List;
-
-public class EntryListFragment extends Fragment implements EntryStore.Observer,
+public class EntryListFragment extends Fragment implements
         View.OnClickListener,
         EntriesAdapter.OnItemClickListener,
-        EntryOptionsDialogFragment.Container {
+        EntryOptionsDialogFragment.Container,
+        LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final int ENTRY_LOADER_ID = 0;
 
     private EntriesAdapter adapter;
     private Entry entrySelected;
-    private Container container;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.container = (Container) activity;
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getLoaderManager().initLoader(ENTRY_LOADER_ID, null, this);
     }
 
     @Override
@@ -43,15 +46,9 @@ public class EntryListFragment extends Fragment implements EntryStore.Observer,
         RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new EntriesAdapter(this);
+        adapter = new EntriesAdapter(getActivity(), null, this);
         recyclerView.setAdapter(adapter);
         return rootView;
-    }
-
-    @Override
-    public void onEntriesLoaded(List<Entry> entries) {
-        adapter.setEntries(entries);
-        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -70,7 +67,7 @@ public class EntryListFragment extends Fragment implements EntryStore.Observer,
     @Override
     public void onDeleteClicked() {
         if (entrySelected != null) {
-            int numDeleted = container.getEntryStore().deleteEntry(entrySelected);
+            int numDeleted = 0; //container.getEntryStore().deleteEntry(entrySelected);
             if (numDeleted == 1) {
                 Toast.makeText(getActivity(), "Entry deleted", Toast.LENGTH_SHORT).show();
             } else {
@@ -81,7 +78,24 @@ public class EntryListFragment extends Fragment implements EntryStore.Observer,
         entrySelected = null;
     }
 
-    public interface Container {
-        EntryStore getEntryStore();
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(
+                getActivity(),
+                EntriesTable.CONTENT_URI,
+                Entry.projection,
+                null, null, null
+        );
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        adapter.changeCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        adapter.changeCursor(null);
     }
 }

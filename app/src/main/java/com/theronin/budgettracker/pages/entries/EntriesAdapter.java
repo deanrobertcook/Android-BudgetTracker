@@ -1,5 +1,7 @@
 package com.theronin.budgettracker.pages.entries;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,41 +10,17 @@ import android.widget.TextView;
 
 import com.theronin.budgettracker.R;
 import com.theronin.budgettracker.model.Entry;
+import com.theronin.budgettracker.utils.CursorRecyclerViewAdapter;
 import com.theronin.budgettracker.utils.DateUtils;
 import com.theronin.budgettracker.utils.MoneyUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHolder> {
+public class EntriesAdapter extends CursorRecyclerViewAdapter<EntriesAdapter.ViewHolder> {
 
     private final OnItemClickListener itemClickListener;
-    private List<Entry> entries;
 
-    public EntriesAdapter(OnItemClickListener itemClickListener) {
-        this(itemClickListener, new ArrayList<Entry>());
-    }
-
-    public EntriesAdapter(OnItemClickListener itemClickListener, List<Entry> entries) {
+    public EntriesAdapter(Context context, Cursor cursor, OnItemClickListener itemClickListener) {
+        super(context, cursor);
         this.itemClickListener = itemClickListener;
-        this.entries = entries;
-        sortEntriesByDate();
-    }
-
-    public void setEntries(List<Entry> entries) {
-        this.entries = entries;
-        sortEntriesByDate();
-    }
-
-    private void sortEntriesByDate() {
-        Collections.sort(entries, new Comparator<Entry>() {
-            @Override
-            public int compare(Entry lhs, Entry rhs) {
-                return rhs.dateEntered.compareTo(lhs.dateEntered);
-            }
-        });
     }
 
     @Override
@@ -55,8 +33,8 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, int position) {
-        final Entry boundEntry = entries.get(position);
+    public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor) {
+        final Entry boundEntry = Entry.fromCursor(cursor);
 
         viewHolder.currencySymbolTextView.setText(MoneyUtils.getCurrencySymbol());
         viewHolder.amountTextView.setText(
@@ -70,11 +48,6 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
                 itemClickListener.onItemClicked(boundEntry);
             }
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        return entries.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

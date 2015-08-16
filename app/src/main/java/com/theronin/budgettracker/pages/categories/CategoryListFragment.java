@@ -1,6 +1,10 @@
 package com.theronin.budgettracker.pages.categories;
 
 import android.app.Fragment;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,36 +13,57 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.theronin.budgettracker.R;
+import com.theronin.budgettracker.data.BudgetContract;
 import com.theronin.budgettracker.model.Category;
-import com.theronin.budgettracker.model.CategoryStore;
 
-import java.util.List;
+public class CategoryListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-public class CategoryListFragment extends Fragment implements CategoryStore.Observer {
 
+
+    private static final int CATEGORY_LOADER_ID = 0;
     private CategoriesAdapter adapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle 
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getLoaderManager().initLoader(CATEGORY_LOADER_ID, null, this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment__category_list, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view__category_list);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id
+                .recycler_view__category_list);
         recyclerView.setHasFixedSize(true);
 
-        RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new CategoriesAdapter();
+        adapter = new CategoriesAdapter(getActivity(), null);
         recyclerView.setAdapter(adapter);
 
         return rootView;
     }
 
     @Override
-    public void onCategoriesLoaded(List<Category> categories) {
-        if (adapter != null) {
-            adapter.setCategories(categories);
-        }
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(
+                getActivity(),
+                BudgetContract.CategoriesTable.CONTENT_URI,
+                Category.projection,
+                null, null, null
+        );
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        adapter.changeCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        adapter.changeCursor(null);
     }
 }

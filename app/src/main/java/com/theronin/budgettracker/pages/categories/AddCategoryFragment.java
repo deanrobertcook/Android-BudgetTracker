@@ -1,8 +1,9 @@
 package com.theronin.budgettracker.pages.categories;
 
-import android.app.Activity;
 import android.app.Fragment;
+import android.content.ContentValues;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -13,20 +14,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.theronin.budgettracker.R;
+import com.theronin.budgettracker.data.BudgetContract;
 
-public class AddCategoryFragment extends Fragment implements TextView.OnEditorActionListener {
+public class AddCategoryFragment extends Fragment implements
+        TextView.OnEditorActionListener {
 
     private EditText categoryEditText;
     private Button confirmNewCategoryButton;
-    private Container container;
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        container = (Container) activity;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
@@ -47,30 +44,21 @@ public class AddCategoryFragment extends Fragment implements TextView.OnEditorAc
         return rootView;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
     private void onConfirmNewCategoryButtonPress() {
         String categoryName = categoryEditText.getText().toString();
         categoryName = categoryName.toLowerCase().trim();
-        container.onCategoryAdded(categoryName);
+        addCategory(categoryName);
 
         View view = getActivity().getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context
+                    .INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
 
     }
 
-    public void clearCategoryEditText() {
+    private void clearCategoryEditText() {
         categoryEditText.setText("");
     }
 
@@ -85,7 +73,30 @@ public class AddCategoryFragment extends Fragment implements TextView.OnEditorAc
         return handled;
     }
 
-    public interface Container {
-        public void onCategoryAdded(String categoryName);
+    public void addCategory(String categoryName) {
+        if (categoryName == null || categoryName.equals("")) {
+            Toast.makeText(getActivity(), "You must specify a name for the new category", Toast
+                    .LENGTH_SHORT).show();
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(BudgetContract.CategoriesTable.COL_CATEGORY_NAME, categoryName);
+
+        Uri categoryUri = getActivity().getContentResolver().insert(
+                BudgetContract.CategoriesTable.CONTENT_URI,
+                values
+        );
+
+        long id = Long.parseLong(categoryUri.getLastPathSegment());
+
+        if (id == -1) {
+            Toast.makeText(getActivity(), "Make sure that the category doesn't already exist",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            clearCategoryEditText();
+
+            Toast.makeText(getActivity(), "Category added succesfully",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }

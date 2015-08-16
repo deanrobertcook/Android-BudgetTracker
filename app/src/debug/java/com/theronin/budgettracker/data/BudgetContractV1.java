@@ -4,7 +4,7 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-public class BudgetContract {
+public class BudgetContractV1 {
 
     public static final String CONTENT_AUTHORITY = "com.theronin.budgettracker";
 
@@ -29,23 +29,18 @@ public class BudgetContract {
          * SQLite constants
          */
         public static final String TABLE_NAME = "categories";
-
-        public static final String COL_FIRST_ENTRY_DATE = "first_entry_date";
-        public static final String COL_TOTAL_AMOUNT = "total_amount_cents";
-        public static final String COL_ENTRY_FREQUENCY = "entry_frequency";
+        public static final String COL_DATE_CREATED = "date_created";
         public static final String COL_CATEGORY_NAME = "category_name";
 
         public static final String SQL_CREATE_CATEGORIES_TABLE = "CREATE TABLE " +
-                TABLE_NAME + " (" +
+                CategoriesTable.TABLE_NAME + " (" +
 
-                _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                CategoriesTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
-                COL_CATEGORY_NAME + " TEXT NOT NULL, " +
-                COL_FIRST_ENTRY_DATE + " DATE DEFAULT (date('now')) NOT NULL, " +
-                COL_TOTAL_AMOUNT + " INTEGER DEFAULT 0 NOT NULL, " +
-                COL_ENTRY_FREQUENCY + " INTEGER DEFAULT 0 NOT NULL, " +
+                CategoriesTable.COL_CATEGORY_NAME + " TEXT NOT NULL, " +
+                CategoriesTable.COL_DATE_CREATED + " DATE DEFAULT (date('now')) NOT NULL, " +
 
-                "UNIQUE (" + COL_CATEGORY_NAME + ") ON CONFLICT IGNORE)";
+                "UNIQUE (" + CategoriesTable.COL_CATEGORY_NAME + ") ON CONFLICT IGNORE)";
     }
 
     public static final class EntriesTable implements BaseColumns {
@@ -74,11 +69,11 @@ public class BudgetContract {
         public static final String SQL_CREATE_ENTRIES_TABLE = "CREATE TABLE " + EntriesTable
                 .TABLE_NAME + " (" +
 
-                _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                EntriesTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
-                COL_DATE_ENTERED + " INTEGER NOT NULL, " +
-                COL_CATEGORY_ID + " INTEGER NOT NULL, " +
-                COL_AMOUNT_CENTS + " INTEGER NOT NULL, " +
+                EntriesTable.COL_DATE_ENTERED + " INTEGER NOT NULL, " +
+                EntriesTable.COL_CATEGORY_ID + " INTEGER NOT NULL, " +
+                EntriesTable.COL_AMOUNT_CENTS + " INTEGER NOT NULL, " +
 
                 " FOREIGN KEY (" + EntriesTable.COL_CATEGORY_ID + ") REFERENCES " +
                 CategoriesTable.TABLE_NAME + " (" + CategoriesTable._ID + "))";

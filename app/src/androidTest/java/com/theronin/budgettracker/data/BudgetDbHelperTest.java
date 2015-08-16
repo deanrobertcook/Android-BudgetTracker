@@ -49,7 +49,7 @@ public class BudgetDbHelperTest {
     public void testCategoriesTableColumns() {
         HashSet<String> categoriesColumnNames = new HashSet<>();
         categoriesColumnNames.add(BudgetContract.CategoriesTable.COL_CATEGORY_NAME);
-        categoriesColumnNames.add(BudgetContract.CategoriesTable.COL_DATE_CREATED);
+        categoriesColumnNames.add(BudgetContract.CategoriesTable.COL_FIRST_ENTRY_DATE);
 
         Cursor cursor = db.rawQuery("PRAGMA table_info (" +
                 BudgetContract.CategoriesTable.TABLE_NAME + ")", null);
