@@ -45,21 +45,6 @@ public class MainActivity extends FragmentActivity implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     public void onEntriesMenuItemClicked() {
         Intent intent = new Intent(this, EntriesActivity.class);
         startActivity(intent);
