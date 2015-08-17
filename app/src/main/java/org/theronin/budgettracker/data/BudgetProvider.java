@@ -10,6 +10,7 @@ import android.net.Uri;
 
 import org.theronin.budgettracker.data.BudgetContract.CategoriesTable;
 import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
+import org.theronin.budgettracker.model.Entry;
 import org.theronin.budgettracker.utils.DateUtils;
 
 import java.util.Date;
@@ -149,7 +150,8 @@ public class BudgetProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         switch (uriMatcher.match(uri)) {
             case CATEGORIES:
-                return insertCategory(values);
+                return CategoriesTable.CONTENT_URI.buildUpon()
+                        .appendPath(Long.toString(insertCategory(values))).build();
             case ENTRIES:
                 return insertEntry(values);
             default:
@@ -158,12 +160,11 @@ public class BudgetProvider extends ContentProvider {
         }
     }
 
-    private Uri insertCategory(ContentValues values) {
+    private long insertCategory(ContentValues values) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         long categoryId = db.insert(CategoriesTable.TABLE_NAME, null, values);
         getContext().getContentResolver().notifyChange(CategoriesTable.CONTENT_URI, null);
-        return CategoriesTable.CONTENT_URI.buildUpon().appendPath(Long.toString(categoryId))
-                .build();
+        return categoryId;
     }
 
     private Uri insertEntry(ContentValues values) {
@@ -302,6 +303,67 @@ public class BudgetProvider extends ContentProvider {
         }
 
         return earliestDate;
+    }
+
+    @Override
+    public int bulkInsert(Uri uri, ContentValues[] values) {
+        switch (uriMatcher.match(uri)) {
+            case ENTRIES:
+                return bulkInsertEntries(values);
+            default:
+                throw new UnsupportedOperationException("Unknown or invalid Uri: " +
+                        uri.toString());
+        }
+    }
+
+    private int bulkInsertEntries(ContentValues[] valuesList) {
+        //Switch category names to category Ids - this could be done for any insert entry?
+        for (ContentValues values : valuesList) {
+            String categoryName = values.getAsString(Entry.projection[Entry.INDEX_CATEGORY_NAME]);
+            long categoryId = getCategoryId(categoryName);
+            values.remove(Entry.projection[Entry.INDEX_CATEGORY_NAME]);
+            values.put(EntriesTable.COL_CATEGORY_ID, categoryId);
+        }
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            for (ContentValues values : valuesList) {
+                db.insert(
+                        EntriesTable.TABLE_NAME,
+                        null,
+                        values
+                );
+            }
+
+            db.setTransactionSuccessful();
+            getContext().getContentResolver().notifyChange(EntriesTable.CONTENT_URI, null);
+            getContext().getContentResolver().notifyChange(CategoriesTable.CONTENT_URI, null);
+        } finally {
+            db.endTransaction();
+        }
+
+        return valuesList.length;
+    }
+
+    private long getCategoryId(String categoryName) {
+        Cursor cursor = dbHelper.getWritableDatabase().query(
+                CategoriesTable.TABLE_NAME,
+                CategoriesTable.RAW_PROJECTION,
+                CategoriesTable.COL_CATEGORY_NAME + " = ?",
+                new String[]{categoryName},
+                null, null, null
+        );
+
+        if (!cursor.moveToFirst()) {
+            ContentValues newCategoryValues = new ContentValues();
+            newCategoryValues.put(CategoriesTable.COL_CATEGORY_NAME, categoryName);
+            return insertCategory(newCategoryValues);
+        }
+
+        long id = cursor.getLong(CategoriesTable.INDEX_ID);
+        cursor.close();
+        return id;
     }
 
     @Override
