@@ -1,4 +1,4 @@
-package com.theronin.budgettracker.network;
+package com.theronin.budgettracker.file;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -7,15 +7,19 @@ import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.theronin.budgettracker.DatabaseDevUtils;
 import com.theronin.budgettracker.data.BudgetContract.CategoriesTable;
+import com.theronin.budgettracker.data.BudgetContract.EntriesTable;
 import com.theronin.budgettracker.data.BudgetDbHelper;
 import com.theronin.budgettracker.model.Category;
+import com.theronin.budgettracker.model.Entry;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +34,7 @@ public class JsonUtilsTest {
         context = InstrumentationRegistry.getTargetContext();
         dbHelper = new BudgetDbHelper(context);
 
-        BudgetDbHelper.dropTables(dbHelper.getWritableDatabase());
-        BudgetDbHelper.createTables(dbHelper.getWritableDatabase());
+        DatabaseDevUtils.resetDatabase(dbHelper.getWritableDatabase());
     }
 
     @Test
@@ -54,5 +57,25 @@ public class JsonUtilsTest {
         Gson gson = new Gson();
         String json = gson.toJson(categories);
         Log.d(TAG, json);
+
+        Cursor entriesCursor = context.getContentResolver().query(
+                EntriesTable.CONTENT_URI,
+                Entry.projection,
+                null, null, null
+        );
+
+        List<Entry> entries = new ArrayList<>();
+        while (entriesCursor.moveToNext()) {
+            entries.add(Entry.fromCursor(entriesCursor));
+        }
+
+        json = gson.toJson(entries);
+        Log.d(TAG, json);
+
+        Type entryArrayType = new TypeToken<ArrayList<Entry>>(){}.getType();
+        ArrayList<Entry> entriesParsed = gson.fromJson(json, entryArrayType);
+        for (Entry entry : entriesParsed) {
+            Log.d(TAG, entry.id + ", " + entry.categoryName + ", " + entry.dateEntered + ", " + entry.amount);
+        }
     }
 }
