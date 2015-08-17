@@ -17,10 +17,6 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public BudgetDbHelper(Context context, int databaseVersion, String databaseName) {
-        super(context, databaseName, null, databaseVersion);
-    }
-
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         createTables(sqLiteDatabase);
@@ -35,18 +31,32 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         switch (oldVersion) {
             case 1:
-                sqLiteDatabase.execSQL(upgrade1To2());
+                upgrade1To2(sqLiteDatabase);
                 break;
             default:
                 throw new IllegalStateException("Unknown old version: " + oldVersion);
         }
     }
 
-    private String upgrade1To2() {
-        return "ALTER TABLE " + CategoriesTable.TABLE_NAME +
-                "RENAME COLUMN date_created to " + CategoriesTable.COL_FIRST_ENTRY_DATE + ", " +
-                "ADD (" + CategoriesTable.COL_TOTAL_AMOUNT + " INTEGER DEFAULT 0 NOT NULL, " +
-                CategoriesTable.COL_ENTRY_FREQUENCY + " INTEGER DEFAULT 0 NOT NULL)";
+    private void upgrade1To2(SQLiteDatabase database) {
+        database.beginTransaction();
+        try {
+            database.execSQL("ALTER TABLE " + CategoriesTable.TABLE_NAME + " RENAME TO tmp_table");
+            database.execSQL(CategoriesTable.SQL_CREATE_CATEGORIES_TABLE);
+            database.execSQL("INSERT INTO " + CategoriesTable.TABLE_NAME + " (" +
+                        CategoriesTable._ID + ", " +
+                        CategoriesTable.COL_FIRST_ENTRY_DATE + ", " +
+                        CategoriesTable.COL_CATEGORY_NAME + ") " +
+                    "SELECT " +
+                        CategoriesTable._ID + ", " +
+                        "date_created, " +
+                        CategoriesTable.COL_CATEGORY_NAME + " " +
+                        "FROM tmp_table");
+            database.execSQL("DROP TABLE tmp_table");
+            database.setTransactionSuccessful();
+        } finally {
+            database.endTransaction();
+        }
     }
 
     @Override
