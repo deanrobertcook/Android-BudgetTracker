@@ -20,5 +20,6 @@
     <string name="failed_to_add_category">Failed to save the input category %s</string>
     <string name="delete_entry">Delete Entry</string>
     <string name="edit_entry">Edit Entry</string>
-    <string name="action_backup">Backup Entries</string>
+    <string name="action_backup">Backup entries</string>
+    <string name="action_restore">Restore from backup</string>
 </resources>

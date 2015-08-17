@@ -7,22 +7,24 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.theronin.budgettracker.R;
 import com.theronin.budgettracker.data.BudgetContract;
+import com.theronin.budgettracker.file.FileBackupAgent;
 import com.theronin.budgettracker.model.Entry;
-import com.theronin.budgettracker.file.FileWriterTask;
 import com.theronin.budgettracker.pages.categories.CategoriesActivity;
 import com.theronin.budgettracker.pages.entries.EntriesActivity;
 
 import java.util.ArrayList;
-
+import java.util.List;
 
 public class MainActivity extends FragmentActivity implements
         MainMenuFragment.Listener,
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>,
+        FileBackupAgent.Listener {
 
     private static final String TAG = MainActivity.class.getName();
     private static final int ENTRY_LOADER_ID = 0;
@@ -49,6 +51,10 @@ public class MainActivity extends FragmentActivity implements
                 return true;
             case R.id.action_backup:
                 backupEntries();
+                return true;
+            case R.id.action_restore:
+                restoreEntries();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -56,6 +62,10 @@ public class MainActivity extends FragmentActivity implements
 
     private void backupEntries() {
         getLoaderManager().initLoader(ENTRY_LOADER_ID, null, this);
+    }
+
+    private void restoreEntries() {
+        new FileBackupAgent().restoreEntriesFromBackup(this);
     }
 
     @Override
@@ -88,11 +98,18 @@ public class MainActivity extends FragmentActivity implements
             entries.add(entry);
         }
 
-        new FileWriterTask().execute(entries);
+        new FileBackupAgent().backupEntries(entries);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         //do nothing
+    }
+
+    @Override
+    public void onEntriesRestored(List<Entry> entries) {
+        for (Entry entry : entries) {
+            Log.d(TAG, entry.amount + ", " + entry.categoryName + ", " + entry.dateEntered);
+        }
     }
 }
