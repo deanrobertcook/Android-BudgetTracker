@@ -1,5 +1,6 @@
 package com.theronin.budgettracker.model;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.theronin.budgettracker.data.BudgetContract.CategoriesTable;
@@ -44,5 +45,12 @@ public class Entry {
         );
     }
 
-
+    public ContentValues toValues() {
+        ContentValues values = new ContentValues();
+        values.put(EntriesTable._ID, id);
+        values.put(projection[INDEX_CATEGORY_NAME], categoryName);
+        values.put(projection[INDEX_DATE_ENTERED], dateEntered);
+        values.put(projection[INDEX_AMOUNT_CENTS], amount);
+        return values;
+    }
 }

@@ -1,18 +1,18 @@
 package com.theronin.budgettracker.pages.main;
 
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.theronin.budgettracker.R;
-import com.theronin.budgettracker.data.BudgetContract;
+import com.theronin.budgettracker.data.BudgetContract.EntriesTable;
 import com.theronin.budgettracker.file.FileBackupAgent;
 import com.theronin.budgettracker.model.Entry;
 import com.theronin.budgettracker.pages.categories.CategoriesActivity;
@@ -84,7 +84,7 @@ public class MainActivity extends FragmentActivity implements
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(
                 this,
-                BudgetContract.EntriesTable.CONTENT_URI,
+                EntriesTable.CONTENT_URI,
                 Entry.projection,
                 null, null, null
         );
@@ -108,8 +108,11 @@ public class MainActivity extends FragmentActivity implements
 
     @Override
     public void onEntriesRestored(List<Entry> entries) {
-        for (Entry entry : entries) {
-            Log.d(TAG, entry.amount + ", " + entry.categoryName + ", " + entry.dateEntered);
+        ContentValues[] valueSet = new ContentValues[entries.size()];
+        for (int i = 0; i < entries.size(); i++) {
+            valueSet[i] = entries.get(i).toValues();
         }
+
+        getContentResolver().bulkInsert(EntriesTable.CONTENT_URI, valueSet);
     }
 }
