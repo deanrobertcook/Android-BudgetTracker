@@ -234,6 +234,7 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
         }
         categorySpinnerAdapter.addAll(categories);
 
+
         if (lastSelectedCategory != null) {
             int lastSelectedCategoryNewPosition = categorySpinnerAdapter.getPosition
                     (lastSelectedCategory);
@@ -254,12 +255,20 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
 
         private List<Category> categories;
 
+        private List<Comparator<Category>> comparators;
+        private final int FREQUENCY_SORT_SIZE = 10;
+
         public CategorySpinnerAdapter(Context context, int resource) {
             super(context, resource);
+            comparators = new ArrayList<>();
+            comparators.add(new FrequencyComparator());
+            comparators.add(new AlphabeticalComparator());
         }
 
         public void addAll(List<Category> categories) {
             this.categories = categories;
+            int[] sortSizes = {FREQUENCY_SORT_SIZE, categories.size() - 1};
+            sortCategories(comparators, sortSizes);
             super.clear();
             super.addAll(getCategoryNames());
             super.notifyDataSetChanged();
@@ -274,11 +283,30 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
             return super.getPosition(category.name);
         }
 
-        public void sortCategories(Comparator<Category> comparator) {
-            Collections.sort(categories, comparator);
+        /**
+         *
+         */
+        public void sortCategories(List<Comparator<Category>> comparators, int[] sizes) {
+            if (comparators.size() != sizes.length) {
+                throw new RuntimeException("The number of comparators and sizes of sublists must " +
+                        "match");
+            }
+
+            List<Category> finalSortedList = new ArrayList<>();
+
+            for (int i = 0; i < comparators.size(); i++) {
+                finalSortedList.addAll(generateSortedSublist(comparators.get(i), sizes[i]));
+            }
+            categories = finalSortedList;
+
             super.clear();
             super.addAll(getCategoryNames());
             super.notifyDataSetChanged();
+        }
+
+        public List<Category> generateSortedSublist(Comparator<Category> comparator, int size) {
+            Collections.sort(categories, comparator);
+            return new ArrayList<>(categories.subList(0, size));
         }
 
         private List<String> getCategoryNames() {
@@ -299,5 +327,21 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
         public void sort(Comparator<? super String> comparator) {
             //prevent sorting of the parent class
         }
+
+        private class FrequencyComparator implements Comparator<Category> {
+            @Override
+            public int compare(Category lhs, Category rhs) {
+                return (int) (lhs.frequency - rhs.frequency);
+            }
+        }
+
+        private class AlphabeticalComparator implements Comparator<Category> {
+            @Override
+            public int compare(Category lhs, Category rhs) {
+                return lhs.name.compareTo(rhs.name);
+            }
+        }
     }
+
+
 }
