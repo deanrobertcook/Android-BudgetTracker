@@ -1,0 +1,1988 @@
+[
+  {
+    "amount": 360,
+    "categoryName": "burritos",
+    "dateEntered": "2015-08-02",
+    "id": 1
+  },
+  {
+    "amount": 350,
+    "categoryName": "chinese",
+    "dateEntered": "2015-08-02",
+    "id": 2
+  },
+  {
+    "amount": 250,
+    "categoryName": "coffee",
+    "dateEntered": "2015-08-02",
+    "id": 3
+  },
+  {
+    "amount": 1200,
+    "categoryName": "climbing",
+    "dateEntered": "2015-08-02",
+    "id": 4
+  },
+  {
+    "amount": 180,
+    "categoryName": "bread",
+    "dateEntered": "2015-08-01",
+    "id": 5
+  },
+  {
+    "amount": 329,
+    "categoryName": "salmon",
+    "dateEntered": "2015-08-01",
+    "id": 6
+  },
+  {
+    "amount": 99,
+    "categoryName": "salami",
+    "dateEntered": "2015-08-01",
+    "id": 8
+  },
+  {
+    "amount": 118,
+    "categoryName": "mango ayran",
+    "dateEntered": "2015-08-01",
+    "id": 9
+  },
+  {
+    "amount": 2200,
+    "categoryName": "breakfast",
+    "dateEntered": "2015-08-01",
+    "id": 10
+  },
+  {
+    "amount": 299,
+    "categoryName": "mouthwash",
+    "dateEntered": "2015-07-31",
+    "id": 11
+  },
+  {
+    "amount": 140,
+    "categoryName": "bread",
+    "dateEntered": "2015-07-31",
+    "id": 12
+  },
+  {
+    "amount": 329,
+    "categoryName": "salmon",
+    "dateEntered": "2015-07-31",
+    "id": 13
+  },
+  {
+    "amount": 1000,
+    "categoryName": "frank\u0027s",
+    "dateEntered": "2015-07-28",
+    "id": 15
+  },
+  {
+    "amount": 640,
+    "categoryName": "beer",
+    "dateEntered": "2015-07-29",
+    "id": 16
+  },
+  {
+    "amount": 350,
+    "categoryName": "beer",
+    "dateEntered": "2015-07-29",
+    "id": 17
+  },
+  {
+    "amount": 360,
+    "categoryName": "burritos",
+    "dateEntered": "2015-07-29",
+    "id": 18
+  },
+  {
+    "amount": 119,
+    "categoryName": "cream cheese",
+    "dateEntered": "2015-07-31",
+    "id": 19
+  },
+  {
+    "amount": 330,
+    "categoryName": "döner",
+    "dateEntered": "2015-08-03",
+    "id": 21
+  },
+  {
+    "amount": 135,
+    "categoryName": "bread",
+    "dateEntered": "2015-08-03",
+    "id": 22
+  },
+  {
+    "amount": 1200,
+    "categoryName": "climbing",
+    "dateEntered": "2015-08-04",
+    "id": 24
+  },
+  {
+    "amount": 118,
+    "categoryName": "mango ayran",
+    "dateEntered": "2015-08-04",
+    "id": 25
+  },
+  {
+    "amount": 200,
+    "categoryName": "soft drink",
+    "dateEntered": "2015-08-04",
+    "id": 26
+  },
+  {
+    "amount": 720,
+    "categoryName": "beer",
+    "dateEntered": "2015-08-04",
+    "id": 27
+  },
+  {
+    "amount": 120,
+    "categoryName": "mango ayran",
+    "dateEntered": "2015-08-05",
+    "id": 28
+  },
+  {
+    "amount": 1000,
+    "categoryName": "frank\u0027s",
+    "dateEntered": "2015-08-05",
+    "id": 30
+  },
+  {
+    "amount": 750,
+    "categoryName": "breakfast",
+    "dateEntered": "2015-08-06",
+    "id": 32
+  },
+  {
+    "amount": 2870,
+    "categoryName": "taxis",
+    "dateEntered": "2015-08-05",
+    "id": 33
+  },
+  {
+    "amount": 350,
+    "categoryName": "schwarma",
+    "dateEntered": "2015-08-06",
+    "id": 34
+  },
+  {
+    "amount": 4300,
+    "categoryName": "club entry",
+    "dateEntered": "2015-08-07",
+    "id": 35
+  },
+  {
+    "amount": 1200,
+    "categoryName": "beer",
+    "dateEntered": "2015-08-07",
+    "id": 36
+  },
+  {
+    "amount": 200,
+    "categoryName": "miscellaneous",
+    "dateEntered": "2015-08-07",
+    "id": 37
+  },
+  {
+    "amount": 500,
+    "categoryName": "döner",
+    "dateEntered": "2015-08-07",
+    "id": 38
+  },
+  {
+    "amount": 538,
+    "categoryName": "subway",
+    "dateEntered": "2015-08-09",
+    "id": 39
+  },
+  {
+    "amount": 1150,
+    "categoryName": "climbing",
+    "dateEntered": "2015-08-09",
+    "id": 40
+  },
+  {
+    "amount": 520,
+    "categoryName": "coffee",
+    "dateEntered": "2015-08-09",
+    "id": 41
+  },
+  {
+    "amount": 320,
+    "categoryName": "döner",
+    "dateEntered": "2015-08-09",
+    "id": 42
+  },
+  {
+    "amount": 135,
+    "categoryName": "bread",
+    "dateEntered": "2015-08-10",
+    "id": 43
+  },
+  {
+    "amount": 299,
+    "categoryName": "nut mix",
+    "dateEntered": "2015-08-10",
+    "id": 44
+  },
+  {
+    "amount": 115,
+    "categoryName": "chicken",
+    "dateEntered": "2015-08-10",
+    "id": 45
+  },
+  {
+    "amount": 350,
+    "categoryName": "schwarma",
+    "dateEntered": "2015-08-10",
+    "id": 46
+  },
+  {
+    "amount": 3700,
+    "categoryName": "spirits",
+    "dateEntered": "2015-08-10",
+    "id": 47
+  },
+  {
+    "amount": 580,
+    "categoryName": "beer",
+    "dateEntered": "2015-08-10",
+    "id": 48
+  },
+  {
+    "amount": 2000,
+    "categoryName": "wine",
+    "dateEntered": "2015-08-11",
+    "id": 49
+  },
+  {
+    "amount": 700,
+    "categoryName": "water",
+    "dateEntered": "2015-08-11",
+    "id": 50
+  },
+  {
+    "amount": 400,
+    "categoryName": "schwarma",
+    "dateEntered": "2015-08-12",
+    "id": 51
+  },
+  {
+    "amount": 350,
+    "categoryName": "chinese",
+    "dateEntered": "2015-08-13",
+    "id": 52
+  },
+  {
+    "amount": 340,
+    "categoryName": "beer",
+    "dateEntered": "2015-08-13",
+    "id": 53
+  },
+  {
+    "amount": 140,
+    "categoryName": "bread",
+    "dateEntered": "2015-08-14",
+    "id": 54
+  },
+  {
+    "amount": 329,
+    "categoryName": "salmon",
+    "dateEntered": "2015-08-14",
+    "id": 55
+  },
+  {
+    "amount": 1800,
+    "categoryName": "taxis",
+    "dateEntered": "2015-08-14",
+    "id": 56
+  },
+  {
+    "amount": 205,
+    "categoryName": "sandwiches",
+    "dateEntered": "2015-08-16",
+    "id": 61
+  },
+  {
+    "amount": 205,
+    "categoryName": "coffee",
+    "dateEntered": "2015-08-16",
+    "id": 62
+  },
+  {
+    "amount": 360,
+    "categoryName": "burritos",
+    "dateEntered": "2015-08-15",
+    "id": 63
+  },
+  {
+    "amount": 195,
+    "categoryName": "milk",
+    "dateEntered": "2015-08-16",
+    "id": 64
+  },
+  {
+    "amount": 550,
+    "categoryName": "indian",
+    "dateEntered": "2015-08-16",
+    "id": 65
+  },
+  {
+    "amount": 560,
+    "categoryName": "beer",
+    "dateEntered": "2015-08-16",
+    "id": 66
+  },
+  {
+    "amount": 249,
+    "categoryName": "avacado",
+    "dateEntered": "2015-08-17",
+    "id": 67
+  },
+  {
+    "amount": 180,
+    "categoryName": "bread",
+    "dateEntered": "2015-08-17",
+    "id": 68
+  },
+  {
+    "amount": 88,
+    "categoryName": "cream cheese",
+    "dateEntered": "2015-08-17",
+    "id": 69
+  },
+  {
+    "amount": 329,
+    "categoryName": "salmon",
+    "dateEntered": "2015-08-17",
+    "id": 70
+  },
+  {
+    "amount": 60,
+    "categoryName": "mango ayran",
+    "dateEntered": "2015-08-18",
+    "id": 71
+  },
+  {
+    "amount": 1000,
+    "categoryName": "frank\u0027s",
+    "dateEntered": "2015-08-18",
+    "id": 72
+  },
+  {
+    "amount": 149,
+    "categoryName": "deodorant",
+    "dateEntered": "2015-08-18",
+    "id": 73
+  },
+  {
+    "amount": 2500,
+    "categoryName": "lunch",
+    "dateEntered": "2015-08-19",
+    "id": 76
+  },
+  {
+    "amount": 1000,
+    "categoryName": "frank\u0027s",
+    "dateEntered": "2015-08-19",
+    "id": 77
+  },
+  {
+    "amount": 189,
+    "categoryName": "juice",
+    "dateEntered": "2015-08-19",
+    "id": 78
+  },
+  {
+    "amount": 360,
+    "categoryName": "burritos",
+    "dateEntered": "2015-08-20",
+    "id": 79
+  },
+  {
+    "amount": 350,
+    "categoryName": "schwarma",
+    "dateEntered": "2015-08-20",
+    "id": 80
+  },
+  {
+    "amount": 140,
+    "categoryName": "bread",
+    "dateEntered": "2015-08-21",
+    "id": 81
+  },
+  {
+    "amount": 88,
+    "categoryName": "cream cheese",
+    "dateEntered": "2015-08-21",
+    "id": 82
+  },
+  {
+    "amount": 329,
+    "categoryName": "salmon",
+    "dateEntered": "2015-08-21",
+    "id": 83
+  },
+  {
+    "amount": 179,
+    "categoryName": "chicken",
+    "dateEntered": "2015-08-21",
+    "id": 84
+  },
+  {
+    "amount": 118,
+    "categoryName": "mango ayran",
+    "dateEntered": "2015-08-21",
+    "id": 85
+  },
+  {
+    "amount": 283,
+    "categoryName": "avacado",
+    "dateEntered": "2015-08-21",
+    "id": 86
+  },
+  {
+    "amount": 710,
+    "categoryName": "döner",
+    "dateEntered": "2015-08-22",
+    "id": 87
+  },
+  {
+    "amount": 1600,
+    "categoryName": "taxis",
+    "dateEntered": "2015-08-22",
+    "id": 88
+  },
+  {
+    "amount": 320,
+    "categoryName": "crepes",
+    "dateEntered": "2015-08-22",
+    "id": 89
+  },
+  {
+    "amount": 2000,
+    "categoryName": "spirits",
+    "dateEntered": "2015-08-21",
+    "id": 90
+  },
+  {
+    "amount": 500,
+    "categoryName": "coffee",
+    "dateEntered": "2015-08-22",
+    "id": 91
+  },
+  {
+    "amount": 360,
+    "categoryName": "burritos",
+    "dateEntered": "2015-08-23",
+    "id": 92
+  },
+  {
+    "amount": 100,
+    "categoryName": "public toilets",
+    "dateEntered": "2015-08-22",
+    "id": 93
+  },
+  {
+    "amount": 79,
+    "categoryName": "cream cheese",
+    "dateEntered": "2015-08-22",
+    "id": 94
+  },
+  {
+    "amount": 99,
+    "categoryName": "chicken",
+    "dateEntered": "2015-08-22",
+    "id": 95
+  },
+  {
+    "amount": 55,
+    "categoryName": "milk",
+    "dateEntered": "2015-08-22",
+    "id": 96
+  },
+  {
+    "amount": 140,
+    "categoryName": "bread",
+    "dateEntered": "2015-08-22",
+    "id": 97
+  },
+  {
+    "amount": 7,
+    "categoryName": "plastic bags",
+    "dateEntered": "2015-08-22",
+    "id": 98
+  },
+  {
+    "amount": 70,
+    "categoryName": "bread",
+    "dateEntered": "2015-08-24",
+    "id": 99
+  },
+  {
+    "amount": 249,
+    "categoryName": "avacado",
+    "dateEntered": "2015-08-24",
+    "id": 100
+  },
+  {
+    "amount": 279,
+    "categoryName": "washing detergent",
+    "dateEntered": "2015-08-24",
+    "id": 101
+  },
+  {
+    "amount": 350,
+    "categoryName": "schwarma",
+    "dateEntered": "2015-08-24",
+    "id": 102
+  },
+  {
+    "amount": 360,
+    "categoryName": "burritos",
+    "dateEntered": "2015-08-25",
+    "id": 103
+  },
+  {
+    "amount": 380,
+    "categoryName": "pens",
+    "dateEntered": "2015-08-26",
+    "id": 104
+  },
+  {
+    "amount": 350,
+    "categoryName": "chinese",
+    "dateEntered": "2015-08-26",
+    "id": 105
+  },
+  {
+    "amount": 350,
+    "categoryName": "döner",
+    "dateEntered": "2015-08-26",
+    "id": 106
+  },
+  {
+    "amount": 1000,
+    "categoryName": "frank\u0027s",
+    "dateEntered": "2015-08-26",
+    "id": 107
+  },
+  {
+    "amount": 350,
+    "categoryName": "schwarma",
+    "dateEntered": "2015-08-27",
+    "id": 109
+  },
+  {
+    "amount": 1795,
+    "categoryName": "books",
+    "dateEntered": "2015-08-29",
+    "id": 110
+  },
+  {
+    "amount": 2290,
+    "categoryName": "guitar strings",
+    "dateEntered": "2015-08-29",
+    "id": 111
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-08-29",
+    "id": 112
+  },
+  {
+    "amount": 115,
+    "categoryName": "cream cheese",
+    "dateEntered": "2015-08-29",
+    "id": 113
+  },
+  {
+    "amount": 70,
+    "categoryName": "bread",
+    "dateEntered": "2015-08-29",
+    "id": 114
+  },
+  {
+    "amount": 59,
+    "categoryName": "mango ayran",
+    "dateEntered": "2015-08-29",
+    "id": 115
+  },
+  {
+    "amount": 89,
+    "categoryName": "chicken",
+    "dateEntered": "2015-08-29",
+    "id": 116
+  },
+  {
+    "amount": 165,
+    "categoryName": "tea",
+    "dateEntered": "2015-08-29",
+    "id": 117
+  },
+  {
+    "amount": 350,
+    "categoryName": "schwarma",
+    "dateEntered": "2015-08-30",
+    "id": 118
+  },
+  {
+    "amount": 1150,
+    "categoryName": "climbing",
+    "dateEntered": "2015-08-30",
+    "id": 119
+  },
+  {
+    "amount": 150,
+    "categoryName": "soft drinks",
+    "dateEntered": "2015-08-30",
+    "id": 120
+  },
+  {
+    "amount": 399,
+    "categoryName": "cashews",
+    "dateEntered": "2015-08-30",
+    "id": 121
+  },
+  {
+    "amount": 130,
+    "categoryName": "pencils",
+    "dateEntered": "2015-08-31",
+    "id": 122
+  },
+  {
+    "amount": 350,
+    "categoryName": "chinese",
+    "dateEntered": "2015-08-31",
+    "id": 123
+  },
+  {
+    "amount": 500,
+    "categoryName": "wire cutters",
+    "dateEntered": "2015-08-31",
+    "id": 124
+  },
+  {
+    "amount": 42500,
+    "categoryName": "rent",
+    "dateEntered": "2015-08-31",
+    "id": 125
+  },
+  {
+    "amount": 360,
+    "categoryName": "burritos",
+    "dateEntered": "2015-09-02",
+    "id": 126
+  },
+  {
+    "amount": 1600,
+    "categoryName": "beer",
+    "dateEntered": "2015-09-01",
+    "id": 127
+  },
+  {
+    "amount": 600,
+    "categoryName": "dinner",
+    "dateEntered": "2015-09-01",
+    "id": 128
+  },
+  {
+    "amount": 1000,
+    "categoryName": "frank\u0027s",
+    "dateEntered": "2015-09-01",
+    "id": 129
+  },
+  {
+    "amount": 1000,
+    "categoryName": "frank\u0027s",
+    "dateEntered": "2015-09-02",
+    "id": 130
+  },
+  {
+    "amount": 360,
+    "categoryName": "burritos",
+    "dateEntered": "2015-09-04",
+    "id": 131
+  },
+  {
+    "amount": 1100,
+    "categoryName": "climbing",
+    "dateEntered": "2015-09-05",
+    "id": 132
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-09-05",
+    "id": 133
+  },
+  {
+    "amount": 60,
+    "categoryName": "mango ayran",
+    "dateEntered": "2015-09-05",
+    "id": 134
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-09-05",
+    "id": 135
+  },
+  {
+    "amount": 1000,
+    "categoryName": "dinner",
+    "dateEntered": "2015-09-05",
+    "id": 137
+  },
+  {
+    "amount": 280,
+    "categoryName": "coffee",
+    "dateEntered": "2015-09-05",
+    "id": 138
+  },
+  {
+    "amount": 499,
+    "categoryName": "socks",
+    "dateEntered": "2015-09-05",
+    "id": 139
+  },
+  {
+    "amount": 500,
+    "categoryName": "coffee",
+    "dateEntered": "2015-09-06",
+    "id": 140
+  },
+  {
+    "amount": 300,
+    "categoryName": "chinese",
+    "dateEntered": "2015-09-06",
+    "id": 141
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-09-07",
+    "id": 142
+  },
+  {
+    "amount": 70,
+    "categoryName": "bread",
+    "dateEntered": "2015-09-07",
+    "id": 143
+  },
+  {
+    "amount": 329,
+    "categoryName": "salmon",
+    "dateEntered": "2015-09-07",
+    "id": 144
+  },
+  {
+    "amount": 119,
+    "categoryName": "cream cheese",
+    "dateEntered": "2015-09-07",
+    "id": 145
+  },
+  {
+    "amount": 850,
+    "categoryName": "burritos",
+    "dateEntered": "2015-09-08",
+    "id": 146
+  },
+  {
+    "amount": 550,
+    "categoryName": "beer",
+    "dateEntered": "2015-09-08",
+    "id": 147
+  },
+  {
+    "amount": 1000,
+    "categoryName": "frank\u0027s",
+    "dateEntered": "2015-09-08",
+    "id": 148
+  },
+  {
+    "amount": 600,
+    "categoryName": "wine",
+    "dateEntered": "2015-09-08",
+    "id": 149
+  },
+  {
+    "amount": 200,
+    "categoryName": "beer",
+    "dateEntered": "2015-09-08",
+    "id": 150
+  },
+  {
+    "amount": 350,
+    "categoryName": "schwarma",
+    "dateEntered": "2015-09-09",
+    "id": 151
+  },
+  {
+    "amount": 289,
+    "categoryName": "cereal",
+    "dateEntered": "2015-09-11",
+    "id": 152
+  },
+  {
+    "amount": 59,
+    "categoryName": "mango ayran",
+    "dateEntered": "2015-09-11",
+    "id": 153
+  },
+  {
+    "amount": 70,
+    "categoryName": "bread",
+    "dateEntered": "2015-09-08",
+    "id": 154
+  },
+  {
+    "amount": 59,
+    "categoryName": "mango ayran",
+    "dateEntered": "2015-09-08",
+    "id": 155
+  },
+  {
+    "amount": 215,
+    "categoryName": "bread",
+    "dateEntered": "2015-09-12",
+    "id": 156
+  },
+  {
+    "amount": 55,
+    "categoryName": "milk",
+    "dateEntered": "2015-09-12",
+    "id": 157
+  },
+  {
+    "amount": 219,
+    "categoryName": "peanut butter",
+    "dateEntered": "2015-09-12",
+    "id": 158
+  },
+  {
+    "amount": 259,
+    "categoryName": "coffee",
+    "dateEntered": "2015-09-12",
+    "id": 159
+  },
+  {
+    "amount": 279,
+    "categoryName": "apples",
+    "dateEntered": "2015-09-12",
+    "id": 160
+  },
+  {
+    "amount": 10,
+    "categoryName": "plastic bags",
+    "dateEntered": "2015-09-12",
+    "id": 161
+  },
+  {
+    "amount": 300,
+    "categoryName": "soft drink",
+    "dateEntered": "2015-09-12",
+    "id": 162
+  },
+  {
+    "amount": 250,
+    "categoryName": "coffee",
+    "dateEntered": "2015-09-12",
+    "id": 163
+  },
+  {
+    "amount": 360,
+    "categoryName": "burritos",
+    "dateEntered": "2015-09-12",
+    "id": 164
+  },
+  {
+    "amount": 1150,
+    "categoryName": "climbing",
+    "dateEntered": "2015-09-13",
+    "id": 165
+  },
+  {
+    "amount": 538,
+    "categoryName": "subway",
+    "dateEntered": "2015-09-13",
+    "id": 166
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-09-14",
+    "id": 167
+  },
+  {
+    "amount": 2500,
+    "categoryName": "pants",
+    "dateEntered": "2015-09-15",
+    "id": 168
+  },
+  {
+    "amount": 495,
+    "categoryName": "smoothies",
+    "dateEntered": "2015-09-15",
+    "id": 169
+  },
+  {
+    "amount": 140,
+    "categoryName": "public toilets",
+    "dateEntered": "2015-09-15",
+    "id": 170
+  },
+  {
+    "amount": 360,
+    "categoryName": "burritos",
+    "dateEntered": "2015-09-16",
+    "id": 171
+  },
+  {
+    "amount": 900,
+    "categoryName": "lunch",
+    "dateEntered": "2015-09-16",
+    "id": 172
+  },
+  {
+    "amount": 1000,
+    "categoryName": "frank\u0027s",
+    "dateEntered": "2015-09-16",
+    "id": 173
+  },
+  {
+    "amount": 560,
+    "categoryName": "train tickets",
+    "dateEntered": "2015-09-14",
+    "id": 174
+  },
+  {
+    "amount": 1900,
+    "categoryName": "shoes",
+    "dateEntered": "2015-09-19",
+    "id": 175
+  },
+  {
+    "amount": 1000,
+    "categoryName": "jump ropes",
+    "dateEntered": "2015-09-19",
+    "id": 176
+  },
+  {
+    "amount": 400,
+    "categoryName": "döner",
+    "dateEntered": "2015-09-19",
+    "id": 177
+  },
+  {
+    "amount": 350,
+    "categoryName": "crepes",
+    "dateEntered": "2015-09-19",
+    "id": 178
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-09-18",
+    "id": 179
+  },
+  {
+    "amount": 350,
+    "categoryName": "chinese",
+    "dateEntered": "2015-09-17",
+    "id": 180
+  },
+  {
+    "amount": 320,
+    "categoryName": "wine",
+    "dateEntered": "2015-09-19",
+    "id": 181
+  },
+  {
+    "amount": 300,
+    "categoryName": "dinner",
+    "dateEntered": "2015-09-19",
+    "id": 182
+  },
+  {
+    "amount": 340,
+    "categoryName": "beer",
+    "dateEntered": "2015-09-19",
+    "id": 183
+  },
+  {
+    "amount": 300,
+    "categoryName": "beer",
+    "dateEntered": "2015-09-19",
+    "id": 184
+  },
+  {
+    "amount": 490,
+    "categoryName": "beer",
+    "dateEntered": "2015-09-19",
+    "id": 185
+  },
+  {
+    "amount": 300,
+    "categoryName": "döner",
+    "dateEntered": "2015-09-19",
+    "id": 186
+  },
+  {
+    "amount": 350,
+    "categoryName": "schwarma",
+    "dateEntered": "2015-09-20",
+    "id": 187
+  },
+  {
+    "amount": 120,
+    "categoryName": "mango ayran",
+    "dateEntered": "2015-09-20",
+    "id": 188
+  },
+  {
+    "amount": 260,
+    "categoryName": "pencils",
+    "dateEntered": "2015-09-19",
+    "id": 190
+  },
+  {
+    "amount": 140,
+    "categoryName": "erasers",
+    "dateEntered": "2015-09-19",
+    "id": 191
+  },
+  {
+    "amount": 220,
+    "categoryName": "sketch books",
+    "dateEntered": "2015-09-19",
+    "id": 192
+  },
+  {
+    "amount": 360,
+    "categoryName": "burritos",
+    "dateEntered": "2015-09-21",
+    "id": 193
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-09-21",
+    "id": 194
+  },
+  {
+    "amount": 350,
+    "categoryName": "döner",
+    "dateEntered": "2015-09-22",
+    "id": 195
+  },
+  {
+    "amount": 150,
+    "categoryName": "mango ayran",
+    "dateEntered": "2015-09-22",
+    "id": 196
+  },
+  {
+    "amount": 1000,
+    "categoryName": "frank\u0027s",
+    "dateEntered": "2015-09-22",
+    "id": 197
+  },
+  {
+    "amount": 690,
+    "categoryName": "wine",
+    "dateEntered": "2015-09-22",
+    "id": 198
+  },
+  {
+    "amount": 70,
+    "categoryName": "bread",
+    "dateEntered": "2015-09-22",
+    "id": 199
+  },
+  {
+    "amount": 289,
+    "categoryName": "cereal",
+    "dateEntered": "2015-09-22",
+    "id": 200
+  },
+  {
+    "amount": 50,
+    "categoryName": "donations",
+    "dateEntered": "2015-09-24",
+    "id": 201
+  },
+  {
+    "amount": 1050,
+    "categoryName": "beer",
+    "dateEntered": "2015-09-24",
+    "id": 202
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-09-24",
+    "id": 203
+  },
+  {
+    "amount": 450,
+    "categoryName": "chinese",
+    "dateEntered": "2015-09-24",
+    "id": 204
+  },
+  {
+    "amount": 290,
+    "categoryName": "döner",
+    "dateEntered": "2015-09-26",
+    "id": 205
+  },
+  {
+    "amount": 800,
+    "categoryName": "döner",
+    "dateEntered": "2015-09-26",
+    "id": 206
+  },
+  {
+    "amount": 800,
+    "categoryName": "club entry",
+    "dateEntered": "2015-09-26",
+    "id": 207
+  },
+  {
+    "amount": 280,
+    "categoryName": "beer",
+    "dateEntered": "2015-09-26",
+    "id": 208
+  },
+  {
+    "amount": 540,
+    "categoryName": "börek",
+    "dateEntered": "2015-09-28",
+    "id": 209
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-09-29",
+    "id": 210
+  },
+  {
+    "amount": 67,
+    "categoryName": "bananas",
+    "dateEntered": "2015-09-26",
+    "id": 211
+  },
+  {
+    "amount": 110,
+    "categoryName": "milk",
+    "dateEntered": "2015-09-26",
+    "id": 212
+  },
+  {
+    "amount": 205,
+    "categoryName": "bread",
+    "dateEntered": "2015-09-26",
+    "id": 213
+  },
+  {
+    "amount": 149,
+    "categoryName": "peanuts",
+    "dateEntered": "2015-09-26",
+    "id": 214
+  },
+  {
+    "amount": 175,
+    "categoryName": "cereal",
+    "dateEntered": "2015-09-26",
+    "id": 215
+  },
+  {
+    "amount": 10,
+    "categoryName": "plastic bags",
+    "dateEntered": "2015-09-26",
+    "id": 216
+  },
+  {
+    "amount": 70,
+    "categoryName": "bread",
+    "dateEntered": "2015-09-30",
+    "id": 217
+  },
+  {
+    "amount": 329,
+    "categoryName": "salmon",
+    "dateEntered": "2015-09-30",
+    "id": 218
+  },
+  {
+    "amount": 199,
+    "categoryName": "avacado",
+    "dateEntered": "2015-09-30",
+    "id": 219
+  },
+  {
+    "amount": 59,
+    "categoryName": "mango ayran",
+    "dateEntered": "2015-09-30",
+    "id": 220
+  },
+  {
+    "amount": 42500,
+    "categoryName": "rent",
+    "dateEntered": "2015-09-30",
+    "id": 221
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-10-01",
+    "id": 222
+  },
+  {
+    "amount": 70,
+    "categoryName": "bread",
+    "dateEntered": "2015-10-01",
+    "id": 223
+  },
+  {
+    "amount": 1000,
+    "categoryName": "frank\u0027s",
+    "dateEntered": "2015-10-01",
+    "id": 224
+  },
+  {
+    "amount": 1200,
+    "categoryName": "cocktails",
+    "dateEntered": "2015-10-03",
+    "id": 225
+  },
+  {
+    "amount": 300,
+    "categoryName": "beer",
+    "dateEntered": "2015-10-02",
+    "id": 226
+  },
+  {
+    "amount": 250,
+    "categoryName": "beer",
+    "dateEntered": "2015-10-02",
+    "id": 227
+  },
+  {
+    "amount": 300,
+    "categoryName": "beer",
+    "dateEntered": "2015-10-02",
+    "id": 228
+  },
+  {
+    "amount": 50,
+    "categoryName": "donations",
+    "dateEntered": "2015-10-03",
+    "id": 229
+  },
+  {
+    "amount": 50,
+    "categoryName": "donations",
+    "dateEntered": "2015-10-03",
+    "id": 230
+  },
+  {
+    "amount": 350,
+    "categoryName": "döner",
+    "dateEntered": "2015-10-02",
+    "id": 231
+  },
+  {
+    "amount": 50,
+    "categoryName": "donations",
+    "dateEntered": "2015-10-03",
+    "id": 232
+  },
+  {
+    "amount": 900,
+    "categoryName": "climbing",
+    "dateEntered": "2015-10-03",
+    "id": 233
+  },
+  {
+    "amount": 690,
+    "categoryName": "pizza",
+    "dateEntered": "2015-10-03",
+    "id": 234
+  },
+  {
+    "amount": 710,
+    "categoryName": "beer",
+    "dateEntered": "2015-10-03",
+    "id": 235
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-10-03",
+    "id": 236
+  },
+  {
+    "amount": 260,
+    "categoryName": "ice cream",
+    "dateEntered": "2015-10-03",
+    "id": 237
+  },
+  {
+    "amount": 230,
+    "categoryName": "coffee",
+    "dateEntered": "2015-10-03",
+    "id": 238
+  },
+  {
+    "amount": 50,
+    "categoryName": "donations",
+    "dateEntered": "2015-10-04",
+    "id": 239
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-10-04",
+    "id": 240
+  },
+  {
+    "amount": 360,
+    "categoryName": "burritos",
+    "dateEntered": "2015-10-04",
+    "id": 241
+  },
+  {
+    "amount": 350,
+    "categoryName": "crepes",
+    "dateEntered": "2015-10-04",
+    "id": 242
+  },
+  {
+    "amount": 140,
+    "categoryName": "coffee",
+    "dateEntered": "2015-10-04",
+    "id": 243
+  },
+  {
+    "amount": 50,
+    "categoryName": "donations",
+    "dateEntered": "2015-10-04",
+    "id": 244
+  },
+  {
+    "amount": 389,
+    "categoryName": "burgers",
+    "dateEntered": "2015-10-04",
+    "id": 245
+  },
+  {
+    "amount": 490,
+    "categoryName": "smoxey\u0027s",
+    "dateEntered": "2015-10-05",
+    "id": 246
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-10-05",
+    "id": 247
+  },
+  {
+    "amount": 50,
+    "categoryName": "donations",
+    "dateEntered": "2015-10-05",
+    "id": 248
+  },
+  {
+    "amount": 50,
+    "categoryName": "donations",
+    "dateEntered": "2015-10-07",
+    "id": 249
+  },
+  {
+    "amount": 1000,
+    "categoryName": "frank\u0027s",
+    "dateEntered": "2015-10-06",
+    "id": 252
+  },
+  {
+    "amount": 359,
+    "categoryName": "smoothie",
+    "dateEntered": "2015-10-06",
+    "id": 253
+  },
+  {
+    "amount": 360,
+    "categoryName": "burritos",
+    "dateEntered": "2015-10-07",
+    "id": 254
+  },
+  {
+    "amount": 1000,
+    "categoryName": "presents",
+    "dateEntered": "2015-10-07",
+    "id": 255
+  },
+  {
+    "amount": 100,
+    "categoryName": "donations",
+    "dateEntered": "2015-10-08",
+    "id": 256
+  },
+  {
+    "amount": 650,
+    "categoryName": "burritos",
+    "dateEntered": "2015-10-08",
+    "id": 257
+  },
+  {
+    "amount": 350,
+    "categoryName": "gozleme",
+    "dateEntered": "2015-10-08",
+    "id": 258
+  },
+  {
+    "amount": 1000,
+    "categoryName": "frank\u0027s",
+    "dateEntered": "2015-10-07",
+    "id": 259
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-10-07",
+    "id": 260
+  },
+  {
+    "amount": 70,
+    "categoryName": "donations",
+    "dateEntered": "2015-10-09",
+    "id": 261
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-10-09",
+    "id": 262
+  },
+  {
+    "amount": 350,
+    "categoryName": "schwarma",
+    "dateEntered": "2015-10-09",
+    "id": 263
+  },
+  {
+    "amount": 60,
+    "categoryName": "donations",
+    "dateEntered": "2015-10-09",
+    "id": 264
+  },
+  {
+    "amount": 50,
+    "categoryName": "bananas",
+    "dateEntered": "2015-10-10",
+    "id": 265
+  },
+  {
+    "amount": 59,
+    "categoryName": "milk",
+    "dateEntered": "2015-10-10",
+    "id": 266
+  },
+  {
+    "amount": 99,
+    "categoryName": "chocolate",
+    "dateEntered": "2015-10-10",
+    "id": 267
+  },
+  {
+    "amount": 325,
+    "categoryName": "toilet paper",
+    "dateEntered": "2015-10-10",
+    "id": 268
+  },
+  {
+    "amount": 95,
+    "categoryName": "shower gel",
+    "dateEntered": "2015-10-10",
+    "id": 269
+  },
+  {
+    "amount": 115,
+    "categoryName": "toilet freshener",
+    "dateEntered": "2015-10-10",
+    "id": 270
+  },
+  {
+    "amount": 75,
+    "categoryName": "toilet cleaner",
+    "dateEntered": "2015-10-10",
+    "id": 271
+  },
+  {
+    "amount": 179,
+    "categoryName": "candles",
+    "dateEntered": "2015-10-10",
+    "id": 272
+  },
+  {
+    "amount": 1500,
+    "categoryName": "beer",
+    "dateEntered": "2015-10-10",
+    "id": 273
+  },
+  {
+    "amount": 1400,
+    "categoryName": "beer",
+    "dateEntered": "2015-10-10",
+    "id": 274
+  },
+  {
+    "amount": 650,
+    "categoryName": "burritos",
+    "dateEntered": "2015-10-10",
+    "id": 275
+  },
+  {
+    "amount": 1100,
+    "categoryName": "burgers",
+    "dateEntered": "2015-10-11",
+    "id": 276
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-10-11",
+    "id": 277
+  },
+  {
+    "amount": 2298,
+    "categoryName": "guitar strings",
+    "dateEntered": "2015-10-10",
+    "id": 280
+  },
+  {
+    "amount": 1000,
+    "categoryName": "burgers",
+    "dateEntered": "2015-10-14",
+    "id": 281
+  },
+  {
+    "amount": 1000,
+    "categoryName": "frank\u0027s",
+    "dateEntered": "2015-10-14",
+    "id": 282
+  },
+  {
+    "amount": 1000,
+    "categoryName": "frank\u0027s",
+    "dateEntered": "2015-10-13",
+    "id": 283
+  },
+  {
+    "amount": 360,
+    "categoryName": "burritos",
+    "dateEntered": "2015-10-13",
+    "id": 284
+  },
+  {
+    "amount": 150,
+    "categoryName": "donations",
+    "dateEntered": "2015-10-12",
+    "id": 285
+  },
+  {
+    "amount": 350,
+    "categoryName": "chinese",
+    "dateEntered": "2015-10-12",
+    "id": 286
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-10-12",
+    "id": 287
+  },
+  {
+    "amount": 100,
+    "categoryName": "donations",
+    "dateEntered": "2015-10-14",
+    "id": 288
+  },
+  {
+    "amount": 70,
+    "categoryName": "donations",
+    "dateEntered": "2015-10-15",
+    "id": 289
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-10-14",
+    "id": 290
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-10-16",
+    "id": 291
+  },
+  {
+    "amount": 360,
+    "categoryName": "burritos",
+    "dateEntered": "2015-10-15",
+    "id": 292
+  },
+  {
+    "amount": 650,
+    "categoryName": "turkish",
+    "dateEntered": "2015-10-15",
+    "id": 293
+  },
+  {
+    "amount": 100,
+    "categoryName": "donations",
+    "dateEntered": "2015-10-16",
+    "id": 295
+  },
+  {
+    "amount": 1600,
+    "categoryName": "lunch",
+    "dateEntered": "2015-10-17",
+    "id": 296
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-10-18",
+    "id": 299
+  },
+  {
+    "amount": 120,
+    "categoryName": "mango ayran",
+    "dateEntered": "2015-10-18",
+    "id": 300
+  },
+  {
+    "amount": 259,
+    "categoryName": "ciabatta",
+    "dateEntered": "2015-10-18",
+    "id": 301
+  },
+  {
+    "amount": 259,
+    "categoryName": "bagels",
+    "dateEntered": "2015-10-18",
+    "id": 302
+  },
+  {
+    "amount": 1250,
+    "categoryName": "climbing",
+    "dateEntered": "2015-10-18",
+    "id": 303
+  },
+  {
+    "amount": 250,
+    "categoryName": "coffee",
+    "dateEntered": "2015-10-18",
+    "id": 304
+  },
+  {
+    "amount": 200,
+    "categoryName": "coffee",
+    "dateEntered": "2015-10-18",
+    "id": 305
+  },
+  {
+    "amount": 350,
+    "categoryName": "crepes",
+    "dateEntered": "2015-10-18",
+    "id": 306
+  },
+  {
+    "amount": 400,
+    "categoryName": "schwarma",
+    "dateEntered": "2015-10-18",
+    "id": 307
+  },
+  {
+    "amount": 360,
+    "categoryName": "burritos",
+    "dateEntered": "2015-10-19",
+    "id": 308
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-10-19",
+    "id": 309
+  },
+  {
+    "amount": 1300,
+    "categoryName": "presents",
+    "dateEntered": "2015-10-20",
+    "id": 310
+  },
+  {
+    "amount": 2000,
+    "categoryName": "dinner",
+    "dateEntered": "2015-10-20",
+    "id": 311
+  },
+  {
+    "amount": 500,
+    "categoryName": "beer",
+    "dateEntered": "2015-10-20",
+    "id": 312
+  },
+  {
+    "amount": 7995,
+    "categoryName": "train tickets",
+    "dateEntered": "2015-10-17",
+    "id": 313
+  },
+  {
+    "amount": 60,
+    "categoryName": "mango ayran",
+    "dateEntered": "2015-10-21",
+    "id": 314
+  },
+  {
+    "amount": 100,
+    "categoryName": "donations",
+    "dateEntered": "2015-10-22",
+    "id": 315
+  },
+  {
+    "amount": 360,
+    "categoryName": "burritos",
+    "dateEntered": "2015-10-22",
+    "id": 316
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-10-22",
+    "id": 317
+  },
+  {
+    "amount": 3500,
+    "categoryName": "indian",
+    "dateEntered": "2015-10-21",
+    "id": 318
+  },
+  {
+    "amount": 360,
+    "categoryName": "burritos",
+    "dateEntered": "2015-10-24",
+    "id": 319
+  },
+  {
+    "amount": 380,
+    "categoryName": "pens",
+    "dateEntered": "2015-10-24",
+    "id": 320
+  },
+  {
+    "amount": 350,
+    "categoryName": "chinese",
+    "dateEntered": "2015-10-24",
+    "id": 321
+  },
+  {
+    "amount": 400,
+    "categoryName": "döner",
+    "dateEntered": "2015-10-25",
+    "id": 322
+  },
+  {
+    "amount": 100,
+    "categoryName": "snickers",
+    "dateEntered": "2015-10-25",
+    "id": 327
+  },
+  {
+    "amount": 450,
+    "categoryName": "bagels",
+    "dateEntered": "2015-10-25",
+    "id": 328
+  },
+  {
+    "amount": 1250,
+    "categoryName": "climbing",
+    "dateEntered": "2015-10-25",
+    "id": 329
+  },
+  {
+    "amount": 350,
+    "categoryName": "coffee",
+    "dateEntered": "2015-10-25",
+    "id": 330
+  },
+  {
+    "amount": 538,
+    "categoryName": "subway",
+    "dateEntered": "2015-10-25",
+    "id": 331
+  },
+  {
+    "amount": 3180,
+    "categoryName": "costumes",
+    "dateEntered": "2015-10-24",
+    "id": 332
+  },
+  {
+    "amount": 200,
+    "categoryName": "donations",
+    "dateEntered": "2015-10-26",
+    "id": 333
+  },
+  {
+    "amount": 395,
+    "categoryName": "coffee",
+    "dateEntered": "2015-10-27",
+    "id": 334
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-10-27",
+    "id": 335
+  },
+  {
+    "amount": 1000,
+    "categoryName": "frank\u0027s",
+    "dateEntered": "2015-10-27",
+    "id": 336
+  },
+  {
+    "amount": 300,
+    "categoryName": "coffee",
+    "dateEntered": "2015-10-28",
+    "id": 337
+  },
+  {
+    "amount": 350,
+    "categoryName": "schwarma",
+    "dateEntered": "2015-10-28",
+    "id": 338
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-10-29",
+    "id": 339
+  },
+  {
+    "amount": 300,
+    "categoryName": "pizza",
+    "dateEntered": "2015-10-30",
+    "id": 340
+  },
+  {
+    "amount": 200,
+    "categoryName": "donations",
+    "dateEntered": "2015-10-29",
+    "id": 341
+  },
+  {
+    "amount": 42500,
+    "categoryName": "rent",
+    "dateEntered": "2015-10-30",
+    "id": 342
+  },
+  {
+    "amount": 100,
+    "categoryName": "donations",
+    "dateEntered": "2015-10-30",
+    "id": 343
+  },
+  {
+    "amount": 200,
+    "categoryName": "coffee",
+    "dateEntered": "2015-10-31",
+    "id": 344
+  },
+  {
+    "amount": 350,
+    "categoryName": "chinese",
+    "dateEntered": "2015-10-31",
+    "id": 345
+  },
+  {
+    "amount": 200,
+    "categoryName": "coffee",
+    "dateEntered": "2015-10-31",
+    "id": 346
+  },
+  {
+    "amount": 250,
+    "categoryName": "cake",
+    "dateEntered": "2015-10-31",
+    "id": 347
+  },
+  {
+    "amount": 350,
+    "categoryName": "schwarma",
+    "dateEntered": "2015-10-31",
+    "id": 348
+  },
+  {
+    "amount": 1500,
+    "categoryName": "whiskey",
+    "dateEntered": "2015-10-31",
+    "id": 349
+  },
+  {
+    "amount": 380,
+    "categoryName": "döner",
+    "dateEntered": "2015-10-31",
+    "id": 350
+  },
+  {
+    "amount": 360,
+    "categoryName": "burritos",
+    "dateEntered": "2015-11-01",
+    "id": 351
+  },
+  {
+    "amount": 1200,
+    "categoryName": "climbing",
+    "dateEntered": "2015-11-01",
+    "id": 352
+  },
+  {
+    "amount": 120,
+    "categoryName": "mango ayran",
+    "dateEntered": "2015-11-01",
+    "id": 353
+  },
+  {
+    "amount": 270,
+    "categoryName": "döner",
+    "dateEntered": "2015-11-01",
+    "id": 354
+  },
+  {
+    "amount": 270,
+    "categoryName": "coffee",
+    "dateEntered": "2015-11-02",
+    "id": 355
+  },
+  {
+    "amount": 200,
+    "categoryName": "chocolate",
+    "dateEntered": "2015-11-02",
+    "id": 356
+  },
+  {
+    "amount": 1000,
+    "categoryName": "underwear",
+    "dateEntered": "2015-11-02",
+    "id": 357
+  }
+]
