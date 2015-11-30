@@ -23,23 +23,6 @@ public class FileBackupAgent  {
     private final String BACKUP_FILE = "backup.json";
     private Listener listener;
 
-    private boolean isExternalStorageWriteable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isExternalStorageReadable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) ||
-                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            return true;
-        }
-        return false;
-    }
-
     public void backupEntries(List<Entry> entries) {
         new FileWriterTask().execute(entries);
     }
@@ -53,8 +36,9 @@ public class FileBackupAgent  {
     }
 
     private class FileWriterTask extends AsyncTask<List<Entry>, Void, Void> {
+        @SafeVarargs
         @Override
-        protected Void doInBackground(List<Entry>... params) {
+        protected final Void doInBackground(List<Entry>... params) {
             List<Entry> entries = params[0];
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String entriesJson = gson.toJson(entries);
@@ -84,6 +68,11 @@ public class FileBackupAgent  {
             }
             throw new RuntimeException("External storage currently not available");
         }
+
+        private boolean isExternalStorageWriteable() {
+            String state = Environment.getExternalStorageState();
+            return Environment.MEDIA_MOUNTED.equals(state);
+        }
     }
 
     private class FileReaderTask extends AsyncTask<Void, Void, String> {
@@ -107,8 +96,6 @@ public class FileBackupAgent  {
                         line = br.readLine();
                     }
                     return sb.toString();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
@@ -122,6 +109,12 @@ public class FileBackupAgent  {
                 }
             }
             return null;
+        }
+
+        private boolean isExternalStorageReadable() {
+            String state = Environment.getExternalStorageState();
+            return Environment.MEDIA_MOUNTED.equals(state) ||
+                    Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
         }
 
         @Override

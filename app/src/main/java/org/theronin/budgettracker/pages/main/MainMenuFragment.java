@@ -1,7 +1,7 @@
 package org.theronin.budgettracker.pages.main;
 
-import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -19,9 +19,9 @@ public class MainMenuFragment extends Fragment {
     private Listener listener;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.listener = (Listener) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.listener = (Listener) context;
     }
 
     @Nullable

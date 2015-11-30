@@ -74,4 +74,16 @@ public class Category {
         double monthsPassed = (double) daysPassed / DateUtils.AVG_DAYS_IN_MONTH;
         return (long) ((double) total / monthsPassed);
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Category %s\n" +
+                        "\t id: %d\n" +
+                        "\t first entered: %s\n" +
+                        "\t total amount: %d\n" +
+                        "\t entry frequency: %d\n",
+                name, id, date, total, frequency
+        );
+    }
 }
