@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,10 +88,7 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
         amountEditText.addTextChangedListener(this);
 
         categorySpinner = (Spinner) rootView.findViewById(R.id.spn__entry_category);
-        categorySpinnerAdapter = new CategorySpinnerAdapter(getActivity(),
-                android.R.layout.simple_spinner_item);
-        categorySpinnerAdapter.setDropDownViewResource(android.R.layout
-                .simple_spinner_dropdown_item);
+        categorySpinnerAdapter = new CategorySpinnerAdapter();
         categorySpinner.setAdapter(categorySpinnerAdapter);
 
         dateTextView = (TextView) rootView.findViewById(R.id.tv__entry_date);
@@ -230,7 +228,9 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         List<Category> categories = new ArrayList<>();
         while (data.moveToNext()) {
-            categories.add(Category.fromCursor(data));
+            Category category = Category.fromCursor(data);
+            Log.d("Loading categories", category.toString());
+            categories.add(category);
         }
         categorySpinnerAdapter.addAll(categories);
 
@@ -256,22 +256,41 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
         private List<Category> categories;
 
         private List<Comparator<Category>> comparators;
+        private int[] sortSizes;
+
         private final int FREQUENCY_SORT_SIZE = 10;
 
-        public CategorySpinnerAdapter(Context context, int resource) {
-            super(context, resource);
-            comparators = new ArrayList<>();
-            comparators.add(new FrequencyComparator());
-            comparators.add(new AlphabeticalComparator());
+        private final int VIEW_TYPE_NORMAL = 0;
+        private final int VIEW_TYPE_WITH_BORDER = 1;
+
+        public CategorySpinnerAdapter() {
+            super(getActivity(), android.R.layout.simple_spinner_item);
         }
 
         public void addAll(List<Category> categories) {
             this.categories = categories;
-            int[] sortSizes = {FREQUENCY_SORT_SIZE, categories.size() - 1};
+
+            initialiseSortingBlocks();
             sortCategories(comparators, sortSizes);
+
             super.clear();
             super.addAll(getCategoryNames());
             super.notifyDataSetChanged();
+        }
+
+        private void initialiseSortingBlocks() {
+            comparators = new ArrayList<>();
+            if (categories.size() > FREQUENCY_SORT_SIZE * 2) {
+                comparators.add(new FrequencyComparator());
+                comparators.add(new AlphabeticalComparator());
+
+                sortSizes = new int[]{
+                        FREQUENCY_SORT_SIZE,
+                        categories.size() - 1};
+            } else {
+                comparators.add(new AlphabeticalComparator());
+                sortSizes = new int[]{categories.size() - 1};
+            }
         }
 
         public Category getCategory(String categoryName) {
@@ -283,13 +302,69 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
             return super.getPosition(category.name);
         }
 
+        @Override
+        public int getViewTypeCount() {
+            return 1;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            int borderIndex = 0;
+            for (int i = 0; i < sortSizes.length; i++) {
+                borderIndex += sortSizes[i];
+                if (position == borderIndex - 1
+                        && position != categories.size() - 1) {
+                    return VIEW_TYPE_WITH_BORDER;
+                }
+            }
+            return VIEW_TYPE_NORMAL;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            View itemView = null;
+            String categoryName = getItem(position);
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+
+            switch (getItemViewType(position)) {
+                case VIEW_TYPE_NORMAL:
+                    itemView = inflater.inflate(
+                            android.R.layout.simple_dropdown_item_1line,
+                            parent, false);
+                    ((TextView) itemView).setText(categoryName);
+                    break;
+                case VIEW_TYPE_WITH_BORDER:
+                    itemView = inflater.inflate(
+                            R.layout.list_item__add_entry__category_spinner_with_border,
+                            parent, false);
+                    ((TextView) itemView.findViewById(R.id.tv__add_category__spinner_drop_down)).setText(categoryName);
+                    break;
+            }
+            return itemView;
+        }
+
         /**
+         * This method takes in a list of comparators, and a list of sizes, where each size specifies
+         * how many items in the backing list that it's corresponding comparator will sort. For each
+         * different comparator, a sub-list is created from the complete backing list, and then the
+         * sub-lists for all of the different comparators are combined in order to provide us with
+         * a multiple-sorted collection of items.
          *
+         * Note, each sub list does NOT remove elements from the backing collection, so that there
+         * can be duplicates across different sub-lists.
+         * @param comparators the comparators to be applied to the backing list
+         * @param sizes the number of elements in the backing list that each comparator should sort,
+         *              where the size value at index i corresponds to some comparator in comparators
+         *              at index i.
          */
-        public void sortCategories(List<Comparator<Category>> comparators, int[] sizes) {
+        private void sortCategories(List<Comparator<Category>> comparators, int[] sizes) {
             if (comparators.size() != sizes.length) {
                 throw new RuntimeException("The number of comparators and sizes of sublists must " +
                         "match");
+            }
+
+            if (categories.size() == 0) {
+                return;
             }
 
             List<Category> finalSortedList = new ArrayList<>();
@@ -298,13 +373,9 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
                 finalSortedList.addAll(generateSortedSublist(comparators.get(i), sizes[i]));
             }
             categories = finalSortedList;
-
-            super.clear();
-            super.addAll(getCategoryNames());
-            super.notifyDataSetChanged();
         }
 
-        public List<Category> generateSortedSublist(Comparator<Category> comparator, int size) {
+        private List<Category> generateSortedSublist(Comparator<Category> comparator, int size) {
             Collections.sort(categories, comparator);
             return new ArrayList<>(categories.subList(0, size));
         }
@@ -342,6 +413,4 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
             }
         }
     }
-
-
 }
