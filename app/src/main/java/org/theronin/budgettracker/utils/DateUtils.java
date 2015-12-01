@@ -14,50 +14,38 @@ public class DateUtils {
 
     public static final int DAYS_IN_YEAR = 365;
 
-    public static String getDisplayFormattedDate(Date date) {
+    public static String getDisplayFormattedDate(long utcTime) {
         Locale locale = new Locale("en", "DE");
         SimpleDateFormat sdf;
 
-        if (daysSince(date) < DAYS_IN_YEAR) {
+        if (daysSince(utcTime) < DAYS_IN_YEAR) {
             sdf = new SimpleDateFormat("dd MMM.", locale);
         } else {
             sdf = new SimpleDateFormat("dd.MM.yy", locale);
         }
-        return sdf.format(date);
+        return sdf.format(new Date(utcTime));
     }
 
-    public static String getDisplayFormattedDate(String storageFormattedDate) {
+    public static long getUtcTimeFromStorageFormattedDate(String formattedDate) {
+        Date date = null;
         try {
-            Date date = DATE_FORMAT_FOR_STORAGE.parse(storageFormattedDate);
-            return getDisplayFormattedDate(date);
-        } catch (ParseException e) {
-            throw new RuntimeException("The date formatter expected a date of the format " + DATE_FORMAT_FOR_STORAGE.toPattern());
-        }
-    }
-
-    public static String getStorageFormattedDate(Date date) {
-        return DATE_FORMAT_FOR_STORAGE.format(date);
-    }
-
-    public static String getStorageFormattedCurrentDate() {
-        return getStorageFormattedDate(new Date());
-    }
-
-    public static long daysSince(String date) {
-        try {
-            Date startDate = DATE_FORMAT_FOR_STORAGE.parse(date);
-            return daysSince(startDate);
+            date = DATE_FORMAT_FOR_STORAGE.parse(formattedDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return -1;
+        return date == null ? 0 : date.getTime();
     }
 
-    public static long daysSince(Date date) {
-        Date today = new Date(System.currentTimeMillis());
-        long diff = today.getTime() - date.getTime();
+    public static String getStorageFormattedDate(long utcTime) {
+        return DATE_FORMAT_FOR_STORAGE.format(new Date(utcTime));
+    }
+
+    public static String getStorageFormattedCurrentDate() {
+        return getStorageFormattedDate(new Date().getTime());
+    }
+
+    public static long daysSince(long utcTime) {
+        long diff = System.currentTimeMillis() - utcTime;
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
-
-
 }

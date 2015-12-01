@@ -55,7 +55,7 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
     private Category lastSelectedCategory;
 
     private TextView dateTextView;
-    private Date currentSelectedDate;
+    private long currentSelectedUtcTime;
 
     private EditText amountEditText;
     private String currentAmountText;
@@ -92,7 +92,7 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
         categorySpinner.setAdapter(categorySpinnerAdapter);
 
         dateTextView = (TextView) rootView.findViewById(R.id.tv__entry_date);
-        setDateTextView(new Date());
+        setDateTextView(new Date().getTime());
         dateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,9 +119,9 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
         return MoneyUtils.convertDisplayAmountToCents(displayAmount);
     }
 
-    private void setDateTextView(Date date) {
-        this.currentSelectedDate = date;
-        dateTextView.setText(DateUtils.getDisplayFormattedDate(date));
+    private void setDateTextView(long utcTime) {
+        this.currentSelectedUtcTime = utcTime;
+        dateTextView.setText(DateUtils.getDisplayFormattedDate(currentSelectedUtcTime));
     }
 
     private void dateSpinnerClicked() {
@@ -139,11 +139,10 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
         }
 
         lastSelectedCategory = categorySpinnerAdapter.getCategory(categorySpinner.getSelectedItem().toString());
-        String dateEnteredVal = DateUtils.getStorageFormattedDate(currentSelectedDate);
 
         ContentValues values = new ContentValues();
         values.put(EntriesTable.COL_CATEGORY_ID, lastSelectedCategory.id);
-        values.put(EntriesTable.COL_DATE_ENTERED, dateEnteredVal);
+        values.put(EntriesTable.COL_DATE_ENTERED, currentSelectedUtcTime);
         values.put(EntriesTable.COL_AMOUNT_CENTS, amount);
 
         Uri uri = getActivity().getContentResolver().insert(
@@ -176,8 +175,8 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
     }
 
     @Override
-    public void onDateSelected(Date date) {
-        setDateTextView(date);
+    public void onDateSelected(long utcTime) {
+        setDateTextView(utcTime);
     }
 
     @Override

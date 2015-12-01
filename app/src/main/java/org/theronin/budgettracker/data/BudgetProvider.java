@@ -8,15 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
+import org.theronin.budgettracker.data.BudgetContract.CategoriesTable;
 import org.theronin.budgettracker.data.BudgetContract.CategoriesView;
 import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
 import org.theronin.budgettracker.model.Entry;
-import org.theronin.budgettracker.utils.DateUtils;
-
-import java.util.Date;
-
-import static org.theronin.budgettracker.data.BudgetProvider.Queries.queryCategoryById;
-import static org.theronin.budgettracker.data.BudgetProvider.Queries.queryEntryById;
 
 public class BudgetProvider extends ContentProvider {
 
@@ -162,59 +157,24 @@ public class BudgetProvider extends ContentProvider {
 
     private long insertCategory(ContentValues values) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        long categoryId = db.insert(CategoriesView.VIEW_NAME, null, values);
-        getContext().getContentResolver().notifyChange(CategoriesView.CONTENT_URI, null);
+        long categoryId = db.insert(CategoriesTable.TABLE_NAME, null, values);
+        notifyChanges();
         return categoryId;
+    }
+
+    private void notifyChanges() {
+        getContext().getContentResolver().notifyChange(EntriesTable.CONTENT_URI, null);
+        getContext().getContentResolver().notifyChange(CategoriesView.CONTENT_URI, null);
     }
 
     private Uri insertEntry(ContentValues values) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         long entryId = db.insert(EntriesTable.TABLE_NAME, null, values);
-        updateCategoryOnInsertEntry(values);
-
-        getContext().getContentResolver().notifyChange(EntriesTable.CONTENT_URI, null);
-        getContext().getContentResolver().notifyChange(CategoriesView.CONTENT_URI, null);
+        notifyChanges();
 
         return EntriesTable.CONTENT_URI.buildUpon().appendPath(Long.toString(entryId))
                 .build();
-    }
-
-    /**
-     * Updates the earliest Entry date, the Entry frequency and the total sum amount of all
-     * Entries for the given categoryId.
-     *
-     * @param entryValues
-     * @return
-     */
-    private void updateCategoryOnInsertEntry(ContentValues entryValues) {
-        String categoryId = entryValues.getAsString(EntriesTable.COL_CATEGORY_ID);
-        String entryDate = entryValues.getAsString(EntriesTable.COL_DATE_ENTERED);
-        Long entryAmount = entryValues.getAsLong(EntriesTable.COL_AMOUNT_CENTS);
-
-        Cursor cursor = queryCategoryById(dbHelper.getReadableDatabase(), categoryId);
-        cursor.moveToFirst();
-        String earliestDate = cursor.getString(CategoriesView.INDEX_FIRST_ENTRY_DATE);
-        int entryFrequency = cursor.getInt(CategoriesView.INDEX_ENTRY_FREQUENCY);
-        long totalAmount = cursor.getLong(CategoriesView.INDEX_TOTAL_AMOUNT);
-        cursor.close();
-
-        ContentValues categoryValues = new ContentValues();
-        if (entryDate.compareTo(earliestDate) < 0) {
-            categoryValues.put(CategoriesView.COL_FIRST_ENTRY_DATE, entryDate);
-        }
-        categoryValues.put(CategoriesView.COL_ENTRY_FREQUENCY, entryFrequency + 1);
-        categoryValues.put(CategoriesView.COL_TOTAL_AMOUNT, totalAmount + entryAmount);
-
-        updateCategory(categoryValues, categoryId);
-    }
-
-    private void updateCategory(ContentValues values, String categoryId) {
-        dbHelper.getWritableDatabase().update(
-                CategoriesView.VIEW_NAME,
-                values,
-                CategoriesView._ID + " = ?",
-                new String[]{categoryId});
     }
 
     @Override
@@ -231,78 +191,12 @@ public class BudgetProvider extends ContentProvider {
     }
 
     private int deleteEntry(String entryId) {
-        ContentValues entryToBeDeleted = fetchEntryToBeDeleted(entryId);
         int numDeleted = dbHelper.getWritableDatabase().delete(
                 EntriesTable.TABLE_NAME,
                 EntriesTable._ID + " = ?",
                 new String[]{entryId});
-        updateCategoryOnDeleteEntry(entryToBeDeleted);
-        getContext().getContentResolver().notifyChange(EntriesTable.CONTENT_URI, null);
+        notifyChanges();
         return numDeleted;
-    }
-
-    private ContentValues fetchEntryToBeDeleted(String entryId) {
-        Cursor entryCursor = queryEntryById(dbHelper.getReadableDatabase(), entryId);
-        if (!entryCursor.moveToFirst()) {
-            throw new IllegalStateException("Could not find an Entry that matches the id: " +
-                    entryId);
-        }
-
-        ContentValues values = new ContentValues();
-
-        values.put(EntriesTable.COL_AMOUNT_CENTS,
-                entryCursor.getLong(EntriesTable.INDEX_AMOUNT_CENTS));
-        values.put(EntriesTable.COL_CATEGORY_ID,
-                entryCursor.getString(EntriesTable.INDEX_CATEGORY_ID));
-        values.put(EntriesTable.COL_DATE_ENTERED,
-                entryCursor.getString(EntriesTable.INDEX_DATE_ENTERED));
-        entryCursor.close();
-        return values;
-    }
-
-    private void updateCategoryOnDeleteEntry(ContentValues entryValues) {
-        String categoryId = entryValues.getAsString(EntriesTable.COL_CATEGORY_ID);
-        String entryDate = entryValues.getAsString(EntriesTable.COL_DATE_ENTERED);
-        long entryAmount = entryValues.getAsLong(EntriesTable.COL_AMOUNT_CENTS);
-
-        Cursor categoryCursor = queryCategoryById(dbHelper.getReadableDatabase(), categoryId);
-        categoryCursor.moveToFirst();
-        String categoryDate = categoryCursor.getString(CategoriesView.INDEX_FIRST_ENTRY_DATE);
-        long categoryTotal = categoryCursor.getLong(CategoriesView.INDEX_TOTAL_AMOUNT);
-        int entryFrequency = categoryCursor.getInt(CategoriesView.INDEX_ENTRY_FREQUENCY);
-        categoryCursor.close();
-
-        ContentValues updateValues = new ContentValues();
-        if (entryDate.equals(categoryDate)) {
-            updateValues.put(CategoriesView.COL_FIRST_ENTRY_DATE, findEarliestEntry(categoryId));
-        }
-
-        updateValues.put(CategoriesView.COL_TOTAL_AMOUNT, categoryTotal - entryAmount);
-        updateValues.put(CategoriesView.COL_ENTRY_FREQUENCY, entryFrequency - 1);
-
-        updateCategory(updateValues, categoryId);
-    }
-
-    private String findEarliestEntry(String categoryId) {
-        Cursor cursor = dbHelper.getReadableDatabase().query(
-                EntriesTable.TABLE_NAME,
-                EntriesTable.RAW_PROJECTION,
-                EntriesTable.COL_CATEGORY_ID + " = ?",
-                new String[]{categoryId},
-                null, null, null
-        );
-
-        //Start on today's date
-        String earliestDate = DateUtils.getStorageFormattedDate(new Date());
-
-        while (cursor.moveToNext()) {
-            String entryDate = cursor.getString(EntriesTable.INDEX_DATE_ENTERED);
-            if (entryDate.compareTo(earliestDate) < 0) {
-                earliestDate = entryDate;
-            }
-        }
-
-        return earliestDate;
     }
 
     @Override
@@ -316,19 +210,12 @@ public class BudgetProvider extends ContentProvider {
         }
     }
 
-    private int bulkInsertEntries(ContentValues[] valuesList) {
-        //Switch category names to category Ids - this could be done for any insert entry?
-        for (ContentValues values : valuesList) {
-            String categoryName = values.getAsString(Entry.projection[Entry.INDEX_CATEGORY_NAME]);
-            long categoryId = getCategoryId(categoryName);
-            values.remove(Entry.projection[Entry.INDEX_CATEGORY_NAME]);
-            values.put(EntriesTable.COL_CATEGORY_ID, categoryId);
-        }
-
+    private int bulkInsertEntries(ContentValues[] valuesArray) {
+        switchCategoryNamesToIds(valuesArray);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
-            for (ContentValues values : valuesList) {
+            for (ContentValues values : valuesArray) {
                 db.insert(
                         EntriesTable.TABLE_NAME,
                         null,
@@ -337,13 +224,21 @@ public class BudgetProvider extends ContentProvider {
             }
 
             db.setTransactionSuccessful();
-            getContext().getContentResolver().notifyChange(EntriesTable.CONTENT_URI, null);
-            getContext().getContentResolver().notifyChange(CategoriesView.CONTENT_URI, null);
+            notifyChanges();
         } finally {
             db.endTransaction();
         }
 
-        return valuesList.length;
+        return valuesArray.length;
+    }
+
+    private void switchCategoryNamesToIds(ContentValues[] valuesArray) {
+        for (ContentValues values : valuesArray) {
+            String categoryName = values.getAsString(Entry.projection[Entry.INDEX_CATEGORY_NAME]);
+            long categoryId = getCategoryId(categoryName);
+            values.remove(Entry.projection[Entry.INDEX_CATEGORY_NAME]);
+            values.put(EntriesTable.COL_CATEGORY_ID, categoryId);
+        }
     }
 
     private long getCategoryId(String categoryName) {
@@ -369,30 +264,5 @@ public class BudgetProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         return 0;
-    }
-
-    public static class Queries {
-
-        public static Cursor queryCategoryById(SQLiteDatabase database, String categoryId) {
-            return database.query(
-                    CategoriesView.VIEW_NAME,
-                    CategoriesView.RAW_PROJECTION,
-                    CategoriesView._ID + " = ?",
-                    new String[]{categoryId},
-                    null, null, null
-            );
-        }
-
-        public static Cursor queryEntryById(SQLiteDatabase database, String categoryId) {
-            return database.query(
-                    EntriesTable.TABLE_NAME,
-                    EntriesTable.RAW_PROJECTION,
-                    EntriesTable._ID + " = ?",
-                    new String[]{categoryId},
-                    null, null, null
-            );
-        }
-
-
     }
 }

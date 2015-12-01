@@ -33,8 +33,8 @@ public class DatabaseDevUtils {
             category) {
         ContentValues values = new ContentValues();
         values.put(BudgetContract.CategoriesView.COL_CATEGORY_NAME, category.name);
-        if (category.date != null) {
-            values.put(BudgetContract.CategoriesView.COL_FIRST_ENTRY_DATE, category.date);
+        if (category.utcFirstEntryDate != 0) {
+            values.put(BudgetContract.CategoriesView.COL_FIRST_ENTRY_DATE, category.utcFirstEntryDate);
         }
 
         long categoryId = database.insert(BudgetContract.CategoriesView
@@ -109,7 +109,7 @@ public class DatabaseDevUtils {
         ContentValues values = new ContentValues();
         values.put(EntriesTable.COL_CATEGORY_ID, findCategoryId(database, entry
                 .categoryName));
-        values.put(EntriesTable.COL_DATE_ENTERED, entry.dateEntered);
+        values.put(EntriesTable.COL_DATE_ENTERED, entry.utcDateEntered);
         values.put(EntriesTable.COL_AMOUNT_CENTS, entry.amount);
         return values;
     }

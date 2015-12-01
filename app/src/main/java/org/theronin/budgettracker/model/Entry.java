@@ -9,7 +9,7 @@ import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
 public class Entry {
     public final long id;
     public final String categoryName;
-    public final String dateEntered;
+    public final long utcDateEntered;
     public final long amount;
 
     public static final String [] projection = {
@@ -24,14 +24,14 @@ public class Entry {
     public static final int INDEX_DATE_ENTERED = 2;
     public static final int INDEX_AMOUNT_CENTS = 3;
 
-    public Entry(String categoryName, String dateEntered, long amount) {
-        this(-1, categoryName, dateEntered, amount);
+    public Entry(String categoryName, long utcDateEntered, long amount) {
+        this(-1, categoryName, utcDateEntered, amount);
     }
 
-    public Entry (long id, String categoryName, String dateEntered, long amount) {
+    public Entry (long id, String categoryName, long utcDateEntered, long amount) {
         this.id = id;
         this.categoryName = categoryName;
-        this.dateEntered = dateEntered;
+        this.utcDateEntered = utcDateEntered;
         this.amount = amount;
     }
 
@@ -40,7 +40,7 @@ public class Entry {
         return new Entry(
                 cursor.getLong(INDEX_ID),
                 cursor.getString(INDEX_CATEGORY_NAME),
-                cursor.getString(INDEX_DATE_ENTERED),
+                cursor.getLong(INDEX_DATE_ENTERED),
                 cursor.getLong(INDEX_AMOUNT_CENTS)
         );
     }
@@ -49,7 +49,7 @@ public class Entry {
         ContentValues values = new ContentValues();
         values.put(EntriesTable._ID, id);
         values.put(projection[INDEX_CATEGORY_NAME], categoryName);
-        values.put(projection[INDEX_DATE_ENTERED], dateEntered);
+        values.put(projection[INDEX_DATE_ENTERED], utcDateEntered);
         values.put(projection[INDEX_AMOUNT_CENTS], amount);
         return values;
     }

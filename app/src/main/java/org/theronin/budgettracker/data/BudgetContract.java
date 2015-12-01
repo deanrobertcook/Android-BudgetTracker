@@ -50,7 +50,8 @@ public class BudgetContract {
         public static final String COL_FIRST_ENTRY_DATE = "first_entry_date";
         public static final String COL_TOTAL_AMOUNT = "total_amount_cents";
         public static final String COL_ENTRY_FREQUENCY = "entry_frequency";
-        public static final String COL_CATEGORY_NAME = "category_name";
+        //these need to be the same so the business layer doesn't need to know about categories_base
+        public static final String COL_CATEGORY_NAME = CategoriesTable.COL_CATEGORY_NAME;
 
     //@formatter:off
         public static final String SQL_CREATE_CATEGORIES_VIEW =

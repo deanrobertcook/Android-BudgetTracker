@@ -8,10 +8,8 @@ import java.util.Random;
 
 public class DateDevUtils {
 
-    public static String getDaysAgo(int daysAgo) {
-        long daysAgoMilliseconds = System.currentTimeMillis() - (long) daysAgo * 24 * 60 * 60 * 1000;
-        Date dateAgo = new Date(daysAgoMilliseconds);
-        return DateUtils.DATE_FORMAT_FOR_STORAGE.format(dateAgo);
+    public static long getDaysAgo(int daysAgo) {
+        return System.currentTimeMillis() - (long) daysAgo * 24 * 60 * 60 * 1000;
     }
 
     public static String getDaysBefore(String date, int daysBefore) {
@@ -19,7 +17,7 @@ public class DateDevUtils {
         try {
             long dateInMillis = DateUtils.DATE_FORMAT_FOR_STORAGE.parse(date).getTime();
             long daysBeforeInMillis = dateInMillis - (long) daysBefore * 24 * 60 * 60 * 1000;
-            returnDate = DateUtils.getStorageFormattedDate(new Date(daysBeforeInMillis));
+            returnDate = DateUtils.getStorageFormattedDate(daysBeforeInMillis);
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -27,7 +25,7 @@ public class DateDevUtils {
         return returnDate;
     }
 
-    public static String getRandomDate() {
+    public static long getRandomDate() {
         //Return a random date from within the last five years
         return getDaysAgo(new Random().nextInt(2000));
     }

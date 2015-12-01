@@ -2,11 +2,16 @@ package org.theronin.budgettracker.file;
 
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import org.theronin.budgettracker.model.Entry;
+import org.theronin.budgettracker.utils.DateUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileBackupAgent  {
+    private static final String TAG = FileBackupAgent.class.getName();
     private final String BACKUP_DIRECTORY = "BudgetTracker";
     private final String BACKUP_FILE = "backup.json";
     private Listener listener;
@@ -42,6 +48,7 @@ public class FileBackupAgent  {
             List<Entry> entries = params[0];
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String entriesJson = gson.toJson(entries);
+            entriesJson = convertUtcToString(gson, entriesJson);
 
             if (isExternalStorageWriteable()) {
                 File backupsDirectory = new File(Environment.getExternalStoragePublicDirectory(
@@ -67,6 +74,21 @@ public class FileBackupAgent  {
                 return null;
             }
             throw new RuntimeException("External storage currently not available");
+        }
+
+        //Store the dates in a more human-friendly way
+        private String convertUtcToString(Gson gson, String entriesJson) {
+            JsonArray jsonArray = gson.fromJson(entriesJson, JsonElement.class).getAsJsonArray();
+            for (JsonElement element : jsonArray) {
+                JsonObject object = (JsonObject) element;
+                if (object.has("utcDateEntered")) {
+                    long utcTime = object.get("utcDateEntered").getAsLong();
+                    String formattedDate = DateUtils.getStorageFormattedDate(utcTime);
+                    object.remove("utcDateEntered");
+                    object.addProperty("dateEntered", formattedDate);
+                }
+            }
+            return gson.toJson(jsonArray);
         }
 
         private boolean isExternalStorageWriteable() {
@@ -119,10 +141,27 @@ public class FileBackupAgent  {
 
         @Override
         protected void onPostExecute(String entriesJson) {
+            entriesJson = convertStringToUtc(entriesJson);
+            Log.d(TAG, entriesJson);
             Type entryListType = new TypeToken<ArrayList<Entry>>(){}.getType();
             Gson gson = new Gson();
             List<Entry> entries = gson.fromJson(entriesJson, entryListType);
             listener.onEntriesRestored(entries);
+        }
+
+        private String convertStringToUtc(String entriesJson) {
+            Gson gson = new Gson();
+            JsonArray jsonArray = gson.fromJson(entriesJson, JsonElement.class).getAsJsonArray();
+            for (JsonElement element : jsonArray) {
+                JsonObject object = (JsonObject) element;
+                if (object.has("dateEntered")) {
+                    String formattedDate = object.get("dateEntered").getAsString();
+                    long utcTime = DateUtils.getUtcTimeFromStorageFormattedDate(formattedDate);
+                    object.remove("dateEntered");
+                    object.addProperty("utcDateEntered", Long.toString(utcTime));
+                }
+            }
+            return gson.toJson(jsonArray);
         }
     }
 

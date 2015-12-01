@@ -3,6 +3,7 @@ package org.theronin.budgettracker.pages.categories;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import org.theronin.budgettracker.utils.CursorRecyclerViewAdapter;
 import org.theronin.budgettracker.utils.MoneyUtils;
 
 public class CategoriesAdapter extends CursorRecyclerViewAdapter<CategoriesAdapter.ViewHolder> {
+
+    private static final String TAG = CategoriesAdapter.class.getName();
 
     public CategoriesAdapter(Context context, Cursor cursor) {
         super(context, cursor);
@@ -31,6 +34,7 @@ public class CategoriesAdapter extends CursorRecyclerViewAdapter<CategoriesAdapt
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor) {
         Category category = Category.fromCursor(cursor);
+        Log.d(TAG, category.toString());
 
         viewHolder.nameTextView.setText(category.name);
         viewHolder.currencySymbolTotalView.setText(MoneyUtils.getCurrencySymbol());
