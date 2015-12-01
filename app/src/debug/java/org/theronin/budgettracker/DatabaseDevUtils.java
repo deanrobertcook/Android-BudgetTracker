@@ -141,15 +141,15 @@ public class DatabaseDevUtils {
             insertCategoryDirectlyToDatabase(database, new Category(categoryName));
         }
 
-        for (int i = 0; i < numEntries; i++) {
-            insertEntryDirectlyToDatabase(
-                    database,
-                    new Entry(
-                            categoryNames[random.nextInt(categoryNames.length)],
-                            DateDevUtils.getRandomDate(),
-                            random.nextInt(maxAmount))
-            );
-        }
+//        for (int i = 0; i < numEntries; i++) {
+//            insertEntryDirectlyToDatabase(
+//                    database,
+//                    new Entry(
+//                            categoryNames[random.nextInt(categoryNames.length)],
+//                            DateDevUtils.getRandomDate(),
+//                            random.nextInt(maxAmount))
+//            );
+//        }
     }
 
     public static void fillDatabaseUsingContentProvider(Context context, String[] categoryNames, int numEntries, int maxAmount) {
@@ -160,14 +160,14 @@ public class DatabaseDevUtils {
             insertCategoryDirectlyToDatabase(helper.getWritableDatabase(), new Category(categoryName));
         }
 
-        for (int i = 0; i < numEntries; i++) {
-            insertEntryUsingContentProvider(
-                    context,
-                    new Entry(
-                            categoryNames[random.nextInt(categoryNames.length)],
-                            DateDevUtils.getRandomDate(),
-                            random.nextInt(maxAmount))
-            );
-        }
+//        for (int i = 0; i < numEntries; i++) {
+//            insertEntryUsingContentProvider(
+//                    context,
+//                    new Entry(
+//                            categoryNames[random.nextInt(categoryNames.length)],
+//                            DateDevUtils.getRandomDate(),
+//                            random.nextInt(maxAmount))
+//            );
+//        }
     }
 }
