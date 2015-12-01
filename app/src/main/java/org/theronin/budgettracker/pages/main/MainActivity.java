@@ -13,7 +13,7 @@ import android.view.MenuItem;
 
 import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
-import org.theronin.budgettracker.file.FileBackupAgent;
+import org.theronin.budgettracker.task.FileBackupAgent;
 import org.theronin.budgettracker.model.Entry;
 import org.theronin.budgettracker.pages.categories.CategoriesActivity;
 import org.theronin.budgettracker.pages.entries.EntriesActivity;
