@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply from: "hidden.gradle"
 
 ext {
     supportLibVersion = "23.1.1"
