@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -229,9 +228,7 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         List<Category> categories = new ArrayList<>();
         while (data.moveToNext()) {
-            Category category = Category.fromCursor(data);
-            Log.d("Loading categories", category.toString());
-            categories.add(category);
+            categories.add(Category.fromCursor(data));
         }
         categorySpinnerAdapter.addAll(categories);
 

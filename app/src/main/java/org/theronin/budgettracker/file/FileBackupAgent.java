@@ -2,7 +2,6 @@ package org.theronin.budgettracker.file;
 
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,6 +9,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+
 import org.theronin.budgettracker.model.Entry;
 import org.theronin.budgettracker.utils.DateUtils;
 
@@ -142,7 +142,6 @@ public class FileBackupAgent  {
         @Override
         protected void onPostExecute(String entriesJson) {
             entriesJson = convertStringToUtc(entriesJson);
-            Log.d(TAG, entriesJson);
             Type entryListType = new TypeToken<ArrayList<Entry>>(){}.getType();
             Gson gson = new Gson();
             List<Entry> entries = gson.fromJson(entriesJson, entryListType);

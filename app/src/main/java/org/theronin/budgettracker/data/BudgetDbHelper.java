@@ -3,7 +3,6 @@ package org.theronin.budgettracker.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import org.theronin.budgettracker.data.BudgetContract.CategoriesTable;
 import org.theronin.budgettracker.data.BudgetContract.CategoriesView;
@@ -38,16 +37,9 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
     }
 
     public static void createTables(SQLiteDatabase sqLiteDatabase) {
-        printSqlStatements();
         sqLiteDatabase.execSQL(CategoriesTable.SQL_CREATE_CATEGORIES_TABLE);
         sqLiteDatabase.execSQL(EntriesTable.SQL_CREATE_ENTRIES_TABLE);
         sqLiteDatabase.execSQL(CategoriesView.SQL_CREATE_CATEGORIES_VIEW);
-    }
-
-    private static void printSqlStatements() {
-        Log.d(TAG, CategoriesTable.SQL_CREATE_CATEGORIES_TABLE);
-        Log.d(TAG, EntriesTable.SQL_CREATE_ENTRIES_TABLE);
-        Log.d(TAG, CategoriesView.SQL_CREATE_CATEGORIES_VIEW);
     }
 
     public static void dropTables(SQLiteDatabase sqLiteDatabase) {

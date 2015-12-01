@@ -25,7 +25,7 @@ public class EntryListFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int ENTRY_LOADER_ID = 0;
-    private static final String SORT_ORDER = "date_entered DESC";
+    private static final String SORT_ORDER = EntriesTable.COL_DATE_ENTERED + " DESC";
 
     private EntriesAdapter adapter;
     private Entry entrySelected;

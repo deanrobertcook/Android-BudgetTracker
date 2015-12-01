@@ -25,7 +25,7 @@ public class Category {
     public static final int INDEX_CATEGORY_NAME = 1;
     public static final int INDEX_FIRST_ENTRY_DATE = 2;
     public static final int INDEX_TOTAL_AMOUNT = 3;
-    public static final int INDEX_ENTRY_FREQUENCY = 3;
+    public static final int INDEX_ENTRY_FREQUENCY = 4;
 
     public static Category fromCursor(Cursor cursor) {
         if (cursor.getColumnCount() != projection.length) {
