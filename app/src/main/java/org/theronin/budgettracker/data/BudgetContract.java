@@ -13,6 +13,21 @@ public class BudgetContract {
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     public static final class CategoriesTable implements BaseColumns {
+        /**
+         * SQLite constants
+         */
+        public static final String TABLE_NAME = "categories_base";
+
+        public static final String COL_CATEGORY_NAME = "category_name";
+
+        public static final String SQL_CREATE_CATEGORIES_TABLE = "CREATE TABLE " +
+                TABLE_NAME + " (" +
+                _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COL_CATEGORY_NAME + " TEXT NOT NULL, " +
+                "UNIQUE (" + COL_CATEGORY_NAME + ") ON CONFLICT IGNORE)";
+    }
+
+    public static final class CategoriesView implements BaseColumns {
 
         /**
          * Provider constants
@@ -30,24 +45,36 @@ public class BudgetContract {
         /**
          * SQLite constants
          */
-        public static final String TABLE_NAME = "categories";
+        public static final String VIEW_NAME = "categories";
 
         public static final String COL_FIRST_ENTRY_DATE = "first_entry_date";
         public static final String COL_TOTAL_AMOUNT = "total_amount_cents";
         public static final String COL_ENTRY_FREQUENCY = "entry_frequency";
         public static final String COL_CATEGORY_NAME = "category_name";
 
-        public static final String SQL_CREATE_CATEGORIES_TABLE = "CREATE TABLE " +
-                TABLE_NAME + " (" +
+    //@formatter:off
+        public static final String SQL_CREATE_CATEGORIES_VIEW =
+                "CREATE VIEW " + VIEW_NAME + " AS " +
 
-                _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "SELECT " +
+                        CategoriesTable.TABLE_NAME + "." + CategoriesTable._ID + " AS " + CategoriesView._ID + ", " +
 
-                COL_CATEGORY_NAME + " TEXT NOT NULL, " +
-                COL_FIRST_ENTRY_DATE + " DATE DEFAULT (date('now')) NOT NULL, " +
-                COL_TOTAL_AMOUNT + " INTEGER DEFAULT 0 NOT NULL, " +
-                COL_ENTRY_FREQUENCY + " INTEGER DEFAULT 0 NOT NULL, " +
+                        "MIN(" + EntriesTable.TABLE_NAME + "." + EntriesTable.COL_DATE_ENTERED+ ") AS " + COL_FIRST_ENTRY_DATE + ", " +
+                        "IFNULL(SUM(" + EntriesTable.TABLE_NAME + "." + EntriesTable.COL_AMOUNT_CENTS + "), 0) AS " + COL_TOTAL_AMOUNT + ", " +
+                        "COUNT(" + EntriesTable.TABLE_NAME + "." + EntriesTable._ID + ")" + " AS " + COL_ENTRY_FREQUENCY + ", " +
+                        CategoriesTable.TABLE_NAME + "." + CategoriesTable.COL_CATEGORY_NAME + " AS " + COL_CATEGORY_NAME + " " +
 
-                "UNIQUE (" + COL_CATEGORY_NAME + ") ON CONFLICT IGNORE)";
+                "FROM " +
+                        CategoriesTable.TABLE_NAME + " LEFT OUTER JOIN " + EntriesTable.TABLE_NAME + " " +
+
+                "ON " +
+                        CategoriesTable.TABLE_NAME + "." + CategoriesTable._ID + " = " + EntriesTable.COL_CATEGORY_ID + " " +
+
+                "GROUP BY " +
+                        CategoriesTable.TABLE_NAME + "." + CategoriesTable._ID + ", " +
+                        CategoriesTable.TABLE_NAME + "." + CategoriesTable.COL_CATEGORY_NAME;
+
+    //@formatter:on
 
         /**
          * Helper projections for faster query write-ups
@@ -101,7 +128,7 @@ public class BudgetContract {
                 COL_AMOUNT_CENTS + " INTEGER NOT NULL, " +
 
                 " FOREIGN KEY (" + EntriesTable.COL_CATEGORY_ID + ") REFERENCES " +
-                CategoriesTable.TABLE_NAME + " (" + CategoriesTable._ID + "))";
+                CategoriesView.VIEW_NAME + " (" + CategoriesView._ID + "))";
 
         /**
          * Helper projections for faster query write-ups
@@ -118,5 +145,4 @@ public class BudgetContract {
         public static final int INDEX_CATEGORY_ID = 2;
         public static final int INDEX_AMOUNT_CENTS = 3;
     }
-
 }

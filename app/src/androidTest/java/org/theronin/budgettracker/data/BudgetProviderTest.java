@@ -26,7 +26,7 @@ import static org.theronin.budgettracker.DatabaseDevUtils.findCategoryId;
 import static org.theronin.budgettracker.DatabaseDevUtils.findCategoryName;
 import static org.theronin.budgettracker.DatabaseDevUtils.insertCategoryDirectlyToDatabase;
 import static org.theronin.budgettracker.DatabaseDevUtils.insertEntryDirectlyToDatabase;
-import static org.theronin.budgettracker.data.BudgetContract.CategoriesTable;
+import static org.theronin.budgettracker.data.BudgetContract.CategoriesView;
 import static org.theronin.budgettracker.utils.DateUtils.getStorageFormattedCurrentDate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -63,8 +63,8 @@ public class BudgetProviderTest {
     @Test
     public void getCategoryDirectoryType() {
         Log.d(TAG, "getCategoryDirectoryType");
-        String expectedType = CategoriesTable.CONTENT_TYPE;
-        Uri categoryDirUri = CategoriesTable.CONTENT_URI;
+        String expectedType = CategoriesView.CONTENT_TYPE;
+        Uri categoryDirUri = CategoriesView.CONTENT_URI;
         String matchedType = context.getContentResolver().getType(categoryDirUri);
         assertEquals("Categories dir type is incorrect", expectedType, matchedType);
     }
@@ -72,8 +72,8 @@ public class BudgetProviderTest {
     @Test
     public void getCategoryItemType() {
         Log.d(TAG, "getCategoryItemType");
-        String expectedType = CategoriesTable.CONTENT_ITEM_TYPE;
-        Uri categoryItemUri = CategoriesTable.CONTENT_URI.buildUpon().appendPath(TEST_ITEM_ID)
+        String expectedType = CategoriesView.CONTENT_ITEM_TYPE;
+        Uri categoryItemUri = CategoriesView.CONTENT_URI.buildUpon().appendPath(TEST_ITEM_ID)
                 .build();
         String matchedType = context.getContentResolver().getType(categoryItemUri);
         assertEquals("Category item type is incorrect", expectedType, matchedType);
@@ -106,13 +106,13 @@ public class BudgetProviderTest {
         insertCategoryDirectlyToDatabase(dbHelper, expectedCategory);
 
         //query the content provider
-        Uri categoryURI = CategoriesTable.CONTENT_URI.buildUpon().appendPath("1").build();
+        Uri categoryURI = CategoriesView.CONTENT_URI.buildUpon().appendPath("1").build();
 
         Cursor result = context.getContentResolver().query(
                 categoryURI,
                 new String[]{
-                        CategoriesTable.COL_CATEGORY_NAME,
-                        CategoriesTable.COL_FIRST_ENTRY_DATE},
+                        CategoriesView.COL_CATEGORY_NAME,
+                        CategoriesView.COL_FIRST_ENTRY_DATE},
                 null, null, null);
         result.moveToFirst();
 
@@ -139,12 +139,12 @@ public class BudgetProviderTest {
         }
 
         //Query all current categories and check them off of the hashset using the contentProvider
-        Uri categoriesUri = CategoriesTable.CONTENT_URI;
+        Uri categoriesUri = CategoriesView.CONTENT_URI;
         Cursor result = context.getContentResolver().query(
                 categoriesUri,
                 new String[]{
-                        CategoriesTable.COL_CATEGORY_NAME,
-                        CategoriesTable.COL_FIRST_ENTRY_DATE},
+                        CategoriesView.COL_CATEGORY_NAME,
+                        CategoriesView.COL_FIRST_ENTRY_DATE},
                 null, null, null);
 
         while (result.moveToNext()) {
@@ -243,21 +243,21 @@ public class BudgetProviderTest {
         Category category = new Category("cashews", null);
         //And a ContentValues with the name data (date should be done automatically)
         ContentValues values = new ContentValues();
-        values.put(CategoriesTable.COL_CATEGORY_NAME, category.name);
+        values.put(CategoriesView.COL_CATEGORY_NAME, category.name);
 
 
         //Add to the content provider
         Uri newCategoryItemUri = context.getContentResolver().insert(
-                CategoriesTable.CONTENT_URI,
+                CategoriesView.CONTENT_URI,
                 values);
 
         //Query the database directly to check
         Cursor cursor = dbHelper.getReadableDatabase().query(
-                CategoriesTable.TABLE_NAME,
+                CategoriesView.VIEW_NAME,
                 new String[]{
-                        CategoriesTable.COL_CATEGORY_NAME,
-                        CategoriesTable.COL_FIRST_ENTRY_DATE},
-                CategoriesTable.COL_CATEGORY_NAME + " = ?",
+                        CategoriesView.COL_CATEGORY_NAME,
+                        CategoriesView.COL_FIRST_ENTRY_DATE},
+                CategoriesView.COL_CATEGORY_NAME + " = ?",
                 new String[]{category.name},
                 null, null, null);
 
@@ -364,9 +364,9 @@ public class BudgetProviderTest {
         );
 
         Cursor cursor = context.getContentResolver().query(
-                CategoriesTable.CONTENT_URI,
+                CategoriesView.CONTENT_URI,
                 Category.projection,
-                CategoriesTable.COL_CATEGORY_NAME + " = ?",
+                CategoriesView.COL_CATEGORY_NAME + " = ?",
                 new String[]{categoryName}, null
         );
 
@@ -387,9 +387,9 @@ public class BudgetProviderTest {
 
         //The cursor should be notified automatically on dataset change (wooh ContentProviders).
         cursor = context.getContentResolver().query(
-                CategoriesTable.CONTENT_URI,
+                CategoriesView.CONTENT_URI,
                 Category.projection,
-                CategoriesTable.COL_CATEGORY_NAME + " = ?",
+                CategoriesView.COL_CATEGORY_NAME + " = ?",
                 new String[]{categoryName}, null
         );
         cursor.moveToFirst();
@@ -431,9 +431,9 @@ public class BudgetProviderTest {
 
         //Query the categories table
         Cursor cursor = context.getContentResolver().query(
-                CategoriesTable.CONTENT_URI,
+                CategoriesView.CONTENT_URI,
                 Category.projection,
-                CategoriesTable.COL_CATEGORY_NAME + " = ?",
+                CategoriesView.COL_CATEGORY_NAME + " = ?",
                 new String[]{categoryName}, null
         );
         cursor.moveToFirst();

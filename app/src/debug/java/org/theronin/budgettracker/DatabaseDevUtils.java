@@ -32,13 +32,13 @@ public class DatabaseDevUtils {
     public static long insertCategoryDirectlyToDatabase(SQLiteDatabase database, Category
             category) {
         ContentValues values = new ContentValues();
-        values.put(BudgetContract.CategoriesTable.COL_CATEGORY_NAME, category.name);
+        values.put(BudgetContract.CategoriesView.COL_CATEGORY_NAME, category.name);
         if (category.date != null) {
-            values.put(BudgetContract.CategoriesTable.COL_FIRST_ENTRY_DATE, category.date);
+            values.put(BudgetContract.CategoriesView.COL_FIRST_ENTRY_DATE, category.date);
         }
 
-        long categoryId = database.insert(BudgetContract.CategoriesTable
-                        .TABLE_NAME, null,
+        long categoryId = database.insert(BudgetContract.CategoriesView
+                        .VIEW_NAME, null,
                 values);
         if (categoryId == -1) {
             throw new RuntimeException("An error occurred inserting the Category into the DB");
@@ -52,9 +52,9 @@ public class DatabaseDevUtils {
 
     public static long findCategoryId(SQLiteDatabase database, String categoryName) {
         Cursor cursor = database.query(
-                BudgetContract.CategoriesTable.TABLE_NAME,
-                new String[]{BudgetContract.CategoriesTable._ID},
-                BudgetContract.CategoriesTable.COL_CATEGORY_NAME + "= ?",
+                BudgetContract.CategoriesView.VIEW_NAME,
+                new String[]{BudgetContract.CategoriesView._ID},
+                BudgetContract.CategoriesView.COL_CATEGORY_NAME + "= ?",
                 new String[]{categoryName},
                 null, null, null
         );
@@ -71,9 +71,9 @@ public class DatabaseDevUtils {
 
     public static String findCategoryName(SQLiteDatabase database, long id) {
         Cursor cursor = database.query(
-                BudgetContract.CategoriesTable.TABLE_NAME,
-                new String[]{BudgetContract.CategoriesTable.COL_CATEGORY_NAME},
-                BudgetContract.CategoriesTable._ID + "= ?",
+                BudgetContract.CategoriesView.VIEW_NAME,
+                new String[]{BudgetContract.CategoriesView.COL_CATEGORY_NAME},
+                BudgetContract.CategoriesView._ID + "= ?",
                 new String[]{Long.toString(id)},
                 null, null, null
         );

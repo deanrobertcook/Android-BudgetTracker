@@ -44,12 +44,12 @@ public class DatabaseUpgradeTest {
         dbHelper.onUpgrade(database, 1, 2);
 
         Cursor newData = database.query(
-                BudgetContract.CategoriesTable.TABLE_NAME,
+                BudgetContract.CategoriesView.VIEW_NAME,
                 new String[]{
-                        BudgetContract.CategoriesTable.COL_CATEGORY_NAME,
-                        BudgetContract.CategoriesTable.COL_FIRST_ENTRY_DATE,
-                        BudgetContract.CategoriesTable.COL_ENTRY_FREQUENCY,
-                        BudgetContract.CategoriesTable.COL_TOTAL_AMOUNT
+                        BudgetContract.CategoriesView.COL_CATEGORY_NAME,
+                        BudgetContract.CategoriesView.COL_FIRST_ENTRY_DATE,
+                        BudgetContract.CategoriesView.COL_ENTRY_FREQUENCY,
+                        BudgetContract.CategoriesView.COL_TOTAL_AMOUNT
                 }, null, null, null, null, null
         );
 

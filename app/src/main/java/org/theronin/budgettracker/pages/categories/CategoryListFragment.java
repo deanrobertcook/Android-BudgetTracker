@@ -51,7 +51,7 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(
                 getActivity(),
-                BudgetContract.CategoriesTable.CONTENT_URI,
+                BudgetContract.CategoriesView.CONTENT_URI,
                 Category.projection,
                 null, null, null
         );

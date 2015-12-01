@@ -2,7 +2,7 @@ package org.theronin.budgettracker.model;
 
 import android.database.Cursor;
 
-import org.theronin.budgettracker.data.BudgetContract.CategoriesTable;
+import org.theronin.budgettracker.data.BudgetContract.CategoriesView;
 import org.theronin.budgettracker.utils.DateUtils;
 
 public class Category {
@@ -13,11 +13,11 @@ public class Category {
     public final long frequency;
 
     public static final String [] projection = {
-            CategoriesTable._ID,
-            CategoriesTable.COL_CATEGORY_NAME,
-            CategoriesTable.COL_FIRST_ENTRY_DATE,
-            CategoriesTable.COL_TOTAL_AMOUNT,
-            CategoriesTable.COL_ENTRY_FREQUENCY
+            CategoriesView._ID,
+            CategoriesView.COL_CATEGORY_NAME,
+            CategoriesView.COL_FIRST_ENTRY_DATE,
+            CategoriesView.COL_TOTAL_AMOUNT,
+            CategoriesView.COL_ENTRY_FREQUENCY
     };
 
     public static final int INDEX_ID = 0;

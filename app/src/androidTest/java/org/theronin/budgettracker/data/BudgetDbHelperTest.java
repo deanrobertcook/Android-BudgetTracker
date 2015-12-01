@@ -33,7 +33,7 @@ public class BudgetDbHelperTest {
     public void testCreateDatabase() {
         final HashSet<String> tableNameHashSet = new HashSet<>();
         tableNameHashSet.add(BudgetContract.EntriesTable.TABLE_NAME);
-        tableNameHashSet.add(BudgetContract.CategoriesTable.TABLE_NAME);
+        tableNameHashSet.add(BudgetContract.CategoriesView.VIEW_NAME);
 
         Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
         cursor.moveToFirst();
@@ -48,11 +48,11 @@ public class BudgetDbHelperTest {
     @Test
     public void testCategoriesTableColumns() {
         HashSet<String> categoriesColumnNames = new HashSet<>();
-        categoriesColumnNames.add(BudgetContract.CategoriesTable.COL_CATEGORY_NAME);
-        categoriesColumnNames.add(BudgetContract.CategoriesTable.COL_FIRST_ENTRY_DATE);
+        categoriesColumnNames.add(BudgetContract.CategoriesView.COL_CATEGORY_NAME);
+        categoriesColumnNames.add(BudgetContract.CategoriesView.COL_FIRST_ENTRY_DATE);
 
         Cursor cursor = db.rawQuery("PRAGMA table_info (" +
-                BudgetContract.CategoriesTable.TABLE_NAME + ")", null);
+                BudgetContract.CategoriesView.VIEW_NAME + ")", null);
 
         cursor.moveToFirst();
 

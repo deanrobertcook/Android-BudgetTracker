@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
-import org.theronin.budgettracker.data.BudgetContract.CategoriesTable;
+import org.theronin.budgettracker.data.BudgetContract.CategoriesView;
 import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
 import org.theronin.budgettracker.model.Entry;
 import org.theronin.budgettracker.utils.DateUtils;
@@ -35,8 +35,8 @@ public class BudgetProvider extends ContentProvider {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         String authority = BudgetContract.CONTENT_AUTHORITY;
 
-        matcher.addURI(authority, CategoriesTable.PROVIDER_PATH, CATEGORIES);
-        matcher.addURI(authority, CategoriesTable.PROVIDER_PATH + "/#", CATEGORY_WITH_ID);
+        matcher.addURI(authority, CategoriesView.PROVIDER_PATH, CATEGORIES);
+        matcher.addURI(authority, CategoriesView.PROVIDER_PATH + "/#", CATEGORY_WITH_ID);
         matcher.addURI(authority, EntriesTable.PROVIDER_PATH, ENTRIES);
         matcher.addURI(authority, EntriesTable.PROVIDER_PATH + "/#", ENTRY_WITH_ID);
 
@@ -49,10 +49,10 @@ public class BudgetProvider extends ContentProvider {
         entryJoinedOnCategoryQueryBuilder = new SQLiteQueryBuilder();
 
         entryJoinedOnCategoryQueryBuilder.setTables(
-                EntriesTable.TABLE_NAME + " LEFT JOIN " + CategoriesTable.TABLE_NAME +
+                EntriesTable.TABLE_NAME + " LEFT JOIN " + CategoriesView.VIEW_NAME +
                         " ON " +
                         EntriesTable.TABLE_NAME + "." + EntriesTable.COL_CATEGORY_ID + " = " +
-                        CategoriesTable.TABLE_NAME + "." + CategoriesTable._ID
+                        CategoriesView.VIEW_NAME + "." + CategoriesView._ID
         );
     }
 
@@ -84,25 +84,25 @@ public class BudgetProvider extends ContentProvider {
 
     private Cursor queryCategoryWithId(String id, String[] projection) {
         Cursor cursor = dbHelper.getReadableDatabase().query(
-                CategoriesTable.TABLE_NAME,
+                CategoriesView.VIEW_NAME,
                 projection,
-                CategoriesTable._ID + " = ?",
+                CategoriesView._ID + " = ?",
                 new String[]{id},
                 null, null, null
         );
-        cursor.setNotificationUri(getContext().getContentResolver(), CategoriesTable.CONTENT_URI);
+        cursor.setNotificationUri(getContext().getContentResolver(), CategoriesView.CONTENT_URI);
         return cursor;
     }
 
     private Cursor queryCategories(String[] projection, String selection, String[] selectionArgs) {
         Cursor cursor = dbHelper.getReadableDatabase().query(
-                CategoriesTable.TABLE_NAME,
+                CategoriesView.VIEW_NAME,
                 projection,
                 selection,
                 selectionArgs,
                 null, null, null
         );
-        cursor.setNotificationUri(getContext().getContentResolver(), CategoriesTable.CONTENT_URI);
+        cursor.setNotificationUri(getContext().getContentResolver(), CategoriesView.CONTENT_URI);
         return cursor;
     }
 
@@ -134,9 +134,9 @@ public class BudgetProvider extends ContentProvider {
     public String getType(Uri uri) {
         switch (uriMatcher.match(uri)) {
             case CATEGORIES:
-                return CategoriesTable.CONTENT_TYPE;
+                return CategoriesView.CONTENT_TYPE;
             case CATEGORY_WITH_ID:
-                return CategoriesTable.CONTENT_ITEM_TYPE;
+                return CategoriesView.CONTENT_ITEM_TYPE;
             case ENTRIES:
                 return EntriesTable.CONTENT_TYPE;
             case ENTRY_WITH_ID:
@@ -150,7 +150,7 @@ public class BudgetProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         switch (uriMatcher.match(uri)) {
             case CATEGORIES:
-                return CategoriesTable.CONTENT_URI.buildUpon()
+                return CategoriesView.CONTENT_URI.buildUpon()
                         .appendPath(Long.toString(insertCategory(values))).build();
             case ENTRIES:
                 return insertEntry(values);
@@ -162,8 +162,8 @@ public class BudgetProvider extends ContentProvider {
 
     private long insertCategory(ContentValues values) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        long categoryId = db.insert(CategoriesTable.TABLE_NAME, null, values);
-        getContext().getContentResolver().notifyChange(CategoriesTable.CONTENT_URI, null);
+        long categoryId = db.insert(CategoriesView.VIEW_NAME, null, values);
+        getContext().getContentResolver().notifyChange(CategoriesView.CONTENT_URI, null);
         return categoryId;
     }
 
@@ -174,7 +174,7 @@ public class BudgetProvider extends ContentProvider {
         updateCategoryOnInsertEntry(values);
 
         getContext().getContentResolver().notifyChange(EntriesTable.CONTENT_URI, null);
-        getContext().getContentResolver().notifyChange(CategoriesTable.CONTENT_URI, null);
+        getContext().getContentResolver().notifyChange(CategoriesView.CONTENT_URI, null);
 
         return EntriesTable.CONTENT_URI.buildUpon().appendPath(Long.toString(entryId))
                 .build();
@@ -194,26 +194,26 @@ public class BudgetProvider extends ContentProvider {
 
         Cursor cursor = queryCategoryById(dbHelper.getReadableDatabase(), categoryId);
         cursor.moveToFirst();
-        String earliestDate = cursor.getString(CategoriesTable.INDEX_FIRST_ENTRY_DATE);
-        int entryFrequency = cursor.getInt(CategoriesTable.INDEX_ENTRY_FREQUENCY);
-        long totalAmount = cursor.getLong(CategoriesTable.INDEX_TOTAL_AMOUNT);
+        String earliestDate = cursor.getString(CategoriesView.INDEX_FIRST_ENTRY_DATE);
+        int entryFrequency = cursor.getInt(CategoriesView.INDEX_ENTRY_FREQUENCY);
+        long totalAmount = cursor.getLong(CategoriesView.INDEX_TOTAL_AMOUNT);
         cursor.close();
 
         ContentValues categoryValues = new ContentValues();
         if (entryDate.compareTo(earliestDate) < 0) {
-            categoryValues.put(CategoriesTable.COL_FIRST_ENTRY_DATE, entryDate);
+            categoryValues.put(CategoriesView.COL_FIRST_ENTRY_DATE, entryDate);
         }
-        categoryValues.put(CategoriesTable.COL_ENTRY_FREQUENCY, entryFrequency + 1);
-        categoryValues.put(CategoriesTable.COL_TOTAL_AMOUNT, totalAmount + entryAmount);
+        categoryValues.put(CategoriesView.COL_ENTRY_FREQUENCY, entryFrequency + 1);
+        categoryValues.put(CategoriesView.COL_TOTAL_AMOUNT, totalAmount + entryAmount);
 
         updateCategory(categoryValues, categoryId);
     }
 
     private void updateCategory(ContentValues values, String categoryId) {
         dbHelper.getWritableDatabase().update(
-                CategoriesTable.TABLE_NAME,
+                CategoriesView.VIEW_NAME,
                 values,
-                CategoriesTable._ID + " = ?",
+                CategoriesView._ID + " = ?",
                 new String[]{categoryId});
     }
 
@@ -267,18 +267,18 @@ public class BudgetProvider extends ContentProvider {
 
         Cursor categoryCursor = queryCategoryById(dbHelper.getReadableDatabase(), categoryId);
         categoryCursor.moveToFirst();
-        String categoryDate = categoryCursor.getString(CategoriesTable.INDEX_FIRST_ENTRY_DATE);
-        long categoryTotal = categoryCursor.getLong(CategoriesTable.INDEX_TOTAL_AMOUNT);
-        int entryFrequency = categoryCursor.getInt(CategoriesTable.INDEX_ENTRY_FREQUENCY);
+        String categoryDate = categoryCursor.getString(CategoriesView.INDEX_FIRST_ENTRY_DATE);
+        long categoryTotal = categoryCursor.getLong(CategoriesView.INDEX_TOTAL_AMOUNT);
+        int entryFrequency = categoryCursor.getInt(CategoriesView.INDEX_ENTRY_FREQUENCY);
         categoryCursor.close();
 
         ContentValues updateValues = new ContentValues();
         if (entryDate.equals(categoryDate)) {
-            updateValues.put(CategoriesTable.COL_FIRST_ENTRY_DATE, findEarliestEntry(categoryId));
+            updateValues.put(CategoriesView.COL_FIRST_ENTRY_DATE, findEarliestEntry(categoryId));
         }
 
-        updateValues.put(CategoriesTable.COL_TOTAL_AMOUNT, categoryTotal - entryAmount);
-        updateValues.put(CategoriesTable.COL_ENTRY_FREQUENCY, entryFrequency - 1);
+        updateValues.put(CategoriesView.COL_TOTAL_AMOUNT, categoryTotal - entryAmount);
+        updateValues.put(CategoriesView.COL_ENTRY_FREQUENCY, entryFrequency - 1);
 
         updateCategory(updateValues, categoryId);
     }
@@ -338,7 +338,7 @@ public class BudgetProvider extends ContentProvider {
 
             db.setTransactionSuccessful();
             getContext().getContentResolver().notifyChange(EntriesTable.CONTENT_URI, null);
-            getContext().getContentResolver().notifyChange(CategoriesTable.CONTENT_URI, null);
+            getContext().getContentResolver().notifyChange(CategoriesView.CONTENT_URI, null);
         } finally {
             db.endTransaction();
         }
@@ -348,20 +348,20 @@ public class BudgetProvider extends ContentProvider {
 
     private long getCategoryId(String categoryName) {
         Cursor cursor = dbHelper.getWritableDatabase().query(
-                CategoriesTable.TABLE_NAME,
-                CategoriesTable.RAW_PROJECTION,
-                CategoriesTable.COL_CATEGORY_NAME + " = ?",
+                CategoriesView.VIEW_NAME,
+                CategoriesView.RAW_PROJECTION,
+                CategoriesView.COL_CATEGORY_NAME + " = ?",
                 new String[]{categoryName},
                 null, null, null
         );
 
         if (!cursor.moveToFirst()) {
             ContentValues newCategoryValues = new ContentValues();
-            newCategoryValues.put(CategoriesTable.COL_CATEGORY_NAME, categoryName);
+            newCategoryValues.put(CategoriesView.COL_CATEGORY_NAME, categoryName);
             return insertCategory(newCategoryValues);
         }
 
-        long id = cursor.getLong(CategoriesTable.INDEX_ID);
+        long id = cursor.getLong(CategoriesView.INDEX_ID);
         cursor.close();
         return id;
     }
@@ -375,9 +375,9 @@ public class BudgetProvider extends ContentProvider {
 
         public static Cursor queryCategoryById(SQLiteDatabase database, String categoryId) {
             return database.query(
-                    CategoriesTable.TABLE_NAME,
-                    CategoriesTable.RAW_PROJECTION,
-                    CategoriesTable._ID + " = ?",
+                    CategoriesView.VIEW_NAME,
+                    CategoriesView.RAW_PROJECTION,
+                    CategoriesView._ID + " = ?",
                     new String[]{categoryId},
                     null, null, null
             );

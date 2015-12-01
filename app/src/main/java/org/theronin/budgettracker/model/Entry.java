@@ -3,7 +3,7 @@ package org.theronin.budgettracker.model;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import org.theronin.budgettracker.data.BudgetContract.CategoriesTable;
+import org.theronin.budgettracker.data.BudgetContract.CategoriesView;
 import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
 
 public class Entry {
@@ -14,7 +14,7 @@ public class Entry {
 
     public static final String [] projection = {
             EntriesTable.TABLE_NAME + "." + EntriesTable._ID,
-            CategoriesTable.TABLE_NAME + "." + CategoriesTable.COL_CATEGORY_NAME,
+            CategoriesView.VIEW_NAME + "." + CategoriesView.COL_CATEGORY_NAME,
             EntriesTable.COL_DATE_ENTERED,
             EntriesTable.COL_AMOUNT_CENTS
     };
