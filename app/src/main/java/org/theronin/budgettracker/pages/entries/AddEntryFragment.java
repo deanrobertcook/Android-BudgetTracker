@@ -26,6 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.theronin.budgettracker.R;
+import org.theronin.budgettracker.comparators.CategoryAlphabeticalComparator;
+import org.theronin.budgettracker.comparators.CategoryFrequencyComparator;
 import org.theronin.budgettracker.data.BudgetContract;
 import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
 import org.theronin.budgettracker.model.Category;
@@ -280,14 +282,14 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
         private void initialiseSortingBlocks() {
             comparators = new ArrayList<>();
             if (categories.size() > FREQUENCY_SORT_SIZE * 2) {
-                comparators.add(new FrequencyComparator());
-                comparators.add(new AlphabeticalComparator());
+                comparators.add(new CategoryFrequencyComparator());
+                comparators.add(new CategoryAlphabeticalComparator());
 
                 sortSizes = new int[]{
                         FREQUENCY_SORT_SIZE,
                         categories.size() - 1};
             } else {
-                comparators.add(new AlphabeticalComparator());
+                comparators.add(new CategoryAlphabeticalComparator());
                 sortSizes = new int[]{categories.size() - 1};
             }
         }
@@ -396,20 +398,6 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
         @Override
         public void sort(Comparator<? super String> comparator) {
             //prevent sorting of the parent class
-        }
-
-        private class FrequencyComparator implements Comparator<Category> {
-            @Override
-            public int compare(Category lhs, Category rhs) {
-                return (int) (lhs.frequency - rhs.frequency);
-            }
-        }
-
-        private class AlphabeticalComparator implements Comparator<Category> {
-            @Override
-            public int compare(Category lhs, Category rhs) {
-                return lhs.name.compareTo(rhs.name);
-            }
         }
     }
 }

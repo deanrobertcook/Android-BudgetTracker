@@ -51,7 +51,6 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
     }
 
     public static void dropTables(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("DROP VIEW IF EXISTS " + CategoriesView.VIEW_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + EntriesTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CategoriesView.VIEW_NAME);
     }

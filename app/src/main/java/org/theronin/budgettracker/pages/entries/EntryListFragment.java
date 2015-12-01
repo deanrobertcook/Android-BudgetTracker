@@ -25,6 +25,7 @@ public class EntryListFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int ENTRY_LOADER_ID = 0;
+    private static final String SORT_ORDER = "date_entered DESC";
 
     private EntriesAdapter adapter;
     private Entry entrySelected;
@@ -88,7 +89,7 @@ public class EntryListFragment extends Fragment implements
                 getActivity(),
                 EntriesTable.CONTENT_URI,
                 Entry.projection,
-                null, null, null
+                null, null, SORT_ORDER
         );
     }
 

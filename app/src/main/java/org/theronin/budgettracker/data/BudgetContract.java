@@ -115,7 +115,7 @@ public class BudgetContract {
          */
         public static final String TABLE_NAME = "entries";
 
-        public static final String COL_DATE_ENTERED = "dateEntered";
+        public static final String COL_DATE_ENTERED = "date_entered";
         public static final String COL_CATEGORY_ID = "category_id";
         public static final String COL_AMOUNT_CENTS = "amount_cents";
 

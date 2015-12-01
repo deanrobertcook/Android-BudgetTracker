@@ -63,12 +63,12 @@ public class BudgetProvider extends ContentProvider {
         String id;
         switch (uriMatcher.match(uri)) {
             case CATEGORIES:
-                return queryCategories(projection, selection, selectionArgs);
+                return queryCategories(projection, selection, selectionArgs, sortOrder);
             case CATEGORY_WITH_ID:
                 id = uri.getLastPathSegment();
                 return queryCategoryWithId(id, projection);
             case ENTRIES:
-                return queryEntries(projection, selection, selectionArgs);
+                return queryEntries(projection, selection, selectionArgs, sortOrder);
             case ENTRY_WITH_ID:
                 id = uri.getLastPathSegment();
                 return queryEntryWithId(id, projection);
@@ -89,13 +89,14 @@ public class BudgetProvider extends ContentProvider {
         return cursor;
     }
 
-    private Cursor queryCategories(String[] projection, String selection, String[] selectionArgs) {
+    private Cursor queryCategories(String[] projection, String selection, String[] selectionArgs,
+                                   String sortOrder) {
         Cursor cursor = dbHelper.getReadableDatabase().query(
                 CategoriesView.VIEW_NAME,
                 projection,
                 selection,
                 selectionArgs,
-                null, null, null
+                null, null, sortOrder
         );
         cursor.setNotificationUri(getContext().getContentResolver(), CategoriesView.CONTENT_URI);
         return cursor;
@@ -113,13 +114,13 @@ public class BudgetProvider extends ContentProvider {
         return cursor;
     }
 
-    private Cursor queryEntries(String[] projection, String selection, String[] selectionArgs) {
+    private Cursor queryEntries(String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor cursor = entryJoinedOnCategoryQueryBuilder.query(
                 dbHelper.getReadableDatabase(),
                 projection,
                 selection,
                 selectionArgs,
-                null, null, null
+                null, null, sortOrder
         );
         cursor.setNotificationUri(getContext().getContentResolver(), EntriesTable.CONTENT_URI);
         return cursor;

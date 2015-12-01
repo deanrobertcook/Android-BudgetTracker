@@ -13,15 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.theronin.budgettracker.R;
+import org.theronin.budgettracker.comparators.CategoryAlphabeticalComparator;
 import org.theronin.budgettracker.data.BudgetContract;
 import org.theronin.budgettracker.model.Category;
 
 public class CategoryListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-
-
     private static final int CATEGORY_LOADER_ID = 0;
     private CategoriesAdapter adapter;
+    private String sortOrder = CategoryAlphabeticalComparator.SQL_SORT_ORDER;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
                 getActivity(),
                 BudgetContract.CategoriesView.CONTENT_URI,
                 Category.projection,
-                null, null, null
+                null, null, sortOrder
         );
     }
 
