@@ -159,6 +159,9 @@ public class FileBackupAgent  {
                     object.remove("dateEntered");
                     object.addProperty("utcDateEntered", Long.toString(utcTime));
                 }
+                if (!object.has("currencyEntered")) {
+                    object.addProperty("currencyEntered", "EUR");
+                }
             }
             return gson.toJson(jsonArray);
         }
