@@ -39,7 +39,6 @@ public class Entry {
         this.currencyEntered = currencyEntered;
     }
 
-
     public static Entry fromCursor(Cursor cursor) {
         return new Entry(
                 cursor.getLong(INDEX_ID),
