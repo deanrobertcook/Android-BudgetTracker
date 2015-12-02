@@ -8,23 +8,27 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
-import org.theronin.budgettracker.task.FileBackupAgent;
 import org.theronin.budgettracker.model.Entry;
+import org.theronin.budgettracker.model.ExchangeRate;
 import org.theronin.budgettracker.pages.categories.CategoriesActivity;
 import org.theronin.budgettracker.pages.entries.EntriesActivity;
+import org.theronin.budgettracker.task.ExchangeRateDownloadAgent;
+import org.theronin.budgettracker.task.FileBackupAgent;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class MainActivity extends FragmentActivity implements
         MainMenuFragment.Listener,
         LoaderManager.LoaderCallbacks<Cursor>,
-        FileBackupAgent.Listener {
+        FileBackupAgent.Listener, ExchangeRateDownloadAgent.Listener {
 
     private static final String TAG = MainActivity.class.getName();
     private static final int ENTRY_LOADER_ID = 0;
@@ -33,6 +37,7 @@ public class MainActivity extends FragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__main);
+        new ExchangeRateDownloadAgent().getExchangeData(1448899200000L, this);
     }
 
     @Override
@@ -114,5 +119,12 @@ public class MainActivity extends FragmentActivity implements
         }
 
         getContentResolver().bulkInsert(EntriesTable.CONTENT_URI, valueSet);
+    }
+
+    @Override
+    public void onExchangeRatesDownloaded(List<ExchangeRate> rates) {
+        for (ExchangeRate rate: rates) {
+            Log.d("EXCHANGE RATES", rate.toString());
+        }
     }
 }
