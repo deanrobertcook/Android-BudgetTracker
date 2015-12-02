@@ -99,7 +99,7 @@ public class ExchangeRateDownloadAgent {
         protected void onPostExecute(String exchangeRatesJson) {
             Gson gson = new Gson();
             List<ExchangeRate> exchangeRates = new ArrayList<>();
-            
+
             Set<Map.Entry<String, JsonElement>> entries =
                     ((JsonObject) gson.fromJson(exchangeRatesJson, JsonElement.class))
                     .getAsJsonObject(RATES_KEY).entrySet();

@@ -17,7 +17,7 @@ public class Entry {
             EntriesTable.TABLE_NAME + "." + EntriesTable._ID,
             CategoriesView.VIEW_NAME + "." + CategoriesView.COL_CATEGORY_NAME,
             EntriesTable.COL_DATE_ENTERED,
-            EntriesTable.COL_CURRENCY_ENTERED,
+            EntriesTable.COL_CURRENCY_CODE,
             EntriesTable.COL_AMOUNT_CENTS
     };
 

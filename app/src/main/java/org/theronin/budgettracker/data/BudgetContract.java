@@ -118,7 +118,7 @@ public class BudgetContract {
         public static final String COL_DATE_ENTERED = "date_entered";
         public static final String COL_CATEGORY_ID = "category_id";
         public static final String COL_AMOUNT_CENTS = "amount_cents";
-        public static final String COL_CURRENCY_ENTERED = "currency_entered";
+        public static final String COL_CURRENCY_CODE = "currency_entered";
 
         public static final String SQL_CREATE_ENTRIES_TABLE = "CREATE TABLE " + EntriesTable
                 .TABLE_NAME + " (" +
@@ -128,13 +128,13 @@ public class BudgetContract {
                 COL_DATE_ENTERED + " INTEGER NOT NULL, " +
                 COL_CATEGORY_ID + " INTEGER NOT NULL, " +
                 COL_AMOUNT_CENTS + " INTEGER NOT NULL, " +
-                COL_CURRENCY_ENTERED + " INTEGER NOT NULL, " +
+                COL_CURRENCY_CODE + " TEXT NOT NULL, " +
 
                 "FOREIGN KEY (" + COL_CATEGORY_ID + ") REFERENCES " +
                 CategoriesView.VIEW_NAME + " (" + CategoriesView._ID + "), " +
 
-                "FOREIGN KEY (" + COL_CURRENCY_ENTERED + ") REFERENCES " +
-                CurrenciesTable.TABLE_NAME + " (" + CurrenciesTable._ID + "))";
+                "FOREIGN KEY (" + COL_CURRENCY_CODE + ") REFERENCES " +
+                CurrenciesTable.TABLE_NAME + " (" + CurrenciesTable.COL_CODE + "))";
 
         /**
          * Helper projections for faster query write-ups
@@ -158,6 +158,26 @@ public class BudgetContract {
          */
         public static final String TABLE_NAME = "currencies";
 
+        public static final String COL_CODE = "code";
+        public static final String COL_SYMBOL = "symbol";
+        public static final String COL_NAME = "name";
+
+        public static final String SQL_CREATE_CATEGORIES_TABLE = "CREATE TABLE " +
+                TABLE_NAME + " (" +
+                _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+
+                COL_CODE + " TEXT NOT NULL, " +
+                COL_NAME + " TEXT NOT NULL, " +
+                COL_SYMBOL + " TEXT NOT NULL, " +
+                "UNIQUE (" + COL_CODE + ") ON CONFLICT IGNORE)";
+    }
+
+    public static final class ExchangeRatesTable implements BaseColumns {
+        /**
+         * SQLite constants
+         */
+        public static final String TABLE_NAME = "exchange_rates";
+
         public static final String COL_CURRENCY_CODE = "currency_code";
         public static final String COL_DATE = "date";
         public static final String COL_USD_RATE = "usd_rate";
@@ -167,7 +187,9 @@ public class BudgetContract {
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
                 COL_CURRENCY_CODE + " TEXT NOT NULL, " +
+                COL_DATE + " INTEGER NOT NULL, " +
                 COL_USD_RATE + " REAL NOT NULL, " +
-                "UNIQUE (" + COL_CURRENCY_CODE + ", " + COL_DATE + ", " + COL_USD_RATE + ") ON CONFLICT IGNORE)";
+                "FOREIGN KEY (" + COL_CURRENCY_CODE + ") REFERENCES " + CurrenciesTable.TABLE_NAME + " (" + CurrenciesTable.COL_CODE + "), " +
+                "UNIQUE (" + COL_CURRENCY_CODE + ", " + COL_DATE + ") ON CONFLICT IGNORE)";
     }
 }
