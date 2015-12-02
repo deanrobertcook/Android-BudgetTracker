@@ -36,7 +36,7 @@ public class EntriesAdapter extends CursorRecyclerViewAdapter<EntriesAdapter.Vie
     public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor) {
         final Entry boundEntry = Entry.fromCursor(cursor);
 
-        viewHolder.currencySymbolTextView.setText(MoneyUtils.getCurrencySymbol());
+        viewHolder.currencySymbolTextView.setText(boundEntry.currencyEntered);
         viewHolder.amountTextView.setText(
                 MoneyUtils.convertCentsToDisplayAmount(boundEntry.amount));
         viewHolder.categoryTextView.setText(boundEntry.categoryName);
