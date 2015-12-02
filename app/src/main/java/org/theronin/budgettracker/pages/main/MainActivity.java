@@ -31,13 +31,13 @@ public class MainActivity extends FragmentActivity implements
         FileBackupAgent.Listener, ExchangeRateDownloadAgent.Listener {
 
     private static final String TAG = MainActivity.class.getName();
+
     private static final int ENTRY_LOADER_ID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__main);
-        new ExchangeRateDownloadAgent().getExchangeData(1448899200000L, this);
     }
 
     @Override
@@ -87,24 +87,40 @@ public class MainActivity extends FragmentActivity implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(
-                this,
-                EntriesTable.CONTENT_URI,
-                Entry.projection,
-                null, null, null
-        );
+        switch (id) {
+            case ENTRY_LOADER_ID:
+                return new CursorLoader(
+                        this,
+                        EntriesTable.CONTENT_URI,
+                        Entry.projection,
+                        null, null, null
+                );
+            default:
+                throw new RuntimeException("Unrecognised loader id");
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        switch (loader.getId()) {
+            case ENTRY_LOADER_ID:
+                handleLoadedEntries(data);
+                break;
+            default:
+                throw new RuntimeException("Unrecognised loader id");
+        }
+    }
+
+    private void handleLoadedEntries(Cursor data) {
         ArrayList<Entry> entries = new ArrayList<>();
         while (data.moveToNext()) {
             Entry entry = Entry.fromCursor(data);
             entries.add(entry);
         }
-
         new FileBackupAgent().backupEntries(entries);
     }
+
+
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -113,12 +129,11 @@ public class MainActivity extends FragmentActivity implements
 
     @Override
     public void onEntriesRestored(List<Entry> entries) {
-        ContentValues[] valueSet = new ContentValues[entries.size()];
+        ContentValues[] valuesArray = new ContentValues[entries.size()];
         for (int i = 0; i < entries.size(); i++) {
-            valueSet[i] = entries.get(i).toValues();
+            valuesArray[i] = entries.get(i).toValues();
         }
-
-        getContentResolver().bulkInsert(EntriesTable.CONTENT_URI, valueSet);
+        getContentResolver().bulkInsert(EntriesTable.CONTENT_URI, valuesArray);
     }
 
     @Override
