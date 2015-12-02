@@ -28,9 +28,9 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="CurrencyStyle">
+    <style name="CurrencySpinnerStyle" parent="@android:style/Widget.Material.EditText">
         <item name="android:textSize">@dimen/font_size_medium</item>
-        <item name="android:padding">@dimen/padding_single</item>
+        <item name="android:background">@color/primary</item>
     </style>
 
     <style name="MainMenuTextStyle">
