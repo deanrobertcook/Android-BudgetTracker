@@ -10,10 +10,12 @@ import android.net.Uri;
 
 import org.theronin.budgettracker.data.BudgetContract.CategoriesTable;
 import org.theronin.budgettracker.data.BudgetContract.CategoriesView;
+import org.theronin.budgettracker.data.BudgetContract.CurrenciesTable;
 import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
 import org.theronin.budgettracker.model.Entry;
 
 public class BudgetProvider extends ContentProvider {
+    private static final String TAG = BudgetProvider.class.getName();
 
     /**
      * URL match values
@@ -22,6 +24,7 @@ public class BudgetProvider extends ContentProvider {
     public static final int CATEGORY_WITH_ID = 101;
     public static final int ENTRIES = 200;
     public static final int ENTRY_WITH_ID = 201;
+    public static final int CURRENCIES = 300;
 
     private static final UriMatcher uriMatcher = buildUriMatcher();
     private BudgetDbHelper dbHelper;
@@ -34,6 +37,7 @@ public class BudgetProvider extends ContentProvider {
         matcher.addURI(authority, CategoriesView.PROVIDER_PATH + "/#", CATEGORY_WITH_ID);
         matcher.addURI(authority, EntriesTable.PROVIDER_PATH, ENTRIES);
         matcher.addURI(authority, EntriesTable.PROVIDER_PATH + "/#", ENTRY_WITH_ID);
+        matcher.addURI(authority, CurrenciesTable.PROVIDER_PATH, CURRENCIES);
 
         return matcher;
     }
@@ -72,6 +76,8 @@ public class BudgetProvider extends ContentProvider {
             case ENTRY_WITH_ID:
                 id = uri.getLastPathSegment();
                 return queryEntryWithId(id, projection);
+            case CURRENCIES:
+                return queryCurrencies(projection, selection, selectionArgs, sortOrder);
             default:
                 throw new UnsupportedOperationException("Unknown URI: " + uri.toString());
         }
@@ -126,6 +132,18 @@ public class BudgetProvider extends ContentProvider {
         return cursor;
     }
 
+    private Cursor queryCurrencies(String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        Cursor cursor = dbHelper.getReadableDatabase().query(
+                CurrenciesTable.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null, null, sortOrder
+        );
+        cursor.setNotificationUri(getContext().getContentResolver(), CurrenciesTable.CONTENT_URI);
+        return cursor;
+    }
+
     @Override
     public String getType(Uri uri) {
         switch (uriMatcher.match(uri)) {
@@ -137,6 +155,8 @@ public class BudgetProvider extends ContentProvider {
                 return EntriesTable.CONTENT_TYPE;
             case ENTRY_WITH_ID:
                 return EntriesTable.CONTENT_ITEM_TYPE;
+            case CURRENCIES:
+                return CurrenciesTable.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown URI: " + uri.toString());
         }
@@ -166,6 +186,7 @@ public class BudgetProvider extends ContentProvider {
     private void notifyChanges() {
         getContext().getContentResolver().notifyChange(EntriesTable.CONTENT_URI, null);
         getContext().getContentResolver().notifyChange(CategoriesView.CONTENT_URI, null);
+        getContext().getContentResolver().notifyChange(CurrenciesTable.CONTENT_URI, null);
     }
 
     private Uri insertEntry(ContentValues values) {
@@ -229,7 +250,6 @@ public class BudgetProvider extends ContentProvider {
         } finally {
             db.endTransaction();
         }
-
         return valuesArray.length;
     }
 

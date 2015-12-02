@@ -40,6 +40,8 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
 
     public static void createTables(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(CurrenciesTable.SQL_CREATE_CATEGORIES_TABLE);
+        sqLiteDatabase.execSQL(CurrenciesTable.SQL_DEFAULT_CURRENCIES);
+
         sqLiteDatabase.execSQL(ExchangeRatesTable.SQL_CREATE_CATEGORIES_TABLE);
         sqLiteDatabase.execSQL(CategoriesTable.SQL_CREATE_CATEGORIES_TABLE);
         sqLiteDatabase.execSQL(EntriesTable.SQL_CREATE_ENTRIES_TABLE);

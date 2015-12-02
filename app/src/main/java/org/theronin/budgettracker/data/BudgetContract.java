@@ -154,22 +154,56 @@ public class BudgetContract {
 
     public static final class CurrenciesTable implements BaseColumns {
         /**
+         * Provider constants
+         */
+        public static final String PROVIDER_PATH = "currency";
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath
+                (PROVIDER_PATH).build();
+
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" +
+                CONTENT_AUTHORITY + "." + PROVIDER_PATH;
+
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" +
+                CONTENT_AUTHORITY + "." + PROVIDER_PATH;
+
+        /**
          * SQLite constants
          */
         public static final String TABLE_NAME = "currencies";
 
         public static final String COL_CODE = "code";
         public static final String COL_SYMBOL = "symbol";
-        public static final String COL_NAME = "name";
 
         public static final String SQL_CREATE_CATEGORIES_TABLE = "CREATE TABLE " +
                 TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
                 COL_CODE + " TEXT NOT NULL, " +
-                COL_NAME + " TEXT NOT NULL, " +
                 COL_SYMBOL + " TEXT NOT NULL, " +
                 "UNIQUE (" + COL_CODE + ") ON CONFLICT IGNORE)";
+
+        public static final String SQL_DEFAULT_CURRENCIES =
+                "INSERT INTO " + CurrenciesTable.TABLE_NAME +
+                        " (" + CurrenciesTable.COL_CODE + ", " + CurrenciesTable.COL_SYMBOL + ") " +
+                        "VALUES " +
+                        "('USD', '$')," +
+                        "('EUR', '€')," +
+                        "('JPY', '¥')," +
+                        "('GBP', '£')," +
+                        "('AUD', '$')";
+
+        /**
+         * Helper projections for faster query write-ups
+         */
+        public static final String[] PROJECTION = {
+                _ID,
+                COL_CODE,
+                COL_SYMBOL
+        };
+
+        public static final int INDEX_ID = 0;
+        public static final int INDEX_CODE = 1;
+        public static final int INDEX_SYMBOL = 2;
     }
 
     public static final class ExchangeRatesTable implements BaseColumns {
