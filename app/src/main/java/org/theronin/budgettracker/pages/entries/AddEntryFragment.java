@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -84,6 +85,10 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
         currencySpinner = (Spinner) rootView.findViewById(R.id.spn__currency_symbol);
         currencySymbolSpinnerAdapter = new CurrencySymbolSpinnerAdapter();
         currencySpinner.setAdapter(currencySymbolSpinnerAdapter);
+
+        SharedPreferences preferences = getActivity()
+                .getSharedPreferences(getString(R.string.shared_preferences_key), Context.MODE_PRIVATE);
+
 
         confirmEntryButton = (Button) rootView.findViewById(R.id.btn__add_entry_confirm);
         confirmEntryButton.setOnClickListener(new View.OnClickListener() {

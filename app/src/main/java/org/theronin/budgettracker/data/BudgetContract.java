@@ -114,32 +114,6 @@ public class BudgetContract {
                 COL_SYMBOL + " TEXT NOT NULL, " +
                 "UNIQUE (" + COL_CODE + ") ON CONFLICT IGNORE)";
 
-        //Top 20 currencies from wikipedia, in order of most traded
-        public static final String SQL_DEFAULT_CURRENCIES =
-                "INSERT INTO " + CurrenciesTable.TABLE_NAME +
-                        " (" + CurrenciesTable.COL_CODE + ", " + CurrenciesTable.COL_SYMBOL + ") " +
-                        "VALUES " +
-                        "('USD', '$')," +
-                        "('EUR', '€')," +
-                        "('JPY', '¥')," +
-                        "('GBP', '£')," +
-                        "('AUD', '$')," +
-                        "('CHF', 'CHF')," +
-                        "('CAD', '$')," +
-                        "('MXN', '$')," +
-                        "('CNY', '¥')," +
-                        "('NZD', '$')," +
-                        "('SEK', 'kr')," +
-                        "('RUB', '\u20BD')," +
-                        "('HKD', '$')," +
-                        "('NOK', 'kr')," +
-                        "('SGD', '$')," +
-                        "('TRY', '\u20BA')," +
-                        "('KRW', '₩')," +
-                        "('ZAR', 'R')," +
-                        "('BRL', '$')," +
-                        "('INR', '\u20B9')";
-
         /**
          * Helper projections for faster query write-ups
          */

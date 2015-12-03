@@ -18,10 +18,10 @@ public class DatabaseDevUtils {
             "tissues", "beer", "electronics", "schawarma", "pens", "paper", "train tickets"};
 
 
-    public static void resetDatabase(SQLiteDatabase database) {
-        BudgetDbHelper.dropTables(database);
-        BudgetDbHelper.createTables(database);
-    }
+//    public static void resetDatabase(SQLiteDatabase database) {
+//        BudgetDbHelper.dropTables(database);
+//        BudgetDbHelper.createTables(database);
+//    }
 
     public static long insertCategoryDirectlyToDatabase(BudgetDbHelper dbHelper, Category
             category) {

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Top 20 currencies from wikipedia, in order of most traded-->
+    <array name="currency_codes">
+        <item>USD</item>
+        <item>EUR</item>
+        <item>JPY</item>
+        <item>GBP</item>
+        <item>AUD</item>
+        <item>CHF</item>
+        <item>CAD</item>
+        <item>MXN</item>
+        <item>CNY</item>
+        <item>NZD</item>
+        <item>SEK</item>
+        <item>RUB</item>
+        <item>HKD</item>
+        <item>NOK</item>
+        <item>SGD</item>
+        <item>TRY</item>
+        <item>KRW</item>
+        <item>ZAR</item>
+        <item>BRL</item>
+        <item>INR</item>
+    </array>
+
+    <array name="currency_symbols">
+        <item>$</item>
+        <item>€</item>
+        <item>¥</item>
+        <item>£</item>
+        <item>$</item>
+        <item>CHF</item>
+        <item>$</item>
+        <item>$</item>
+        <item>¥</item>
+        <item>$</item>
+        <item>kr</item>
+        <item>\u20BD</item>
+        <item>$</item>
+        <item>kr</item>
+        <item>$</item>
+        <item>\u20BA</item>
+        <item>₩</item>
+        <item>R</item>
+        <item>$</item>
+        <item>\u20B9</item>
+    </array>
+</resources>
