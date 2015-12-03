@@ -8,6 +8,7 @@ import org.theronin.budgettracker.data.BudgetContract.CategoriesTable;
 import org.theronin.budgettracker.data.BudgetContract.CategoriesView;
 import org.theronin.budgettracker.data.BudgetContract.CurrenciesTable;
 import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
+import org.theronin.budgettracker.data.BudgetContract.EntriesView;
 import org.theronin.budgettracker.data.BudgetContract.ExchangeRatesTable;
 
 public class BudgetDbHelper extends SQLiteOpenHelper {
@@ -46,6 +47,7 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(CategoriesTable.SQL_CREATE_CATEGORIES_TABLE);
         sqLiteDatabase.execSQL(EntriesTable.SQL_CREATE_ENTRIES_TABLE);
         sqLiteDatabase.execSQL(CategoriesView.SQL_CREATE_CATEGORIES_VIEW);
+        sqLiteDatabase.execSQL(EntriesView.SQL_CREATE_CATEGORIES_VIEW);
     }
 
     public static void dropTables(SQLiteDatabase sqLiteDatabase) {

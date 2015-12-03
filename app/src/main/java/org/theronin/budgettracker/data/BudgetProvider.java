@@ -5,14 +5,13 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
 import org.theronin.budgettracker.data.BudgetContract.CategoriesTable;
 import org.theronin.budgettracker.data.BudgetContract.CategoriesView;
 import org.theronin.budgettracker.data.BudgetContract.CurrenciesTable;
 import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
-import org.theronin.budgettracker.model.Entry;
+import org.theronin.budgettracker.data.BudgetContract.EntriesView;
 
 public class BudgetProvider extends ContentProvider {
     private static final String TAG = BudgetProvider.class.getName();
@@ -35,24 +34,11 @@ public class BudgetProvider extends ContentProvider {
 
         matcher.addURI(authority, CategoriesView.PROVIDER_PATH, CATEGORIES);
         matcher.addURI(authority, CategoriesView.PROVIDER_PATH + "/#", CATEGORY_WITH_ID);
-        matcher.addURI(authority, EntriesTable.PROVIDER_PATH, ENTRIES);
-        matcher.addURI(authority, EntriesTable.PROVIDER_PATH + "/#", ENTRY_WITH_ID);
+        matcher.addURI(authority, EntriesView.PROVIDER_PATH, ENTRIES);
+        matcher.addURI(authority, EntriesView.PROVIDER_PATH + "/#", ENTRY_WITH_ID);
         matcher.addURI(authority, CurrenciesTable.PROVIDER_PATH, CURRENCIES);
 
         return matcher;
-    }
-
-    private static final SQLiteQueryBuilder entryJoinedOnCategoryQueryBuilder;
-
-    static {
-        entryJoinedOnCategoryQueryBuilder = new SQLiteQueryBuilder();
-
-        entryJoinedOnCategoryQueryBuilder.setTables(
-                EntriesTable.TABLE_NAME + " LEFT JOIN " + CategoriesView.VIEW_NAME +
-                        " ON " +
-                        EntriesTable.TABLE_NAME + "." + EntriesTable.COL_CATEGORY_ID + " = " +
-                        CategoriesView.VIEW_NAME + "." + CategoriesView._ID
-        );
     }
 
     @Override
@@ -110,25 +96,25 @@ public class BudgetProvider extends ContentProvider {
 
     private Cursor queryEntryWithId(String id, String[] projection) {
         Cursor cursor = dbHelper.getReadableDatabase().query(
-                EntriesTable.TABLE_NAME,
+                EntriesView.VIEW_NAME,
                 projection,
-                EntriesTable._ID + " = ?",
+                EntriesView._ID + " = ?",
                 new String[]{id},
                 null, null, null
         );
-        cursor.setNotificationUri(getContext().getContentResolver(), EntriesTable.CONTENT_URI);
+        cursor.setNotificationUri(getContext().getContentResolver(), EntriesView.CONTENT_URI);
         return cursor;
     }
 
     private Cursor queryEntries(String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        Cursor cursor = entryJoinedOnCategoryQueryBuilder.query(
-                dbHelper.getReadableDatabase(),
+        Cursor cursor = dbHelper.getReadableDatabase().query(
+                EntriesView.VIEW_NAME,
                 projection,
                 selection,
                 selectionArgs,
                 null, null, sortOrder
         );
-        cursor.setNotificationUri(getContext().getContentResolver(), EntriesTable.CONTENT_URI);
+        cursor.setNotificationUri(getContext().getContentResolver(), EntriesView.CONTENT_URI);
         return cursor;
     }
 
@@ -152,9 +138,9 @@ public class BudgetProvider extends ContentProvider {
             case CATEGORY_WITH_ID:
                 return CategoriesView.CONTENT_ITEM_TYPE;
             case ENTRIES:
-                return EntriesTable.CONTENT_TYPE;
+                return EntriesView.CONTENT_TYPE;
             case ENTRY_WITH_ID:
-                return EntriesTable.CONTENT_ITEM_TYPE;
+                return EntriesView.CONTENT_ITEM_TYPE;
             case CURRENCIES:
                 return CurrenciesTable.CONTENT_TYPE;
             default:
@@ -184,18 +170,19 @@ public class BudgetProvider extends ContentProvider {
     }
 
     private void notifyChanges() {
-        getContext().getContentResolver().notifyChange(EntriesTable.CONTENT_URI, null);
+        getContext().getContentResolver().notifyChange(EntriesView.CONTENT_URI, null);
         getContext().getContentResolver().notifyChange(CategoriesView.CONTENT_URI, null);
         getContext().getContentResolver().notifyChange(CurrenciesTable.CONTENT_URI, null);
     }
 
     private Uri insertEntry(ContentValues values) {
+        switchCategoryNameToId(values);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         long entryId = db.insert(EntriesTable.TABLE_NAME, null, values);
         notifyChanges();
 
-        return EntriesTable.CONTENT_URI.buildUpon().appendPath(Long.toString(entryId))
+        return EntriesView.CONTENT_URI.buildUpon().appendPath(Long.toString(entryId))
                 .build();
     }
 
@@ -255,29 +242,33 @@ public class BudgetProvider extends ContentProvider {
 
     private void switchCategoryNamesToIds(ContentValues[] valuesArray) {
         for (ContentValues values : valuesArray) {
-            String categoryName = values.getAsString(Entry.projection[Entry.INDEX_CATEGORY_NAME]);
-            long categoryId = getCategoryId(categoryName);
-            values.remove(Entry.projection[Entry.INDEX_CATEGORY_NAME]);
-            values.put(EntriesTable.COL_CATEGORY_ID, categoryId);
+            switchCategoryNameToId(values);
         }
     }
 
+    private void switchCategoryNameToId(ContentValues values) {
+        String categoryName = values.getAsString(EntriesTable.COL_CATEGORY_ID);
+        long categoryId = getCategoryId(categoryName);
+        values.put(EntriesTable.COL_CATEGORY_ID, categoryId);
+    }
+
+    //TODO can this be made more efficient? lots of single queries here.
     private long getCategoryId(String categoryName) {
         Cursor cursor = dbHelper.getWritableDatabase().query(
-                CategoriesView.VIEW_NAME,
-                CategoriesView.RAW_PROJECTION,
-                CategoriesView.COL_CATEGORY_NAME + " = ?",
+                CategoriesTable.TABLE_NAME,
+                CategoriesTable.PROJECTION,
+                CategoriesTable.COL_CATEGORY_NAME + " = ?",
                 new String[]{categoryName},
                 null, null, null
         );
 
         if (!cursor.moveToFirst()) {
             ContentValues newCategoryValues = new ContentValues();
-            newCategoryValues.put(CategoriesView.COL_CATEGORY_NAME, categoryName);
+            newCategoryValues.put(CategoriesTable.COL_CATEGORY_NAME, categoryName);
             return insertCategory(newCategoryValues);
         }
 
-        long id = cursor.getLong(CategoriesView.INDEX_ID);
+        long id = cursor.getLong(CategoriesTable.INDEX_ID);
         cursor.close();
         return id;
     }
