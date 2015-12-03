@@ -18,6 +18,7 @@ import org.theronin.budgettracker.model.Entry;
 import org.theronin.budgettracker.model.ExchangeRate;
 import org.theronin.budgettracker.pages.categories.CategoriesActivity;
 import org.theronin.budgettracker.pages.entries.EntriesActivity;
+import org.theronin.budgettracker.pages.settings.SettingsActivity;
 import org.theronin.budgettracker.task.ExchangeRateDownloadAgent;
 import org.theronin.budgettracker.task.FileBackupAgent;
 
@@ -53,6 +54,7 @@ public class MainActivity extends FragmentActivity implements
 
         switch (id) {
             case R.id.action_settings:
+                showSettings();
                 return true;
             case R.id.action_backup:
                 backupEntries();
@@ -63,6 +65,11 @@ public class MainActivity extends FragmentActivity implements
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showSettings() {
+        Intent settingsIntent = new Intent(this, SettingsActivity.class);
+        startActivity(settingsIntent);
     }
 
     private void backupEntries() {

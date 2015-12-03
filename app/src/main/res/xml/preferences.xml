@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <PreferenceCategory
+        android:title="@string/prefcat_currency_title">
+        <ListPreference
+            android:key="@string/pref_home_currency_key"
+            android:title="@string/pref_home_currency_title"
+            android:summary="@string/pref_home_currency_summary"
+            android:defaultValue="@string/pref_currency_default"
+            android:entries="@array/currency_names"
+            android:entryValues="@array/currency_codes"/>
+        <ListPreference
+            android:key="@string/pref_current_currency_key"
+            android:title="@string/pref_current_currency_title"
+            android:summary="@string/pref_current_currency_summary"
+            android:defaultValue="@string/pref_currency_default"
+            android:entries="@array/currency_names"
+            android:entryValues="@array/currency_codes"/>
+    </PreferenceCategory>
 </PreferenceScreen>

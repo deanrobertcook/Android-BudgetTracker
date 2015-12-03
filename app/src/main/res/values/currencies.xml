@@ -46,4 +46,27 @@
         <item>$</item>
         <item>\u20B9</item>
     </array>
+
+    <array name="currency_names">
+        <item>United States Dollar</item>
+        <item>Euro</item>
+        <item>Japanese Yen</item>
+        <item>British Pound Sterling</item>
+        <item>Australian Dollar</item>
+        <item>Swiss Franc</item>
+        <item>Canadian Dollar</item>
+        <item>Mexican Peso</item>
+        <item>Chinese Yuan</item>
+        <item>New Zealand Dollar</item>
+        <item>Swedish Krona</item>
+        <item>Aruban Florin</item>
+        <item>Hong Kong Dollar</item>
+        <item>Norwegian Krone</item>
+        <item>Singapore Dollar</item>
+        <item>Turkish Lira</item>
+        <item>South Korean Won</item>
+        <item>South African Rand</item>
+        <item>Brazilian Real</item>
+        <item>Indian Rupee</item>
+    </array>
 </resources>

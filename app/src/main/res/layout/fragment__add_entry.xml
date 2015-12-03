@@ -36,11 +36,15 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <Spinner
-            android:id="@+id/spn__currency_symbol"
-            style="@style/CurrencySpinnerStyle"
+        <LinearLayout
+            android:id="@+id/ll__currency_layout"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:padding="@dimen/padding_single">
+
+            <include layout="@layout/currency_display"/>
+
+        </LinearLayout>
 
         <EditText
             android:id="@+id/et__entry_amount"
