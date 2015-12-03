@@ -38,7 +38,6 @@ import org.theronin.budgettracker.utils.DateUtils;
 import org.theronin.budgettracker.utils.MoneyUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -119,18 +118,9 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
     }
 
     private void updateCurrencyDisplay(SharedPreferences sharedPreferences) {
-        String defaultCurrency = getString(R.string.pref_currency_default);
-        String currentCurrencyKey = getString(R.string.pref_current_currency_key);
-
-        String[] currencyCodes = getResources().getStringArray(R.array.currency_codes);
-        String[] currencySymbols = getResources().getStringArray(R.array.currency_symbols);
-
-        String currencyCode = sharedPreferences.getString(currentCurrencyKey, defaultCurrency);
-        int index = Arrays.asList(currencyCodes).indexOf(currencyCode);
-
-        String currencySymbol = currencySymbols[index];
-        currencyCodeTextView.setText(currencyCode);
-        currencySymbolTextView.setText(currencySymbol);
+        Currency currentCurrency = MoneyUtils.getCurrentCurrency(getActivity(), sharedPreferences);
+        currencyCodeTextView.setText(currentCurrency.code);
+        currencySymbolTextView.setText(currentCurrency.symbol);
     }
 
     @Override

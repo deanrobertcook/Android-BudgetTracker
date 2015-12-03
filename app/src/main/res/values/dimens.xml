@@ -10,5 +10,6 @@
     <dimen name="font_size_medium">24sp</dimen>
     <dimen name="font_size_small">18sp</dimen>
     <dimen name="font_size_extra_small">12sp</dimen>
+    <dimen name="font_size_miniscule">6sp</dimen>
     <dimen name="quick_bar_elevation">4dp</dimen>
 </resources>

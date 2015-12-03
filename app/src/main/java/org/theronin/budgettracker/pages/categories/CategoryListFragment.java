@@ -1,7 +1,7 @@
 package org.theronin.budgettracker.pages.categories;
 
 import android.app.Fragment;
-import android.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
@@ -15,12 +15,14 @@ import android.view.ViewGroup;
 import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.data.BudgetContract.CategoriesView;
 
-public class CategoryListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class CategoryListFragment extends Fragment implements
+        LoaderCallbacks<Cursor> {
 
     private static final int CATEGORY_LOADER_ID = 0;
     private static final String SORT_ORDER =
             CategoriesView.COL_TOTAL_AMOUNT + " DESC, " + CategoriesView.COL_CATEGORY_NAME + " ASC";
     private CategoriesAdapter adapter;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -12,13 +12,17 @@
         android:layout_weight="4"
         style="@style/ListItemStyle"/>
 
-    <TextView
-        android:id="@+id/tv__currency_symbol_total"
+    <LinearLayout
+        android:id="@+id/ll__currency_total"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:orientation="horizontal"
         android:paddingRight="@dimen/padding_single"
-        android:paddingLeft="@dimen/padding_single"
-        style="@style/ListItemStyle"/>
+        android:paddingLeft="@dimen/padding_single">
+
+        <include layout="@layout/currency_display_small"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv__total_column"
@@ -28,13 +32,17 @@
         android:gravity="right"
         style="@style/ListItemStyle"/>
 
-    <TextView
-        android:id="@+id/tv__currency_symbol_monthly"
+    <LinearLayout
+        android:id="@+id/ll__currency_monthly"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:orientation="horizontal"
         android:paddingRight="@dimen/padding_single"
-        android:paddingLeft="@dimen/padding_single"
-        style="@style/ListItemStyle"/>
+        android:paddingLeft="@dimen/padding_single">
+
+        <include layout="@layout/currency_display_small"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv__monthly_column"
