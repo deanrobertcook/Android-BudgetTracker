@@ -16,7 +16,7 @@ public class BudgetContract {
         /**
          * SQLite constants
          */
-        public static final String TABLE_NAME = "categories_base";
+        public static final String TABLE_NAME = "category_base";
 
         public static final String COL_CATEGORY_NAME = "category_name";
 
@@ -101,7 +101,7 @@ public class BudgetContract {
         /**
          * SQLite constants
          */
-        public static final String TABLE_NAME = "currencies";
+        public static final String TABLE_NAME = "currency";
 
         public static final String COL_CODE = "code";
         public static final String COL_SYMBOL = "symbol";
@@ -114,6 +114,7 @@ public class BudgetContract {
                 COL_SYMBOL + " TEXT NOT NULL, " +
                 "UNIQUE (" + COL_CODE + ") ON CONFLICT IGNORE)";
 
+        //Top 20 currencies from wikipedia, in order of most traded
         public static final String SQL_DEFAULT_CURRENCIES =
                 "INSERT INTO " + CurrenciesTable.TABLE_NAME +
                         " (" + CurrenciesTable.COL_CODE + ", " + CurrenciesTable.COL_SYMBOL + ") " +
@@ -122,7 +123,22 @@ public class BudgetContract {
                         "('EUR', '€')," +
                         "('JPY', '¥')," +
                         "('GBP', '£')," +
-                        "('AUD', '$')";
+                        "('AUD', '$')," +
+                        "('CHF', 'CHF')," +
+                        "('CAD', '$')," +
+                        "('MXN', '$')," +
+                        "('CNY', '¥')," +
+                        "('NZD', '$')," +
+                        "('SEK', 'kr')," +
+                        "('RUB', '\u20BD')," +
+                        "('HKD', '$')," +
+                        "('NOK', 'kr')," +
+                        "('SGD', '$')," +
+                        "('TRY', '\u20BA')," +
+                        "('KRW', '₩')," +
+                        "('ZAR', 'R')," +
+                        "('BRL', '₩')," +
+                        "('INR', '\u20B9')";
 
         /**
          * Helper projections for faster query write-ups
@@ -142,7 +158,7 @@ public class BudgetContract {
         /**
          * SQLite constants
          */
-        public static final String TABLE_NAME = "exchange_rates";
+        public static final String TABLE_NAME = "exchange_rate";
 
         public static final String COL_CURRENCY_CODE = "currency_code";
         public static final String COL_DATE = "date";
@@ -177,13 +193,12 @@ public class BudgetContract {
         /**
          * SQLite constants
          */
-        public static final String VIEW_NAME = "categories";
+        public static final String VIEW_NAME = "category";
 
+        public static final String COL_CATEGORY_NAME = CategoriesTable.COL_CATEGORY_NAME;
         public static final String COL_FIRST_ENTRY_DATE = "first_entry_date";
         public static final String COL_TOTAL_AMOUNT = "total_amount_cents";
         public static final String COL_ENTRY_FREQUENCY = "entry_frequency";
-        //these need to be the same so the business layer doesn't need to know about categories_base
-        public static final String COL_CATEGORY_NAME = CategoriesTable.COL_CATEGORY_NAME;
 
     //@formatter:off
         public static final String SQL_CREATE_CATEGORIES_VIEW =
@@ -192,10 +207,10 @@ public class BudgetContract {
                 "SELECT " +
                         CategoriesTable.TABLE_NAME + "." + CategoriesTable._ID + " AS " + _ID + ", " +
 
+                        CategoriesTable.TABLE_NAME + "." + CategoriesTable.COL_CATEGORY_NAME + " AS " + COL_CATEGORY_NAME + ", " +
                         "MIN(" + EntriesTable.TABLE_NAME + "." + EntriesTable.COL_DATE_ENTERED+ ") AS " + COL_FIRST_ENTRY_DATE + ", " +
                         "IFNULL(SUM(" + EntriesTable.TABLE_NAME + "." + EntriesTable.COL_AMOUNT_CENTS + "), 0) AS " + COL_TOTAL_AMOUNT + ", " +
-                        "COUNT(" + EntriesTable.TABLE_NAME + "." + EntriesTable._ID + ")" + " AS " + COL_ENTRY_FREQUENCY + ", " +
-                        CategoriesTable.TABLE_NAME + "." + CategoriesTable.COL_CATEGORY_NAME + " AS " + COL_CATEGORY_NAME + " " +
+                        "COUNT(" + EntriesTable.TABLE_NAME + "." + EntriesTable._ID + ")" + " AS " + COL_ENTRY_FREQUENCY + " " +
 
                 "FROM " +
                         CategoriesTable.TABLE_NAME + " LEFT OUTER JOIN " + EntriesTable.TABLE_NAME + " " +
@@ -214,17 +229,17 @@ public class BudgetContract {
          */
         public static final String[] PROJECTION = {
                 _ID,
+                COL_CATEGORY_NAME,
                 COL_FIRST_ENTRY_DATE,
                 COL_TOTAL_AMOUNT,
                 COL_ENTRY_FREQUENCY,
-                COL_CATEGORY_NAME
         };
 
         public static final int INDEX_ID = 0;
-        public static final int INDEX_FIRST_ENTRY_DATE = 1;
-        public static final int INDEX_TOTAL_AMOUNT = 2;
-        public static final int INDEX_ENTRY_FREQUENCY = 3;
-        public static final int INDEX_CATEGORY_NAME = 4;
+        public static final int INDEX_CATEGORY_NAME = 1;
+        public static final int INDEX_FIRST_ENTRY_DATE = 2;
+        public static final int INDEX_TOTAL_AMOUNT = 3;
+        public static final int INDEX_ENTRY_FREQUENCY = 4;
     }
 
     public static final class EntriesView implements BaseColumns {
@@ -248,9 +263,11 @@ public class BudgetContract {
         public static final String VIEW_NAME = "entry";
 
         public static final String COL_DATE_ENTERED = EntriesTable.COL_DATE_ENTERED;
+        public static final String COL_AMOUNT_CENTS = EntriesTable.COL_AMOUNT_CENTS;
+
         public static final String COL_CATEGORY_ID = EntriesTable.COL_CATEGORY_ID;
         public static final String COL_CATEGORY_NAME = CategoriesTable.COL_CATEGORY_NAME;
-        public static final String COL_AMOUNT_CENTS = EntriesTable.COL_AMOUNT_CENTS;
+
         public static final String COL_CURRENCY_ID = EntriesTable.COL_CURRENCY_ID;
         public static final String COL_CURRENCY_CODE = "currency_code";
         public static final String COL_CURRENCY_SYMBOL = "currency_symbol";
@@ -264,16 +281,20 @@ public class BudgetContract {
 
                         EntriesTable.TABLE_NAME + "." + EntriesTable.COL_DATE_ENTERED + " AS " + COL_DATE_ENTERED + ", " +
                         EntriesTable.TABLE_NAME + "." + EntriesTable.COL_AMOUNT_CENTS + " AS " + COL_AMOUNT_CENTS + ", " +
+
                         EntriesTable.TABLE_NAME + "." + EntriesTable.COL_CATEGORY_ID + " AS " + COL_CATEGORY_ID + ", " +
                         CategoriesTable.TABLE_NAME + "." + CategoriesTable.COL_CATEGORY_NAME + " AS " + COL_CATEGORY_NAME + ", " +
+
                         EntriesTable.TABLE_NAME + "." + EntriesTable.COL_CURRENCY_ID + " AS " + COL_CURRENCY_ID + ", " +
                         CurrenciesTable.TABLE_NAME  + "." + CurrenciesTable.COL_CODE + " AS " + COL_CURRENCY_CODE + ", " +
                         CurrenciesTable.TABLE_NAME + "." + CurrenciesTable.COL_SYMBOL + " AS " + COL_CURRENCY_SYMBOL + " " +
 
                 "FROM " +
                         EntriesTable.TABLE_NAME +
-                        " JOIN " + CategoriesTable.TABLE_NAME + " ON " + EntriesTable.TABLE_NAME + "." + EntriesTable.COL_CATEGORY_ID + " = " + CategoriesTable._ID + " " +
-                        " JOIN " + CurrenciesTable.TABLE_NAME + " ON " + EntriesTable.TABLE_NAME + "." + EntriesTable.COL_CURRENCY_ID + " = " + CurrenciesTable._ID;
+                        " JOIN " + CategoriesTable.TABLE_NAME +
+                            " ON " + EntriesTable.TABLE_NAME + "." + EntriesTable.COL_CATEGORY_ID + " = " + CategoriesTable.TABLE_NAME + "." + CategoriesTable._ID + " " +
+                        " JOIN " + CurrenciesTable.TABLE_NAME +
+                            " ON " + EntriesTable.TABLE_NAME + "." + EntriesTable.COL_CURRENCY_ID + " = " + CurrenciesTable.TABLE_NAME + "." + CurrenciesTable._ID;
 
     //@formatter:on
 
@@ -284,8 +305,10 @@ public class BudgetContract {
                 _ID,
                 COL_DATE_ENTERED,
                 COL_AMOUNT_CENTS,
+
                 COL_CATEGORY_ID,
                 COL_CATEGORY_NAME,
+
                 COL_CURRENCY_ID,
                 COL_CURRENCY_CODE,
                 COL_CURRENCY_SYMBOL
@@ -294,8 +317,10 @@ public class BudgetContract {
         public static final int INDEX_ID = 0;
         public static final int INDEX_DATE_ENTERED = 1;
         public static final int INDEX_AMOUNT_CENTS = 2;
+
         public static final int INDEX_CATEGORY_ID = 3;
         public static final int INDEX_CATEGORY_NAME = 4;
+
         public static final int INDEX_CURRENCY_ID = 5;
         public static final int INDEX_CURRENCY_CODE = 6;
         public static final int INDEX_CURRENCY_SYMBOL = 7;

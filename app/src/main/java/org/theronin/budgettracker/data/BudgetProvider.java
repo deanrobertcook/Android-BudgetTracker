@@ -48,6 +48,24 @@ public class BudgetProvider extends ContentProvider {
     }
 
     @Override
+    public String getType(Uri uri) {
+        switch (uriMatcher.match(uri)) {
+            case CATEGORIES:
+                return CategoriesView.CONTENT_TYPE;
+            case CATEGORY_WITH_ID:
+                return CategoriesView.CONTENT_ITEM_TYPE;
+            case ENTRIES:
+                return EntriesView.CONTENT_TYPE;
+            case ENTRY_WITH_ID:
+                return EntriesView.CONTENT_ITEM_TYPE;
+            case CURRENCIES:
+                return CurrenciesTable.CONTENT_TYPE;
+            default:
+                throw new UnsupportedOperationException("Unknown URI: " + uri.toString());
+        }
+    }
+
+    @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
         String id;
@@ -131,24 +149,6 @@ public class BudgetProvider extends ContentProvider {
     }
 
     @Override
-    public String getType(Uri uri) {
-        switch (uriMatcher.match(uri)) {
-            case CATEGORIES:
-                return CategoriesView.CONTENT_TYPE;
-            case CATEGORY_WITH_ID:
-                return CategoriesView.CONTENT_ITEM_TYPE;
-            case ENTRIES:
-                return EntriesView.CONTENT_TYPE;
-            case ENTRY_WITH_ID:
-                return EntriesView.CONTENT_ITEM_TYPE;
-            case CURRENCIES:
-                return CurrenciesTable.CONTENT_TYPE;
-            default:
-                throw new UnsupportedOperationException("Unknown URI: " + uri.toString());
-        }
-    }
-
-    @Override
     public Uri insert(Uri uri, ContentValues values) {
         switch (uriMatcher.match(uri)) {
             case CATEGORIES:
@@ -176,14 +176,40 @@ public class BudgetProvider extends ContentProvider {
     }
 
     private Uri insertEntry(ContentValues values) {
-        switchCategoryNameToId(values);
+        checkEntryValues(values);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         long entryId = db.insert(EntriesTable.TABLE_NAME, null, values);
         notifyChanges();
 
-        return EntriesView.CONTENT_URI.buildUpon().appendPath(Long.toString(entryId))
-                .build();
+        return EntriesView.CONTENT_URI.buildUpon().appendPath(Long.toString(entryId)).build();
+    }
+
+    private void checkEntryValues(ContentValues values) {
+        sanitiseEntryCategoryValues(values);
+        sanitiseEntryCurrencyValues(values);
+    }
+
+    private void sanitiseEntryCategoryValues(ContentValues values) {
+        long categoryId = values.getAsLong(EntriesView.COL_CATEGORY_ID);
+        if (categoryId == -1) {
+            String categoryName = values.getAsString(EntriesView.COL_CATEGORY_NAME);
+
+            categoryId = getCategoryId(categoryName);
+            values.put(EntriesTable.COL_CATEGORY_ID, categoryId);
+        }
+        values.remove(EntriesView.COL_CATEGORY_NAME);
+    }
+
+    private void sanitiseEntryCurrencyValues(ContentValues values) {
+        long currencyId = values.getAsLong(EntriesView.COL_CURRENCY_ID);
+        if (currencyId == -1) {
+            String currencyCode = values.getAsString(EntriesView.COL_CURRENCY_CODE);
+
+            currencyId = getCurrencyId(currencyCode);
+            values.put(EntriesTable.COL_CURRENCY_ID, currencyId);
+        }
+        values.remove(EntriesView.COL_CURRENCY_CODE);
     }
 
     @Override
@@ -220,7 +246,9 @@ public class BudgetProvider extends ContentProvider {
     }
 
     private int bulkInsertEntries(ContentValues[] valuesArray) {
-        switchCategoryNamesToIds(valuesArray);
+        for (ContentValues values : valuesArray) {
+            checkEntryValues(values);
+        }
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
@@ -238,18 +266,6 @@ public class BudgetProvider extends ContentProvider {
             db.endTransaction();
         }
         return valuesArray.length;
-    }
-
-    private void switchCategoryNamesToIds(ContentValues[] valuesArray) {
-        for (ContentValues values : valuesArray) {
-            switchCategoryNameToId(values);
-        }
-    }
-
-    private void switchCategoryNameToId(ContentValues values) {
-        String categoryName = values.getAsString(EntriesTable.COL_CATEGORY_ID);
-        long categoryId = getCategoryId(categoryName);
-        values.put(EntriesTable.COL_CATEGORY_ID, categoryId);
     }
 
     //TODO can this be made more efficient? lots of single queries here.
@@ -272,6 +288,27 @@ public class BudgetProvider extends ContentProvider {
         cursor.close();
         return id;
     }
+
+    private long getCurrencyId(String currencyCode) {
+        Cursor cursor = dbHelper.getWritableDatabase().query(
+                CurrenciesTable.TABLE_NAME,
+                CurrenciesTable.PROJECTION,
+                CurrenciesTable.COL_CODE + " = ?",
+                new String[]{currencyCode},
+                null, null, null
+        );
+
+        if (!cursor.moveToFirst()) {
+            throw new IllegalArgumentException(
+                    String.format("The currency %s is not supported", currencyCode)
+            );
+        }
+
+        long id = cursor.getLong(CurrenciesTable.INDEX_ID);
+        cursor.close();
+        return id;
+    }
+
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {

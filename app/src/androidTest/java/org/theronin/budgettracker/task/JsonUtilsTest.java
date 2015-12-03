@@ -75,7 +75,7 @@ public class JsonUtilsTest {
         Type entryArrayType = new TypeToken<ArrayList<Entry>>(){}.getType();
         ArrayList<Entry> entriesParsed = gson.fromJson(json, entryArrayType);
         for (Entry entry : entriesParsed) {
-            Log.d(TAG, entry.id + ", " + entry.categoryName + ", " + entry.utcDateEntered + ", " + entry.amount);
+            Log.d(TAG, entry.id + ", " + entry.category + ", " + entry.utcDateEntered + ", " + entry.amount);
         }
     }
 }

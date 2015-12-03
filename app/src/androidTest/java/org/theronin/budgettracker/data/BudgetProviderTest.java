@@ -183,7 +183,7 @@ public class BudgetProviderTest {
                 null, null, null);
         result.moveToFirst();
 
-        assertEquals("Unexpected Entry categoryId", expectedEntry.categoryName,
+        assertEquals("Unexpected Entry categoryId", expectedEntry.category,
                 findCategoryName(dbHelper, result.getLong(0)));
         assertEquals("Unexpected Entry dateEntered", expectedEntry.utcDateEntered, result.
                 getString(1));
@@ -226,7 +226,7 @@ public class BudgetProviderTest {
         while (result.moveToNext()) {
             for (int i = 0; i < entries.size(); i++) {
                 Entry tempEntry = entries.get(i);
-                if (tempEntry.categoryName.equals(findCategoryName(dbHelper, result.getLong(0)))
+                if (tempEntry.category.equals(findCategoryName(dbHelper, result.getLong(0)))
                         && tempEntry.utcDateEntered.equals(result.getString(1))
                         && tempEntry.amount == result.getLong(2)) {
                     entries.remove(tempEntry);
@@ -287,7 +287,7 @@ public class BudgetProviderTest {
         Entry entry = new Entry(categoryName, getStorageFormattedCurrentDate(), 100);
         //re-use values object
         ContentValues values = new ContentValues();
-        values.put(EntriesTable.COL_CATEGORY_ID, findCategoryId(dbHelper, entry.categoryName));
+        values.put(EntriesTable.COL_CATEGORY_ID, findCategoryId(dbHelper, entry.category));
         values.put(EntriesTable.COL_DATE_ENTERED, entry.utcDateEntered);
         values.put(EntriesTable.COL_AMOUNT_CENTS, entry.amount);
 
@@ -315,7 +315,7 @@ public class BudgetProviderTest {
 
         cursor.moveToFirst();
         //Check the name matches and that the date of insertion is saved in the db
-        assertEquals(entry.categoryName, findCategoryName(dbHelper, cursor.getLong(0)));
+        assertEquals(entry.category, findCategoryName(dbHelper, cursor.getLong(0)));
         assertEquals(entry.utcDateEntered, cursor.getString(1));
         assertEquals(entry.amount, cursor.getLong(2));
     }

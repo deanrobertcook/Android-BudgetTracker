@@ -6,20 +6,23 @@
               android:orientation="horizontal"
               android:padding="@dimen/padding_single">
 
-    <TextView
-        android:id="@+id/tv__currency_symbol"
-        style="@style/ListItemStyle"
+    <LinearLayout
+        android:id="@+id/ll__currency_layout"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:paddingRight="@dimen/padding_single"/>
+        android:orientation="horizontal">
+
+        <include layout="@layout/currency_display"/>
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/tv__cost_column"
+        android:id="@+id/tv__amount_column"
         style="@style/ListItemStyle"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="3"
-        android:gravity="right"
+        android:gravity="center_vertical|right"
         android:paddingRight="@dimen/padding_single"
         />
 

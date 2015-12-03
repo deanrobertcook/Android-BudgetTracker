@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 
 import org.theronin.budgettracker.data.BudgetContract;
 import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
@@ -107,31 +106,8 @@ public class DatabaseDevUtils {
 
     public static ContentValues getEntryValues(SQLiteDatabase database, Entry entry) {
         ContentValues values = new ContentValues();
-        values.put(EntriesTable.COL_CATEGORY_ID, findCategoryId(database, entry
-                .categoryName));
-        values.put(EntriesTable.COL_DATE_ENTERED, entry.utcDateEntered);
-        values.put(EntriesTable.COL_AMOUNT_CENTS, entry.amount);
+
         return values;
-    }
-
-    public static long insertEntryUsingContentProvider(Context context, Entry entry) {
-        BudgetDbHelper helper = new BudgetDbHelper(context);
-        ContentValues values = getEntryValues(helper.getReadableDatabase(), entry);
-
-        Uri entryUri = context.getContentResolver().insert(
-                EntriesTable.CONTENT_URI,
-                values
-        );
-
-        long entryId = Long.parseLong(entryUri.getLastPathSegment().toString());
-        if (entryId == -1) {
-            throw new RuntimeException("An error occurred inserting the Entry into the DB");
-        }
-        return entryId;
-    }
-
-    public static void fillDatabaseWithDummyData(BudgetDbHelper dbHelper, String[] categoryNames, int numEntries, int maxAmount) {
-        fillDatabaseWithDummyData(dbHelper.getWritableDatabase(), categoryNames, numEntries, maxAmount);
     }
 
     public static void fillDatabaseWithDummyData(SQLiteDatabase database, String[] categoryNames, int numEntries, int maxAmount) {

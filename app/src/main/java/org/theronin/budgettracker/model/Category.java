@@ -2,8 +2,14 @@ package org.theronin.budgettracker.model;
 
 import android.database.Cursor;
 
-import org.theronin.budgettracker.data.BudgetContract.CategoriesView;
 import org.theronin.budgettracker.utils.DateUtils;
+
+import static org.theronin.budgettracker.data.BudgetContract.CategoriesView.INDEX_CATEGORY_NAME;
+import static org.theronin.budgettracker.data.BudgetContract.CategoriesView.INDEX_ENTRY_FREQUENCY;
+import static org.theronin.budgettracker.data.BudgetContract.CategoriesView.INDEX_FIRST_ENTRY_DATE;
+import static org.theronin.budgettracker.data.BudgetContract.CategoriesView.INDEX_ID;
+import static org.theronin.budgettracker.data.BudgetContract.CategoriesView.INDEX_TOTAL_AMOUNT;
+import static org.theronin.budgettracker.data.BudgetContract.CategoriesView.PROJECTION;
 
 public class Category {
     private static final String TAG = Category.class.getName();
@@ -13,39 +19,13 @@ public class Category {
     public final long total;
     public final long frequency;
 
-    public static final String [] projection = {
-            CategoriesView._ID,
-            CategoriesView.COL_CATEGORY_NAME,
-            CategoriesView.COL_FIRST_ENTRY_DATE,
-            CategoriesView.COL_TOTAL_AMOUNT,
-            CategoriesView.COL_ENTRY_FREQUENCY
-    };
-
-    public static final int INDEX_ID = 0;
-    public static final int INDEX_CATEGORY_NAME = 1;
-    public static final int INDEX_FIRST_ENTRY_DATE = 2;
-    public static final int INDEX_TOTAL_AMOUNT = 3;
-    public static final int INDEX_ENTRY_FREQUENCY = 4;
-
-    public static Category fromCursor(Cursor cursor) {
-        if (cursor.getColumnCount() != projection.length) {
-            throw new IllegalArgumentException("The cursor supplied does not have all of the columns necessary");
-        }
-
-        long id = cursor.getLong(INDEX_ID);
-        String categoryName = cursor.getString(INDEX_CATEGORY_NAME);
-
-        long utcDateFirstEntered = cursor.getLong(INDEX_FIRST_ENTRY_DATE);
-
-        long totalAmount = cursor.getLong(INDEX_TOTAL_AMOUNT);
-        long entryFrequency = cursor.getLong(INDEX_ENTRY_FREQUENCY);
-
-        return new Category(id, categoryName, utcDateFirstEntered, totalAmount, entryFrequency);
-    }
-
     public Category(String name) {
         //TODO check what a good default date is.
         this(name, 0);
+    }
+
+    public Category(long id, String name) {
+        this(id, name, 0);
     }
 
     public Category(String name, long utcFirstEntryDate) {
@@ -66,6 +46,19 @@ public class Category {
         this.utcFirstEntryDate = utcFirstEntryDate;
         this.total = total;
         this.frequency = frequency;
+    }
+
+    public static Category fromCursor(Cursor cursor) {
+        if (cursor.getColumnCount() != PROJECTION.length) {
+            throw new IllegalArgumentException("The cursor supplied does not have all of the columns necessary");
+        }
+        long id = cursor.getLong(INDEX_ID);
+        String categoryName = cursor.getString(INDEX_CATEGORY_NAME);
+        long utcDateFirstEntered = cursor.getLong(INDEX_FIRST_ENTRY_DATE);
+        long totalAmount = cursor.getLong(INDEX_TOTAL_AMOUNT);
+        long entryFrequency = cursor.getLong(INDEX_ENTRY_FREQUENCY);
+
+        return new Category(id, categoryName, utcDateFirstEntered, totalAmount, entryFrequency);
     }
 
     public long getMonthlyAverage() {

@@ -29,9 +29,10 @@ import org.theronin.budgettracker.comparators.CategoryAlphabeticalComparator;
 import org.theronin.budgettracker.comparators.CategoryFrequencyComparator;
 import org.theronin.budgettracker.data.BudgetContract.CategoriesView;
 import org.theronin.budgettracker.data.BudgetContract.CurrenciesTable;
-import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
+import org.theronin.budgettracker.data.BudgetContract.EntriesView;
 import org.theronin.budgettracker.model.Category;
-import org.theronin.budgettracker.model.CurrencyWrapper;
+import org.theronin.budgettracker.model.Currency;
+import org.theronin.budgettracker.model.Entry;
 import org.theronin.budgettracker.pages.reusable.DatePickerFragment;
 import org.theronin.budgettracker.utils.DateUtils;
 import org.theronin.budgettracker.utils.MoneyUtils;
@@ -49,12 +50,12 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
 
     private static final String TAG = AddEntryFragment.class.getName();
 
-    private static final int CURRENCY_SYMBOL_LOADER_ID = 0;
+    private static final int CURRENCY_LOADER_ID = 0;
     private static final int CATEGORY_LOADER_ID = 1;
 
     private Spinner currencySpinner;
     private CurrencySymbolSpinnerAdapter currencySymbolSpinnerAdapter;
-    private CurrencyWrapper lastSelectedCurrency;
+    private Currency lastSelectedCurrency;
 
     private Button confirmEntryButton;
 
@@ -71,7 +72,7 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLoaderManager().initLoader(CURRENCY_SYMBOL_LOADER_ID, null, this);
+        getLoaderManager().initLoader(CURRENCY_LOADER_ID, null, this);
         getLoaderManager().initLoader(CATEGORY_LOADER_ID, null, this);
     }
 
@@ -153,20 +154,20 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
                     .LENGTH_SHORT).show();
             return;
         }
-        //TODO, change this to use getSelectedItemPosition instead!
-        lastSelectedCategory = categorySpinnerAdapter.getCategory(categorySpinner.getSelectedItem().toString());
+
+        lastSelectedCategory = categorySpinnerAdapter.getCategory(categorySpinner
+                .getSelectedItemPosition());
         lastSelectedCurrency = currencySymbolSpinnerAdapter.getCurrency(currencySpinner
                 .getSelectedItemPosition());
 
-        ContentValues values = new ContentValues();
-        values.put(EntriesTable.COL_CATEGORY_ID, lastSelectedCategory.id);
-        values.put(EntriesTable.COL_DATE_ENTERED, currentSelectedUtcTime);
-        values.put(EntriesTable.COL_CURRENCY_CODE, lastSelectedCurrency.code);
-        values.put(EntriesTable.COL_AMOUNT_CENTS, amount);
+        ContentValues values = new Entry(
+                currentSelectedUtcTime,
+                amount,
+                lastSelectedCategory,
+                lastSelectedCurrency
+        ).toValues();
 
-        Uri uri = getActivity().getContentResolver().insert(
-                EntriesTable.CONTENT_URI, values);
-
+        Uri uri = getActivity().getContentResolver().insert(EntriesView.CONTENT_URI, values);
         long id = Long.parseLong(uri.getLastPathSegment());
 
         if (id == -1) {
@@ -235,18 +236,18 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
-            case CURRENCY_SYMBOL_LOADER_ID:
+            case CURRENCY_LOADER_ID:
                 return new CursorLoader(
                         getActivity(),
                         CurrenciesTable.CONTENT_URI,
                         CurrenciesTable.PROJECTION,
-                        null, null, CurrenciesTable.COL_CODE + " ASC"
+                        null, null, CurrenciesTable._ID + " ASC"
                 );
             case CATEGORY_LOADER_ID:
                 return new CursorLoader(
                         getActivity(),
                         CategoriesView.CONTENT_URI,
-                        Category.projection,
+                        CategoriesView.PROJECTION,
                         null, null, null
                 );
             default:
@@ -257,7 +258,7 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         switch (loader.getId()) {
-            case CURRENCY_SYMBOL_LOADER_ID:
+            case CURRENCY_LOADER_ID:
                 updateCurrencySymbols(data);
                 break;
             case CATEGORY_LOADER_ID:
@@ -269,9 +270,9 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
     }
 
     private void updateCurrencySymbols(Cursor data) {
-        List<CurrencyWrapper> currencies = new ArrayList<>();
+        List<Currency> currencies = new ArrayList<>();
         while (data.moveToNext()) {
-            currencies.add(CurrencyWrapper.fromCursor(data));
+            currencies.add(Currency.fromCursor(data));
         }
 
         currencySymbolSpinnerAdapter.addAll(currencies);
@@ -307,7 +308,7 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         switch (loader.getId()) {
-            case CURRENCY_SYMBOL_LOADER_ID:
+            case CURRENCY_LOADER_ID:
                 currencySymbolSpinnerAdapter.clear();
                 break;
             case CATEGORY_LOADER_ID:
@@ -360,9 +361,8 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
             }
         }
 
-        public Category getCategory(String categoryName) {
-            int pos = super.getPosition(categoryName);
-            return categories.get(pos);
+        public Category getCategory(int position) {
+            return categories.get(position);
         }
 
         public int getPosition(Category category) {
@@ -469,13 +469,13 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
 
     private class CurrencySymbolSpinnerAdapter extends ArrayAdapter<String> {
 
-        List<CurrencyWrapper> currencies;
+        List<Currency> currencies;
 
         public CurrencySymbolSpinnerAdapter() {
-            super(getActivity(), android.R.layout.simple_spinner_item);
+            super(getActivity(), 0);
         }
 
-        public void addAll(List<CurrencyWrapper> currencies) {
+        public void addAll(List<Currency> currencies) {
             this.currencies = currencies;
 
             super.clear();
@@ -484,20 +484,13 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
         }
 
         @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                LayoutInflater inflater = LayoutInflater.from(getContext());
-                convertView = inflater.inflate(R.layout.list_item_add_entry_currency_symbol_spinner,
-                        parent, false);
-            }
-            TextView symbolTextView = (TextView) convertView.findViewById(
-                    R.id.tv__add_entry__currency_spinner__drop_down__symbol);
-            TextView codeTextView = (TextView) convertView.findViewById(
-                    R.id.tv__add_entry__currency_spinner__drop_down__code);
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return createCurrencyView(position, convertView, parent);
+        }
 
-            CurrencyWrapper currency = getCurrency(position);
-            symbolTextView.setText(currency.symbol);
-            codeTextView.setText("(" + currency.code + ")");
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            convertView = createCurrencyView(position, convertView, parent);
 
             if (position == currencySpinner.getSelectedItemPosition()) {
                 convertView.setBackgroundColor(getResources().getColor(R.color.primary_light));
@@ -506,19 +499,36 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
             return convertView;
         }
 
+        private View createCurrencyView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(getContext());
+                convertView = inflater.inflate(R.layout.list_item_currency,
+                        parent, false);
+            }
+            TextView symbolTextView = (TextView) convertView.findViewById(
+                    R.id.tv__list_item__currency__symbol);
+            TextView codeTextView = (TextView) convertView.findViewById(
+                    R.id.tv__list_item__currency__code);
+
+            Currency currency = getCurrency(position);
+            symbolTextView.setText(currency.symbol);
+            codeTextView.setText(currency.code);
+            return convertView;
+        }
+
         private List<String> getSymbols() {
             List<String> symbols = new ArrayList<>();
-            for (CurrencyWrapper currency : currencies) {
+            for (Currency currency : currencies) {
                 symbols.add(currency.symbol);
             }
             return symbols;
         }
 
-        public CurrencyWrapper getCurrency(int position) {
+        public Currency getCurrency(int position) {
             return currencies.get(position);
         }
 
-        public int getPosition(CurrencyWrapper currency) {
+        public int getPosition(Currency currency) {
             return currencies.indexOf(currency);
         }
     }

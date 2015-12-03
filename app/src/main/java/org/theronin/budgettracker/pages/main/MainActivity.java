@@ -13,7 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import org.theronin.budgettracker.R;
-import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
+import org.theronin.budgettracker.data.BudgetContract.EntriesView;
 import org.theronin.budgettracker.model.Entry;
 import org.theronin.budgettracker.model.ExchangeRate;
 import org.theronin.budgettracker.pages.categories.CategoriesActivity;
@@ -91,8 +91,8 @@ public class MainActivity extends FragmentActivity implements
             case ENTRY_LOADER_ID:
                 return new CursorLoader(
                         this,
-                        EntriesTable.CONTENT_URI,
-                        Entry.projection,
+                        EntriesView.CONTENT_URI,
+                        EntriesView.PROJECTION,
                         null, null, null
                 );
             default:
@@ -120,8 +120,6 @@ public class MainActivity extends FragmentActivity implements
         new FileBackupAgent().backupEntries(entries);
     }
 
-
-
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         //do nothing
@@ -133,7 +131,7 @@ public class MainActivity extends FragmentActivity implements
         for (int i = 0; i < entries.size(); i++) {
             valuesArray[i] = entries.get(i).toValues();
         }
-        getContentResolver().bulkInsert(EntriesTable.CONTENT_URI, valuesArray);
+        getContentResolver().bulkInsert(EntriesView.CONTENT_URI, valuesArray);
     }
 
     @Override

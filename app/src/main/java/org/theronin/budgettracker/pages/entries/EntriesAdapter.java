@@ -36,10 +36,11 @@ public class EntriesAdapter extends CursorRecyclerViewAdapter<EntriesAdapter.Vie
     public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor) {
         final Entry boundEntry = Entry.fromCursor(cursor);
 
-        viewHolder.currencySymbolTextView.setText(boundEntry.currencyEntered);
+        viewHolder.currencySymbolTextView.setText(boundEntry.currency.symbol);
+        viewHolder.currencyCodeTextView.setText(boundEntry.currency.code);
         viewHolder.amountTextView.setText(
                 MoneyUtils.convertCentsToDisplayAmount(boundEntry.amount));
-        viewHolder.categoryTextView.setText(boundEntry.categoryName);
+        viewHolder.categoryTextView.setText(boundEntry.category.name);
         viewHolder.dateTextView.setText(DateUtils.getDisplayFormattedDate(boundEntry.utcDateEntered));
 
         viewHolder.listItemView.setOnClickListener(new View.OnClickListener() {
@@ -54,6 +55,7 @@ public class EntriesAdapter extends CursorRecyclerViewAdapter<EntriesAdapter.Vie
 
         public final View listItemView;
         public final TextView currencySymbolTextView;
+        public final TextView currencyCodeTextView;
         public final TextView amountTextView;
         public final TextView categoryTextView;
         public final TextView dateTextView;
@@ -61,8 +63,10 @@ public class EntriesAdapter extends CursorRecyclerViewAdapter<EntriesAdapter.Vie
         public ViewHolder(View view) {
             super(view);
             this.listItemView = view;
-            currencySymbolTextView = (TextView) listItemView.findViewById(R.id.tv__currency_symbol);
-            amountTextView = (TextView) listItemView.findViewById(R.id.tv__cost_column);
+            View currencyDisplayView = listItemView.findViewById(R.id.ll__currency_layout);
+            currencySymbolTextView = (TextView) currencyDisplayView.findViewById(R.id.tv__list_item__currency__symbol);
+            currencyCodeTextView = (TextView) currencyDisplayView.findViewById(R.id.tv__list_item__currency__code);
+            amountTextView = (TextView) listItemView.findViewById(R.id.tv__amount_column);
             categoryTextView = (TextView) listItemView.findViewById(R.id.tv__category_column);
             dateTextView = (TextView) listItemView.findViewById(R.id.tv__date_column);
         }

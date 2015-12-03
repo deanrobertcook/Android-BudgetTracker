@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.theronin.budgettracker.R;
-import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
+import org.theronin.budgettracker.data.BudgetContract.EntriesView;
 import org.theronin.budgettracker.model.Entry;
 
 public class EntryListFragment extends Fragment implements
@@ -25,7 +25,9 @@ public class EntryListFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int ENTRY_LOADER_ID = 0;
-    private static final String SORT_ORDER = EntriesTable.COL_DATE_ENTERED + " DESC";
+
+    private static final String SORT_ORDER =
+            EntriesView.COL_DATE_ENTERED + " DESC, " + EntriesView._ID + " DESC";
 
     private EntriesAdapter adapter;
     private Entry entrySelected;
@@ -70,7 +72,7 @@ public class EntryListFragment extends Fragment implements
     public void onDeleteClicked() {
         if (entrySelected != null) {
             int numDeleted = getActivity().getContentResolver().delete(
-                    EntriesTable.CONTENT_URI.buildUpon().appendPath(
+                    EntriesView.CONTENT_URI.buildUpon().appendPath(
                             Long.toString(entrySelected.id)).build(),
                     null, null);
             if (numDeleted == 1) {
@@ -85,21 +87,38 @@ public class EntryListFragment extends Fragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(
-                getActivity(),
-                EntriesTable.CONTENT_URI,
-                Entry.projection,
-                null, null, SORT_ORDER
-        );
+        switch (id) {
+            case ENTRY_LOADER_ID:
+                return new CursorLoader(
+                        getActivity(),
+                        EntriesView.CONTENT_URI,
+                        EntriesView.PROJECTION,
+                        null, null, SORT_ORDER
+                );
+            default:
+                throw new RuntimeException("Unrecognised loader id");
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        adapter.changeCursor(data);
+        switch (loader.getId()) {
+            case ENTRY_LOADER_ID:
+                adapter.changeCursor(data);
+                break;
+            default:
+                throw new RuntimeException("Unrecognised loader id");
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.changeCursor(null);
+        switch (loader.getId()) {
+            case ENTRY_LOADER_ID:
+                adapter.changeCursor(null);
+                break;
+            default:
+                throw new RuntimeException("Unrecognised loader id");
+        }
     }
 }
