@@ -1,9 +1,11 @@
 package org.theronin.budgettracker.model;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 
 import org.theronin.budgettracker.utils.DateUtils;
 
+import static org.theronin.budgettracker.data.BudgetContract.CategoriesView.COL_CATEGORY_NAME;
 import static org.theronin.budgettracker.data.BudgetContract.CategoriesView.INDEX_CATEGORY_NAME;
 import static org.theronin.budgettracker.data.BudgetContract.CategoriesView.INDEX_ENTRY_FREQUENCY;
 import static org.theronin.budgettracker.data.BudgetContract.CategoriesView.INDEX_FIRST_ENTRY_DATE;
@@ -46,6 +48,12 @@ public class Category {
         this.utcFirstEntryDate = utcFirstEntryDate;
         this.total = total;
         this.frequency = frequency;
+    }
+
+    public ContentValues toValues() {
+        ContentValues values = new ContentValues();
+        values.put(COL_CATEGORY_NAME, name);
+        return values;
     }
 
     public static Category fromCursor(Cursor cursor) {

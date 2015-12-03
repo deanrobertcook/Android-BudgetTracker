@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.data.BudgetContract;
+import org.theronin.budgettracker.model.Category;
 
 public class AddCategoryFragment extends Fragment implements
         TextView.OnEditorActionListener {
@@ -55,7 +56,6 @@ public class AddCategoryFragment extends Fragment implements
                     .INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
-
     }
 
     private void clearCategoryEditText() {
@@ -79,8 +79,7 @@ public class AddCategoryFragment extends Fragment implements
                     .LENGTH_SHORT).show();
         }
 
-        ContentValues values = new ContentValues();
-        values.put(BudgetContract.CategoriesView.COL_CATEGORY_NAME, categoryName);
+        ContentValues values = new Category(categoryName).toValues();
 
         Uri categoryUri = getActivity().getContentResolver().insert(
                 BudgetContract.CategoriesView.CONTENT_URI,
