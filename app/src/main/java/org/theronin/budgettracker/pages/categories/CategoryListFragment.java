@@ -18,7 +18,8 @@ import org.theronin.budgettracker.data.BudgetContract.CategoriesView;
 public class CategoryListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int CATEGORY_LOADER_ID = 0;
-    private static final String SORT_ORDER = CategoriesView.COL_TOTAL_AMOUNT + " DESC";
+    private static final String SORT_ORDER =
+            CategoriesView.COL_TOTAL_AMOUNT + " DESC, " + CategoriesView.COL_CATEGORY_NAME + " ASC";
     private CategoriesAdapter adapter;
 
     @Override
