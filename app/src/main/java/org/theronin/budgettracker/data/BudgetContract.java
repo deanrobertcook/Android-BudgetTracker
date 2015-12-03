@@ -137,7 +137,7 @@ public class BudgetContract {
                         "('TRY', '\u20BA')," +
                         "('KRW', '₩')," +
                         "('ZAR', 'R')," +
-                        "('BRL', '₩')," +
+                        "('BRL', '$')," +
                         "('INR', '\u20B9')";
 
         /**

@@ -2,14 +2,16 @@ package org.theronin.budgettracker.task;
 
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
+import org.theronin.budgettracker.model.Category;
+import org.theronin.budgettracker.model.Currency;
 import org.theronin.budgettracker.model.Entry;
 import org.theronin.budgettracker.utils.DateUtils;
 
@@ -19,7 +21,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class FileBackupAgent  {
             List<Entry> entries = params[0];
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String entriesJson = gson.toJson(entries);
-            entriesJson = convertUtcToString(gson, entriesJson);
+            entriesJson = simplifyJson(gson, entriesJson);
 
             if (isExternalStorageWriteable()) {
                 File backupsDirectory = new File(Environment.getExternalStoragePublicDirectory(
@@ -76,19 +77,43 @@ public class FileBackupAgent  {
             throw new RuntimeException("External storage currently not available");
         }
 
-        //Store the dates in a more human-friendly way
-        private String convertUtcToString(Gson gson, String entriesJson) {
+        /**
+         * Removes any redundant fields from the json array
+         */
+        private String simplifyJson(Gson gson, String entriesJson) {
             JsonArray jsonArray = gson.fromJson(entriesJson, JsonElement.class).getAsJsonArray();
             for (JsonElement element : jsonArray) {
                 JsonObject object = (JsonObject) element;
-                if (object.has("utcDateEntered")) {
-                    long utcTime = object.get("utcDateEntered").getAsLong();
-                    String formattedDate = DateUtils.getStorageFormattedDate(utcTime);
-                    object.remove("utcDateEntered");
-                    object.addProperty("dateEntered", formattedDate);
-                }
+                changeDateToUtc(object);
+                replaceCategoryObjectWithName(object);
+                replaceCurrencyObjectWithCode(object);
             }
             return gson.toJson(jsonArray);
+        }
+
+        private void changeDateToUtc(JsonObject object) {
+            if (object.has("utcDateEntered")) {
+                long utcTime = object.get("utcDateEntered").getAsLong();
+                String formattedDate = DateUtils.getStorageFormattedDate(utcTime);
+                object.remove("utcDateEntered");
+                object.addProperty("dateEntered", formattedDate);
+            }
+        }
+
+        private void replaceCategoryObjectWithName(JsonObject object) {
+            if (object.has("category")) {
+                JsonObject category = (JsonObject) object.get("category");
+                String categoryName = category.get("name").getAsString();
+                object.addProperty("category", categoryName);
+            }
+        }
+
+        private void replaceCurrencyObjectWithCode(JsonObject object) {
+            if (object.has("currency")) {
+                JsonObject category = (JsonObject) object.get("currency");
+                String categoryName = category.get("code").getAsString();
+                object.addProperty("currency", categoryName);
+            }
         }
 
         private boolean isExternalStorageWriteable() {
@@ -141,29 +166,53 @@ public class FileBackupAgent  {
 
         @Override
         protected void onPostExecute(String entriesJson) {
-            entriesJson = convertStringToUtc(entriesJson);
-            Type entryListType = new TypeToken<ArrayList<Entry>>(){}.getType();
             Gson gson = new Gson();
-            List<Entry> entries = gson.fromJson(entriesJson, entryListType);
+            Log.d("JSON", entriesJson);
+            JsonArray jsonArray = gson.fromJson(entriesJson, JsonArray.class);
+            List<Entry> entries = buildEntries(jsonArray);
             listener.onEntriesRestored(entries);
         }
 
-        private String convertStringToUtc(String entriesJson) {
-            Gson gson = new Gson();
-            JsonArray jsonArray = gson.fromJson(entriesJson, JsonElement.class).getAsJsonArray();
-            for (JsonElement element : jsonArray) {
-                JsonObject object = (JsonObject) element;
-                if (object.has("dateEntered")) {
-                    String formattedDate = object.get("dateEntered").getAsString();
-                    long utcTime = DateUtils.getUtcTimeFromStorageFormattedDate(formattedDate);
-                    object.remove("dateEntered");
-                    object.addProperty("utcDateEntered", Long.toString(utcTime));
-                }
-                if (!object.has("currencyEntered")) {
-                    object.addProperty("currencyEntered", "EUR");
-                }
+        private List<Entry> buildEntries(JsonArray jsonArray) {
+            List<Entry> entries = new ArrayList<>();
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JsonObject object = (JsonObject) jsonArray.get(i);
+                Entry entry = new Entry(
+                        findId(object),
+                        findDate(object),
+                        findAmount(object),
+                        findCategory(object),
+                        findCurrency(object)
+                );
+
+                Log.d("JSON", entry.toString());
+
+                entries.add(entry);
             }
-            return gson.toJson(jsonArray);
+            return entries;
+        }
+
+        private long findId(JsonObject object) {
+            return object.get("id").getAsLong();
+        }
+
+        private long findDate(JsonObject object) {
+            String formattedDate = object.get("dateEntered").getAsString();
+            return DateUtils.getUtcTimeFromStorageFormattedDate(formattedDate);
+        }
+
+        private long findAmount(JsonObject object) {
+            return object.get("amount").getAsLong();
+        }
+
+        private Category findCategory(JsonObject object) {
+            String categoryName = object.get("category").getAsString();
+            return new Category(categoryName);
+        }
+
+        private Currency findCurrency(JsonObject object) {
+            String currencyCode = object.get("currency").getAsString();
+            return new Currency(currencyCode);
         }
     }
 

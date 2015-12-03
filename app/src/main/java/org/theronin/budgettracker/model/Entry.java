@@ -5,6 +5,7 @@ import android.database.Cursor;
 
 import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
 import org.theronin.budgettracker.data.BudgetContract.EntriesView;
+import org.theronin.budgettracker.utils.DateUtils;
 
 import static org.theronin.budgettracker.data.BudgetContract.EntriesView.INDEX_AMOUNT_CENTS;
 import static org.theronin.budgettracker.data.BudgetContract.EntriesView.INDEX_CATEGORY_ID;
@@ -64,6 +65,11 @@ public class Entry {
 
     public ContentValues toValues() {
         ContentValues values = new ContentValues();
+
+        if (id > -1) {
+            values.put(EntriesTable._ID, id);
+        }
+
         values.put(EntriesTable.COL_DATE_ENTERED, utcDateEntered);
         values.put(EntriesTable.COL_AMOUNT_CENTS, amount);
 
@@ -73,5 +79,21 @@ public class Entry {
         values.put(EntriesTable.COL_CURRENCY_ID, currency.id);
         values.put(EntriesView.COL_CURRENCY_CODE, currency.code);
         return values;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Entry: %d \n" +
+                        "\t date: %s\n" +
+                        "\t category: %s\n" +
+                        "\t amount: %d\n" +
+                        "\t currency: %s\n",
+                id,
+                DateUtils.getStorageFormattedDate(utcDateEntered),
+                category.name,
+                amount,
+                currency.code
+        );
     }
 }
