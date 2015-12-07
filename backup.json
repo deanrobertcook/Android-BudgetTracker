@@ -2980,5 +2980,138 @@
     "currency": "AUD",
     "id": 467,
     "dateEntered": "2015-12-02"
+  },
+  {
+    "amount": 540,
+    "category": "subway",
+    "currency": "AUD",
+    "id": 469,
+    "dateEntered": "2015-12-03"
+  },
+  {
+    "amount": 300,
+    "category": "parking tickets",
+    "currency": "AUD",
+    "id": 470,
+    "dateEntered": "2015-12-01"
+  },
+  {
+    "amount": 740,
+    "category": "subway",
+    "currency": "AUD",
+    "id": 471,
+    "dateEntered": "2015-12-04"
+  },
+  {
+    "amount": 1140,
+    "category": "subscriptions",
+    "currency": "AUD",
+    "id": 472,
+    "dateEntered": "2015-12-03"
+  },
+  {
+    "amount": 1100,
+    "category": "beer",
+    "currency": "AUD",
+    "id": 474,
+    "dateEntered": "2015-12-04"
+  },
+  {
+    "amount": 1000,
+    "category": "beer",
+    "currency": "AUD",
+    "id": 475,
+    "dateEntered": "2015-12-04"
+  },
+  {
+    "amount": 1200,
+    "category": "gozleme",
+    "currency": "AUD",
+    "id": 476,
+    "dateEntered": "2015-12-04"
+  },
+  {
+    "amount": 200,
+    "category": "market entries",
+    "currency": "AUD",
+    "id": 478,
+    "dateEntered": "2015-12-04"
+  },
+  {
+    "amount": 1900,
+    "category": "pizza",
+    "currency": "AUD",
+    "id": 479,
+    "dateEntered": "2015-12-04"
+  },
+  {
+    "amount": 2000,
+    "category": "beer",
+    "currency": "AUD",
+    "id": 480,
+    "dateEntered": "2015-12-04"
+  },
+  {
+    "amount": 1250,
+    "category": "shisha",
+    "currency": "AUD",
+    "id": 483,
+    "dateEntered": "2015-12-05"
+  },
+  {
+    "amount": 500,
+    "category": "chips",
+    "currency": "AUD",
+    "id": 486,
+    "dateEntered": "2015-12-05"
+  },
+  {
+    "amount": 560,
+    "category": "atm fees",
+    "currency": "AUD",
+    "id": 487,
+    "dateEntered": "2015-12-04"
+  },
+  {
+    "amount": 1100,
+    "category": "döner",
+    "currency": "AUD",
+    "id": 488,
+    "dateEntered": "2015-12-05"
+  },
+  {
+    "amount": 550,
+    "category": "shisha",
+    "currency": "AUD",
+    "id": 490,
+    "dateEntered": "2015-12-05"
+  },
+  {
+    "amount": 2180,
+    "category": "burgers",
+    "currency": "AUD",
+    "id": 491,
+    "dateEntered": "2015-12-06"
+  },
+  {
+    "amount": 450,
+    "category": "coffee",
+    "currency": "AUD",
+    "id": 492,
+    "dateEntered": "2015-12-06"
+  },
+  {
+    "amount": 270,
+    "category": "juice",
+    "currency": "AUD",
+    "id": 493,
+    "dateEntered": "2015-12-06"
+  },
+  {
+    "amount": 380,
+    "category": "pastries",
+    "currency": "AUD",
+    "id": 494,
+    "dateEntered": "2015-12-06"
   }
 ]
