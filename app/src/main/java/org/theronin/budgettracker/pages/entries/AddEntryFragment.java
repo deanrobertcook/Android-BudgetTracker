@@ -4,11 +4,9 @@ import android.app.Fragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -27,9 +25,10 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import org.theronin.budgettracker.BudgetTrackerApplication;
 import org.theronin.budgettracker.R;
-import org.theronin.budgettracker.data.BudgetContract.CategoriesView;
 import org.theronin.budgettracker.data.BudgetContract.EntriesView;
+import org.theronin.budgettracker.data.loader.DataLoader;
 import org.theronin.budgettracker.model.Category;
 import org.theronin.budgettracker.model.Currency;
 import org.theronin.budgettracker.model.Entry;
@@ -44,7 +43,7 @@ import java.util.List;
 public class AddEntryFragment extends Fragment implements DatePickerFragment.Container,
         OnEditorActionListener,
         TextWatcher,
-        LoaderCallbacks<Cursor>,
+        LoaderCallbacks<List<Category>>,
         OnSharedPreferenceChangeListener {
 
     private static final String TAG = AddEntryFragment.class.getName();
@@ -244,38 +243,20 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        switch (id) {
-            case CATEGORY_LOADER_ID:
-                return new CursorLoader(
-                        getActivity(),
-                        CategoriesView.CONTENT_URI,
-                        CategoriesView.PROJECTION,
-                        null, null, null
-                );
-            default:
-                throw new RuntimeException("Unrecognised loader id");
-        }
+    public Loader<List<Category>> onCreateLoader(int id, Bundle args) {
+        return new DataLoader<>(
+                getActivity(),
+                ((BudgetTrackerApplication) getActivity().getApplication()).getDataSourceCategory()
+        );
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        switch (loader.getId()) {
-            case CATEGORY_LOADER_ID:
-                updateCategories(data);
-                break;
-            default:
-                throw new RuntimeException("Unrecognised loader id");
-        }
+    public void onLoadFinished(Loader<List<Category>> loader, List<Category> data) {
+        updateCategories(data);
     }
 
-    private void updateCategories(Cursor data) {
-        List<Category> categories = new ArrayList<>();
-        while (data.moveToNext()) {
-            categories.add(Category.fromCursor(data));
-        }
+    private void updateCategories(List<Category> categories) {
         categorySpinnerAdapter.addAll(categories);
-
 
         if (lastSelectedCategory != null) {
             int lastSelectedCategoryNewPosition =
@@ -288,13 +269,7 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        switch (loader.getId()) {
-            case CATEGORY_LOADER_ID:
-                categorySpinnerAdapter.clear();
-                break;
-            default:
-                throw new RuntimeException("Unrecognised loader id");
-        }
+    public void onLoaderReset(Loader<List<Category>> loader) {
+        updateCategories(new ArrayList<Category>());
     }
 }
