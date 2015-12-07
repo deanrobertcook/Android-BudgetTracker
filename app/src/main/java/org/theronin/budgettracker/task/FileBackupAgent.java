@@ -2,7 +2,6 @@ package org.theronin.budgettracker.task;
 
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,6 +22,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
 
 public class FileBackupAgent  {
     private static final String TAG = FileBackupAgent.class.getName();
@@ -122,11 +123,11 @@ public class FileBackupAgent  {
         }
     }
 
-    private class FileReaderTask extends AsyncTask<Void, Void, String> {
+    private class FileReaderTask extends AsyncTask<Void, Void, List<Entry>> {
 
         @Override
-        protected String doInBackground(Void... params) {
-
+        protected List<Entry> doInBackground(Void... params) {
+            Timber.d("FileReaderTask: doInBackground");
             if (isExternalStorageReadable()) {
                 File backupFile = new File(Environment.getExternalStoragePublicDirectory(
                         Environment.DIRECTORY_DOCUMENTS) + "/" + BACKUP_DIRECTORY, BACKUP_FILE);
@@ -142,7 +143,7 @@ public class FileBackupAgent  {
                         sb.append(System.lineSeparator());
                         line = br.readLine();
                     }
-                    return sb.toString();
+                    return buildEntries(buildJsonArray(sb.toString()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
@@ -164,13 +165,9 @@ public class FileBackupAgent  {
                     Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
         }
 
-        @Override
-        protected void onPostExecute(String entriesJson) {
+        private JsonArray buildJsonArray(String jsonString) {
             Gson gson = new Gson();
-            Log.d("JSON", entriesJson);
-            JsonArray jsonArray = gson.fromJson(entriesJson, JsonArray.class);
-            List<Entry> entries = buildEntries(jsonArray);
-            listener.onEntriesRestored(entries);
+            return gson.fromJson(jsonString, JsonArray.class);
         }
 
         private List<Entry> buildEntries(JsonArray jsonArray) {
@@ -184,9 +181,6 @@ public class FileBackupAgent  {
                         findCategory(object),
                         findCurrency(object)
                 );
-
-                Log.d("JSON", entry.toString());
-
                 entries.add(entry);
             }
             return entries;
@@ -213,6 +207,11 @@ public class FileBackupAgent  {
         private Currency findCurrency(JsonObject object) {
             String currencyCode = object.get("currency").getAsString();
             return new Currency(currencyCode);
+        }
+
+        @Override
+        protected void onPostExecute(List<Entry> entries) {
+            listener.onEntriesRestored(entries);
         }
     }
 
