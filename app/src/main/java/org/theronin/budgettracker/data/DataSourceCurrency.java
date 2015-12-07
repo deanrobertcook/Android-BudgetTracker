@@ -9,7 +9,7 @@ import org.theronin.budgettracker.model.Currency;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataSourceCurrency extends DataSource<Currency> {
+public class DataSourceCurrency extends AbsDataSource<Currency> {
 
     public DataSourceCurrency(BudgetTrackerApplication application) {
         super(application);
@@ -45,7 +45,6 @@ public class DataSourceCurrency extends DataSource<Currency> {
             categories.add(Currency.fromCursor(cursor));
         }
         cursor.close();
-        setDataValid();
         return categories;
     }
 }

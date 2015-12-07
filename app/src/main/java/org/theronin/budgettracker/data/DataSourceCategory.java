@@ -11,7 +11,7 @@ import org.theronin.budgettracker.model.Category;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataSourceCategory extends DataSource<Category> {
+public class DataSourceCategory extends AbsDataSource<Category> {
 
     public DataSourceCategory(BudgetTrackerApplication application) {
         super(application);
@@ -53,7 +53,6 @@ public class DataSourceCategory extends DataSource<Category> {
             categories.add(Category.fromCursor(cursor));
         }
         cursor.close();
-        setDataValid();
         return categories;
     }
 }

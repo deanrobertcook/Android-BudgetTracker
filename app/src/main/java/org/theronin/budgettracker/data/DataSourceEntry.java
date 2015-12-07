@@ -12,7 +12,7 @@ import org.theronin.budgettracker.model.Entry;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataSourceEntry extends DataSource<Entry> {
+public class DataSourceEntry extends AbsDataSource<Entry> {
 
     public DataSourceEntry(BudgetTrackerApplication application) {
         super(application);
@@ -93,7 +93,6 @@ public class DataSourceEntry extends DataSource<Entry> {
             entries.add(Entry.fromCursor(cursor));
         }
         cursor.close();
-        setDataValid();
         return entries;
     }
 }
