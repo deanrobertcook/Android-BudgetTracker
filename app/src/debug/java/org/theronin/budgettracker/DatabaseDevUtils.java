@@ -129,12 +129,12 @@ public class DatabaseDevUtils {
     }
 
     public static void fillDatabaseUsingContentProvider(Context context, String[] categoryNames, int numEntries, int maxAmount) {
-        Random random = new Random();
-        BudgetDbHelper helper = new BudgetDbHelper(context);
+//        Random random = new Random();
+//        BudgetDbHelper helper = new BudgetDbHelper(context);
 
-        for (String categoryName : categoryNames) {
-            insertCategoryDirectlyToDatabase(helper.getWritableDatabase(), new Category(categoryName));
-        }
+//        for (String categoryName : categoryNames) {
+//            insertCategoryDirectlyToDatabase(helper.getWritableDatabase(), new Category(categoryName));
+//        }
 
 //        for (int i = 0; i < numEntries; i++) {
 //            insertEntryUsingContentProvider(

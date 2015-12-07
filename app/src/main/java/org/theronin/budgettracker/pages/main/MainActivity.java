@@ -1,7 +1,6 @@
 package org.theronin.budgettracker.pages.main;
 
 import android.app.LoaderManager;
-import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -12,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.theronin.budgettracker.BudgetTrackerApplication;
 import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.data.BudgetContract.EntriesView;
 import org.theronin.budgettracker.model.Entry;
@@ -134,11 +134,7 @@ public class MainActivity extends FragmentActivity implements
 
     @Override
     public void onEntriesRestored(List<Entry> entries) {
-        ContentValues[] valuesArray = new ContentValues[entries.size()];
-        for (int i = 0; i < entries.size(); i++) {
-            valuesArray[i] = entries.get(i).toValues();
-        }
-        getContentResolver().bulkInsert(EntriesView.CONTENT_URI, valuesArray);
+        ((BudgetTrackerApplication) getApplication()).getDataSourceEntry().bulkInsert(entries);
     }
 
     @Override
