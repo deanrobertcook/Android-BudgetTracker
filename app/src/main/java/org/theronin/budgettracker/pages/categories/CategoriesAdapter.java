@@ -11,11 +11,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.theronin.budgettracker.R;
+import org.theronin.budgettracker.comparators.CategoryTotalComparator;
 import org.theronin.budgettracker.model.Category;
 import org.theronin.budgettracker.model.Currency;
 import org.theronin.budgettracker.utils.MoneyUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder>
@@ -44,6 +46,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
                     "instead");
         }
         this.categories = categories;
+        Collections.sort(this.categories, new CategoryTotalComparator());
         notifyDataSetChanged();
     }
 
