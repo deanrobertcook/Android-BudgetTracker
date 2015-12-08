@@ -85,20 +85,11 @@ public class FileBackupAgent  {
             JsonArray jsonArray = gson.fromJson(entriesJson, JsonElement.class).getAsJsonArray();
             for (JsonElement element : jsonArray) {
                 JsonObject object = (JsonObject) element;
-                changeDateToUtc(object);
                 replaceCategoryObjectWithName(object);
                 replaceCurrencyObjectWithCode(object);
+                removeExchangeRateField(object);
             }
             return gson.toJson(jsonArray);
-        }
-
-        private void changeDateToUtc(JsonObject object) {
-            if (object.has("utcDate")) {
-                long utcTime = object.get("utcDate").getAsLong();
-                String formattedDate = DateUtils.getStorageFormattedDate(utcTime);
-                object.remove("utcDate");
-                object.addProperty("dateEntered", formattedDate);
-            }
         }
 
         private void replaceCategoryObjectWithName(JsonObject object) {
@@ -114,6 +105,12 @@ public class FileBackupAgent  {
                 JsonObject category = (JsonObject) object.get("currency");
                 String categoryName = category.get("code").getAsString();
                 object.addProperty("currency", categoryName);
+            }
+        }
+
+        private void removeExchangeRateField(JsonObject object) {
+            if (object.has("exchangeRate")) {
+                object.remove("exchangeRate");
             }
         }
 
@@ -191,8 +188,14 @@ public class FileBackupAgent  {
         }
 
         private long findDate(JsonObject object) {
-            String formattedDate = object.get("dateEntered").getAsString();
-            return DateUtils.getUtcTimeFromStorageFormattedDate(formattedDate);
+            if (object.has("dateEntered")) {
+                String date = object.get("dateEntered").getAsString();
+                long utcDate =  DateUtils.getUtcTimeFromStorageFormattedDate(date);
+                Timber.d("findDate: " + date + ", utcDate: " + utcDate);
+                return utcDate;
+            } else {
+                return object.get("utcDate").getAsLong();
+            }
         }
 
         private long findAmount(JsonObject object) {

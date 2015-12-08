@@ -3113,5 +3113,26 @@
     "currency": "AUD",
     "id": 494,
     "dateEntered": "2015-12-06"
+  },
+  {
+    "amount": 540,
+    "category": "subway",
+    "currency": "AUD",
+    "id": 495,
+    "dateEntered": "2015-12-07"
+  },
+  {
+    "amount": 400,
+    "category": "coffee",
+    "currency": "AUD",
+    "id": 496,
+    "dateEntered": "2015-12-08"
+  },
+  {
+    "amount": 4450,
+    "category": "lunch",
+    "currency": "AUD",
+    "id": 497,
+    "dateEntered": "2015-12-08"
   }
 ]

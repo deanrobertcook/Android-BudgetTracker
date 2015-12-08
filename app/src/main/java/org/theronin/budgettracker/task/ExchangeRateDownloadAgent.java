@@ -118,8 +118,6 @@ public class ExchangeRateDownloadAgent {
 
     private class ExchangeRateDownloadTask extends AsyncTask<Long, Void, String> {
 
-
-
         @Override
         protected String doInBackground(Long... params) {
             String formattedDate = DateUtils.getStorageFormattedDate(params[0]);
