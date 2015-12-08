@@ -5,6 +5,7 @@ import android.app.Application;
 import org.theronin.budgettracker.data.DataSourceCategory;
 import org.theronin.budgettracker.data.DataSourceCurrency;
 import org.theronin.budgettracker.data.DataSourceEntry;
+import org.theronin.budgettracker.data.DataSourceExchangeRate;
 
 import timber.log.Timber;
 
@@ -13,6 +14,7 @@ public class BudgetTrackerApplication extends Application {
     private DataSourceEntry dataSourceEntry;
     private DataSourceCategory dataSourceCategory;
     private DataSourceCurrency dataSourceCurrency;
+    private DataSourceExchangeRate dataSourceExchangeRate;
 
     @Override
     public void onCreate() {
@@ -24,6 +26,7 @@ public class BudgetTrackerApplication extends Application {
         dataSourceEntry = new DataSourceEntry(this);
         dataSourceCategory = new DataSourceCategory(this);
         dataSourceCurrency = new DataSourceCurrency(this);
+        dataSourceExchangeRate = new DataSourceExchangeRate(this);
     }
 
     public DataSourceEntry getDataSourceEntry() {
@@ -36,5 +39,9 @@ public class BudgetTrackerApplication extends Application {
 
     public DataSourceCurrency getDataSourceCurrency() {
         return dataSourceCurrency;
+    }
+
+    public DataSourceExchangeRate getDataSourceExchangeRate() {
+        return dataSourceExchangeRate;
     }
 }
