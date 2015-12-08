@@ -64,7 +64,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         viewHolder.currencySymbolTotalView.setText(homeCurrency.symbol);
         viewHolder.currencyCodeTotalView.setText(homeCurrency.code);
 
-        viewHolder.totalTextView.setText(MoneyUtils.convertCentsToDisplayAmount(category.total));
+        viewHolder.totalTextView.setText(MoneyUtils.convertCentsToDisplayAmount(category.getTotal()));
 
         viewHolder.currencySymbolMonthlyView.setText(homeCurrency.symbol);
         viewHolder.currencyCodeMonthlyView.setText(homeCurrency.code);

@@ -3,6 +3,8 @@ package org.theronin.budgettracker.model;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import org.theronin.budgettracker.utils.DateUtils;
+
 import static org.theronin.budgettracker.data.BudgetContract.CategoryView.COL_CATEGORY_NAME;
 import static org.theronin.budgettracker.data.BudgetContract.CategoryView.INDEX_CATEGORY_NAME;
 import static org.theronin.budgettracker.data.BudgetContract.CategoryView.INDEX_ENTRY_FREQUENCY;
@@ -16,6 +18,8 @@ public class Category {
     public final String name;
     public final long utcFirstEntryDate;
     public final long frequency;
+
+    private long total = -1;
 
     public Category(String name) {
         //TODO check what a good default date is.
@@ -69,4 +73,27 @@ public class Category {
                 name, id, utcFirstEntryDate, frequency
         );
     }
+
+    public long getTotal() {
+        return total;
+    }
+
+    public void setTotal(long total) {
+        this.total = total;
+    }
+
+    public long getMonthlyAverage() {
+        if (total == -1) {
+            return -1;
+        }
+        long daysPassed = DateUtils.daysSince(utcFirstEntryDate);
+
+        if (daysPassed < DateUtils.AVG_DAYS_IN_MONTH) {
+            return -1;
+        }
+
+        double monthsPassed = (double) daysPassed / DateUtils.AVG_DAYS_IN_MONTH;
+        return (long) ((double) total / monthsPassed);
+    }
+
 }
