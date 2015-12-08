@@ -126,6 +126,21 @@ public class BudgetContract {
                 COL_USD_RATE + " REAL NOT NULL, " +
                 "FOREIGN KEY (" + COL_CURRENCY_CODE + ") REFERENCES " + CurrencyTable.TABLE_NAME + " (" + CurrencyTable.COL_CODE + "), " +
                 "UNIQUE (" + COL_CURRENCY_CODE + ", " + COL_DATE + ") ON CONFLICT IGNORE)";
+
+        /**
+         * Helper projections for faster query write-ups
+         */
+        public static final String[] PROJECTION = {
+                _ID,
+                COL_CURRENCY_CODE,
+                COL_DATE,
+                COL_USD_RATE
+        };
+
+        public static final int INDEX_ID = 0;
+        public static final int INDEX_CURRENCY_CODE = 1;
+        public static final int INDEX_DATE = 2;
+        public static final int INDEX_USD_RATE = 3;
     }
 
     public static final class CategoryView implements BaseColumns {
@@ -148,7 +163,6 @@ public class BudgetContract {
 
                         CategoryTable.TABLE_NAME + "." + CategoryTable.COL_NAME + " AS " + COL_CATEGORY_NAME + ", " +
                         "MIN(" + EntryTable.TABLE_NAME + "." + EntryTable.COL_DATE+ ") AS " + COL_FIRST_ENTRY_DATE + ", " +
-                        "IFNULL(SUM(" + EntryTable.TABLE_NAME + "." + EntryTable.COL_AMOUNT + "), 0) AS " + COL_TOTAL_AMOUNT + ", " +
                         "COUNT(" + EntryTable.TABLE_NAME + "." + EntryTable._ID + ")" + " AS " + COL_ENTRY_FREQUENCY + " " +
 
                 "FROM " +

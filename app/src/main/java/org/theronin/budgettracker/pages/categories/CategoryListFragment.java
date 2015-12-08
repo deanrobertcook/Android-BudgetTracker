@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.theronin.budgettracker.R;
-import org.theronin.budgettracker.data.BudgetContract.CategoryView;
 import org.theronin.budgettracker.data.loader.DataLoader;
 import org.theronin.budgettracker.model.Category;
 
@@ -22,8 +21,6 @@ public class CategoryListFragment extends Fragment implements
         LoaderCallbacks<List<Category>> {
 
     private static final int CATEGORY_LOADER_ID = 0;
-    private static final String SORT_ORDER =
-            CategoryView.COL_TOTAL_AMOUNT + " DESC, " + CategoryView.COL_CATEGORY_NAME + " ASC";
     private CategoriesAdapter adapter;
 
 
@@ -53,9 +50,7 @@ public class CategoryListFragment extends Fragment implements
 
     @Override
     public Loader<List<Category>> onCreateLoader(int id, Bundle args) {
-        return new DataLoader.CategoryLoader(
-                getActivity(),
-                null, null, CategoryView.COL_TOTAL_AMOUNT + " DESC");
+        return new DataLoader.CategoryLoader(getActivity());
     }
 
     @Override
