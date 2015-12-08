@@ -91,7 +91,7 @@ public class MainActivity extends FragmentActivity implements
 
     @Override
     public Loader<List<Entry>> onCreateLoader(int id, Bundle args) {
-        return new EntryLoader(this);
+        return new EntryLoader(this, null, null, null);
     }
 
     @Override
