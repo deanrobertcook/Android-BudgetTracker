@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.theronin.budgettracker.R;
-import org.theronin.budgettracker.data.BudgetContract.EntriesView;
+import org.theronin.budgettracker.data.BudgetContract.EntryView;
 import org.theronin.budgettracker.data.loader.DataLoader;
 import org.theronin.budgettracker.model.Entry;
 
@@ -29,7 +29,7 @@ public class EntryListFragment extends Fragment implements
     private static final int ENTRY_LOADER_ID = 0;
 
     private static final String SORT_ORDER =
-            EntriesView.COL_DATE_ENTERED + " DESC, " + EntriesView._ID + " DESC";
+            EntryView.COL_DATE + " DESC, " + EntryView._ID + " DESC";
 
     private EntriesAdapter adapter;
     private Entry entrySelected;
@@ -74,7 +74,7 @@ public class EntryListFragment extends Fragment implements
     public void onDeleteClicked() {
         if (entrySelected != null) {
             int numDeleted = getActivity().getContentResolver().delete(
-                    EntriesView.CONTENT_URI.buildUpon().appendPath(
+                    EntryView.CONTENT_URI.buildUpon().appendPath(
                             Long.toString(entrySelected.id)).build(),
                     null, null);
             if (numDeleted == 1) {

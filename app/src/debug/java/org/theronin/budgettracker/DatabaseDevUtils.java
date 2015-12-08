@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.theronin.budgettracker.data.BudgetContract;
-import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
+import org.theronin.budgettracker.data.BudgetContract.EntryTable;
 import org.theronin.budgettracker.data.BudgetDbHelper;
 import org.theronin.budgettracker.model.Category;
 import org.theronin.budgettracker.model.Entry;
@@ -31,12 +31,12 @@ public class DatabaseDevUtils {
     public static long insertCategoryDirectlyToDatabase(SQLiteDatabase database, Category
             category) {
         ContentValues values = new ContentValues();
-        values.put(BudgetContract.CategoriesView.COL_CATEGORY_NAME, category.name);
+        values.put(BudgetContract.CategoryView.COL_CATEGORY_NAME, category.name);
         if (category.utcFirstEntryDate != 0) {
-            values.put(BudgetContract.CategoriesView.COL_FIRST_ENTRY_DATE, category.utcFirstEntryDate);
+            values.put(BudgetContract.CategoryView.COL_FIRST_ENTRY_DATE, category.utcFirstEntryDate);
         }
 
-        long categoryId = database.insert(BudgetContract.CategoriesView
+        long categoryId = database.insert(BudgetContract.CategoryView
                         .VIEW_NAME, null,
                 values);
         if (categoryId == -1) {
@@ -51,9 +51,9 @@ public class DatabaseDevUtils {
 
     public static long findCategoryId(SQLiteDatabase database, String categoryName) {
         Cursor cursor = database.query(
-                BudgetContract.CategoriesView.VIEW_NAME,
-                new String[]{BudgetContract.CategoriesView._ID},
-                BudgetContract.CategoriesView.COL_CATEGORY_NAME + "= ?",
+                BudgetContract.CategoryView.VIEW_NAME,
+                new String[]{BudgetContract.CategoryView._ID},
+                BudgetContract.CategoryView.COL_CATEGORY_NAME + "= ?",
                 new String[]{categoryName},
                 null, null, null
         );
@@ -70,9 +70,9 @@ public class DatabaseDevUtils {
 
     public static String findCategoryName(SQLiteDatabase database, long id) {
         Cursor cursor = database.query(
-                BudgetContract.CategoriesView.VIEW_NAME,
-                new String[]{BudgetContract.CategoriesView.COL_CATEGORY_NAME},
-                BudgetContract.CategoriesView._ID + "= ?",
+                BudgetContract.CategoryView.VIEW_NAME,
+                new String[]{BudgetContract.CategoryView.COL_CATEGORY_NAME},
+                BudgetContract.CategoryView._ID + "= ?",
                 new String[]{Long.toString(id)},
                 null, null, null
         );
@@ -96,7 +96,7 @@ public class DatabaseDevUtils {
     public static long insertEntryDirectlyToDatabase(SQLiteDatabase database, Entry entry) {
         ContentValues values = getEntryValues(database, entry);
 
-        long entryId = database.insert(EntriesTable
+        long entryId = database.insert(EntryTable
                 .TABLE_NAME, null, values);
         if (entryId == -1) {
             throw new RuntimeException("An error occurred inserting the Entry into the DB");

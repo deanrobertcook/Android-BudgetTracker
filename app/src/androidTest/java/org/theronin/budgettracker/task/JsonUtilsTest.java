@@ -9,8 +9,8 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.theronin.budgettracker.DatabaseDevUtils;
-import org.theronin.budgettracker.data.BudgetContract.CategoriesView;
-import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
+import org.theronin.budgettracker.data.BudgetContract.CategoryView;
+import org.theronin.budgettracker.data.BudgetContract.EntryTable;
 import com.theronin.budgettracker.data.BudgetDbHelper;
 import org.theronin.budgettracker.model.Category;
 import org.theronin.budgettracker.model.Entry;
@@ -45,7 +45,7 @@ public class JsonUtilsTest {
                 200, 1000);
 
         Cursor categoriesCursor = context.getContentResolver().query(
-                CategoriesView.CONTENT_URI,
+                CategoryView.CONTENT_URI,
                 Category.projection,
                 null, null, null);
 
@@ -59,7 +59,7 @@ public class JsonUtilsTest {
         Log.d(TAG, json);
 
         Cursor entriesCursor = context.getContentResolver().query(
-                EntriesTable.CONTENT_URI,
+                EntryTable.CONTENT_URI,
                 Entry.projection,
                 null, null, null
         );

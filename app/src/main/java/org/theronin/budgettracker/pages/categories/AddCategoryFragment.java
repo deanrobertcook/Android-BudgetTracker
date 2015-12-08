@@ -82,7 +82,7 @@ public class AddCategoryFragment extends Fragment implements
         ContentValues values = new Category(categoryName).toValues();
 
         Uri categoryUri = getActivity().getContentResolver().insert(
-                BudgetContract.CategoriesView.CONTENT_URI,
+                BudgetContract.CategoryView.CONTENT_URI,
                 values
         );
 

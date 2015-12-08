@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.theronin.budgettracker.BudgetTrackerApplication;
-import org.theronin.budgettracker.data.BudgetContract.CategoriesView;
+import org.theronin.budgettracker.data.BudgetContract.CategoryView;
 import org.theronin.budgettracker.model.Category;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class DataSourceCategory extends AbsDataSource<Category> {
 
     public long getId(String categoryName) {
         List<Category> categories = query(
-                BudgetContract.CategoriesTable.COL_CATEGORY_NAME + " = ?",
+                BudgetContract.CategoryTable.COL_NAME + " = ?",
                 new String[]{categoryName},
                 null
         );
@@ -33,7 +33,7 @@ public class DataSourceCategory extends AbsDataSource<Category> {
     public long insert(Category entity) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = entity.toValues();
-        long categoryId = db.insert(BudgetContract.CategoriesTable.TABLE_NAME, null, values);
+        long categoryId = db.insert(BudgetContract.CategoryTable.TABLE_NAME, null, values);
         setDataInValid();
         return categoryId;
     }
@@ -41,8 +41,8 @@ public class DataSourceCategory extends AbsDataSource<Category> {
     @Override
     public List<Category> query(String selection, String[] selectionArgs, String orderBy) {
         Cursor cursor = dbHelper.getReadableDatabase().query(
-                CategoriesView.VIEW_NAME,
-                CategoriesView.PROJECTION,
+                CategoryView.VIEW_NAME,
+                CategoryView.PROJECTION,
                 selection,
                 selectionArgs,
                 null, null, orderBy

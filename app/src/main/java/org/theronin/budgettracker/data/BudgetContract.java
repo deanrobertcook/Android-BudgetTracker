@@ -1,103 +1,82 @@
 package org.theronin.budgettracker.data;
 
-import android.content.ContentResolver;
-import android.net.Uri;
 import android.provider.BaseColumns;
-
-import org.theronin.budgettracker.BuildConfig;
 
 public class BudgetContract {
 
-    public static final String CONTENT_AUTHORITY = BuildConfig.APPLICATION_ID;
-
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
-
-    public static final class CategoriesTable implements BaseColumns {
+    public static final class CategoryTable implements BaseColumns {
         /**
          * SQLite constants
          */
         public static final String TABLE_NAME = "category_base";
 
-        public static final String COL_CATEGORY_NAME = "category_name";
+        public static final String COL_NAME = "name";
 
         public static final String SQL_CREATE_CATEGORIES_TABLE = "CREATE TABLE " +
                 TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COL_CATEGORY_NAME + " TEXT NOT NULL, " +
-                "UNIQUE (" + COL_CATEGORY_NAME + ") ON CONFLICT IGNORE)";
+                COL_NAME + " TEXT NOT NULL, " +
+                "UNIQUE (" + COL_NAME + ") ON CONFLICT IGNORE)";
 
         /**
          * Helper projections for faster query write-ups
          */
         public static final String[] PROJECTION = {
                 _ID,
-                COL_CATEGORY_NAME
+                COL_NAME
         };
 
         public static final int INDEX_ID = 0;
-        public static final int INDEX_CATEGORY_NAME = 1;
+        public static final int INDEX_NAME = 1;
     }
 
-    public static final class EntriesTable implements BaseColumns {
+    public static final class EntryTable implements BaseColumns {
 
         /**
          * SQLite constants
          */
         public static final String TABLE_NAME = "entry_base";
 
-        public static final String COL_DATE_ENTERED = "date_entered";
+        public static final String COL_DATE = "date";
         public static final String COL_CATEGORY_ID = "category_id";
-        public static final String COL_AMOUNT_CENTS = "amount_cents";
+        public static final String COL_AMOUNT = "amount";
         public static final String COL_CURRENCY_ID = "currency_id";
 
-        public static final String SQL_CREATE_ENTRIES_TABLE = "CREATE TABLE " + EntriesTable
+        public static final String SQL_CREATE_ENTRIES_TABLE = "CREATE TABLE " + EntryTable
                 .TABLE_NAME + " (" +
 
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
-                COL_DATE_ENTERED + " INTEGER NOT NULL, " +
+                COL_DATE + " INTEGER NOT NULL, " +
                 COL_CATEGORY_ID + " INTEGER NOT NULL, " +
-                COL_AMOUNT_CENTS + " INTEGER NOT NULL, " +
+                COL_AMOUNT + " INTEGER NOT NULL, " +
                 COL_CURRENCY_ID + " INTEGER NOT NULL, " +
 
                 "FOREIGN KEY (" + COL_CATEGORY_ID + ") REFERENCES " +
-                CategoriesView.VIEW_NAME + " (" + CategoriesView._ID + "), " +
+                CategoryView.VIEW_NAME + " (" + CategoryView._ID + "), " +
 
                 "FOREIGN KEY (" + COL_CURRENCY_ID + ") REFERENCES " +
-                CurrenciesTable.TABLE_NAME + " (" + CurrenciesTable._ID + "))";
+                CurrencyTable.TABLE_NAME + " (" + CurrencyTable._ID + "))";
 
         /**
          * Helper projections for faster query write-ups
          */
         public static final String[] PROJECTION = {
                 _ID,
-                COL_DATE_ENTERED,
+                COL_DATE,
                 COL_CATEGORY_ID,
-                COL_AMOUNT_CENTS,
+                COL_AMOUNT,
                 COL_CURRENCY_ID
         };
 
         public static final int INDEX_ID = 0;
-        public static final int INDEX_DATE_ENTERED = 1;
+        public static final int INDEX_DATE = 1;
         public static final int INDEX_CATEGORY_ID = 2;
-        public static final int INDEX_AMOUNT_CENTS = 3;
+        public static final int INDEX_AMOUNT = 3;
         public static final int INDEX_CURRENCY_ENTERED = 4;
     }
 
-    public static final class CurrenciesTable implements BaseColumns {
-        /**
-         * Provider constants
-         */
-        public static final String PROVIDER_PATH = "currency";
-        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath
-                (PROVIDER_PATH).build();
-
-        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" +
-                CONTENT_AUTHORITY + "." + PROVIDER_PATH;
-
-        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" +
-                CONTENT_AUTHORITY + "." + PROVIDER_PATH;
-
+    public static final class CurrencyTable implements BaseColumns {
         /**
          * SQLite constants
          */
@@ -128,7 +107,7 @@ public class BudgetContract {
         public static final int INDEX_SYMBOL = 2;
     }
 
-    public static final class ExchangeRatesTable implements BaseColumns {
+    public static final class ExchangeRateTable implements BaseColumns {
         /**
          * SQLite constants
          */
@@ -145,33 +124,19 @@ public class BudgetContract {
                 COL_CURRENCY_CODE + " TEXT NOT NULL, " +
                 COL_DATE + " INTEGER NOT NULL, " +
                 COL_USD_RATE + " REAL NOT NULL, " +
-                "FOREIGN KEY (" + COL_CURRENCY_CODE + ") REFERENCES " + CurrenciesTable.TABLE_NAME + " (" + CurrenciesTable.COL_CODE + "), " +
+                "FOREIGN KEY (" + COL_CURRENCY_CODE + ") REFERENCES " + CurrencyTable.TABLE_NAME + " (" + CurrencyTable.COL_CODE + "), " +
                 "UNIQUE (" + COL_CURRENCY_CODE + ", " + COL_DATE + ") ON CONFLICT IGNORE)";
     }
 
-    public static final class CategoriesView implements BaseColumns {
-
-        /**
-         * Provider constants
-         */
-        public static final String PROVIDER_PATH = "category";
-        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath
-                (PROVIDER_PATH).build();
-
-        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" +
-                CONTENT_AUTHORITY + "." + PROVIDER_PATH;
-
-        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" +
-                CONTENT_AUTHORITY + "." + PROVIDER_PATH;
-
+    public static final class CategoryView implements BaseColumns {
         /**
          * SQLite constants
          */
         public static final String VIEW_NAME = "category";
 
-        public static final String COL_CATEGORY_NAME = CategoriesTable.COL_CATEGORY_NAME;
+        public static final String COL_CATEGORY_NAME = CategoryTable.COL_NAME;
         public static final String COL_FIRST_ENTRY_DATE = "first_entry_date";
-        public static final String COL_TOTAL_AMOUNT = "total_amount_cents";
+        public static final String COL_TOTAL_AMOUNT = "total_amount";
         public static final String COL_ENTRY_FREQUENCY = "entry_frequency";
 
     //@formatter:off
@@ -179,22 +144,22 @@ public class BudgetContract {
                 "CREATE VIEW " + VIEW_NAME + " AS " +
 
                 "SELECT " +
-                        CategoriesTable.TABLE_NAME + "." + CategoriesTable._ID + " AS " + _ID + ", " +
+                        CategoryTable.TABLE_NAME + "." + CategoryTable._ID + " AS " + _ID + ", " +
 
-                        CategoriesTable.TABLE_NAME + "." + CategoriesTable.COL_CATEGORY_NAME + " AS " + COL_CATEGORY_NAME + ", " +
-                        "MIN(" + EntriesTable.TABLE_NAME + "." + EntriesTable.COL_DATE_ENTERED+ ") AS " + COL_FIRST_ENTRY_DATE + ", " +
-                        "IFNULL(SUM(" + EntriesTable.TABLE_NAME + "." + EntriesTable.COL_AMOUNT_CENTS + "), 0) AS " + COL_TOTAL_AMOUNT + ", " +
-                        "COUNT(" + EntriesTable.TABLE_NAME + "." + EntriesTable._ID + ")" + " AS " + COL_ENTRY_FREQUENCY + " " +
+                        CategoryTable.TABLE_NAME + "." + CategoryTable.COL_NAME + " AS " + COL_CATEGORY_NAME + ", " +
+                        "MIN(" + EntryTable.TABLE_NAME + "." + EntryTable.COL_DATE+ ") AS " + COL_FIRST_ENTRY_DATE + ", " +
+                        "IFNULL(SUM(" + EntryTable.TABLE_NAME + "." + EntryTable.COL_AMOUNT + "), 0) AS " + COL_TOTAL_AMOUNT + ", " +
+                        "COUNT(" + EntryTable.TABLE_NAME + "." + EntryTable._ID + ")" + " AS " + COL_ENTRY_FREQUENCY + " " +
 
                 "FROM " +
-                        CategoriesTable.TABLE_NAME + " LEFT OUTER JOIN " + EntriesTable.TABLE_NAME + " " +
+                        CategoryTable.TABLE_NAME + " LEFT OUTER JOIN " + EntryTable.TABLE_NAME + " " +
 
                 "ON " +
-                        CategoriesTable.TABLE_NAME + "." + CategoriesTable._ID + " = " + EntriesTable.COL_CATEGORY_ID + " " +
+                        CategoryTable.TABLE_NAME + "." + CategoryTable._ID + " = " + EntryTable.COL_CATEGORY_ID + " " +
 
                 "GROUP BY " +
-                        CategoriesTable.TABLE_NAME + "." + CategoriesTable._ID + ", " +
-                        CategoriesTable.TABLE_NAME + "." + CategoriesTable.COL_CATEGORY_NAME;
+                        CategoryTable.TABLE_NAME + "." + CategoryTable._ID + ", " +
+                        CategoryTable.TABLE_NAME + "." + CategoryTable.COL_NAME;
 
     //@formatter:on
 
@@ -216,33 +181,19 @@ public class BudgetContract {
         public static final int INDEX_ENTRY_FREQUENCY = 4;
     }
 
-    public static final class EntriesView implements BaseColumns {
-
-        /**
-         * Provider constants
-         */
-        public static final String PROVIDER_PATH = "entry";
-        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath
-                (PROVIDER_PATH).build();
-
-        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" +
-                CONTENT_AUTHORITY + "." + PROVIDER_PATH;
-
-        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" +
-                CONTENT_AUTHORITY + "." + PROVIDER_PATH;
-
+    public static final class EntryView implements BaseColumns {
         /**
          * SQLite constants
          */
         public static final String VIEW_NAME = "entry";
 
-        public static final String COL_DATE_ENTERED = EntriesTable.COL_DATE_ENTERED;
-        public static final String COL_AMOUNT_CENTS = EntriesTable.COL_AMOUNT_CENTS;
+        public static final String COL_DATE = EntryTable.COL_DATE;
+        public static final String COL_AMOUNT = EntryTable.COL_AMOUNT;
 
-        public static final String COL_CATEGORY_ID = EntriesTable.COL_CATEGORY_ID;
-        public static final String COL_CATEGORY_NAME = CategoriesTable.COL_CATEGORY_NAME;
+        public static final String COL_CATEGORY_ID = EntryTable.COL_CATEGORY_ID;
+        public static final String COL_CATEGORY_NAME = "currency_name";
 
-        public static final String COL_CURRENCY_ID = EntriesTable.COL_CURRENCY_ID;
+        public static final String COL_CURRENCY_ID = EntryTable.COL_CURRENCY_ID;
         public static final String COL_CURRENCY_CODE = "currency_code";
         public static final String COL_CURRENCY_SYMBOL = "currency_symbol";
 
@@ -251,24 +202,24 @@ public class BudgetContract {
                 "CREATE VIEW " + VIEW_NAME + " AS " +
 
                 "SELECT " +
-                        EntriesTable.TABLE_NAME + "." + EntriesTable._ID + " AS " + _ID + ", " +
+                        EntryTable.TABLE_NAME + "." + EntryTable._ID + " AS " + _ID + ", " +
 
-                        EntriesTable.TABLE_NAME + "." + EntriesTable.COL_DATE_ENTERED + " AS " + COL_DATE_ENTERED + ", " +
-                        EntriesTable.TABLE_NAME + "." + EntriesTable.COL_AMOUNT_CENTS + " AS " + COL_AMOUNT_CENTS + ", " +
+                        EntryTable.TABLE_NAME + "." + EntryTable.COL_DATE + " AS " + COL_DATE + ", " +
+                        EntryTable.TABLE_NAME + "." + EntryTable.COL_AMOUNT + " AS " + COL_AMOUNT + ", " +
 
-                        EntriesTable.TABLE_NAME + "." + EntriesTable.COL_CATEGORY_ID + " AS " + COL_CATEGORY_ID + ", " +
-                        CategoriesTable.TABLE_NAME + "." + CategoriesTable.COL_CATEGORY_NAME + " AS " + COL_CATEGORY_NAME + ", " +
+                        EntryTable.TABLE_NAME + "." + EntryTable.COL_CATEGORY_ID + " AS " + COL_CATEGORY_ID + ", " +
+                        CategoryTable.TABLE_NAME + "." + CategoryTable.COL_NAME + " AS " + COL_CATEGORY_NAME + ", " +
 
-                        EntriesTable.TABLE_NAME + "." + EntriesTable.COL_CURRENCY_ID + " AS " + COL_CURRENCY_ID + ", " +
-                        CurrenciesTable.TABLE_NAME  + "." + CurrenciesTable.COL_CODE + " AS " + COL_CURRENCY_CODE + ", " +
-                        CurrenciesTable.TABLE_NAME + "." + CurrenciesTable.COL_SYMBOL + " AS " + COL_CURRENCY_SYMBOL + " " +
+                        EntryTable.TABLE_NAME + "." + EntryTable.COL_CURRENCY_ID + " AS " + COL_CURRENCY_ID + ", " +
+                        CurrencyTable.TABLE_NAME  + "." + CurrencyTable.COL_CODE + " AS " + COL_CURRENCY_CODE + ", " +
+                        CurrencyTable.TABLE_NAME + "." + CurrencyTable.COL_SYMBOL + " AS " + COL_CURRENCY_SYMBOL + " " +
 
                 "FROM " +
-                        EntriesTable.TABLE_NAME +
-                        " JOIN " + CategoriesTable.TABLE_NAME +
-                            " ON " + EntriesTable.TABLE_NAME + "." + EntriesTable.COL_CATEGORY_ID + " = " + CategoriesTable.TABLE_NAME + "." + CategoriesTable._ID + " " +
-                        " JOIN " + CurrenciesTable.TABLE_NAME +
-                            " ON " + EntriesTable.TABLE_NAME + "." + EntriesTable.COL_CURRENCY_ID + " = " + CurrenciesTable.TABLE_NAME + "." + CurrenciesTable._ID;
+                        EntryTable.TABLE_NAME +
+                        " JOIN " + CategoryTable.TABLE_NAME +
+                            " ON " + EntryTable.TABLE_NAME + "." + EntryTable.COL_CATEGORY_ID + " = " + CategoryTable.TABLE_NAME + "." + CategoryTable._ID + " " +
+                        " JOIN " + CurrencyTable.TABLE_NAME +
+                            " ON " + EntryTable.TABLE_NAME + "." + EntryTable.COL_CURRENCY_ID + " = " + CurrencyTable.TABLE_NAME + "." + CurrencyTable._ID;
 
     //@formatter:on
 
@@ -277,8 +228,8 @@ public class BudgetContract {
          */
         public static final String[] PROJECTION = {
                 _ID,
-                COL_DATE_ENTERED,
-                COL_AMOUNT_CENTS,
+                COL_DATE,
+                COL_AMOUNT,
 
                 COL_CATEGORY_ID,
                 COL_CATEGORY_NAME,
@@ -289,8 +240,8 @@ public class BudgetContract {
         };
 
         public static final int INDEX_ID = 0;
-        public static final int INDEX_DATE_ENTERED = 1;
-        public static final int INDEX_AMOUNT_CENTS = 2;
+        public static final int INDEX_DATE = 1;
+        public static final int INDEX_AMOUNT = 2;
 
         public static final int INDEX_CATEGORY_ID = 3;
         public static final int INDEX_CATEGORY_NAME = 4;
@@ -299,6 +250,4 @@ public class BudgetContract {
         public static final int INDEX_CURRENCY_CODE = 6;
         public static final int INDEX_CURRENCY_SYMBOL = 7;
     }
-
-
 }

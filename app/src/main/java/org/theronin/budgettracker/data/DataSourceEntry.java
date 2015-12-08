@@ -5,8 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.theronin.budgettracker.BudgetTrackerApplication;
-import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
-import org.theronin.budgettracker.data.BudgetContract.EntriesView;
+import org.theronin.budgettracker.data.BudgetContract.EntryTable;
+import org.theronin.budgettracker.data.BudgetContract.EntryView;
 import org.theronin.budgettracker.model.Entry;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
         ContentValues values = entity.toValues();
         checkEntryValues(values);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        long entryId = db.insert(EntriesTable.TABLE_NAME, null, values);
+        long entryId = db.insert(EntryTable.TABLE_NAME, null, values);
         setDataInValid();
         return entryId;
     }
@@ -38,7 +38,7 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
                 ContentValues values = entry.toValues();
                 checkEntryValues(values);
                 db.insert(
-                        EntriesTable.TABLE_NAME,
+                        EntryTable.TABLE_NAME,
                         null,
                         values
                 );
@@ -57,32 +57,32 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
     }
 
     private void sanitiseEntryCategoryValues(ContentValues values) {
-        long categoryId = values.getAsLong(EntriesView.COL_CATEGORY_ID);
+        long categoryId = values.getAsLong(EntryView.COL_CATEGORY_ID);
         if (categoryId == -1) {
-            String categoryName = values.getAsString(EntriesView.COL_CATEGORY_NAME);
+            String categoryName = values.getAsString(EntryView.COL_CATEGORY_NAME);
 
             categoryId = application.getDataSourceCategory().getId(categoryName);
-            values.put(EntriesTable.COL_CATEGORY_ID, categoryId);
+            values.put(EntryTable.COL_CATEGORY_ID, categoryId);
         }
-        values.remove(EntriesView.COL_CATEGORY_NAME);
+        values.remove(EntryView.COL_CATEGORY_NAME);
     }
 
     private void sanitiseEntryCurrencyValues(ContentValues values) {
-        long currencyId = values.getAsLong(EntriesView.COL_CURRENCY_ID);
+        long currencyId = values.getAsLong(EntryView.COL_CURRENCY_ID);
         if (currencyId == -1) {
-            String currencyCode = values.getAsString(EntriesView.COL_CURRENCY_CODE);
+            String currencyCode = values.getAsString(EntryView.COL_CURRENCY_CODE);
 
             currencyId = application.getDataSourceCurrency().getId(currencyCode);
-            values.put(EntriesTable.COL_CURRENCY_ID, currencyId);
+            values.put(EntryTable.COL_CURRENCY_ID, currencyId);
         }
-        values.remove(EntriesView.COL_CURRENCY_CODE);
+        values.remove(EntryView.COL_CURRENCY_CODE);
     }
 
     @Override
     public List<Entry> query(String selection, String[] selectionArgs, String orderBy) {
         Cursor cursor = dbHelper.getReadableDatabase().query(
-                EntriesView.VIEW_NAME,
-                EntriesView.PROJECTION,
+                EntryView.VIEW_NAME,
+                EntryView.PROJECTION,
                 selection,
                 selectionArgs,
                 null, null, orderBy

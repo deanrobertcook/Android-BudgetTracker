@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.theronin.budgettracker.R;
-import org.theronin.budgettracker.data.BudgetContract.CategoriesView;
+import org.theronin.budgettracker.data.BudgetContract.CategoryView;
 import org.theronin.budgettracker.data.loader.DataLoader;
 import org.theronin.budgettracker.model.Category;
 
@@ -23,7 +23,7 @@ public class CategoryListFragment extends Fragment implements
 
     private static final int CATEGORY_LOADER_ID = 0;
     private static final String SORT_ORDER =
-            CategoriesView.COL_TOTAL_AMOUNT + " DESC, " + CategoriesView.COL_CATEGORY_NAME + " ASC";
+            CategoryView.COL_TOTAL_AMOUNT + " DESC, " + CategoryView.COL_CATEGORY_NAME + " ASC";
     private CategoriesAdapter adapter;
 
 

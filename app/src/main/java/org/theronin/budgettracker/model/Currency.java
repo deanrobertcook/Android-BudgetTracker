@@ -2,7 +2,7 @@ package org.theronin.budgettracker.model;
 
 import android.database.Cursor;
 
-import org.theronin.budgettracker.data.BudgetContract.CurrenciesTable;
+import org.theronin.budgettracker.data.BudgetContract.CurrencyTable;
 
 public class Currency {
 
@@ -29,8 +29,8 @@ public class Currency {
 
     public static Currency fromCursor(Cursor cursor) {
         return new Currency(
-                cursor.getLong(CurrenciesTable.INDEX_ID),
-                cursor.getString(CurrenciesTable.INDEX_CODE),
-                cursor.getString(CurrenciesTable.INDEX_SYMBOL));
+                cursor.getLong(CurrencyTable.INDEX_ID),
+                cursor.getString(CurrencyTable.INDEX_CODE),
+                cursor.getString(CurrencyTable.INDEX_SYMBOL));
     }
 }

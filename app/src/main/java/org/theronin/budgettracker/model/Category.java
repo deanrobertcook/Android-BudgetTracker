@@ -5,13 +5,13 @@ import android.database.Cursor;
 
 import org.theronin.budgettracker.utils.DateUtils;
 
-import static org.theronin.budgettracker.data.BudgetContract.CategoriesView.COL_CATEGORY_NAME;
-import static org.theronin.budgettracker.data.BudgetContract.CategoriesView.INDEX_CATEGORY_NAME;
-import static org.theronin.budgettracker.data.BudgetContract.CategoriesView.INDEX_ENTRY_FREQUENCY;
-import static org.theronin.budgettracker.data.BudgetContract.CategoriesView.INDEX_FIRST_ENTRY_DATE;
-import static org.theronin.budgettracker.data.BudgetContract.CategoriesView.INDEX_ID;
-import static org.theronin.budgettracker.data.BudgetContract.CategoriesView.INDEX_TOTAL_AMOUNT;
-import static org.theronin.budgettracker.data.BudgetContract.CategoriesView.PROJECTION;
+import static org.theronin.budgettracker.data.BudgetContract.CategoryView.COL_CATEGORY_NAME;
+import static org.theronin.budgettracker.data.BudgetContract.CategoryView.INDEX_CATEGORY_NAME;
+import static org.theronin.budgettracker.data.BudgetContract.CategoryView.INDEX_ENTRY_FREQUENCY;
+import static org.theronin.budgettracker.data.BudgetContract.CategoryView.INDEX_FIRST_ENTRY_DATE;
+import static org.theronin.budgettracker.data.BudgetContract.CategoryView.INDEX_ID;
+import static org.theronin.budgettracker.data.BudgetContract.CategoryView.INDEX_TOTAL_AMOUNT;
+import static org.theronin.budgettracker.data.BudgetContract.CategoryView.PROJECTION;
 
 public class Category {
     private static final String TAG = Category.class.getName();

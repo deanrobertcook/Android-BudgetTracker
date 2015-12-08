@@ -32,8 +32,8 @@ public class BudgetDbHelperTest {
     @Test
     public void testCreateDatabase() {
         final HashSet<String> tableNameHashSet = new HashSet<>();
-        tableNameHashSet.add(BudgetContract.EntriesTable.TABLE_NAME);
-        tableNameHashSet.add(BudgetContract.CategoriesView.VIEW_NAME);
+        tableNameHashSet.add(BudgetContract.EntryTable.TABLE_NAME);
+        tableNameHashSet.add(BudgetContract.CategoryView.VIEW_NAME);
 
         Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
         cursor.moveToFirst();
@@ -48,11 +48,11 @@ public class BudgetDbHelperTest {
     @Test
     public void testCategoriesTableColumns() {
         HashSet<String> categoriesColumnNames = new HashSet<>();
-        categoriesColumnNames.add(BudgetContract.CategoriesView.COL_CATEGORY_NAME);
-        categoriesColumnNames.add(BudgetContract.CategoriesView.COL_FIRST_ENTRY_DATE);
+        categoriesColumnNames.add(BudgetContract.CategoryView.COL_CATEGORY_NAME);
+        categoriesColumnNames.add(BudgetContract.CategoryView.COL_FIRST_ENTRY_DATE);
 
         Cursor cursor = db.rawQuery("PRAGMA table_info (" +
-                BudgetContract.CategoriesView.VIEW_NAME + ")", null);
+                BudgetContract.CategoryView.VIEW_NAME + ")", null);
 
         cursor.moveToFirst();
 
@@ -66,12 +66,12 @@ public class BudgetDbHelperTest {
     @Test
     public void testEntriesTableColumns() {
         HashSet<String> entriesColumnNames = new HashSet<>();
-        entriesColumnNames.add(BudgetContract.EntriesTable.COL_CATEGORY_ID);
-        entriesColumnNames.add(BudgetContract.EntriesTable.COL_DATE_ENTERED);
-        entriesColumnNames.add(BudgetContract.EntriesTable.COL_AMOUNT_CENTS);
+        entriesColumnNames.add(BudgetContract.EntryTable.COL_CATEGORY_ID);
+        entriesColumnNames.add(BudgetContract.EntryTable.COL_DATE);
+        entriesColumnNames.add(BudgetContract.EntryTable.COL_AMOUNT);
 
         Cursor cursor = db.rawQuery("PRAGMA table_info (" +
-                BudgetContract.EntriesTable.TABLE_NAME + ")", null);
+                BudgetContract.EntryTable.TABLE_NAME + ")", null);
 
         cursor.moveToFirst();
 

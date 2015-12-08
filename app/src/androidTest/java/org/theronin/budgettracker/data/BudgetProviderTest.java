@@ -10,7 +10,7 @@ import android.util.Log;
 
 import org.theronin.budgettracker.DatabaseDevUtils;
 import org.theronin.budgettracker.DateDevUtils;
-import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
+import org.theronin.budgettracker.data.BudgetContract.EntryTable;
 import org.theronin.budgettracker.model.Category;
 import org.theronin.budgettracker.model.Entry;
 
@@ -26,7 +26,7 @@ import static org.theronin.budgettracker.DatabaseDevUtils.findCategoryId;
 import static org.theronin.budgettracker.DatabaseDevUtils.findCategoryName;
 import static org.theronin.budgettracker.DatabaseDevUtils.insertCategoryDirectlyToDatabase;
 import static org.theronin.budgettracker.DatabaseDevUtils.insertEntryDirectlyToDatabase;
-import static org.theronin.budgettracker.data.BudgetContract.CategoriesView;
+import static org.theronin.budgettracker.data.BudgetContract.CategoryView;
 import static org.theronin.budgettracker.utils.DateUtils.getStorageFormattedCurrentDate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -63,8 +63,8 @@ public class BudgetProviderTest {
     @Test
     public void getCategoryDirectoryType() {
         Log.d(TAG, "getCategoryDirectoryType");
-        String expectedType = CategoriesView.CONTENT_TYPE;
-        Uri categoryDirUri = CategoriesView.CONTENT_URI;
+        String expectedType = CategoryView.CONTENT_TYPE;
+        Uri categoryDirUri = CategoryView.CONTENT_URI;
         String matchedType = context.getContentResolver().getType(categoryDirUri);
         assertEquals("Categories dir type is incorrect", expectedType, matchedType);
     }
@@ -72,8 +72,8 @@ public class BudgetProviderTest {
     @Test
     public void getCategoryItemType() {
         Log.d(TAG, "getCategoryItemType");
-        String expectedType = CategoriesView.CONTENT_ITEM_TYPE;
-        Uri categoryItemUri = CategoriesView.CONTENT_URI.buildUpon().appendPath(TEST_ITEM_ID)
+        String expectedType = CategoryView.CONTENT_ITEM_TYPE;
+        Uri categoryItemUri = CategoryView.CONTENT_URI.buildUpon().appendPath(TEST_ITEM_ID)
                 .build();
         String matchedType = context.getContentResolver().getType(categoryItemUri);
         assertEquals("Category item type is incorrect", expectedType, matchedType);
@@ -82,8 +82,8 @@ public class BudgetProviderTest {
     @Test
     public void getEntriesDirectoryType() {
         Log.d(TAG, "getEntriesDirectoryType");
-        String expectedType = EntriesTable.CONTENT_TYPE;
-        Uri entriesDirUri = EntriesTable.CONTENT_URI;
+        String expectedType = EntryTable.CONTENT_TYPE;
+        Uri entriesDirUri = EntryTable.CONTENT_URI;
         String matchedType = context.getContentResolver().getType(entriesDirUri);
         assertEquals("Entries dir type is incorrect", expectedType, matchedType);
     }
@@ -91,8 +91,8 @@ public class BudgetProviderTest {
     @Test
     public void getEntryItemType() {
         Log.d(TAG, "getEntryItemType");
-        String expectedType = EntriesTable.CONTENT_ITEM_TYPE;
-        Uri entryItemUri = EntriesTable.CONTENT_URI.buildUpon().appendPath(TEST_ITEM_ID).build();
+        String expectedType = EntryTable.CONTENT_ITEM_TYPE;
+        Uri entryItemUri = EntryTable.CONTENT_URI.buildUpon().appendPath(TEST_ITEM_ID).build();
         String matchedType = context.getContentResolver().getType(entryItemUri);
         assertEquals("Entry item type is incorrect", expectedType, matchedType);
     }
@@ -106,13 +106,13 @@ public class BudgetProviderTest {
         insertCategoryDirectlyToDatabase(dbHelper, expectedCategory);
 
         //query the content provider
-        Uri categoryURI = CategoriesView.CONTENT_URI.buildUpon().appendPath("1").build();
+        Uri categoryURI = CategoryView.CONTENT_URI.buildUpon().appendPath("1").build();
 
         Cursor result = context.getContentResolver().query(
                 categoryURI,
                 new String[]{
-                        CategoriesView.COL_CATEGORY_NAME,
-                        CategoriesView.COL_FIRST_ENTRY_DATE},
+                        CategoryView.COL_CATEGORY_NAME,
+                        CategoryView.COL_FIRST_ENTRY_DATE},
                 null, null, null);
         result.moveToFirst();
 
@@ -139,12 +139,12 @@ public class BudgetProviderTest {
         }
 
         //Query all current categories and check them off of the hashset using the contentProvider
-        Uri categoriesUri = CategoriesView.CONTENT_URI;
+        Uri categoriesUri = CategoryView.CONTENT_URI;
         Cursor result = context.getContentResolver().query(
                 categoriesUri,
                 new String[]{
-                        CategoriesView.COL_CATEGORY_NAME,
-                        CategoriesView.COL_FIRST_ENTRY_DATE},
+                        CategoryView.COL_CATEGORY_NAME,
+                        CategoryView.COL_FIRST_ENTRY_DATE},
                 null, null, null);
 
         while (result.moveToNext()) {
@@ -172,14 +172,14 @@ public class BudgetProviderTest {
         insertEntryDirectlyToDatabase(dbHelper, expectedEntry);
 
         //query the content provider
-        Uri entryUri = EntriesTable.CONTENT_URI.buildUpon().appendPath("1").build();
+        Uri entryUri = EntryTable.CONTENT_URI.buildUpon().appendPath("1").build();
 
         Cursor result = context.getContentResolver().query(
                 entryUri,
                 new String[]{
-                        EntriesTable.COL_CATEGORY_ID,
-                        EntriesTable.COL_DATE_ENTERED,
-                        EntriesTable.COL_AMOUNT_CENTS},
+                        EntryTable.COL_CATEGORY_ID,
+                        EntryTable.COL_DATE,
+                        EntryTable.COL_AMOUNT},
                 null, null, null);
         result.moveToFirst();
 
@@ -214,13 +214,13 @@ public class BudgetProviderTest {
         }
 
         //Query all current categories and check them off of the hashset using the contentProvider
-        Uri entriesUri = EntriesTable.CONTENT_URI;
+        Uri entriesUri = EntryTable.CONTENT_URI;
         Cursor result = context.getContentResolver().query(
                 entriesUri,
                 new String[]{
-                        EntriesTable.COL_CATEGORY_ID,
-                        EntriesTable.COL_DATE_ENTERED,
-                        EntriesTable.COL_AMOUNT_CENTS},
+                        EntryTable.COL_CATEGORY_ID,
+                        EntryTable.COL_DATE,
+                        EntryTable.COL_AMOUNT},
                 null, null, null);
 
         while (result.moveToNext()) {
@@ -243,21 +243,21 @@ public class BudgetProviderTest {
         Category category = new Category("cashews", null);
         //And a ContentValues with the name data (date should be done automatically)
         ContentValues values = new ContentValues();
-        values.put(CategoriesView.COL_CATEGORY_NAME, category.name);
+        values.put(CategoryView.COL_CATEGORY_NAME, category.name);
 
 
         //Add to the content provider
         Uri newCategoryItemUri = context.getContentResolver().insert(
-                CategoriesView.CONTENT_URI,
+                CategoryView.CONTENT_URI,
                 values);
 
         //Query the database directly to check
         Cursor cursor = dbHelper.getReadableDatabase().query(
-                CategoriesView.VIEW_NAME,
+                CategoryView.VIEW_NAME,
                 new String[]{
-                        CategoriesView.COL_CATEGORY_NAME,
-                        CategoriesView.COL_FIRST_ENTRY_DATE},
-                CategoriesView.COL_CATEGORY_NAME + " = ?",
+                        CategoryView.COL_CATEGORY_NAME,
+                        CategoryView.COL_FIRST_ENTRY_DATE},
+                CategoryView.COL_CATEGORY_NAME + " = ?",
                 new String[]{category.name},
                 null, null, null);
 
@@ -287,26 +287,26 @@ public class BudgetProviderTest {
         Entry entry = new Entry(categoryName, getStorageFormattedCurrentDate(), 100);
         //re-use values object
         ContentValues values = new ContentValues();
-        values.put(EntriesTable.COL_CATEGORY_ID, findCategoryId(dbHelper, entry.category));
-        values.put(EntriesTable.COL_DATE_ENTERED, entry.utcDateEntered);
-        values.put(EntriesTable.COL_AMOUNT_CENTS, entry.amount);
+        values.put(EntryTable.COL_CATEGORY_ID, findCategoryId(dbHelper, entry.category));
+        values.put(EntryTable.COL_DATE, entry.utcDateEntered);
+        values.put(EntryTable.COL_AMOUNT, entry.amount);
 
 
         //Add to the content provider
         Uri newEntryItemUri = context.getContentResolver().insert(
-                EntriesTable.CONTENT_URI,
+                EntryTable.CONTENT_URI,
                 values);
         String entryId = newEntryItemUri.getLastPathSegment();
 
 
         //Query the database directly to check
         Cursor cursor = dbHelper.getReadableDatabase().query(
-                EntriesTable.TABLE_NAME,
+                EntryTable.TABLE_NAME,
                 new String[]{
-                        EntriesTable.COL_CATEGORY_ID,
-                        EntriesTable.COL_DATE_ENTERED,
-                        EntriesTable.COL_AMOUNT_CENTS,},
-                EntriesTable._ID + " = ?",
+                        EntryTable.COL_CATEGORY_ID,
+                        EntryTable.COL_DATE,
+                        EntryTable.COL_AMOUNT,},
+                EntryTable._ID + " = ?",
                 new String[]{entryId},
                 null, null, null);
 
@@ -330,13 +330,13 @@ public class BudgetProviderTest {
 
         //do the deletion
         int numDeleted = context.getContentResolver().delete(
-                EntriesTable.CONTENT_URI.buildUpon().appendPath(Long.toString(entryId)).build(),
+                EntryTable.CONTENT_URI.buildUpon().appendPath(Long.toString(entryId)).build(),
                 null, null
         );
 
         //query everything from the entries table
         Cursor cursor = dbHelper.getReadableDatabase().query(
-                EntriesTable.TABLE_NAME,
+                EntryTable.TABLE_NAME,
                 null, null, null, null, null, null
         );
 
@@ -353,20 +353,20 @@ public class BudgetProviderTest {
         insertCategoryDirectlyToDatabase(dbHelper.getWritableDatabase(), new Category(categoryName));
 
         ContentValues values = new ContentValues();
-        values.put(EntriesTable.COL_DATE_ENTERED, date);
-        values.put(EntriesTable.COL_CATEGORY_ID, findCategoryId(dbHelper.getWritableDatabase(),
+        values.put(EntryTable.COL_DATE, date);
+        values.put(EntryTable.COL_CATEGORY_ID, findCategoryId(dbHelper.getWritableDatabase(),
                 categoryName));
-        values.put(EntriesTable.COL_AMOUNT_CENTS, amount);
+        values.put(EntryTable.COL_AMOUNT, amount);
 
         context.getContentResolver().insert(
-                EntriesTable.CONTENT_URI,
+                EntryTable.CONTENT_URI,
                 values
         );
 
         Cursor cursor = context.getContentResolver().query(
-                CategoriesView.CONTENT_URI,
+                CategoryView.CONTENT_URI,
                 Category.projection,
-                CategoriesView.COL_CATEGORY_NAME + " = ?",
+                CategoryView.COL_CATEGORY_NAME + " = ?",
                 new String[]{categoryName}, null
         );
 
@@ -379,17 +379,17 @@ public class BudgetProviderTest {
 
         String earlierDate = DateDevUtils.getDaysBefore(date, 5);
 
-        values.put(EntriesTable.COL_DATE_ENTERED, earlierDate);
+        values.put(EntryTable.COL_DATE, earlierDate);
         context.getContentResolver().insert(
-                EntriesTable.CONTENT_URI,
+                EntryTable.CONTENT_URI,
                 values
         );
 
         //The cursor should be notified automatically on dataset change (wooh ContentProviders).
         cursor = context.getContentResolver().query(
-                CategoriesView.CONTENT_URI,
+                CategoryView.CONTENT_URI,
                 Category.projection,
-                CategoriesView.COL_CATEGORY_NAME + " = ?",
+                CategoryView.COL_CATEGORY_NAME + " = ?",
                 new String[]{categoryName}, null
         );
         cursor.moveToFirst();
@@ -412,28 +412,28 @@ public class BudgetProviderTest {
         //insert the entries
         for (int i = 0; i < dates.length; i++) {
             ContentValues values = new ContentValues();
-            values.put(EntriesTable.COL_DATE_ENTERED, dates[i]);
-            values.put(EntriesTable.COL_CATEGORY_ID, findCategoryId(dbHelper.getWritableDatabase(),
+            values.put(EntryTable.COL_DATE, dates[i]);
+            values.put(EntryTable.COL_CATEGORY_ID, findCategoryId(dbHelper.getWritableDatabase(),
                     categoryName));
-            values.put(EntriesTable.COL_AMOUNT_CENTS, amount);
+            values.put(EntryTable.COL_AMOUNT, amount);
 
             context.getContentResolver().insert(
-                    EntriesTable.CONTENT_URI,
+                    EntryTable.CONTENT_URI,
                     values
             );
         }
 
         //Delete the earlier entry
         context.getContentResolver().delete(
-                EntriesTable.CONTENT_URI.buildUpon().appendPath("1").build(),
+                EntryTable.CONTENT_URI.buildUpon().appendPath("1").build(),
                 null, null
         );
 
         //Query the categories table
         Cursor cursor = context.getContentResolver().query(
-                CategoriesView.CONTENT_URI,
+                CategoryView.CONTENT_URI,
                 Category.projection,
-                CategoriesView.COL_CATEGORY_NAME + " = ?",
+                CategoryView.COL_CATEGORY_NAME + " = ?",
                 new String[]{categoryName}, null
         );
         cursor.moveToFirst();

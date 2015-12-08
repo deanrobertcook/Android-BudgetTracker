@@ -13,7 +13,7 @@ import android.view.MenuItem;
 
 import org.theronin.budgettracker.BudgetTrackerApplication;
 import org.theronin.budgettracker.R;
-import org.theronin.budgettracker.data.BudgetContract.EntriesView;
+import org.theronin.budgettracker.data.BudgetContract.EntryView;
 import org.theronin.budgettracker.model.Entry;
 import org.theronin.budgettracker.model.ExchangeRate;
 import org.theronin.budgettracker.pages.categories.CategoriesActivity;
@@ -98,8 +98,8 @@ public class MainActivity extends FragmentActivity implements
             case ENTRY_LOADER_ID:
                 return new CursorLoader(
                         this,
-                        EntriesView.CONTENT_URI,
-                        EntriesView.PROJECTION,
+                        EntryView.CONTENT_URI,
+                        EntryView.PROJECTION,
                         null, null, null
                 );
             default:

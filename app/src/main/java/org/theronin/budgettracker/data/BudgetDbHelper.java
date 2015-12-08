@@ -5,12 +5,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import org.theronin.budgettracker.R;
-import org.theronin.budgettracker.data.BudgetContract.CategoriesTable;
-import org.theronin.budgettracker.data.BudgetContract.CategoriesView;
-import org.theronin.budgettracker.data.BudgetContract.CurrenciesTable;
-import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
-import org.theronin.budgettracker.data.BudgetContract.EntriesView;
-import org.theronin.budgettracker.data.BudgetContract.ExchangeRatesTable;
+import org.theronin.budgettracker.data.BudgetContract.CategoryTable;
+import org.theronin.budgettracker.data.BudgetContract.CategoryView;
+import org.theronin.budgettracker.data.BudgetContract.CurrencyTable;
+import org.theronin.budgettracker.data.BudgetContract.EntryTable;
+import org.theronin.budgettracker.data.BudgetContract.EntryView;
+import org.theronin.budgettracker.data.BudgetContract.ExchangeRateTable;
 
 public class BudgetDbHelper extends SQLiteOpenHelper {
 
@@ -53,22 +53,22 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
     }
 
     public void createTables(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(CurrenciesTable.SQL_CREATE_CATEGORIES_TABLE);
+        sqLiteDatabase.execSQL(CurrencyTable.SQL_CREATE_CATEGORIES_TABLE);
         sqLiteDatabase.execSQL(buildDefaultCurrenciesQuery());
 
-        sqLiteDatabase.execSQL(ExchangeRatesTable.SQL_CREATE_CATEGORIES_TABLE);
-        sqLiteDatabase.execSQL(CategoriesTable.SQL_CREATE_CATEGORIES_TABLE);
-        sqLiteDatabase.execSQL(EntriesTable.SQL_CREATE_ENTRIES_TABLE);
-        sqLiteDatabase.execSQL(CategoriesView.SQL_CREATE_CATEGORIES_VIEW);
-        sqLiteDatabase.execSQL(EntriesView.SQL_CREATE_CATEGORIES_VIEW);
+        sqLiteDatabase.execSQL(ExchangeRateTable.SQL_CREATE_CATEGORIES_TABLE);
+        sqLiteDatabase.execSQL(CategoryTable.SQL_CREATE_CATEGORIES_TABLE);
+        sqLiteDatabase.execSQL(EntryTable.SQL_CREATE_ENTRIES_TABLE);
+        sqLiteDatabase.execSQL(CategoryView.SQL_CREATE_CATEGORIES_VIEW);
+        sqLiteDatabase.execSQL(EntryView.SQL_CREATE_CATEGORIES_VIEW);
     }
 
     public void dropTables(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("DROP VIEW IF EXISTS " + CategoriesView.VIEW_NAME);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + EntriesTable.TABLE_NAME);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CategoriesTable.TABLE_NAME);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ExchangeRatesTable.TABLE_NAME);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CurrenciesTable.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP VIEW IF EXISTS " + CategoryView.VIEW_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + EntryTable.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CategoryTable.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ExchangeRateTable.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CurrencyTable.TABLE_NAME);
     }
 
     private String buildDefaultCurrenciesQuery() {
@@ -77,9 +77,9 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
 
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("INSERT INTO %s (%s, %s) VALUES ",
-                CurrenciesTable.TABLE_NAME,
-                CurrenciesTable.COL_CODE,
-                CurrenciesTable.COL_SYMBOL));
+                CurrencyTable.TABLE_NAME,
+                CurrencyTable.COL_CODE,
+                CurrencyTable.COL_SYMBOL));
 
         for (int i = 0; i < codes.length; i++) {
             sb.append(

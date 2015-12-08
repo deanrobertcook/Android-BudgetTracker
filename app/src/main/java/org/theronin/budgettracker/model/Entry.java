@@ -3,18 +3,18 @@ package org.theronin.budgettracker.model;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import org.theronin.budgettracker.data.BudgetContract.EntriesTable;
-import org.theronin.budgettracker.data.BudgetContract.EntriesView;
+import org.theronin.budgettracker.data.BudgetContract.EntryTable;
+import org.theronin.budgettracker.data.BudgetContract.EntryView;
 import org.theronin.budgettracker.utils.DateUtils;
 
-import static org.theronin.budgettracker.data.BudgetContract.EntriesView.INDEX_AMOUNT_CENTS;
-import static org.theronin.budgettracker.data.BudgetContract.EntriesView.INDEX_CATEGORY_ID;
-import static org.theronin.budgettracker.data.BudgetContract.EntriesView.INDEX_CATEGORY_NAME;
-import static org.theronin.budgettracker.data.BudgetContract.EntriesView.INDEX_CURRENCY_CODE;
-import static org.theronin.budgettracker.data.BudgetContract.EntriesView.INDEX_CURRENCY_ID;
-import static org.theronin.budgettracker.data.BudgetContract.EntriesView.INDEX_CURRENCY_SYMBOL;
-import static org.theronin.budgettracker.data.BudgetContract.EntriesView.INDEX_DATE_ENTERED;
-import static org.theronin.budgettracker.data.BudgetContract.EntriesView.INDEX_ID;
+import static org.theronin.budgettracker.data.BudgetContract.EntryView.INDEX_AMOUNT;
+import static org.theronin.budgettracker.data.BudgetContract.EntryView.INDEX_CATEGORY_ID;
+import static org.theronin.budgettracker.data.BudgetContract.EntryView.INDEX_CATEGORY_NAME;
+import static org.theronin.budgettracker.data.BudgetContract.EntryView.INDEX_CURRENCY_CODE;
+import static org.theronin.budgettracker.data.BudgetContract.EntryView.INDEX_CURRENCY_ID;
+import static org.theronin.budgettracker.data.BudgetContract.EntryView.INDEX_CURRENCY_SYMBOL;
+import static org.theronin.budgettracker.data.BudgetContract.EntryView.INDEX_DATE;
+import static org.theronin.budgettracker.data.BudgetContract.EntryView.INDEX_ID;
 
 public class Entry {
     public final long id;
@@ -46,8 +46,8 @@ public class Entry {
 
     public static Entry fromCursor(Cursor cursor) {
         long id = cursor.getLong(INDEX_ID);
-        long utcDateEntered = cursor.getLong(INDEX_DATE_ENTERED);
-        long amount = cursor.getLong(INDEX_AMOUNT_CENTS);
+        long utcDateEntered = cursor.getLong(INDEX_DATE);
+        long amount = cursor.getLong(INDEX_AMOUNT);
 
         Category category = new Category(
                 cursor.getLong(INDEX_CATEGORY_ID),
@@ -67,17 +67,17 @@ public class Entry {
         ContentValues values = new ContentValues();
 
         if (id > -1) {
-            values.put(EntriesTable._ID, id);
+            values.put(EntryTable._ID, id);
         }
 
-        values.put(EntriesTable.COL_DATE_ENTERED, utcDateEntered);
-        values.put(EntriesTable.COL_AMOUNT_CENTS, amount);
+        values.put(EntryTable.COL_DATE, utcDateEntered);
+        values.put(EntryTable.COL_AMOUNT, amount);
 
-        values.put(EntriesTable.COL_CATEGORY_ID, category.id);
-        values.put(EntriesView.COL_CATEGORY_NAME, category.name);
+        values.put(EntryTable.COL_CATEGORY_ID, category.id);
+        values.put(EntryView.COL_CATEGORY_NAME, category.name);
 
-        values.put(EntriesTable.COL_CURRENCY_ID, currency.id);
-        values.put(EntriesView.COL_CURRENCY_CODE, currency.code);
+        values.put(EntryTable.COL_CURRENCY_ID, currency.id);
+        values.put(EntryView.COL_CURRENCY_CODE, currency.code);
         return values;
     }
 
