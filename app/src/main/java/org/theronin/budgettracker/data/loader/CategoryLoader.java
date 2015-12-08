@@ -15,7 +15,6 @@ import org.theronin.budgettracker.model.Category;
 import org.theronin.budgettracker.model.Currency;
 import org.theronin.budgettracker.model.Entry;
 import org.theronin.budgettracker.model.ExchangeRate;
-import org.theronin.budgettracker.task.ExchangeRateDownloadAgent;
 import org.theronin.budgettracker.utils.DateUtils;
 import org.theronin.budgettracker.utils.MoneyUtils;
 
@@ -135,7 +134,7 @@ public class CategoryLoader extends AsyncTaskLoader<List<Category>>
         ExchangeRate exchangeRate = searchExchangeRates(entry, allExchangeRates);
         if (exchangeRate == null) {
             //rate not found, attempt to download for given day
-            List<ExchangeRate> downloadedRates = new ExchangeRateDownloadAgent().downloadExchangeRates(entry.utcDate);
+            List<ExchangeRate> downloadedRates = new ExchangeRateDownloader().downloadExchangeRates(entry.utcDate);
             if (!downloadedRates.isEmpty()) {
                 //this will (should) cancel loading ??
                 Timber.d("Inserting downloaded exchange rates into the database");
