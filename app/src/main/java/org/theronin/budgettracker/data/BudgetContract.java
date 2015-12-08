@@ -151,7 +151,6 @@ public class BudgetContract {
 
         public static final String COL_CATEGORY_NAME = CategoryTable.COL_NAME;
         public static final String COL_FIRST_ENTRY_DATE = "first_entry_date";
-        public static final String COL_TOTAL_AMOUNT = "total_amount";
         public static final String COL_ENTRY_FREQUENCY = "entry_frequency";
 
     //@formatter:off
@@ -184,15 +183,13 @@ public class BudgetContract {
                 _ID,
                 COL_CATEGORY_NAME,
                 COL_FIRST_ENTRY_DATE,
-                COL_TOTAL_AMOUNT,
                 COL_ENTRY_FREQUENCY,
         };
 
         public static final int INDEX_ID = 0;
         public static final int INDEX_CATEGORY_NAME = 1;
         public static final int INDEX_FIRST_ENTRY_DATE = 2;
-        public static final int INDEX_TOTAL_AMOUNT = 3;
-        public static final int INDEX_ENTRY_FREQUENCY = 4;
+        public static final int INDEX_ENTRY_FREQUENCY = 3;
     }
 
     public static final class EntryView implements BaseColumns {
