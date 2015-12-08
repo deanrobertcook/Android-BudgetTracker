@@ -20,6 +20,7 @@ public class Category {
     public final long frequency;
 
     private long total = -1;
+    private int missingEntries = 1;
 
     public Category(String name) {
         //TODO check what a good default date is.
@@ -96,4 +97,11 @@ public class Category {
         return (long) ((double) total / monthsPassed);
     }
 
+    public int getMissingEntries() {
+        return missingEntries;
+    }
+
+    public void setMissingEntries(int missingEntries) {
+        this.missingEntries = missingEntries;
+    }
 }

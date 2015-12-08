@@ -93,10 +93,10 @@ public class FileBackupAgent  {
         }
 
         private void changeDateToUtc(JsonObject object) {
-            if (object.has("utcDateEntered")) {
-                long utcTime = object.get("utcDateEntered").getAsLong();
+            if (object.has("utcDate")) {
+                long utcTime = object.get("utcDate").getAsLong();
                 String formattedDate = DateUtils.getStorageFormattedDate(utcTime);
-                object.remove("utcDateEntered");
+                object.remove("utcDate");
                 object.addProperty("dateEntered", formattedDate);
             }
         }

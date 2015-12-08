@@ -50,7 +50,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         viewHolder.amountTextView.setText(
                 MoneyUtils.convertCentsToDisplayAmount(boundEntry.amount));
         viewHolder.categoryTextView.setText(boundEntry.category.name);
-        viewHolder.dateTextView.setText(DateUtils.getDisplayFormattedDate(boundEntry.utcDateEntered));
+        viewHolder.dateTextView.setText(DateUtils.getDisplayFormattedDate(boundEntry.utcDate));
 
         viewHolder.listItemView.setOnClickListener(new View.OnClickListener() {
             @Override

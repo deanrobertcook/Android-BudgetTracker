@@ -48,7 +48,7 @@ public class AddEntryFragmentTest extends ActivityTestCase<AddEntryFragmentTestA
         amountEditText.setText(MoneyUtils.convertToDollars(entryToInsert.amount));
         categorySpinner.setSelection(((ArrayAdapter) categorySpinner.getAdapter()).getPosition
                 (entryToInsert.category));
-        dateEditText.setText(entryToInsert.utcDateEntered);
+        dateEditText.setText(entryToInsert.utcDate);
 
         EspressoUtils.click(R.id.btn__add_entry_confirm);
 

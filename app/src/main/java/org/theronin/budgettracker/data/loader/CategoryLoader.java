@@ -2,20 +2,42 @@ package org.theronin.budgettracker.data.loader;
 
 import android.app.Activity;
 import android.content.AsyncTaskLoader;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import org.theronin.budgettracker.BudgetTrackerApplication;
 import org.theronin.budgettracker.data.AbsDataSource;
 import org.theronin.budgettracker.data.DataSourceCategory;
 import org.theronin.budgettracker.data.DataSourceEntry;
+import org.theronin.budgettracker.data.DataSourceExchangeRate;
 import org.theronin.budgettracker.model.Category;
+import org.theronin.budgettracker.model.Currency;
+import org.theronin.budgettracker.model.Entry;
+import org.theronin.budgettracker.model.ExchangeRate;
+import org.theronin.budgettracker.task.ExchangeRateDownloadAgent;
+import org.theronin.budgettracker.utils.DateUtils;
+import org.theronin.budgettracker.utils.MoneyUtils;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-public class CategoryLoader extends AsyncTaskLoader<List<Category>> implements AbsDataSource.Observer {
+import timber.log.Timber;
+
+public class CategoryLoader extends AsyncTaskLoader<List<Category>>
+        implements AbsDataSource.Observer, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private DataSourceCategory dataSourceCategory;
     private DataSourceEntry dataSourceEntry;
+    private DataSourceExchangeRate dataSourceExchangeRate;
+
+    private SharedPreferences defaultPreferences;
+    private Currency homeCurrency;
+    private Map<String, Double> homeCurrencyRates;
+
+    private Context context;
 
     private String selection;
     private String[] selectionArgs;
@@ -34,6 +56,12 @@ public class CategoryLoader extends AsyncTaskLoader<List<Category>> implements A
         BudgetTrackerApplication application = (BudgetTrackerApplication) activity.getApplication();
         dataSourceCategory = application.getDataSourceCategory();
         dataSourceEntry = application.getDataSourceEntry();
+        dataSourceExchangeRate = application.getDataSourceExchangeRate();
+
+        context = application.getApplicationContext();
+        defaultPreferences = PreferenceManager.getDefaultSharedPreferences(application);
+        defaultPreferences.registerOnSharedPreferenceChangeListener(this);
+        homeCurrency = MoneyUtils.getHomeCurrency(application, defaultPreferences);
 
         this.selection = selection;
         this.selectionArgs = selectionArgs;
@@ -43,13 +71,93 @@ public class CategoryLoader extends AsyncTaskLoader<List<Category>> implements A
 
     @Override
     public List<Category> loadInBackground() {
+        List<Category> categories = dataSourceCategory.query(selection, selectionArgs, orderBy);
         if (!calculateTotals) {
-            return dataSourceCategory.query(selection, selectionArgs, orderBy);
+            return categories;
         } else {
+            List<Entry> allEntries = dataSourceEntry.query();
+            List<ExchangeRate> allExchangeRates = dataSourceExchangeRate.query();
 
+            homeCurrencyRates = findHomeCurrencyRates(homeCurrency, allExchangeRates);
 
-            return new ArrayList<>();
+            for (Category category : categories) {
+                long categoryTotal = 0;
+                int missingEntries = 0;
+
+                Iterator<Entry> entryIterator = allEntries.iterator();
+                while (entryIterator.hasNext()) {
+                    Entry entry = entryIterator.next();
+                    Timber.d(entry.toString());
+                    if (category.name.equals(entry.category.name)) {
+                        entryIterator.remove();
+                        if (entry.currency.code.equals(homeCurrency.code)) {
+                            Timber.d("Entry currency code matches home currency code");
+                            categoryTotal += entry.amount;
+                        } else {
+                            Timber.d("Entry currency differs from home currency - calculating equivalent value");
+                            double entryRate = findExchangeRateForEntry(entry, allExchangeRates);
+                            if (entryRate == -1) {
+                                Timber.d("Could not find an exchange rate, missingEntries: " + missingEntries);
+                                missingEntries++;
+                                categoryTotal = -1;
+                            } else {
+                                Double homeRateForDate = homeCurrencyRates.get(DateUtils.getStorageFormattedDate(entry.utcDate));
+                                if (homeRateForDate == null) {
+                                    Timber.d("No exchange rate set for the home currency");
+                                } else {
+                                    Timber.d("Finally: calculating the equivalent entry amount");
+                                    double directExchangeRate = homeRateForDate / entryRate;
+                                    long convertedEntryAmount = (long) (directExchangeRate * (double) entry.amount);
+                                    categoryTotal += convertedEntryAmount;
+                                }
+                            }
+                        }
+                    }
+                }
+                category.setTotal(categoryTotal);
+                category.setMissingEntries(missingEntries);
+            }
+            return categories;
         }
+    }
+
+    private Map<String, Double> findHomeCurrencyRates(Currency homeCurrency, List<ExchangeRate> allRates) {
+        Map<String, Double> returnRates = new HashMap<>();
+        for (ExchangeRate rate: allRates) {
+            if (homeCurrency.code.equals(rate.currencyCode)) {
+                returnRates.put(DateUtils.getStorageFormattedDate(rate.utcDate), rate.usdRate);
+            }
+        }
+        return returnRates;
+    }
+
+    private double findExchangeRateForEntry(Entry entry, List<ExchangeRate> allExchangeRates) {
+        ExchangeRate exchangeRate = searchExchangeRates(entry, allExchangeRates);
+        if (exchangeRate == null) {
+            //rate not found, attempt to download for given day
+            List<ExchangeRate> downloadedRates = new ExchangeRateDownloadAgent().downloadExchangeRates(entry.utcDate);
+            if (!downloadedRates.isEmpty()) {
+                //this will (should) cancel loading ??
+                Timber.d("Inserting downloaded exchange rates into the database");
+                dataSourceExchangeRate.bulkInsert(downloadedRates);
+                exchangeRate = searchExchangeRates(entry, downloadedRates);
+            } else {
+                Timber.d("There was no exchange rate data for " + DateUtils.getStorageFormattedDate(entry.utcDate));
+            }
+        } else {
+            Timber.d("Exchange rate " + exchangeRate + " found in database");
+        }
+        return exchangeRate == null ? -1 : exchangeRate.usdRate;
+    }
+
+    private ExchangeRate searchExchangeRates(Entry entry, List<ExchangeRate> exchangeRates) {
+        for (ExchangeRate rate : exchangeRates) {
+            if (DateUtils.sameDay(entry.utcDate, rate.utcDate) &&
+                    entry.currency.code.equals(rate.currencyCode)) {
+                return rate;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -68,6 +176,7 @@ public class CategoryLoader extends AsyncTaskLoader<List<Category>> implements A
 
         dataSourceCategory.registerObserver(this);
         dataSourceEntry.registerObserver(this);
+        dataSourceExchangeRate.registerObserver(this);
 
         if (takeContentChanged() || categories == null || categories.isEmpty()) {
             forceLoad();
@@ -76,6 +185,8 @@ public class CategoryLoader extends AsyncTaskLoader<List<Category>> implements A
 
     @Override
     public void onDataSourceChanged() {
+        Timber.d("onDataSourceChanged");
+        cancelLoad();
         forceLoad();
     }
 
@@ -89,62 +200,14 @@ public class CategoryLoader extends AsyncTaskLoader<List<Category>> implements A
         onStopLoading();
         dataSourceCategory.unregisterObserver(this);
         dataSourceEntry.unregisterObserver(this);
+        dataSourceExchangeRate.unregisterObserver(this);
     }
 
-    //    private void calculateTotals() {
-//        if (entryCursor == null || !entryCursor.moveToFirst()) {
-//            Timber.d("Entry cursor null or empty!");
-//            return;
-//        }
-//
-//        entryCursor.moveToPosition(-1);
-//        totals = new HashMap<>();
-//        missingEntries = 0;
-//
-//        while (entryCursor.moveToNext()) {
-//            final Entry entry = Entry.fromCursor(entryCursor);
-//            if (entry.currency.code.equals(homeCurrency.code)) {
-//                Timber.d("Entry currency is the same as home currency");
-//                addEntryAmountToTotal(entry);
-//            } else {
-//                if (entry.rate.usdRate == -1) {
-//                    Timber.d("Entry rate not available: " + entry.toString());
-//                    new ExchangeRateDownloadAgent().getExchangeData(context, entry.utcDateEntered);
-//                    missingEntries++;
-//                } else {
-//                    if (homeCurrency.getExchangeRate(entry.utcDateEntered) == null) {
-//                        Timber.d("Still missing home currency data");
-//                        missingEntries++;
-//                    } else {
-//                        Timber.d("Performing currency conversion calculation");
-//                        addEntryAmountToTotal(entry);
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    private void addEntryAmountToTotal(Entry entry) {
-//        long currentTotal;
-//        if (totals.get(entry.category.id) == null) {
-//            currentTotal = 0;
-//        } else {
-//            currentTotal = totals.get(entry.category.id);
-//        }
-//        currentTotal += calculateAmountInHomeCurrency(entry);
-//        totals.put(entry.category.id, currentTotal);
-//    }
-//
-//    private long calculateAmountInHomeCurrency(Entry entry) {
-//        if (entry.currency.code.equals(homeCurrency.code)) {
-//            return entry.amount;
-//        } else {
-//            double directExchangeRate =
-//                    homeCurrency.getExchangeRate(entry.utcDateEntered).usdRate / entry.rate.usdRate;
-//            Timber.d("directExchangeRate: " + directExchangeRate);
-//            long convertedEntryAmount = (long) (directExchangeRate * (double) entry.amount);
-//            Timber.d("convertedEntryAmount: " + convertedEntryAmount);
-//            return convertedEntryAmount;
-//        }
-//    }
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        homeCurrency = MoneyUtils.getHomeCurrency(context, defaultPreferences);
+        if (calculateTotals) {
+            forceLoad();
+        }
+    }
 }

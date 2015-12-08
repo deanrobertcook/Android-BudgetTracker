@@ -18,27 +18,29 @@ import static org.theronin.budgettracker.data.BudgetContract.EntryView.INDEX_ID;
 
 public class Entry {
     public final long id;
-    public final long utcDateEntered;
+    public final long utcDate;
     public final long amount;
     public final Category category;
     public final Currency currency;
 
+    private double exchangeRate = -1;
+
     public Entry(
-            long utcDateEntered,
+            long utcDate,
             long amount,
             Category category,
             Currency currency) {
-        this(-1, utcDateEntered, amount, category, currency);
+        this(-1, utcDate, amount, category, currency);
     }
 
     public Entry(
             long id,
-            long utcDateEntered,
+            long utcDate,
             long amount,
             Category category,
             Currency currency) {
         this.id = id;
-        this.utcDateEntered = utcDateEntered;
+        this.utcDate = utcDate;
         this.amount = amount;
         this.category = category;
         this.currency = currency;
@@ -70,7 +72,7 @@ public class Entry {
             values.put(EntryTable._ID, id);
         }
 
-        values.put(EntryTable.COL_DATE, utcDateEntered);
+        values.put(EntryTable.COL_DATE, utcDate);
         values.put(EntryTable.COL_AMOUNT, amount);
 
         values.put(EntryTable.COL_CATEGORY_ID, category.id);
@@ -84,16 +86,20 @@ public class Entry {
     @Override
     public String toString() {
         return String.format(
-                "Entry: %d \n" +
-                        "\t date: %s\n" +
-                        "\t category: %s\n" +
-                        "\t amount: %d\n" +
-                        "\t currency: %s\n",
+                "Entry: %d,  date: %s, category: %s, amount: %d, currency: %s",
                 id,
-                DateUtils.getStorageFormattedDate(utcDateEntered),
+                DateUtils.getStorageFormattedDate(utcDate),
                 category.name,
                 amount,
                 currency.code
         );
+    }
+
+    public double getExchangeRate() {
+        return exchangeRate;
+    }
+
+    public void setExchangeRate(double exchangeRate) {
+        this.exchangeRate = exchangeRate;
     }
 }

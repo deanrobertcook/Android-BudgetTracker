@@ -64,13 +64,23 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         viewHolder.currencySymbolTotalView.setText(homeCurrency.symbol);
         viewHolder.currencyCodeTotalView.setText(homeCurrency.code);
 
-        viewHolder.totalTextView.setText(MoneyUtils.convertCentsToDisplayAmount(category.getTotal()));
+        viewHolder.totalTextView.setText(createAmountDisplay(category.getMissingEntries(),
+                category.getTotal()));
 
         viewHolder.currencySymbolMonthlyView.setText(homeCurrency.symbol);
         viewHolder.currencyCodeMonthlyView.setText(homeCurrency.code);
 
-        viewHolder.monthlyTextView.setText(MoneyUtils.convertCentsToDisplayAmount(category
-                .getMonthlyAverage()));
+        viewHolder.monthlyTextView.setText(createAmountDisplay(category.getMissingEntries(),
+                category.getMonthlyAverage()));
+    }
+
+    private String createAmountDisplay(int missingEntries, long amount) {
+        StringBuilder sb = new StringBuilder();
+        if (missingEntries > 0) {
+            sb.append("~");
+        }
+        sb.append(MoneyUtils.convertCentsToDisplayAmount(amount));
+        return sb.toString();
     }
 
     @Override

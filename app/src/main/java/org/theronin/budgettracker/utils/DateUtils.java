@@ -1,5 +1,7 @@
 package org.theronin.budgettracker.utils;
 
+import org.joda.time.DateTimeComparator;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,6 +26,10 @@ public class DateUtils {
             sdf = new SimpleDateFormat("dd.MM.yy", locale);
         }
         return sdf.format(new Date(utcTime));
+    }
+
+    public static boolean sameDay(long date1, long date2) {
+        return DateTimeComparator.getDateOnlyInstance().compare(date1, date2) == 0;
     }
 
     public static long getUtcTimeFromStorageFormattedDate(String formattedDate) {

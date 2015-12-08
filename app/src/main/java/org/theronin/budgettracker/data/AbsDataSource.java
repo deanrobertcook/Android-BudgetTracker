@@ -57,6 +57,10 @@ public abstract class AbsDataSource<T> {
         return false;
     }
 
+    public List<T> query() {
+        return query(null, null, null);
+    }
+
     public List<T> query(String selection,
                                   String[] selectionArgs,
                                   String orderBy) {

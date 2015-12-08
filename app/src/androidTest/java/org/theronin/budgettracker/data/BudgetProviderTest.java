@@ -185,7 +185,7 @@ public class BudgetProviderTest {
 
         assertEquals("Unexpected Entry categoryId", expectedEntry.category,
                 findCategoryName(dbHelper, result.getLong(0)));
-        assertEquals("Unexpected Entry dateEntered", expectedEntry.utcDateEntered, result.
+        assertEquals("Unexpected Entry dateEntered", expectedEntry.utcDate, result.
                 getString(1));
         assertEquals("Unexpected Entry amount", expectedEntry.amount, result.getLong(2));
     }
@@ -227,7 +227,7 @@ public class BudgetProviderTest {
             for (int i = 0; i < entries.size(); i++) {
                 Entry tempEntry = entries.get(i);
                 if (tempEntry.category.equals(findCategoryName(dbHelper, result.getLong(0)))
-                        && tempEntry.utcDateEntered.equals(result.getString(1))
+                        && tempEntry.utcDate.equals(result.getString(1))
                         && tempEntry.amount == result.getLong(2)) {
                     entries.remove(tempEntry);
                 }
@@ -288,7 +288,7 @@ public class BudgetProviderTest {
         //re-use values object
         ContentValues values = new ContentValues();
         values.put(EntryTable.COL_CATEGORY_ID, findCategoryId(dbHelper, entry.category));
-        values.put(EntryTable.COL_DATE, entry.utcDateEntered);
+        values.put(EntryTable.COL_DATE, entry.utcDate);
         values.put(EntryTable.COL_AMOUNT, entry.amount);
 
 
@@ -316,7 +316,7 @@ public class BudgetProviderTest {
         cursor.moveToFirst();
         //Check the name matches and that the date of insertion is saved in the db
         assertEquals(entry.category, findCategoryName(dbHelper, cursor.getLong(0)));
-        assertEquals(entry.utcDateEntered, cursor.getString(1));
+        assertEquals(entry.utcDate, cursor.getString(1));
         assertEquals(entry.amount, cursor.getLong(2));
     }
 

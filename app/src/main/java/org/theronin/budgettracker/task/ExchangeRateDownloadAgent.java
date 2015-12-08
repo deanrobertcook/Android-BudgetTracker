@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import timber.log.Timber;
+
 public class ExchangeRateDownloadAgent {
     private static final String TAG = ExchangeRateDownloadAgent.class.getName();
 
@@ -43,8 +45,80 @@ public class ExchangeRateDownloadAgent {
         new ExchangeRateDownloadTask().execute(utcDate);
     }
 
+    public List<ExchangeRate> downloadExchangeRates(long utcDate) {
+        this.utcDate = utcDate;
+        String formattedDate = DateUtils.getStorageFormattedDate(utcDate);
+
+        String urlString = OPEN_EXCHANGE_BASE_URL + "historical/" + formattedDate + ".json?app_id=" + API_KEY;
+
+        Timber.d("urlString: " + urlString);
+
+        HttpURLConnection urlConnection = null;
+        BufferedReader reader = null;
+
+        String exchangeDataString = null;
+
+        try {
+            URL url = new URL(urlString);
+
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+
+            // Read the input stream into a String
+            InputStream inputStream = urlConnection.getInputStream();
+            StringBuffer buffer = new StringBuffer();
+            if (inputStream == null) {
+                // Nothing to do.
+                exchangeDataString = "";
+            }
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                // But it does make debugging a *lot* easier if you print out the completed
+                // buffer for debugging.
+                buffer.append(line + "\n");
+            }
+
+            if (buffer.length() == 0) {
+                // Stream was empty.  No point in parsing.
+                exchangeDataString = "";
+            }
+            exchangeDataString = buffer.toString();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Timber.d("ExchangeRates json: " + exchangeDataString);
+
+        return getRatesFromJson(exchangeDataString);
+    }
+
+    private List<ExchangeRate> getRatesFromJson(String exchangeRatesJson) {
+        Gson gson = new Gson();
+        List<ExchangeRate> exchangeRates = new ArrayList<>();
+
+        Set<Map.Entry<String, JsonElement>> entries =
+                ((JsonObject) gson.fromJson(exchangeRatesJson, JsonElement.class))
+                        .getAsJsonObject(RATES_KEY).entrySet();
+
+        for (Map.Entry<String, JsonElement> entry: entries) {
+            exchangeRates.add(new ExchangeRate(
+                            entry.getKey(),
+                            utcDate,
+                            Double.parseDouble(entry.getValue().toString()))
+            );
+        }
+        return exchangeRates;
+    }
+
 
     private class ExchangeRateDownloadTask extends AsyncTask<Long, Void, String> {
+
+
 
         @Override
         protected String doInBackground(Long... params) {
