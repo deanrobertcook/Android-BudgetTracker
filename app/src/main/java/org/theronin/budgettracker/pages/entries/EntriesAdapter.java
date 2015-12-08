@@ -1,7 +1,5 @@
 package org.theronin.budgettracker.pages.entries;
 
-import android.content.Context;
-import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,17 +8,27 @@ import android.widget.TextView;
 
 import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.model.Entry;
-import org.theronin.budgettracker.utils.CursorRecyclerViewAdapter;
 import org.theronin.budgettracker.utils.DateUtils;
 import org.theronin.budgettracker.utils.MoneyUtils;
 
-public class EntriesAdapter extends CursorRecyclerViewAdapter<EntriesAdapter.ViewHolder> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHolder> {
 
     private final OnItemClickListener itemClickListener;
+    private List<Entry> entries = new ArrayList<>();
 
-    public EntriesAdapter(Context context, Cursor cursor, OnItemClickListener itemClickListener) {
-        super(context, cursor);
+    public EntriesAdapter(OnItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
+    }
+
+    public void setEntries(List<Entry> entries) {
+        if (entries == null) {
+            throw new IllegalArgumentException("Entries cannot be set to null, use an empty list " +
+                    "instead");
+        }
+        this.entries = entries;
     }
 
     @Override
@@ -33,8 +41,8 @@ public class EntriesAdapter extends CursorRecyclerViewAdapter<EntriesAdapter.Vie
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor) {
-        final Entry boundEntry = Entry.fromCursor(cursor);
+    public void onBindViewHolder(ViewHolder viewHolder, int position) {
+        final Entry boundEntry = entries.get(position);
 
         viewHolder.currencySymbolTextView.setText(boundEntry.currency.symbol);
         viewHolder.currencyCodeTextView.setText(boundEntry.currency.code);
@@ -49,6 +57,11 @@ public class EntriesAdapter extends CursorRecyclerViewAdapter<EntriesAdapter.Vie
                 itemClickListener.onItemClicked(boundEntry);
             }
         });
+    }
+
+    @Override
+    public int getItemCount() {
+        return entries.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

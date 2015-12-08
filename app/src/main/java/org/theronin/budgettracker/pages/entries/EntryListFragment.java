@@ -2,9 +2,7 @@ package org.theronin.budgettracker.pages.entries;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
-import android.content.CursorLoader;
 import android.content.Loader;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,13 +14,17 @@ import android.widget.Toast;
 
 import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.data.BudgetContract.EntriesView;
+import org.theronin.budgettracker.data.loader.DataLoader;
 import org.theronin.budgettracker.model.Entry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EntryListFragment extends Fragment implements
         View.OnClickListener,
         EntriesAdapter.OnItemClickListener,
         EntryOptionsDialogFragment.Container,
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<List<Entry>> {
 
     private static final int ENTRY_LOADER_ID = 0;
 
@@ -50,7 +52,7 @@ public class EntryListFragment extends Fragment implements
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new EntriesAdapter(getActivity(), null, this);
+        adapter = new EntriesAdapter(this);
         recyclerView.setAdapter(adapter);
         return rootView;
     }
@@ -86,39 +88,17 @@ public class EntryListFragment extends Fragment implements
 
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        switch (id) {
-            case ENTRY_LOADER_ID:
-                return new CursorLoader(
-                        getActivity(),
-                        EntriesView.CONTENT_URI,
-                        EntriesView.PROJECTION,
-                        null, null, SORT_ORDER
-                );
-            default:
-                throw new RuntimeException("Unrecognised loader id");
-        }
+    public Loader<List<Entry>> onCreateLoader(int id, Bundle args) {
+        return new DataLoader.EntryLoader(getActivity());
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        switch (loader.getId()) {
-            case ENTRY_LOADER_ID:
-                adapter.changeCursor(data);
-                break;
-            default:
-                throw new RuntimeException("Unrecognised loader id");
-        }
+    public void onLoadFinished(Loader<List<Entry>> loader, List<Entry> data) {
+        adapter.setEntries(data);
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        switch (loader.getId()) {
-            case ENTRY_LOADER_ID:
-                adapter.changeCursor(null);
-                break;
-            default:
-                throw new RuntimeException("Unrecognised loader id");
-        }
+    public void onLoaderReset(Loader<List<Entry>> loader) {
+        adapter.setEntries(new ArrayList<Entry>());
     }
 }

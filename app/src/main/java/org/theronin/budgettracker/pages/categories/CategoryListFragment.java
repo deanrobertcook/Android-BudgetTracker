@@ -2,9 +2,7 @@ package org.theronin.budgettracker.pages.categories;
 
 import android.app.Fragment;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.CursorLoader;
 import android.content.Loader;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,9 +12,14 @@ import android.view.ViewGroup;
 
 import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.data.BudgetContract.CategoriesView;
+import org.theronin.budgettracker.data.loader.DataLoader;
+import org.theronin.budgettracker.model.Category;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CategoryListFragment extends Fragment implements
-        LoaderCallbacks<Cursor> {
+        LoaderCallbacks<List<Category>> {
 
     private static final int CATEGORY_LOADER_ID = 0;
     private static final String SORT_ORDER =
@@ -42,29 +45,24 @@ public class CategoryListFragment extends Fragment implements
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new CategoriesAdapter(getActivity(), null);
+        adapter = new CategoriesAdapter(getActivity());
         recyclerView.setAdapter(adapter);
 
         return rootView;
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(
-                getActivity(),
-                CategoriesView.CONTENT_URI,
-                CategoriesView.PROJECTION,
-                null, null, SORT_ORDER
-        );
+    public Loader<List<Category>> onCreateLoader(int id, Bundle args) {
+        return new DataLoader.CategoryLoader(getActivity());
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        adapter.changeCursor(data);
+    public void onLoadFinished(Loader<List<Category>> loader, List<Category> data) {
+        adapter.setCategories(data);
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.changeCursor(null);
+    public void onLoaderReset(Loader<List<Category>> loader) {
+        adapter.setCategories(new ArrayList<Category>());
     }
 }

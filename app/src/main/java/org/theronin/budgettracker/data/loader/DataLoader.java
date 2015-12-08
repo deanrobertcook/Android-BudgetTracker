@@ -1,9 +1,14 @@
 package org.theronin.budgettracker.data.loader;
 
+import android.app.Activity;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 
+import org.theronin.budgettracker.BudgetTrackerApplication;
 import org.theronin.budgettracker.data.AbsDataSource;
+import org.theronin.budgettracker.model.Category;
+import org.theronin.budgettracker.model.Currency;
+import org.theronin.budgettracker.model.Entry;
 
 import java.util.List;
 
@@ -73,5 +78,29 @@ public class DataLoader<T> extends AsyncTaskLoader<List<T>>
     protected void onReset() {
         onStopLoading();
         dataSource.unregisterObserver(this);
+    }
+
+    public static class EntryLoader extends DataLoader<Entry> {
+        public EntryLoader(Activity activity) {
+            super(activity,
+                    ((BudgetTrackerApplication) activity.getApplication()).getDataSourceEntry());
+
+        }
+    }
+
+    public static class CategoryLoader extends DataLoader<Category> {
+        public CategoryLoader(Activity activity) {
+            super(activity,
+                    ((BudgetTrackerApplication) activity.getApplication()).getDataSourceCategory());
+
+        }
+    }
+
+    public static class CurrencyLoader extends DataLoader<Currency> {
+        public CurrencyLoader(Activity activity) {
+            super(activity,
+                    ((BudgetTrackerApplication) activity.getApplication()).getDataSourceCurrency());
+
+        }
     }
 }

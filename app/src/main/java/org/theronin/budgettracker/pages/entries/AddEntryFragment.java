@@ -25,7 +25,6 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-import org.theronin.budgettracker.BudgetTrackerApplication;
 import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.data.BudgetContract.EntriesView;
 import org.theronin.budgettracker.data.loader.DataLoader;
@@ -244,10 +243,7 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
 
     @Override
     public Loader<List<Category>> onCreateLoader(int id, Bundle args) {
-        return new DataLoader<>(
-                getActivity(),
-                ((BudgetTrackerApplication) getActivity().getApplication()).getDataSourceCategory()
-        );
+        return new DataLoader.CategoryLoader(getActivity());
     }
 
     @Override

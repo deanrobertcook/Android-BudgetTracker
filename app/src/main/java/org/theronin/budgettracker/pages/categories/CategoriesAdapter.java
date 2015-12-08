@@ -3,7 +3,6 @@ package org.theronin.budgettracker.pages.categories;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,13 +13,17 @@ import android.widget.TextView;
 import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.model.Category;
 import org.theronin.budgettracker.model.Currency;
-import org.theronin.budgettracker.utils.CursorRecyclerViewAdapter;
 import org.theronin.budgettracker.utils.MoneyUtils;
 
-public class CategoriesAdapter extends CursorRecyclerViewAdapter<CategoriesAdapter.ViewHolder>
+import java.util.ArrayList;
+import java.util.List;
+
+public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder>
         implements OnSharedPreferenceChangeListener {
 
     private static final String TAG = CategoriesAdapter.class.getName();
+
+    private List<Category> categories = new ArrayList<>();
 
     private Currency homeCurrency;
 
@@ -28,12 +31,19 @@ public class CategoriesAdapter extends CursorRecyclerViewAdapter<CategoriesAdapt
 
     private SharedPreferences defaultPreferences;
 
-    public CategoriesAdapter(Context context, Cursor cursor) {
-        super(context, cursor);
+    public CategoriesAdapter(Context context) {
         this.context = context;
         defaultPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         defaultPreferences.registerOnSharedPreferenceChangeListener(this);
         homeCurrency = MoneyUtils.getHomeCurrency(context, defaultPreferences);
+    }
+
+    public void setCategories(List<Category> categories) {
+        if (categories == null) {
+            throw new IllegalArgumentException("Categories cannot be null, specify an empty list " +
+                    "instead");
+        }
+        this.categories = categories;
     }
 
     @Override
@@ -45,8 +55,8 @@ public class CategoriesAdapter extends CursorRecyclerViewAdapter<CategoriesAdapt
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor) {
-        Category category = Category.fromCursor(cursor);
+    public void onBindViewHolder(ViewHolder viewHolder, int position) {
+        Category category = categories.get(position);
 
         viewHolder.nameTextView.setText(category.name);
 
@@ -60,6 +70,11 @@ public class CategoriesAdapter extends CursorRecyclerViewAdapter<CategoriesAdapt
 
         viewHolder.monthlyTextView.setText(MoneyUtils.convertCentsToDisplayAmount(category
                 .getMonthlyAverage()));
+    }
+
+    @Override
+    public int getItemCount() {
+        return categories.size();
     }
 
     @Override
