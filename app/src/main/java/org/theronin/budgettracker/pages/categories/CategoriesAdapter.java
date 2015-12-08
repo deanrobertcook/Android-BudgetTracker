@@ -44,6 +44,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
                     "instead");
         }
         this.categories = categories;
+        notifyDataSetChanged();
     }
 
     @Override

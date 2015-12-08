@@ -79,6 +79,17 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
     }
 
     @Override
+    public boolean delete(Entry entity) {
+        int numDeleted = dbHelper.getWritableDatabase().delete(
+                EntryTable.TABLE_NAME,
+                EntryTable._ID + " = ?",
+                new String[]{Long.toString(entity.id)}
+        );
+        setDataInValid();
+        return numDeleted == 1;
+    }
+
+    @Override
     public List<Entry> query(String selection, String[] selectionArgs, String orderBy) {
         Cursor cursor = dbHelper.getReadableDatabase().query(
                 EntryView.VIEW_NAME,

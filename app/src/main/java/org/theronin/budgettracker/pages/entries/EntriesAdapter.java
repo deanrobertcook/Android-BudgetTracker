@@ -29,6 +29,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
                     "instead");
         }
         this.entries = entries;
+        notifyDataSetChanged();
     }
 
     @Override

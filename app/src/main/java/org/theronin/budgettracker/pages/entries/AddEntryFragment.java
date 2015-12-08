@@ -2,12 +2,10 @@ package org.theronin.budgettracker.pages.entries;
 
 import android.app.Fragment;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
@@ -25,8 +23,8 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import org.theronin.budgettracker.BudgetTrackerApplication;
 import org.theronin.budgettracker.R;
-import org.theronin.budgettracker.data.BudgetContract.EntriesView;
 import org.theronin.budgettracker.data.loader.DataLoader;
 import org.theronin.budgettracker.model.Category;
 import org.theronin.budgettracker.model.Currency;
@@ -177,15 +175,15 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
         lastSelectedCategory = categorySpinnerAdapter.getCategory(categorySpinner
                 .getSelectedItemPosition());
 
-        ContentValues values = new Entry(
+        Entry entry = new Entry(
                 currentSelectedUtcTime,
                 amount,
                 lastSelectedCategory,
                 new Currency(currencyCodeTextView.getText().toString())
-        ).toValues();
+        );
 
-        Uri uri = getActivity().getContentResolver().insert(EntriesView.CONTENT_URI, values);
-        long id = Long.parseLong(uri.getLastPathSegment());
+        long id = ((BudgetTrackerApplication) getActivity().getApplication())
+                .getDataSourceEntry().insert(entry);
 
         if (id == -1) {
             Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();

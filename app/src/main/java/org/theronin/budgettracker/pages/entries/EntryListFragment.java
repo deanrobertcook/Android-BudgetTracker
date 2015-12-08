@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.theronin.budgettracker.BudgetTrackerApplication;
 import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.data.BudgetContract.EntryView;
 import org.theronin.budgettracker.data.loader.DataLoader;
@@ -73,11 +74,9 @@ public class EntryListFragment extends Fragment implements
     @Override
     public void onDeleteClicked() {
         if (entrySelected != null) {
-            int numDeleted = getActivity().getContentResolver().delete(
-                    EntryView.CONTENT_URI.buildUpon().appendPath(
-                            Long.toString(entrySelected.id)).build(),
-                    null, null);
-            if (numDeleted == 1) {
+            boolean wasDeleted = ((BudgetTrackerApplication) getActivity().getApplication())
+                    .getDataSourceEntry().delete(entrySelected);
+            if (wasDeleted) {
                 Toast.makeText(getActivity(), "Entry deleted", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
@@ -86,10 +85,12 @@ public class EntryListFragment extends Fragment implements
         entrySelected = null;
     }
 
-
     @Override
     public Loader<List<Entry>> onCreateLoader(int id, Bundle args) {
-        return new DataLoader.EntryLoader(getActivity());
+        return new DataLoader.EntryLoader(
+                getActivity(),
+                null, null,
+                EntryView.COL_DATE + " DESC, " + EntryView._ID + " DESC");
     }
 
     @Override

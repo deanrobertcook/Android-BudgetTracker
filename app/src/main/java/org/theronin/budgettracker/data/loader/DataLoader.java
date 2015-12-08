@@ -86,6 +86,16 @@ public class DataLoader<T> extends AsyncTaskLoader<List<T>>
                     ((BudgetTrackerApplication) activity.getApplication()).getDataSourceEntry());
 
         }
+
+        public EntryLoader(Activity activity,
+                           String selection,
+                           String[] selectionArgs,
+                           String orderBy) {
+            super(activity,
+                    ((BudgetTrackerApplication) activity.getApplication()).getDataSourceEntry(),
+                    selection, selectionArgs, orderBy
+            );
+        }
     }
 
     public static class CategoryLoader extends DataLoader<Category> {
@@ -94,6 +104,16 @@ public class DataLoader<T> extends AsyncTaskLoader<List<T>>
                     ((BudgetTrackerApplication) activity.getApplication()).getDataSourceCategory());
 
         }
+
+        public CategoryLoader(Activity activity,
+                           String selection,
+                           String[] selectionArgs,
+                           String orderBy) {
+            super(activity,
+                    ((BudgetTrackerApplication) activity.getApplication()).getDataSourceCategory(),
+                    selection, selectionArgs, orderBy
+            );
+        }
     }
 
     public static class CurrencyLoader extends DataLoader<Currency> {
@@ -101,6 +121,16 @@ public class DataLoader<T> extends AsyncTaskLoader<List<T>>
             super(activity,
                     ((BudgetTrackerApplication) activity.getApplication()).getDataSourceCurrency());
 
+        }
+
+        public CurrencyLoader(Activity activity,
+                           String selection,
+                           String[] selectionArgs,
+                           String orderBy) {
+            super(activity,
+                    ((BudgetTrackerApplication) activity.getApplication()).getDataSourceCurrency(),
+                    selection, selectionArgs, orderBy
+            );
         }
     }
 }

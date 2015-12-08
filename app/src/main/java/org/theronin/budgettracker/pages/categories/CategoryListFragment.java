@@ -53,7 +53,9 @@ public class CategoryListFragment extends Fragment implements
 
     @Override
     public Loader<List<Category>> onCreateLoader(int id, Bundle args) {
-        return new DataLoader.CategoryLoader(getActivity());
+        return new DataLoader.CategoryLoader(
+                getActivity(),
+                null, null, CategoryView.COL_TOTAL_AMOUNT + " DESC");
     }
 
     @Override

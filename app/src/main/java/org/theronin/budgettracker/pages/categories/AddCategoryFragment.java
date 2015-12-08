@@ -1,9 +1,7 @@
 package org.theronin.budgettracker.pages.categories;
 
 import android.app.Fragment;
-import android.content.ContentValues;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -16,8 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.theronin.budgettracker.BudgetTrackerApplication;
 import org.theronin.budgettracker.R;
-import org.theronin.budgettracker.data.BudgetContract;
 import org.theronin.budgettracker.model.Category;
 
 public class AddCategoryFragment extends Fragment implements
@@ -79,14 +77,10 @@ public class AddCategoryFragment extends Fragment implements
                     .LENGTH_SHORT).show();
         }
 
-        ContentValues values = new Category(categoryName).toValues();
+        Category category = new Category(categoryName);
 
-        Uri categoryUri = getActivity().getContentResolver().insert(
-                BudgetContract.CategoryView.CONTENT_URI,
-                values
-        );
-
-        long id = Long.parseLong(categoryUri.getLastPathSegment());
+        long id = ((BudgetTrackerApplication) getActivity().getApplication())
+                .getDataSourceCategory().insert(category);
 
         if (id == -1) {
             Toast.makeText(getActivity(), "Make sure that the category doesn't already exist",
