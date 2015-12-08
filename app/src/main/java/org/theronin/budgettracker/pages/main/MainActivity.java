@@ -11,7 +11,7 @@ import android.view.MenuItem;
 
 import org.theronin.budgettracker.BudgetTrackerApplication;
 import org.theronin.budgettracker.R;
-import org.theronin.budgettracker.data.loader.DataLoader;
+import org.theronin.budgettracker.data.loader.EntryLoader;
 import org.theronin.budgettracker.model.Entry;
 import org.theronin.budgettracker.model.ExchangeRate;
 import org.theronin.budgettracker.pages.categories.CategoriesActivity;
@@ -91,7 +91,7 @@ public class MainActivity extends FragmentActivity implements
 
     @Override
     public Loader<List<Entry>> onCreateLoader(int id, Bundle args) {
-        return new DataLoader.EntryLoader(this);
+        return new EntryLoader(this);
     }
 
     @Override

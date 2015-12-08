@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.theronin.budgettracker.R;
-import org.theronin.budgettracker.data.loader.DataLoader;
+import org.theronin.budgettracker.data.loader.CategoryLoader;
 import org.theronin.budgettracker.model.Category;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class CategoryListFragment extends Fragment implements
 
     @Override
     public Loader<List<Category>> onCreateLoader(int id, Bundle args) {
-        return new DataLoader.CategoryLoader(getActivity());
+        return new CategoryLoader(getActivity(), null, null, null, true);
     }
 
     @Override

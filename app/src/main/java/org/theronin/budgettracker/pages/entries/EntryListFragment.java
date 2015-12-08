@@ -15,7 +15,7 @@ import android.widget.Toast;
 import org.theronin.budgettracker.BudgetTrackerApplication;
 import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.data.BudgetContract.EntryView;
-import org.theronin.budgettracker.data.loader.DataLoader;
+import org.theronin.budgettracker.data.loader.EntryLoader;
 import org.theronin.budgettracker.model.Entry;
 
 import java.util.ArrayList;
@@ -87,7 +87,7 @@ public class EntryListFragment extends Fragment implements
 
     @Override
     public Loader<List<Entry>> onCreateLoader(int id, Bundle args) {
-        return new DataLoader.EntryLoader(
+        return new EntryLoader(
                 getActivity(),
                 null, null,
                 EntryView.COL_DATE + " DESC, " + EntryView._ID + " DESC");
