@@ -129,7 +129,8 @@ public class ExchangeRateDownloader {
             exchangeRates.add(new ExchangeRate(
                             entry.getKey(),
                             utcDate,
-                            Double.parseDouble(entry.getValue().toString()))
+                            Double.parseDouble(entry.getValue().toString()),
+                            System.currentTimeMillis())
             );
         }
         return exchangeRates;

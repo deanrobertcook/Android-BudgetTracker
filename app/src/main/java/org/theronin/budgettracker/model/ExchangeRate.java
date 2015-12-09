@@ -13,16 +13,22 @@ public class ExchangeRate {
     public final String currencyCode;
     public final long utcDate;
     public final double usdRate;
+    public final long utcLastUpdated;
 
-    public ExchangeRate(String currencyCode, long utcDate, double usd_rate) {
-        this(-1, currencyCode, utcDate, usd_rate);
+    public ExchangeRate(String currencyCode, long utcDate, double usd_rate, long utcLastUpdated) {
+        this(-1, currencyCode, utcDate, usd_rate, utcLastUpdated);
     }
 
-    public ExchangeRate(long id, String currencyCode, long utcDate, double usdRate) {
+    public ExchangeRate(long id,
+                        String currencyCode,
+                        long utcDate,
+                        double usdRate,
+                        long utcLastUpdated) {
         this.id = id;
         this.currencyCode = currencyCode;
         this.utcDate = utcDate;
         this.usdRate = usdRate;
+        this.utcLastUpdated = utcLastUpdated;
     }
 
     @Override
@@ -49,7 +55,8 @@ public class ExchangeRate {
                 cursor.getLong(ExchangeRateTable.INDEX_ID),
                 cursor.getString(ExchangeRateTable.INDEX_CURRENCY_CODE),
                 cursor.getLong(ExchangeRateTable.INDEX_DATE),
-                cursor.getDouble(ExchangeRateTable.INDEX_USD_RATE)
+                cursor.getDouble(ExchangeRateTable.INDEX_USD_RATE),
+                cursor.getLong(ExchangeRateTable.INDEX_LAST_DOWNLOAD_ATTEMPT)
         );
     }
 }

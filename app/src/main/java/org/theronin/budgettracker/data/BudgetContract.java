@@ -116,6 +116,7 @@ public class BudgetContract {
         public static final String COL_CURRENCY_CODE = "currency_code";
         public static final String COL_DATE = "date";
         public static final String COL_USD_RATE = "usd_rate";
+        public static final String COL_LAST_DOWNLOAD_ATTEMPT = "last_download_attempt";
 
         public static final String SQL_CREATE_CATEGORIES_TABLE = "CREATE TABLE " +
                 TABLE_NAME + " (" +
@@ -124,6 +125,7 @@ public class BudgetContract {
                 COL_CURRENCY_CODE + " TEXT NOT NULL, " +
                 COL_DATE + " INTEGER NOT NULL, " +
                 COL_USD_RATE + " REAL NOT NULL, " +
+                COL_LAST_DOWNLOAD_ATTEMPT + " INTEGER NOT NULL DEFAULT 0, " +
                 "FOREIGN KEY (" + COL_CURRENCY_CODE + ") REFERENCES " + CurrencyTable.TABLE_NAME + " (" + CurrencyTable.COL_CODE + "), " +
                 "UNIQUE (" + COL_CURRENCY_CODE + ", " + COL_DATE + ") ON CONFLICT IGNORE)";
 
@@ -134,13 +136,15 @@ public class BudgetContract {
                 _ID,
                 COL_CURRENCY_CODE,
                 COL_DATE,
-                COL_USD_RATE
+                COL_USD_RATE,
+                COL_LAST_DOWNLOAD_ATTEMPT
         };
 
         public static final int INDEX_ID = 0;
         public static final int INDEX_CURRENCY_CODE = 1;
         public static final int INDEX_DATE = 2;
         public static final int INDEX_USD_RATE = 3;
+        public static final int INDEX_LAST_DOWNLOAD_ATTEMPT = 4;
     }
 
     public static final class CategoryView implements BaseColumns {
