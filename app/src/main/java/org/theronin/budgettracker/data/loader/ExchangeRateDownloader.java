@@ -136,9 +136,10 @@ public class ExchangeRateDownloader {
 
         List<ExchangeRate> exchangeRates = new ArrayList<>();
         for (String currencyCode : currenciesToSave) {
-
-            double usdRate = ratesObject.has(currencyCode) ?
-                    ratesObject.get(currencyCode).getAsDouble() : -1.0;
+            double usdRate = -1.0;
+            if (ratesObject != null && ratesObject.has(currencyCode)) {
+                usdRate = ratesObject.get(currencyCode).getAsDouble();
+            }
 
             exchangeRates.add(new ExchangeRate(
                             currencyCode,

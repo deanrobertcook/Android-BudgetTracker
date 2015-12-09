@@ -15,7 +15,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.theronin.budgettracker.data.loader.ExchangeRateDownloaderTest.CURRENCIES_TO_SAVE;
+import static org.theronin.budgettracker.data.loader.ExchangeRateDownloaderTest.SUPPORTED_CURRENCIES;
 import static org.theronin.budgettracker.data.loader.ExchangeRateDownloaderTest.JSON_RES_PATH;
 
 
@@ -44,7 +44,7 @@ public class CurrencyConverterTest {
     private List<ExchangeRate> findTestRatesForDate(String date) throws MalformedURLException {
         long utcDate = DateUtils.getUtcTimeFromStorageFormattedDate(date);
         URL url = new File(String.format(JSON_RES_PATH, date)).toURI().toURL();
-        ExchangeRateDownloader exchangeRateDownloader = new ExchangeRateDownloader(CURRENCIES_TO_SAVE);
+        ExchangeRateDownloader exchangeRateDownloader = new ExchangeRateDownloader(SUPPORTED_CURRENCIES);
         String jsonString = exchangeRateDownloader.downloadJson(url);
         return exchangeRateDownloader.getRatesFromJson(jsonString,
                 utcDate);

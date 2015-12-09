@@ -22,7 +22,7 @@ public class ExchangeRateDownloaderTest {
 
     public static final String JSON_RES_PATH = "app/src/androidTest/res/test_data/%s.json";
 
-    public static final String[] CURRENCIES_TO_SAVE = {
+    public static final String[] SUPPORTED_CURRENCIES = {
             "USD",
             "AUD",
             "EUR"
@@ -32,7 +32,7 @@ public class ExchangeRateDownloaderTest {
 
     @Before
     public void setup() {
-        exchangeRateDownloader = new ExchangeRateDownloader(CURRENCIES_TO_SAVE);
+        exchangeRateDownloader = new ExchangeRateDownloader(SUPPORTED_CURRENCIES);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class ExchangeRateDownloaderTest {
             System.out.println(rate);
         }
         assertEquals("The number of exchange rates returned doesn't match the size of " +
-                "CURRENCIES_TO_SAVE", CURRENCIES_TO_SAVE.length, exchangeRates.size());
+                "SUPPORTED_CURRENCIES", SUPPORTED_CURRENCIES.length, exchangeRates.size());
     }
 
     @Test @LargeTest
@@ -69,6 +69,7 @@ public class ExchangeRateDownloaderTest {
         String downloadDate = "2015-12-03";
         long utcDate = DateUtils.getUtcTimeFromStorageFormattedDate(downloadDate);
         URL url = new File(String.format(JSON_RES_PATH, downloadDate)).toURI().toURL();
+
         String jsonString = exchangeRateDownloader.downloadJson(url);
         List<ExchangeRate> localExchangeRates = exchangeRateDownloader.getRatesFromJson(jsonString, 0);
 
@@ -77,4 +78,20 @@ public class ExchangeRateDownloaderTest {
         assertEquals("Exchange rate counts differ", localExchangeRates.size(), downloadedExchangeRates.size());
     }
 
+    @Test
+    public void fetchUnavailableData_ShouldProduceAllSupportedRates() throws
+            MalformedURLException {
+        String downloadDate = "2100-12-10";
+        URL url = new File(String.format(JSON_RES_PATH, downloadDate)).toURI().toURL();
+
+        String jsonString = exchangeRateDownloader.downloadJson(url);
+        List<ExchangeRate> exchangeRates = exchangeRateDownloader.getRatesFromJson(jsonString, 0);
+
+        for (ExchangeRate rate : exchangeRates) {
+            System.out.println(rate);
+        }
+
+        assertEquals("ExchangeRateDownloader did create blank ExchangeRate objects for all " +
+                "supported currencies", SUPPORTED_CURRENCIES.length, exchangeRates.size());
+    }
 }
