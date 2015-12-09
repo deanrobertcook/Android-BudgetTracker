@@ -16,7 +16,7 @@ public class CurrencyConverter {
     private final List<ExchangeRate> allExchangeRates;
     private final List<ExchangeRate> homeCurrencyRates;
 
-    private int missingExchangeRateDays = 0;
+    private List<Long> missingExchangeRateDays;
 
     public CurrencyConverter(Currency homeCurrency, List<ExchangeRate> allRates) {
         if (homeCurrency == null) {
@@ -38,7 +38,7 @@ public class CurrencyConverter {
     }
 
     public void assignExchangeRatesToEntries(List<Entry> allEntries) {
-        missingExchangeRateDays = 0;
+        missingExchangeRateDays = new ArrayList<>();
         for (Entry entry : allEntries) {
             Timber.d(entry.toString());
             if (entry.currency.code.equals(homeCurrency.code)) {
@@ -50,12 +50,24 @@ public class CurrencyConverter {
                 entry.setDirectExchangeRate(findDirectExchangeRateForEntry(entry, allExchangeRates));
             }
             if (entry.getDirectExchangeRate() == -1.0) {
-                missingExchangeRateDays++;
+                addDateToMissingExchangeRateDays(entry.utcDate);
             }
         }
     }
 
-    public int getMissingExchangeRateDays() {
+    protected void addDateToMissingExchangeRateDays(long utcDateToEnter) {
+        boolean alreadyContained = false;
+        for(Long utcDate: missingExchangeRateDays) {
+            if (DateUtils.sameDay(utcDate, utcDateToEnter)) {
+                alreadyContained = true;
+            }
+        }
+        if (!alreadyContained) {
+            missingExchangeRateDays.add(utcDateToEnter);
+        }
+    }
+
+    public List<Long> getMissingExchangeRateDays() {
         return missingExchangeRateDays;
     }
 
