@@ -47,6 +47,7 @@ public class ExchangeRate {
         values.put(ExchangeRateTable.COL_CURRENCY_CODE, currencyCode);
         values.put(ExchangeRateTable.COL_DATE, utcDate);
         values.put(ExchangeRateTable.COL_USD_RATE, usdRate);
+        values.put(ExchangeRateTable.COL_LAST_DOWNLOAD_ATTEMPT, utcLastUpdated);
         return values;
     }
 
