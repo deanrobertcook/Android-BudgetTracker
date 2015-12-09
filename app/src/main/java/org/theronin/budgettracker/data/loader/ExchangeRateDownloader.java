@@ -16,8 +16,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import timber.log.Timber;
@@ -31,6 +32,16 @@ public class ExchangeRateDownloader {
     protected static final String API_KEY = "";
 
     private static final String RATES_KEY = "rates";
+
+    private final Set<String> currenciesToSave;
+
+    public ExchangeRateDownloader(String[] currenciesToSave) {
+        if (currenciesToSave == null || currenciesToSave.length == 0) {
+            throw new IllegalArgumentException("currenciesToSave cannot be null and must contain" +
+                    " at least one currency to save");
+        }
+        this.currenciesToSave = new HashSet<>(Arrays.asList(currenciesToSave));
+    }
 
     public List<ExchangeRate> downloadExchangeRates(long utcDate) {
         //TODO check the network connection
@@ -116,20 +127,23 @@ public class ExchangeRateDownloader {
     }
 
     protected List<ExchangeRate> getRatesFromJson(String exchangeRatesJson, long utcDate) {
-        List<ExchangeRate> exchangeRates = new ArrayList<>();
         if (exchangeRatesJson == null) {
-            return exchangeRates;
+            return new ArrayList<>();
         }
         Gson gson = new Gson();
-        Set<Map.Entry<String, JsonElement>> entries =
-                ((JsonObject) gson.fromJson(exchangeRatesJson, JsonElement.class))
-                        .getAsJsonObject(RATES_KEY).entrySet();
+        JsonObject ratesObject = ((JsonObject) gson.fromJson(exchangeRatesJson, JsonElement.class))
+                .getAsJsonObject(RATES_KEY);
 
-        for (Map.Entry<String, JsonElement> entry: entries) {
+        List<ExchangeRate> exchangeRates = new ArrayList<>();
+        for (String currencyCode : currenciesToSave) {
+
+            double usdRate = ratesObject.has(currencyCode) ?
+                    ratesObject.get(currencyCode).getAsDouble() : -1.0;
+
             exchangeRates.add(new ExchangeRate(
-                            entry.getKey(),
+                            currencyCode,
                             utcDate,
-                            Double.parseDouble(entry.getValue().toString()),
+                            usdRate,
                             System.currentTimeMillis())
             );
         }

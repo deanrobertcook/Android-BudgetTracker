@@ -2,11 +2,11 @@ package org.theronin.budgettracker.data.loader;
 
 import android.app.Activity;
 import android.content.AsyncTaskLoader;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import org.theronin.budgettracker.BudgetTrackerApplication;
+import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.data.AbsDataSource;
 import org.theronin.budgettracker.data.DataSourceCategory;
 import org.theronin.budgettracker.data.DataSourceEntry;
@@ -32,8 +32,7 @@ public class CategoryLoader extends AsyncTaskLoader<List<Category>>
 
     private SharedPreferences defaultPreferences;
     private Currency homeCurrency;
-
-    private Context context;
+    private String[] supportedCurrencies;
 
     private String selection;
     private String[] selectionArgs;
@@ -54,10 +53,10 @@ public class CategoryLoader extends AsyncTaskLoader<List<Category>>
         dataSourceEntry = application.getDataSourceEntry();
         dataSourceExchangeRate = application.getDataSourceExchangeRate();
 
-        context = application.getApplicationContext();
         defaultPreferences = PreferenceManager.getDefaultSharedPreferences(application);
         defaultPreferences.registerOnSharedPreferenceChangeListener(this);
         homeCurrency = MoneyUtils.getHomeCurrency(application, defaultPreferences);
+        supportedCurrencies = getContext().getResources().getStringArray(R.array.currency_codes);
 
         this.selection = selection;
         this.selectionArgs = selectionArgs;
@@ -94,24 +93,30 @@ public class CategoryLoader extends AsyncTaskLoader<List<Category>>
     protected void calculateTotals(List<Category> allCategories, List<Entry> allEntries) {
         for (Category category : allCategories) {
             long categoryTotal = 0;
+            int missingEntries = 0;
             Iterator<Entry> entryIterator = allEntries.iterator();
             while (entryIterator.hasNext()) {
                 Entry entry = entryIterator.next();
                 if (category.name.equals(entry.category.name)) {
                     entryIterator.remove();
-                    categoryTotal += entry.amount * entry.getDirectExchangeRate();
+                    if (entry.getDirectExchangeRate() == -1.0) {
+                        //TODO could have a more elegant way of handling missing entry rate data
+                        //But for now I'll just drop them from the calculation
+                        missingEntries++;
+                    } else {
+                        categoryTotal += entry.amount * entry.getDirectExchangeRate();
+                    }
                 }
-
             }
             category.setTotal(categoryTotal);
-            //TODO handle missing entries.
-            category.setMissingEntries(0);
+            category.setMissingEntries(missingEntries);
         }
     }
 
     private void downloadMissingData(List<Long> missingExchangeRateDays) {
         for (Long utcDate : missingExchangeRateDays) {
-            List<ExchangeRate> downloadedRates = new ExchangeRateDownloader().downloadExchangeRates(utcDate);
+            List<ExchangeRate> downloadedRates =
+                    new ExchangeRateDownloader(supportedCurrencies).downloadExchangeRates(utcDate);
             if (!downloadedRates.isEmpty()) {
                 dataSourceExchangeRate.bulkInsert(downloadedRates);
             }
@@ -163,7 +168,7 @@ public class CategoryLoader extends AsyncTaskLoader<List<Category>>
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        homeCurrency = MoneyUtils.getHomeCurrency(context, defaultPreferences);
+        homeCurrency = MoneyUtils.getHomeCurrency(getContext(), defaultPreferences);
         if (calculateTotals) {
             forceLoad();
         }

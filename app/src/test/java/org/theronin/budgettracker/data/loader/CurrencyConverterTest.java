@@ -15,10 +15,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.theronin.budgettracker.data.loader.ExchangeRateDownloaderTest.CURRENCIES_TO_SAVE;
+import static org.theronin.budgettracker.data.loader.ExchangeRateDownloaderTest.JSON_RES_PATH;
+
 
 public class CurrencyConverterTest {
-
-    private static final String JSON_RES_PATH = "app/src/androidTest/res/test_data/%s.json";
 
     private final CurrencyConverter CONVERTER;
 
@@ -43,11 +44,10 @@ public class CurrencyConverterTest {
     private List<ExchangeRate> findTestRatesForDate(String date) throws MalformedURLException {
         long utcDate = DateUtils.getUtcTimeFromStorageFormattedDate(date);
         URL url = new File(String.format(JSON_RES_PATH, date)).toURI().toURL();
-        ExchangeRateDownloader exchangeRateDownloader = new ExchangeRateDownloader();
+        ExchangeRateDownloader exchangeRateDownloader = new ExchangeRateDownloader(CURRENCIES_TO_SAVE);
         String jsonString = exchangeRateDownloader.downloadJson(url);
-        List<ExchangeRate> exchangeRates = exchangeRateDownloader.getRatesFromJson(jsonString,
+        return exchangeRateDownloader.getRatesFromJson(jsonString,
                 utcDate);
-        return exchangeRates;
     }
 
     @Test
@@ -66,7 +66,7 @@ public class CurrencyConverterTest {
         CONVERTER.assignExchangeRatesToEntries(entries);
 
         Assert.assertEquals("Should be no missing exchange rate data", 0,
-                CONVERTER.getMissingExchangeRateDays());
+                CONVERTER.getMissingExchangeRateDays().size());
 
         for (Entry entry : entries) {
             Assert.assertEquals("Entry does not have an exchange rate of 1",
@@ -90,7 +90,7 @@ public class CurrencyConverterTest {
         CONVERTER.assignExchangeRatesToEntries(entries);
 
         Assert.assertEquals("Should be no missing exchange rate data", 0,
-                CONVERTER.getMissingExchangeRateDays());
+                CONVERTER.getMissingExchangeRateDays().size());
 
         for (Entry entry : entries) {
             Assert.assertEquals("Entry does not have an exchange rate of 1",
@@ -116,7 +116,7 @@ public class CurrencyConverterTest {
         CONVERTER.assignExchangeRatesToEntries(entries);
 
         Assert.assertEquals("Should be no missing exchange rate data", 0,
-                CONVERTER.getMissingExchangeRateDays());
+                CONVERTER.getMissingExchangeRateDays().size());
 
         for (Entry entry : entries) {
             Assert.assertTrue("Entry does not have an exchange rate of >0",
@@ -142,10 +142,10 @@ public class CurrencyConverterTest {
         CONVERTER.assignExchangeRatesToEntries(entries);
 
         Assert.assertEquals("All exchange rate data should be missing", entries.size(),
-                CONVERTER.getMissingExchangeRateDays());
+                CONVERTER.getMissingExchangeRateDays().size());
 
         for (Entry entry : entries) {
-            Assert.assertEquals("Entry does not have an exchange rate of >0",
+            Assert.assertEquals("Entry does not have an exchange rate of -1",
                     -1.0, entry.getDirectExchangeRate());
         }
     }

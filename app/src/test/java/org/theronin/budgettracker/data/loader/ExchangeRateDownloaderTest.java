@@ -20,13 +20,19 @@ import static org.theronin.budgettracker.data.loader.ExchangeRateDownloader.OPEN
 
 public class ExchangeRateDownloaderTest {
 
-    private static final String JSON_RES_PATH = "app/src/androidTest/res/test_data/%s.json";
+    public static final String JSON_RES_PATH = "app/src/androidTest/res/test_data/%s.json";
+
+    public static final String[] CURRENCIES_TO_SAVE = {
+            "USD",
+            "AUD",
+            "EUR"
+    };
 
     private ExchangeRateDownloader exchangeRateDownloader;
 
     @Before
     public void setup() {
-        exchangeRateDownloader = new ExchangeRateDownloader();
+        exchangeRateDownloader = new ExchangeRateDownloader(CURRENCIES_TO_SAVE);
     }
 
     @Test
@@ -54,7 +60,8 @@ public class ExchangeRateDownloaderTest {
         for (ExchangeRate rate : exchangeRates) {
             System.out.println(rate);
         }
-        assertTrue("No exchange rates were produced", exchangeRates.size() > 0);
+        assertEquals("The number of exchange rates returned doesn't match the size of " +
+                "CURRENCIES_TO_SAVE", CURRENCIES_TO_SAVE.length, exchangeRates.size());
     }
 
     @Test @LargeTest

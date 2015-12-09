@@ -124,7 +124,7 @@ public class BudgetContract {
 
                 COL_CURRENCY_CODE + " TEXT NOT NULL, " +
                 COL_DATE + " INTEGER NOT NULL, " +
-                COL_USD_RATE + " REAL NOT NULL, " +
+                COL_USD_RATE + " REAL NOT NULL DEFAULT -1.0, " +
                 COL_LAST_DOWNLOAD_ATTEMPT + " INTEGER NOT NULL DEFAULT 0, " +
                 "FOREIGN KEY (" + COL_CURRENCY_CODE + ") REFERENCES " + CurrencyTable.TABLE_NAME + " (" + CurrencyTable.COL_CODE + "), " +
                 "UNIQUE (" + COL_CURRENCY_CODE + ", " + COL_DATE + ") ON CONFLICT IGNORE)";
