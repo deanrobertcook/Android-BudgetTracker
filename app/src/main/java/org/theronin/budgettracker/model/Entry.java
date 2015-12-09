@@ -23,7 +23,7 @@ public class Entry {
     public final Category category;
     public final Currency currency;
 
-    private double exchangeRate = -1;
+    private double directExchangeRate = -1;
 
     public Entry(
             long utcDate,
@@ -95,11 +95,15 @@ public class Entry {
         );
     }
 
-    public double getExchangeRate() {
-        return exchangeRate;
+    public double getDirectExchangeRate() {
+        return directExchangeRate;
     }
 
-    public void setExchangeRate(double exchangeRate) {
-        this.exchangeRate = exchangeRate;
+    /**
+     * Note, unlike everywhere else in the application, this will be the direct exchange rate
+     * @param directExchangeRate
+     */
+    public void setDirectExchangeRate(double directExchangeRate) {
+        this.directExchangeRate = directExchangeRate;
     }
 }

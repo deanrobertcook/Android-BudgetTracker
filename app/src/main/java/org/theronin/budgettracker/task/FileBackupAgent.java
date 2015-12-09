@@ -109,8 +109,8 @@ public class FileBackupAgent  {
         }
 
         private void removeExchangeRateField(JsonObject object) {
-            if (object.has("exchangeRate")) {
-                object.remove("exchangeRate");
+            if (object.has("directExchangeRate")) {
+                object.remove("directExchangeRate");
             }
         }
 
