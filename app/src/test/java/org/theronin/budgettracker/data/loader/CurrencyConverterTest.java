@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
 import static org.theronin.budgettracker.data.loader.ExchangeRateDownloaderTest.SUPPORTED_CURRENCIES;
 import static org.theronin.budgettracker.data.loader.ExchangeRateDownloaderTest.JSON_RES_PATH;
 
@@ -65,11 +66,11 @@ public class CurrencyConverterTest {
 
         CONVERTER.assignExchangeRatesToEntries(entries);
 
-        Assert.assertEquals("Should be no missing exchange rate data", 0,
+        assertEquals("Should be no missing exchange rate data", 0,
                 CONVERTER.getMissingExchangeRateDays().size());
 
         for (Entry entry : entries) {
-            Assert.assertEquals("Entry does not have an exchange rate of 1",
+            assertEquals("Entry does not have an exchange rate of 1",
                     1.0, entry.getDirectExchangeRate());
         }
     }
@@ -89,11 +90,11 @@ public class CurrencyConverterTest {
 
         CONVERTER.assignExchangeRatesToEntries(entries);
 
-        Assert.assertEquals("Should be no missing exchange rate data", 0,
+        assertEquals("Should be no missing exchange rate data", 0,
                 CONVERTER.getMissingExchangeRateDays().size());
 
         for (Entry entry : entries) {
-            Assert.assertEquals("Entry does not have an exchange rate of 1",
+            assertEquals("Entry does not have an exchange rate of 1",
                     1.0, entry.getDirectExchangeRate());
         }
     }
@@ -115,7 +116,7 @@ public class CurrencyConverterTest {
 
         CONVERTER.assignExchangeRatesToEntries(entries);
 
-        Assert.assertEquals("Should be no missing exchange rate data", 0,
+        assertEquals("Should be no missing exchange rate data", 0,
                 CONVERTER.getMissingExchangeRateDays().size());
 
         for (Entry entry : entries) {
@@ -141,13 +142,58 @@ public class CurrencyConverterTest {
 
         CONVERTER.assignExchangeRatesToEntries(entries);
 
-        Assert.assertEquals("All exchange rate data should be missing", entries.size(),
+        assertEquals("All exchange rate data should be missing", entries.size(),
                 CONVERTER.getMissingExchangeRateDays().size());
 
         for (Entry entry : entries) {
-            Assert.assertEquals("Entry does not have an exchange rate of -1",
+            assertEquals("Entry does not have an exchange rate of -1",
                     -1.0, entry.getDirectExchangeRate());
         }
+    }
+
+    @Test
+    public void missingExchangeRateDays_ShouldOnlyIncrement_IfExchangeRateNotInDatabase() {
+        String missingExchangeDataDay = "2015-12-11";
+        String notMissingExchangeDataDay = "2015-12-10";
+
+        List<ExchangeRate> exchangeRates = new ArrayList<>();
+        exchangeRates.add(new ExchangeRate("AUD",
+                DateUtils.getUtcTimeFromStorageFormattedDate(notMissingExchangeDataDay),
+                -1.00,
+                System.currentTimeMillis()));
+        //Need to ad an exchange rate for the home currency on the same day
+        exchangeRates.add(new ExchangeRate("EUR",
+                DateUtils.getUtcTimeFromStorageFormattedDate(notMissingExchangeDataDay),
+                -1.00,
+                System.currentTimeMillis()));
+
+        List<Entry> entries = new ArrayList<>();
+        //Even though the exchange rate for this date has a negative (not available) rate,
+        //We don't want to mark it as missing, as we've attempted to download it before.
+        entries.add(new Entry(
+                DateUtils.getUtcTimeFromStorageFormattedDate(notMissingExchangeDataDay),
+                100,
+                new Category("test"),
+                new Currency("AUD", "$")
+        ));
+        //This entry should trigger an increment to missing entries, since there is no exchange rate
+        //at all for this date, even one with a negative (na) exchange rate
+        entries.add(new Entry(
+                DateUtils.getUtcTimeFromStorageFormattedDate(missingExchangeDataDay),
+                100,
+                new Category("test"),
+                new Currency("AUD", "$")
+        ));
+
+        //Home currency needs to be different to trigger checking of exchange rate data.
+        CurrencyConverter currencyConverter = new CurrencyConverter(HOME_CURRENCY, exchangeRates);
+        currencyConverter.assignExchangeRatesToEntries(entries);
+
+        assertEquals("Missing entries is not as expected", 1,
+                currencyConverter.getMissingExchangeRateDays().size());
+        assertEquals("The missing entry day is not as expected", missingExchangeDataDay,
+                DateUtils.getStorageFormattedDate(
+                        currencyConverter.getMissingExchangeRateDays().get(0)));
     }
 
 }

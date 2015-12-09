@@ -85,8 +85,6 @@ public class CategoryLoader extends AsyncTaskLoader<List<Category>>
                 //this thread will be started again when the data is inserted
                 return new ArrayList<>();
             }
-            //TODO handle the case where no data exists for a given day
-            //Right now, it will continuously attempt to download the data - not good
         }
     }
 

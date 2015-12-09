@@ -47,10 +47,15 @@ public class CurrencyConverter {
             } else {
                 Timber.d("Entry currency differs from home currency - calculating equivalent " +
                         "value");
-                entry.setDirectExchangeRate(findDirectExchangeRateForEntry(entry, allExchangeRates));
-            }
-            if (entry.getDirectExchangeRate() == -1.0) {
-                addDateToMissingExchangeRateDays(entry.utcDate);
+
+                ExchangeRate foreignExchangeRate = searchExchangeRates(entry, allExchangeRates);
+                double directExchangeRate = foreignExchangeRate != null ?
+                        calculateDirectExchangeRate(foreignExchangeRate) : -1.0;
+                entry.setDirectExchangeRate(directExchangeRate);
+
+                if (foreignExchangeRate == null) {
+                    addDateToMissingExchangeRateDays(entry.utcDate);
+                }
             }
         }
     }
@@ -69,14 +74,6 @@ public class CurrencyConverter {
 
     public List<Long> getMissingExchangeRateDays() {
         return missingExchangeRateDays;
-    }
-
-    protected double findDirectExchangeRateForEntry(Entry entry, List<ExchangeRate> allExchangeRates) {
-        ExchangeRate exchangeRate = searchExchangeRates(entry, allExchangeRates);
-        if (exchangeRate != null) {
-            return calculateDirectExchangeRate(exchangeRate);
-        }
-        return -1;
     }
 
     protected ExchangeRate searchExchangeRates(Entry entry, List<ExchangeRate> exchangeRates) {
