@@ -1,6 +1,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppTheme" parent="android:Theme.Material.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:colorPrimary">@color/primary</item>
         <item name="android:colorPrimaryDark">@color/primary_dark</item>
         <item name="android:colorAccent">@color/accent</item>
@@ -9,7 +9,14 @@
         <item name="android:datePickerDialogTheme">@style/DialogStyle</item>
     </style>
 
-    <style name="DialogStyle" parent="android:Theme.Material.Light.Dialog">
+    <style name="AppBarStyle" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:elevation">8dp</item>
+        <item name="android:background">@color/primary</item>
+    </style>
+
+    <style name="DialogStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:datePickerStyle">@style/DatePickerStyle</item>
         <item name="android:colorAccent">@color/primary</item>
     </style>
@@ -43,7 +50,7 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="OptionsDialogStyle" parent="android:Theme.Material.Dialog">
+    <style name="OptionsDialogStyle" parent="Theme.AppCompat.Dialog">
         <item name="windowNoTitle">true</item>
         <item name="android:windowCloseOnTouchOutside">true</item>
     </style>
