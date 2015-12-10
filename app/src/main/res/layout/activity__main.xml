@@ -1,27 +1,41 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical">
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <!--suppress AndroidDomInspection -->
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/tb__toolbar"
-        style="@style/AppBarStyle"/>
-
-    <fragment
-        android:id="@+id/fragment__add_entry"
-        android:name="org.theronin.budgettracker.pages.entries.AddEntryFragment"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/quick_bar_height"
-        />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <fragment
-        android:id="@+id/fragment__main_menu"
-        android:name="org.theronin.budgettracker.pages.main.MainMenuFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-    
-</LinearLayout>
+        <!--suppress AndroidDomInspection -->
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/tb__toolbar"
+            style="@style/AppBarStyle"/>
+
+        <fragment
+            android:id="@+id/fragment__add_entry"
+            android:name="org.theronin.budgettracker.pages.entries.AddEntryFragment"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/quick_bar_height"
+            />
+
+        <fragment
+            android:id="@+id/fragment__main_menu"
+            android:name="org.theronin.budgettracker.pages.main.MainMenuFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+
+        android:layout_width="@dimen/navigation_drawer_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:background="#FFFFFF">
+
+    </android.support.v7.widget.RecyclerView>
+</android.support.v4.widget.DrawerLayout>
+
 
