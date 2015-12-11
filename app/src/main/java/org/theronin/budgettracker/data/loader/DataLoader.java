@@ -10,23 +10,15 @@ import java.util.List;
 public abstract class DataLoader<T> extends AsyncTaskLoader<List<T>>
     implements AbsDataSource.Observer {
 
-    protected AbsDataSource<T> dataSource;
+    protected AbsDataSource[] dataSources;
     private List<T> data;
 
-    protected String selection;
-    protected String[] selectionArgs;
-    protected String orderBy;
-
-    public DataLoader(Context context,
-                      AbsDataSource<T> dataSource,
-                      String selection,
-                      String[] selectionArgs,
-                      String orderBy) {
+    public DataLoader(Context context) {
         super(context);
-        this.dataSource = dataSource;
-        this.selection = selection;
-        this.selectionArgs = selectionArgs;
-        this.orderBy = orderBy;
+    }
+
+    protected void setDataSources(AbsDataSource ... dataSources) {
+        this.dataSources = dataSources;
     }
 
     @Override
@@ -43,10 +35,20 @@ public abstract class DataLoader<T> extends AsyncTaskLoader<List<T>>
             deliverResult(data);
         }
 
-        dataSource.registerObserver(this);
+        registerToDataSources();
 
         if (takeContentChanged() || data == null || data.isEmpty()) {
             forceLoad();
+        }
+    }
+
+    private void registerToDataSources() {
+        if (dataSources.length == 0) {
+            throw new IllegalStateException("There needs to be at least one Datasource that this" +
+                    " loader is registered to");
+        }
+        for (AbsDataSource absDataSource : dataSources) {
+            absDataSource.registerObserver(this);
         }
     }
 
@@ -63,7 +65,13 @@ public abstract class DataLoader<T> extends AsyncTaskLoader<List<T>>
     @Override
     protected void onReset() {
         onStopLoading();
-        dataSource.unregisterObserver(this);
+        unregisterFromDataSources();
+    }
+
+    private void unregisterFromDataSources() {
+        for (AbsDataSource absDataSource : dataSources) {
+            absDataSource.unregisterObserver(this);
+        }
     }
 
 }

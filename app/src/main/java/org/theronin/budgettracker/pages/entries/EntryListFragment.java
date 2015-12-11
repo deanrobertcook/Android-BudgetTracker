@@ -104,10 +104,7 @@ public class EntryListFragment extends Fragment implements
 
     @Override
     public Loader<List<Entry>> onCreateLoader(int id, Bundle args) {
-        return new EntryLoader(
-                getActivity(),
-                null, null,
-                EntryView.COL_DATE + " DESC, " + EntryView._ID + " DESC");
+        return new EntryLoader(getActivity());
     }
 
     @Override

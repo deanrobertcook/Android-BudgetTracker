@@ -1,9 +1,6 @@
 package org.theronin.budgettracker.data.loader;
 
 import android.app.Activity;
-import android.content.AsyncTaskLoader;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import org.theronin.budgettracker.BudgetTrackerApplication;
 import org.theronin.budgettracker.R;
@@ -15,65 +12,51 @@ import org.theronin.budgettracker.model.Category;
 import org.theronin.budgettracker.model.Currency;
 import org.theronin.budgettracker.model.Entry;
 import org.theronin.budgettracker.model.ExchangeRate;
-import org.theronin.budgettracker.utils.MoneyUtils;
+import org.theronin.budgettracker.utils.CurrencySettings;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import timber.log.Timber;
-
-public class CategoryLoader extends AsyncTaskLoader<List<Category>>
-        implements AbsDataSource.Observer, SharedPreferences.OnSharedPreferenceChangeListener {
+public class CategoryLoader extends DataLoader<Category>
+        implements AbsDataSource.Observer, CurrencySettings.Listener {
 
     private DataSourceCategory dataSourceCategory;
     private DataSourceEntry dataSourceEntry;
     private DataSourceExchangeRate dataSourceExchangeRate;
 
-    private SharedPreferences defaultPreferences;
-    private Currency homeCurrency;
+    private CurrencySettings currencySettings;
+
     private String[] supportedCurrencies;
-
-    private String selection;
-    private String[] selectionArgs;
-    private String orderBy;
-
-    private List<Category> data;
 
     private boolean calculateTotals;
 
-    public CategoryLoader(Activity activity,
-                          String selection,
-                          String[] selectionArgs,
-                          String orderBy,
-                          boolean calculateTotals) {
+    public CategoryLoader(Activity activity, boolean calculateTotals) {
         super(activity);
         BudgetTrackerApplication application = (BudgetTrackerApplication) activity.getApplication();
         dataSourceCategory = application.getDataSourceCategory();
         dataSourceEntry = application.getDataSourceEntry();
         dataSourceExchangeRate = application.getDataSourceExchangeRate();
+        setDataSources(dataSourceCategory, dataSourceEntry, dataSourceExchangeRate);
 
-        defaultPreferences = PreferenceManager.getDefaultSharedPreferences(application);
-        defaultPreferences.registerOnSharedPreferenceChangeListener(this);
-        homeCurrency = MoneyUtils.getHomeCurrency(application, defaultPreferences);
+        currencySettings = new CurrencySettings(activity, this);
+
         supportedCurrencies = getContext().getResources().getStringArray(R.array.currency_codes);
 
-        this.selection = selection;
-        this.selectionArgs = selectionArgs;
-        this.orderBy = orderBy;
         this.calculateTotals = calculateTotals;
     }
 
     @Override
     public List<Category> loadInBackground() {
-        List<Category> categories = dataSourceCategory.query(selection, selectionArgs, orderBy);
+        List<Category> categories = dataSourceCategory.query();
         if (!calculateTotals) {
             return categories;
         } else {
             List<Entry> allEntries = dataSourceEntry.query();
             List<ExchangeRate> allExchangeRates = dataSourceExchangeRate.query();
 
-            CurrencyConverter converter = new CurrencyConverter(homeCurrency, allExchangeRates);
+            CurrencyConverter converter =
+                    new CurrencyConverter(currencySettings.getHomeCurrency(), allExchangeRates);
             converter.assignExchangeRatesToEntries(allEntries);
 
             if (converter.getMissingExchangeRateDays().isEmpty()) {
@@ -122,51 +105,7 @@ public class CategoryLoader extends AsyncTaskLoader<List<Category>>
     }
 
     @Override
-    public void deliverResult(List<Category> data) {
-        this.data = data;
-        if (isStarted()) {
-            super.deliverResult(data);
-        }
-    }
-
-    @Override
-    protected void onStartLoading() {
-        if (data != null) {
-            deliverResult(data);
-        }
-
-        dataSourceCategory.registerObserver(this);
-        dataSourceEntry.registerObserver(this);
-        dataSourceExchangeRate.registerObserver(this);
-
-        if (takeContentChanged() || data == null || data.isEmpty()) {
-            forceLoad();
-        }
-    }
-
-    @Override
-    public void onDataSourceChanged() {
-        Timber.d("onDataSourceChanged");
-        cancelLoad();
-        forceLoad();
-    }
-
-    @Override
-    protected void onStopLoading() {
-        cancelLoad();
-    }
-
-    @Override
-    protected void onReset() {
-        onStopLoading();
-        dataSourceCategory.unregisterObserver(this);
-        dataSourceEntry.unregisterObserver(this);
-        dataSourceExchangeRate.unregisterObserver(this);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        homeCurrency = MoneyUtils.getHomeCurrency(getContext(), defaultPreferences);
+    public void onHomeCurrencyChanged(Currency homeCurrency) {
         if (calculateTotals) {
             forceLoad();
         }

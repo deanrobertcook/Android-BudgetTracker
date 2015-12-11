@@ -241,7 +241,7 @@ public class AddEntryFragment extends Fragment implements DatePickerFragment.Con
 
     @Override
     public Loader<List<Category>> onCreateLoader(int id, Bundle args) {
-        return new CategoryLoader(getActivity(), null, null, null, false);
+        return new CategoryLoader(getActivity(), false);
     }
 
     @Override

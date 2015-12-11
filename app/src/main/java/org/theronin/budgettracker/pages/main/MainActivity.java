@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public Loader<List<Entry>> onCreateLoader(int id, Bundle args) {
-        return new EntryLoader(this, null, null, null);
+        return new EntryLoader(this);
     }
 
     @Override

@@ -52,7 +52,7 @@ public class CategoryListFragment extends Fragment implements
 
     @Override
     public Loader<List<Category>> onCreateLoader(int id, Bundle args) {
-        return new CategoryLoader(getActivity(), null, null, null, true);
+        return new CategoryLoader(getActivity(), true);
     }
 
     @Override

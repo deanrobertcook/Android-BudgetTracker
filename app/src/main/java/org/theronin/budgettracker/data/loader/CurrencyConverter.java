@@ -12,6 +12,10 @@ import timber.log.Timber;
 
 public class CurrencyConverter {
 
+    //TODO move in an instance of the DataSourceExchange rate so that this class can control
+    //TODO the downloading of exchange rates.
+    //Downloading of exchange rates is now also needed by the EntryLoader.
+
     private final Currency homeCurrency;
     private final List<ExchangeRate> allExchangeRates;
     private final List<ExchangeRate> homeCurrencyRates;
