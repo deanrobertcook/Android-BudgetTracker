@@ -1,45 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@drawable/list_item_selector"
-              android:orientation="horizontal"
-              android:padding="@dimen/padding_single">
+              android:layout_height="72dp"
+              android:paddingLeft="@dimen/material_default_margin">
 
     <LinearLayout
-        android:id="@+id/ll__currency_layout"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
 
-        <include layout="@layout/currency_display_small"/>
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv__list_item__entry__current_currency__symbol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:includeFontPadding="false"
+                android:text="$"
+                android:textSize="24sp"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv__list_item__entry__current_currency__amount"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
+                    android:text="10.50"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/tv__list_item__entry__current_currency__code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|bottom"
+                    android:text="AUD"
+                    android:textSize="8sp"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv__list_item__entry__home_currency__amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="€6.60"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif"
+            android:textSize="11sp"
+            android:textColor="@color/text_color_secondary"/>
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv__amount_column"
-        style="@style/ListItemStyle"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:gravity="center_vertical|right"
-        android:paddingRight="@dimen/padding_single"
-        />
 
-    <TextView
-        android:id="@+id/tv__category_column"
-        style="@style/ListItemStyle"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:paddingLeft="@dimen/padding_single"
-        android:paddingRight="@dimen/padding_single"
-        android:layout_weight="5"/>
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="16dp">
 
-    <TextView
-        android:id="@+id/tv__date_column"
-        style="@style/ListItemStyle"
-        android:layout_width="0dp"
+        <TextView
+            android:id="@+id/tv__list_item__entry__category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif"
+            android:maxLines="1"
+            android:paddingBottom="2dp"
+            android:text="A Much Longer Category That Will Overflow"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/tv__list_item__entry__date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:text="12 Dec. 2014"
+            android:textColor="@color/text_color_secondary"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv__list_item__entry__more_options"
+        android:layout_width="56dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:layout_height="match_parent"
-        android:layout_weight="3"/>
+        android:layout_gravity="center|right"
+        android:src="@drawable/ic_more_vert"/>
 
 </LinearLayout>

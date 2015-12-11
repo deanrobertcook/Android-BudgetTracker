@@ -45,14 +45,17 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         final Entry boundEntry = entries.get(position);
 
-        viewHolder.currencySymbolTextView.setText(boundEntry.currency.symbol);
-        viewHolder.currencyCodeTextView.setText(boundEntry.currency.code);
-        viewHolder.amountTextView.setText(
+        viewHolder.currentCurrencySymbolTextView.setText(boundEntry.currency.symbol);
+        viewHolder.currentCurrencyCodeTextView.setText(boundEntry.currency.code);
+
+        viewHolder.currentCurrencyAmount.setText(
                 MoneyUtils.convertCentsToDisplayAmount(boundEntry.amount));
+//        viewHolder.homeCurrencyAmount.setText("todo");
+
         viewHolder.categoryTextView.setText(boundEntry.category.name);
         viewHolder.dateTextView.setText(DateUtils.getDisplayFormattedDate(boundEntry.utcDate));
 
-        viewHolder.listItemView.setOnClickListener(new View.OnClickListener() {
+        viewHolder.moreOptionsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 itemClickListener.onItemClicked(boundEntry);
@@ -67,22 +70,30 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public final View listItemView;
-        public final TextView currencySymbolTextView;
-        public final TextView currencyCodeTextView;
-        public final TextView amountTextView;
+        public final TextView currentCurrencySymbolTextView;
+        public final TextView currentCurrencyCodeTextView;
+
+        public final TextView currentCurrencyAmount;
+        public final TextView homeCurrencyAmount;
+
         public final TextView categoryTextView;
         public final TextView dateTextView;
 
+        public final View moreOptionsView;
+
         public ViewHolder(View view) {
-            super(view);
-            this.listItemView = view;
-            View currencyDisplayView = listItemView.findViewById(R.id.ll__currency_layout);
-            currencySymbolTextView = (TextView) currencyDisplayView.findViewById(R.id.tv__list_item__currency__symbol);
-            currencyCodeTextView = (TextView) currencyDisplayView.findViewById(R.id.tv__list_item__currency__code);
-            amountTextView = (TextView) listItemView.findViewById(R.id.tv__amount_column);
-            categoryTextView = (TextView) listItemView.findViewById(R.id.tv__category_column);
-            dateTextView = (TextView) listItemView.findViewById(R.id.tv__date_column);
+            super(view);;
+
+            currentCurrencySymbolTextView = (TextView) itemView.findViewById(R.id.tv__list_item__entry__current_currency__symbol);
+            currentCurrencyCodeTextView = (TextView) itemView.findViewById(R.id.tv__list_item__entry__current_currency__code);
+
+            currentCurrencyAmount = (TextView) itemView.findViewById(R.id.tv__list_item__entry__current_currency__amount);
+            homeCurrencyAmount = (TextView) itemView.findViewById(R.id.tv__list_item__entry__home_currency__amount);
+
+            categoryTextView = (TextView) itemView.findViewById(R.id.tv__list_item__entry__category);
+            dateTextView = (TextView) itemView.findViewById(R.id.tv__list_item__entry__date);
+
+            moreOptionsView = itemView.findViewById(R.id.iv__list_item__entry__more_options);
         }
     }
 

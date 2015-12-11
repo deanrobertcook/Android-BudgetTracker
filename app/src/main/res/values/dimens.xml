@@ -1,7 +1,16 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="material_default_margin">16dp</dimen>
+
+
+    <!-- Entry List Dimensions -->
+    <dimen name="list_item__height_two_line_compact">56dp</dimen>
+    <dimen name="list_item__entry_current_currency_symbol">24sp</dimen>
+    <dimen name="list_item__entry_current_currency_code">8sp</dimen>
+    <dimen name="list_item__entry_main_text_size">13sp</dimen>
+    <dimen name="list_item__entry_secondary_text_size">11sp</dimen>
+
+
 
     <dimen name="status_bar__height">24dp</dimen>
     <dimen name="navigation_drawer_width">304dp</dimen>
