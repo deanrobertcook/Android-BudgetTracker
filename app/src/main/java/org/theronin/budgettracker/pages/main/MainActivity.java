@@ -4,7 +4,6 @@ import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -38,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements
     private static final String TAG = MainActivity.class.getName();
 
     private static final int ENTRY_LOADER_ID = 0;
-    private DrawerLayout drawerLayout;
     private Toolbar toolbar;
 
     private EntryListFragment entryListFragment;
@@ -59,30 +57,35 @@ public class MainActivity extends AppCompatActivity implements
                 .add(R.id.fl__main_content, entryListFragment)
                 .commit();
 
+        buildNavigationDrawer();
+
+    }
+
+    private void buildNavigationDrawer() {
         AccountHeader accountHeader = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(getDrawable(R.color.primary))
                 .build();
 
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem()
-                .withName("Entries")
-                .withIdentifier(0)
-                .withIcon(getDrawable(R.drawable.ic_entry_unselected))
-                .withOnDrawerItemClickListener(this);
-
-        PrimaryDrawerItem item2 = new PrimaryDrawerItem()
-                .withName("Categories")
-                .withIdentifier(1)
-                .withIcon(getDrawable(R.drawable.ic_category_unselected))
-                .withOnDrawerItemClickListener(this);
-
-        Drawer drawer = new DrawerBuilder()
+        new DrawerBuilder()
                 .withActivity(this)
                 .withAccountHeader(accountHeader)
-                .addDrawerItems(item1, item2)
+                .addDrawerItems(buildPrimaryDrawerItems())
                 .build();
-        drawerLayout = drawer.getDrawerLayout();
+    }
 
+    private PrimaryDrawerItem[] buildPrimaryDrawerItems() {
+        PrimaryDrawerItem[] drawerItems = new PrimaryDrawerItem[Page.values().length];
+        for (int i = 0; i < drawerItems.length; i++) {
+            Page page = Page.values()[i];
+            drawerItems[i] = new PrimaryDrawerItem()
+                    .withName(page.title)
+                    .withIdentifier(page.ordinal())
+                    .withIcon(page.unselectedIconResId)
+                    .withSelectedIcon(page.selectedIconResId)
+                    .withOnDrawerItemClickListener(this);
+        }
+        return drawerItems;
     }
 
     @Override
@@ -146,15 +149,19 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-        switch (drawerItem.getIdentifier()) {
-            case 0:
-                toolbar.setTitle("Entries");
+        Page page = Page.valueOf(position - 1);
+        if (page == null) {
+            return false;
+        }
+        switch (page) {
+            case ENTRIES:
+                toolbar.setTitle(page.title);
                 getFragmentManager().beginTransaction()
                         .replace(R.id.fl__main_content, new EntryListFragment())
                         .commit();
                 return true;
-            case 1:
-                toolbar.setTitle("Categories");
+            case CATEGORIES:
+                toolbar.setTitle(page.title);
                 if (categoryListFragment == null) {
                     categoryListFragment = new CategoryListFragment();
                 }
@@ -162,8 +169,9 @@ public class MainActivity extends AppCompatActivity implements
                         .replace(R.id.fl__main_content, new CategoryListFragment())
                         .commit();
                 return true;
+            default:
+                return false;
         }
-        return false;
     }
 
 
