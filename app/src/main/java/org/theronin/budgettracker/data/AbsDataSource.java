@@ -26,9 +26,10 @@ public abstract class AbsDataSource<T> {
     }
 
     public void unregisterObserver(Observer observer) {
-        if (!observers.remove(observer)) {
-            throw new IllegalStateException("The observer is not registered to this DataSource");
-        }
+        observers.remove(observer);
+//        if (!observers.remove(observer)) {
+//            throw new IllegalStateException("The observer is not registered to this DataSource");
+//        }
     }
 
     /**

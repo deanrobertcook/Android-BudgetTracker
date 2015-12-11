@@ -20,6 +20,8 @@ import java.util.List;
 public class CategoryListFragment extends Fragment implements
         LoaderCallbacks<List<Category>> {
 
+    public static final String TAG = CategoryListFragment.class.getName();
+
     private static final int CATEGORY_LOADER_ID = 0;
     private CategoriesAdapter adapter;
 

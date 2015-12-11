@@ -39,8 +39,10 @@ public class MainActivity extends AppCompatActivity implements
     private static final int ENTRY_LOADER_ID = 0;
     private Toolbar toolbar;
 
-    private EntryListFragment entryListFragment;
-    private CategoryListFragment categoryListFragment;
+    private Drawer navDrawer;
+
+    private final static String CURRENT_PAGE_KEY = "CURRENT_PAGE";
+    private Page currentPage;
 
 
     @Override
@@ -49,29 +51,73 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity__main);
 
         toolbar = (Toolbar) findViewById(R.id.tb__toolbar);
-        toolbar.setTitle("Entries");
+        //TODO figure out why having this here prevents "BudgetTracker" from appearing...
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
-        entryListFragment = new EntryListFragment();
-        getFragmentManager().beginTransaction()
-                .add(R.id.fl__main_content, entryListFragment)
-                .commit();
+        navDrawer = buildNavigationDrawer();
 
-        buildNavigationDrawer();
-
+        currentPage = findCurrentPage(savedInstanceState);
+        setPage(currentPage);
     }
 
-    private void buildNavigationDrawer() {
+    private Page findCurrentPage(Bundle savedInstanceState) {
+        Page defaultPage = Page.ENTRIES;
+        if (savedInstanceState != null) {
+            int currentPageId = savedInstanceState.getInt(CURRENT_PAGE_KEY, -1);
+            if (currentPageId > -1) {
+                return Page.valueOf(currentPageId);
+            }
+        }
+        return defaultPage;
+    }
+
+    private boolean setPage(Page page) {
+        if (page == null) {
+            return false;
+        }
+        currentPage = page;
+        toolbar.setTitle(page.title);
+        navDrawer.setSelection(page.id);
+
+        switch (page) {
+            case ENTRIES:
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.fl__main_content,
+                                new EntryListFragment(),
+                                EntryListFragment.TAG)
+                        .commit();
+                return true;
+
+            case CATEGORIES:
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.fl__main_content,
+                                new CategoryListFragment(),
+                                CategoryListFragment.TAG)
+                        .commit();
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private Drawer buildNavigationDrawer() {
         AccountHeader accountHeader = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(getDrawable(R.color.primary))
                 .build();
 
-        new DrawerBuilder()
+        Drawer drawer = new DrawerBuilder()
                 .withActivity(this)
+                .withToolbar(toolbar)
                 .withAccountHeader(accountHeader)
                 .addDrawerItems(buildPrimaryDrawerItems())
                 .build();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        drawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
+
+        return drawer;
     }
 
     private PrimaryDrawerItem[] buildPrimaryDrawerItems() {
@@ -89,8 +135,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(CURRENT_PAGE_KEY, currentPage.id);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -149,29 +200,9 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+        //The AccountHeader in the navigation view also has a position
         Page page = Page.valueOf(position - 1);
-        if (page == null) {
-            return false;
-        }
-        switch (page) {
-            case ENTRIES:
-                toolbar.setTitle(page.title);
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.fl__main_content, new EntryListFragment())
-                        .commit();
-                return true;
-            case CATEGORIES:
-                toolbar.setTitle(page.title);
-                if (categoryListFragment == null) {
-                    categoryListFragment = new CategoryListFragment();
-                }
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.fl__main_content, new CategoryListFragment())
-                        .commit();
-                return true;
-            default:
-                return false;
-        }
+        return setPage(page);
     }
 
 
