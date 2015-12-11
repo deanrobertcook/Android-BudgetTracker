@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.theronin.budgettracker.R;
+import org.theronin.budgettracker.model.Currency;
 import org.theronin.budgettracker.model.Entry;
+import org.theronin.budgettracker.utils.CurrencySettings;
 import org.theronin.budgettracker.utils.DateUtils;
 import org.theronin.budgettracker.utils.MoneyUtils;
 import org.theronin.budgettracker.utils.ViewUtils;
@@ -16,15 +18,19 @@ import org.theronin.budgettracker.utils.ViewUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHolder> {
+public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHolder> implements
+        CurrencySettings.Listener {
 
     private Context context;
+
+    private CurrencySettings currencySettings;
 
     private final OnItemClickListener itemClickListener;
     private List<Entry> entries = new ArrayList<>();
 
     public EntriesAdapter(Context context, OnItemClickListener itemClickListener) {
         this.context = context;
+        this.currencySettings = new CurrencySettings(context, this);
         this.itemClickListener = itemClickListener;
     }
 
@@ -59,7 +65,21 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
         viewHolder.currentCurrencyAmount.setText(
                 MoneyUtils.convertCentsToDisplayAmount(boundEntry.amount));
-//        viewHolder.homeCurrencyAmount.setText("todo");
+
+        if (boundEntry.getDirectExchangeRate() > 0
+                && !boundEntry.currency.code.equals(currencySettings.getHomeCurrency().code)) {
+            viewHolder.homeCurrencyAmount.setVisibility(View.VISIBLE);
+
+            long homeAmount =
+                    (long) ((double) boundEntry.amount * boundEntry.getDirectExchangeRate());
+
+            String homeDisplayString = currencySettings.getHomeCurrency().symbol +
+                    MoneyUtils.convertCentsToDisplayAmount(homeAmount);
+
+            viewHolder.homeCurrencyAmount.setText(homeDisplayString);
+        } else {
+            viewHolder.homeCurrencyAmount.setVisibility(View.GONE);
+        }
 
         viewHolder.categoryTextView.setText(boundEntry.category.name);
         viewHolder.dateTextView.setText(DateUtils.getDisplayFormattedDate(boundEntry.utcDate));
@@ -75,6 +95,10 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
     @Override
     public int getItemCount() {
         return entries.size();
+    }
+
+    @Override
+    public void onHomeCurrencyChanged(Currency homeCurrency) {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
