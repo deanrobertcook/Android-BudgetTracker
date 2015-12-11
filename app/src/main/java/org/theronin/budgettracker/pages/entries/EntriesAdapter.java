@@ -1,5 +1,6 @@
 package org.theronin.budgettracker.pages.entries;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,16 +11,20 @@ import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.model.Entry;
 import org.theronin.budgettracker.utils.DateUtils;
 import org.theronin.budgettracker.utils.MoneyUtils;
+import org.theronin.budgettracker.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHolder> {
 
+    private Context context;
+
     private final OnItemClickListener itemClickListener;
     private List<Entry> entries = new ArrayList<>();
 
-    public EntriesAdapter(OnItemClickListener itemClickListener) {
+    public EntriesAdapter(Context context, OnItemClickListener itemClickListener) {
+        this.context = context;
         this.itemClickListener = itemClickListener;
     }
 
@@ -44,6 +49,10 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         final Entry boundEntry = entries.get(position);
+
+        if (position == 0) {
+            ViewUtils.addPadding(context, viewHolder.itemView, 0, 8, 0, 0);
+        }
 
         viewHolder.currentCurrencySymbolTextView.setText(boundEntry.currency.symbol);
         viewHolder.currentCurrencyCodeTextView.setText(boundEntry.currency.code);

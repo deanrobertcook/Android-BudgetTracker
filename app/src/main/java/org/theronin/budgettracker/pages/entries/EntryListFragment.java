@@ -71,7 +71,7 @@ public class EntryListFragment extends Fragment implements
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new EntriesAdapter(this);
+        adapter = new EntriesAdapter(getActivity(), this);
         recyclerView.setAdapter(adapter);
         return rootView;
     }
