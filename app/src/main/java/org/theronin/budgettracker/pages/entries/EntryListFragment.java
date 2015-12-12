@@ -2,6 +2,7 @@ package org.theronin.budgettracker.pages.entries;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
+import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -77,8 +78,13 @@ public class EntryListFragment extends Fragment implements
     }
 
     @Override
-    public void onClick(View listItemView) {
-        Timber.d("FAB clicked");
+    public void onClick(View button) {
+        switch (button.getId()) {
+            case R.id.fab__add_entry_button:
+                Timber.d("FAB clicked!");
+                Intent intent = new Intent(getActivity(), EntryDialogActivity.class);
+                getActivity().startActivity(intent);
+        }
     }
 
     @Override

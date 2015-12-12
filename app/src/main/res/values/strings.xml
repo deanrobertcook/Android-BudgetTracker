@@ -35,4 +35,5 @@
     <string name="edit_entry">Edit Entry</string>
     <string name="action_backup">Backup entries</string>
     <string name="action_restore">Restore from backup</string>
+    <string name="action_save">SAVE</string>
 </resources>

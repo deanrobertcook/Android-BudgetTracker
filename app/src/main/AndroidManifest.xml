@@ -29,6 +29,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="org.theronin.budgettracker.pages.entries.EntryDialogActivity"
+            android:parentActivityName="org.theronin.budgettracker.pages.main.MainActivity"
+            android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.theronin.budgettracker.pages.main.MainActivity"/>
+        </activity>
+        <activity
             android:name="org.theronin.budgettracker.pages.settings.SettingsActivity"
             android:label="@string/settings_activity"
             android:parentActivityName="org.theronin.budgettracker.pages.main.MainActivity"
