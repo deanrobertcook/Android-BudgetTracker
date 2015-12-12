@@ -4,10 +4,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.View;
 
 import org.theronin.budgettracker.R;
 
-public class EntryDialogActivity extends AppCompatActivity {
+import timber.log.Timber;
+
+public class EntryDialogActivity extends AppCompatActivity
+        implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +30,19 @@ public class EntryDialogActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_entry, menu);
+
+        View saveButton = menu.findItem(R.id.action_save).getActionView();
+        saveButton.setOnClickListener(this);
+
         return true;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.action_save:
+                Timber.d("Save button clicked");
+                break;
+        }
     }
 }
