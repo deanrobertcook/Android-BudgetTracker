@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.apache.commons.lang.WordUtils;
 import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.model.Currency;
 import org.theronin.budgettracker.model.Entry;
@@ -81,7 +82,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
             viewHolder.homeCurrencyAmount.setVisibility(View.GONE);
         }
 
-        viewHolder.categoryTextView.setText(boundEntry.category.name);
+        viewHolder.categoryTextView.setText(WordUtils.capitalize(boundEntry.category.name));
         viewHolder.dateTextView.setText(DateUtils.getDisplayFormattedDate(boundEntry.utcDate));
 
         viewHolder.moreOptionsView.setOnClickListener(new View.OnClickListener() {
