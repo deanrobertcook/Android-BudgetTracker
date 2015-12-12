@@ -37,24 +37,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.theronin.budgettracker.pages.main.MainActivity"/>
         </activity>
-        <activity
-            android:name="org.theronin.budgettracker.pages.entries.EntriesActivity"
-            android:label="@string/entries_activity"
-            android:parentActivityName="org.theronin.budgettracker.pages.main.MainActivity"
-            android:windowSoftInputMode="stateHidden">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.theronin.budgettracker.pages.main.MainActivity"/>
-        </activity>
-        <activity
-            android:name="org.theronin.budgettracker.pages.categories.CategoriesActivity"
-            android:label="@string/categories_activity"
-            android:parentActivityName="org.theronin.budgettracker.pages.main.MainActivity"
-            android:windowSoftInputMode="stateHidden">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.theronin.budgettracker.pages.main.MainActivity"/>
-        </activity>
 
     </application>
 
