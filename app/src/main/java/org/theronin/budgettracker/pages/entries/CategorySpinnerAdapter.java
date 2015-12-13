@@ -30,7 +30,7 @@ class CategorySpinnerAdapter extends ArrayAdapter<String> {
     private final int VIEW_TYPE_WITH_BORDER = 1;
 
     public CategorySpinnerAdapter(Context context) {
-        super(context, android.R.layout.simple_spinner_item);
+        super(context, R.layout.list_item__add_entry__category_spinner);
     }
 
     public void addAll(List<Category> categories) {
@@ -94,7 +94,7 @@ class CategorySpinnerAdapter extends ArrayAdapter<String> {
         switch (getItemViewType(position)) {
             case VIEW_TYPE_NORMAL:
                 itemView = inflater.inflate(
-                        android.R.layout.simple_dropdown_item_1line,
+                        R.layout.list_item__add_entry__category_spinner,
                         parent, false);
                 ((TextView) itemView).setText(categoryName);
                 break;
