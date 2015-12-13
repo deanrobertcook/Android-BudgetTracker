@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import org.apache.commons.lang.WordUtils;
 import org.theronin.budgettracker.R;
-import org.theronin.budgettracker.model.Currency;
 import org.theronin.budgettracker.model.Entry;
 import org.theronin.budgettracker.utils.CurrencySettings;
 import org.theronin.budgettracker.utils.DateUtils;
@@ -19,8 +18,7 @@ import org.theronin.budgettracker.utils.ViewUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHolder> implements
-        CurrencySettings.Listener {
+public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHolder> {
 
     private Context context;
 
@@ -31,7 +29,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
     public EntriesAdapter(Context context, OnItemClickListener itemClickListener) {
         this.context = context;
-        this.currencySettings = new CurrencySettings(context, this);
+        this.currencySettings = new CurrencySettings(context, null);
         this.itemClickListener = itemClickListener;
     }
 
@@ -96,10 +94,6 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
     @Override
     public int getItemCount() {
         return entries.size();
-    }
-
-    @Override
-    public void onHomeCurrencyChanged(Currency homeCurrency) {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -47,4 +47,9 @@ public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.L
     public void onHomeCurrencyChanged(Currency homeCurrency) {
         forceLoad();
     }
+
+    @Override
+    public void onCurrentCurrencyChanged(Currency currentCurrency) {
+
+    }
 }

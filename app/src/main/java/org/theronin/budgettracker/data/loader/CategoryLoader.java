@@ -110,4 +110,8 @@ public class CategoryLoader extends DataLoader<Category>
             forceLoad();
         }
     }
+
+    @Override
+    public void onCurrentCurrencyChanged(Currency currentCurrency) {
+    }
 }
