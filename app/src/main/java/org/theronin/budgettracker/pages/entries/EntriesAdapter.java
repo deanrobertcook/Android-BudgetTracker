@@ -65,21 +65,26 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         viewHolder.currentCurrencyAmount.setText(
                 MoneyUtils.convertCentsToDisplayAmount(boundEntry.amount));
 
-        if (boundEntry.getDirectExchangeRate() > 0
-                && !boundEntry.currency.code.equals(currencySettings.getHomeCurrency().code)) {
+        if (!boundEntry.currency.code.equals(currencySettings.getHomeCurrency().code)) {
             viewHolder.homeCurrencyAmount.setVisibility(View.VISIBLE);
 
-            long homeAmount =
-                    (long) ((double) boundEntry.amount * boundEntry.getDirectExchangeRate());
+            StringBuilder sb = new StringBuilder();
+            sb.append(currencySettings.getHomeCurrency().symbol);
 
-            String homeDisplayString = currencySettings.getHomeCurrency().symbol +
-                    MoneyUtils.convertCentsToDisplayAmount(homeAmount);
+            if (boundEntry.getDirectExchangeRate() > 0) {
+                long homeAmount =
+                        (long) ((double) boundEntry.amount * boundEntry.getDirectExchangeRate());
+                sb.append(MoneyUtils.convertCentsToDisplayAmount(homeAmount));
+            } else {
+                sb.append("??.??");
+            }
+            viewHolder.homeCurrencyAmount.setText(sb.toString());
 
-            viewHolder.homeCurrencyAmount.setText(homeDisplayString);
+
         } else {
             viewHolder.homeCurrencyAmount.setVisibility(View.GONE);
         }
-
+        
         viewHolder.categoryTextView.setText(WordUtils.capitalize(boundEntry.category.name));
         viewHolder.dateTextView.setText(DateUtils.getDisplayFormattedDate(boundEntry.utcDate));
 
