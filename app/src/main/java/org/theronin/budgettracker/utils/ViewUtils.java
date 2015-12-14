@@ -1,6 +1,7 @@
 package org.theronin.budgettracker.utils;
 
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 public class ViewUtils {
@@ -12,14 +13,15 @@ public class ViewUtils {
     public static void addPadding(Context context, View view,
                                   int left, int top, int right, int bottom) {
         view.setPadding(
-                view.getPaddingLeft() + getPixels(context, left),
-                view.getPaddingTop() + getPixels(context, top),
-                view.getPaddingRight() + getPixels(context, right),
-                view.getPaddingBottom() + getPixels(context, bottom)
+                view.getPaddingLeft() + dpToPx(context, left),
+                view.getPaddingTop() + dpToPx(context, top),
+                view.getPaddingRight() + dpToPx(context, right),
+                view.getPaddingBottom() + dpToPx(context, bottom)
         );
     }
 
-    public static int getPixels(Context context, int dp) {
-         return (int)(dp * (context.getResources().getDisplayMetrics().densityDpi / 160));
+    public static int dpToPx(Context context, int dp) {
+         return (int)(dp * (context.getResources()
+                 .getDisplayMetrics().density / DisplayMetrics.DENSITY_DEFAULT));
     }
 }
