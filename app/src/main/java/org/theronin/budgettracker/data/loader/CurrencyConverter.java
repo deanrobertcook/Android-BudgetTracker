@@ -55,22 +55,11 @@ public class CurrencyConverter {
                         calculateDirectExchangeRate(foreignExchangeRate) : -1.0;
                 entry.setDirectExchangeRate(directExchangeRate);
 
-                if (foreignExchangeRate == null) {
-                    addDateToMissingExchangeRateDays(entry.utcDate);
+                if (foreignExchangeRate == null &&
+                        !DateUtils.listContainsDate(missingExchangeRateDays, entry.utcDate)) {
+                    missingExchangeRateDays.add(entry.utcDate);
                 }
             }
-        }
-    }
-
-    protected void addDateToMissingExchangeRateDays(long utcDateToEnter) {
-        boolean alreadyContained = false;
-        for(Long utcDate: missingExchangeRateDays) {
-            if (DateUtils.sameDay(utcDate, utcDateToEnter)) {
-                alreadyContained = true;
-            }
-        }
-        if (!alreadyContained) {
-            missingExchangeRateDays.add(utcDateToEnter);
         }
     }
 

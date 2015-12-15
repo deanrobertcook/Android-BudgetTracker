@@ -5,6 +5,7 @@ import org.joda.time.DateTimeComparator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -53,5 +54,14 @@ public class DateUtils {
     public static long daysSince(long utcTime) {
         long diff = System.currentTimeMillis() - utcTime;
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+    }
+
+    public static boolean listContainsDate(List<Long> utcDates, long utcDateToCheck) {
+        for(Long utcDate: utcDates) {
+            if (DateUtils.sameDay(utcDate, utcDateToCheck)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
