@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import org.apache.commons.lang.WordUtils;
 import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.comparators.CategoryAlphabeticalComparator;
 import org.theronin.budgettracker.comparators.CategoryFrequencyComparator;
@@ -30,7 +31,7 @@ class CategorySpinnerAdapter extends ArrayAdapter<String> {
     private final int VIEW_TYPE_WITH_BORDER = 1;
 
     public CategorySpinnerAdapter(Context context) {
-        super(context, R.layout.list_item__add_entry__category_spinner);
+        super(context, R.layout.category_spinner__closed_layout);
     }
 
     public void addAll(List<Category> categories) {
@@ -86,9 +87,17 @@ class CategorySpinnerAdapter extends ArrayAdapter<String> {
     }
 
     @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        String categoryName = WordUtils.capitalize(getItem(position));
+        TextView closedView = (TextView) super.getView(position, convertView, parent);
+        closedView.setText(categoryName);
+        return closedView;
+    }
+
+    @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         View itemView = null;
-        String categoryName = getItem(position);
+        String categoryName = WordUtils.capitalize(getItem(position));
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
         switch (getItemViewType(position)) {

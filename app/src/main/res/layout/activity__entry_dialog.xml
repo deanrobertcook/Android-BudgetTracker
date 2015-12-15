@@ -15,10 +15,64 @@
         android:orientation="vertical"
         android:padding="@dimen/material_default_margin">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/material_default_margin">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textColor="#888888"
+                    android:paddingLeft="4dp"
+                    android:text="@string/select_category"/>
+
+                <Spinner
+                    style="@style/Widget.AppCompat.Spinner.Underlined"
+                    android:id="@+id/spn__add_entry_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:spinnerMode="dialog"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:paddingLeft="4dp"
+                    android:textColor="#888888"
+                    android:text="@string/select_date"/>
+
+                <TextView
+                    android:id="@+id/tv__add_entry_date"
+                    style="@style/Widget.AppCompat.Spinner.Underlined"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:fontFamily="sans-serif"
+                    android:text="12. Dec"
+                    android:textSize="18sp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:gravity="center_vertical"
                       android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:paddingBottom="@dimen/material_default_margin">
+                      android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tv__add_entry_currency__symbol"
@@ -28,7 +82,7 @@
                 android:fontFamily="sans-serif-thin"
                 android:includeFontPadding="false"
                 android:text="$"
-                android:textSize="96sp"
+                android:textSize="84sp"
                 />
 
             <LinearLayout
@@ -46,11 +100,11 @@
                     android:imeOptions="actionDone"
                     android:includeFontPadding="false"
                     android:inputType="number"
-                    android:maxLength="9"
+                    android:maxLength="13"
                     android:maxLines="1"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginLeft="4dp"
                     android:text="10.50"
-                    android:textSize="56sp"/>
+                    android:textSize="44sp"/>
 
                 <TextView
                     android:id="@+id/tv__add_entry_currency__code"
@@ -59,31 +113,9 @@
                     android:layout_gravity="left|bottom"
                     android:includeFontPadding="false"
                     android:text="AUD"
-                    android:textSize="24sp"/>
+                    android:textSize="20sp"/>
 
             </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Spinner
-                android:id="@+id/spn__add_entry_category"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="3"/>
-
-            <TextView
-                android:id="@+id/tv__add_entry_date"
-                style="@android:style/Widget.DeviceDefault.Light.Spinner"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:text="12. Dec"
-                android:textSize="16sp"/>
-
         </LinearLayout>
 
     </LinearLayout>

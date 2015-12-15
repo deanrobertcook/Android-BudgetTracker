@@ -36,4 +36,7 @@
     <string name="action_backup">Backup entries</string>
     <string name="action_restore">Restore from backup</string>
     <string name="action_save">SAVE</string>
+
+    <string name="select_category">Category</string>
+    <string name="select_date">Date</string>
 </resources>
