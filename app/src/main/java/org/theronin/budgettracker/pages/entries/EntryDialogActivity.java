@@ -4,7 +4,6 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Loader;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -119,7 +118,6 @@ public class EntryDialogActivity extends AppCompatActivity
         switch (view.getId()) {
             case R.id.action_save:
                 passInputToStore();
-                finish();
                 break;
         }
     }
@@ -240,7 +238,7 @@ public class EntryDialogActivity extends AppCompatActivity
                         (Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
-            NavUtils.navigateUpFromSameTask(this);
+            finish();
         }
 
     }
