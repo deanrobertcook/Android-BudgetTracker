@@ -72,8 +72,8 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
             sb.append(currencySettings.getHomeCurrency().symbol);
 
             if (boundEntry.getDirectExchangeRate() > 0) {
-                long homeAmount =
-                        (long) ((double) boundEntry.amount * boundEntry.getDirectExchangeRate());
+                long homeAmount = Math.round(
+                        (double) boundEntry.amount * boundEntry.getDirectExchangeRate());
                 sb.append(MoneyUtils.convertCentsToDisplayAmount(homeAmount));
             } else {
                 sb.append("??.??");
