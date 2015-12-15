@@ -28,6 +28,8 @@ import org.theronin.budgettracker.task.FileBackupAgent;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<List<Entry>>,
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Timber.d("onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__main);
 
@@ -82,17 +85,31 @@ public class MainActivity extends AppCompatActivity implements
 
         switch (page) {
             case ENTRIES:
+                EntryListFragment entryListFragment = (EntryListFragment)
+                        getFragmentManager().findFragmentByTag(EntryListFragment.TAG);
+
+                if (entryListFragment == null) {
+                    entryListFragment = new EntryListFragment();
+                }
+
                 getFragmentManager().beginTransaction()
                         .replace(R.id.fl__main_content,
-                                new EntryListFragment(),
+                                entryListFragment,
                                 EntryListFragment.TAG)
                         .commit();
                 return true;
 
             case CATEGORIES:
+                CategoryListFragment categoryListFragment = (CategoryListFragment)
+                        getFragmentManager().findFragmentByTag(CategoryListFragment.TAG);
+
+                if (categoryListFragment == null) {
+                    categoryListFragment = new CategoryListFragment();
+                }
+
                 getFragmentManager().beginTransaction()
                         .replace(R.id.fl__main_content,
-                                new CategoryListFragment(),
+                                categoryListFragment,
                                 CategoryListFragment.TAG)
                         .commit();
                 return true;

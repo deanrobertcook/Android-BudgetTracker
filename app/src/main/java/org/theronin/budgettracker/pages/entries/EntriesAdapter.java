@@ -84,7 +84,6 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         } else {
             viewHolder.homeCurrencyAmount.setVisibility(View.GONE);
         }
-
         viewHolder.categoryTextView.setText(WordUtils.capitalize(boundEntry.category.name));
         viewHolder.dateTextView.setText(DateUtils.getDisplayFormattedDate(boundEntry.utcDate));
 
