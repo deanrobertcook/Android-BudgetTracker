@@ -63,7 +63,7 @@ public class EntryDialogActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity__add_entry);
+        setContentView(R.layout.activity__entry_dialog);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tb__toolbar);
         toolbar.setTitle("Add Entry");
