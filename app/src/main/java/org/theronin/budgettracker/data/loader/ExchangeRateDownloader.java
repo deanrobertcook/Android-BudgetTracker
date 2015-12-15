@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.theronin.budgettracker.data.DataSourceExchangeRate;
 import org.theronin.budgettracker.model.ExchangeRate;
 import org.theronin.budgettracker.utils.DateUtils;
 
@@ -35,15 +36,28 @@ public class ExchangeRateDownloader {
 
     private final Set<String> currenciesToSave;
 
-    public ExchangeRateDownloader(String[] currenciesToSave) {
+    private final DataSourceExchangeRate dataSource;
+
+    public ExchangeRateDownloader(String[] currenciesToSave, DataSourceExchangeRate dataSource) {
         if (currenciesToSave == null || currenciesToSave.length == 0) {
             throw new IllegalArgumentException("currenciesToSave cannot be null and must contain" +
                     " at least one currency to save");
         }
         this.currenciesToSave = new HashSet<>(Arrays.asList(currenciesToSave));
+        this.dataSource = dataSource;
     }
 
-    public List<ExchangeRate> downloadExchangeRates(long utcDate) {
+    public void downloadExchangeRateDataForDays(List<Long> days) {
+        for (Long utcDate : days) {
+            List<ExchangeRate> downloadedRates = downloadExchangeRatesOnDay(utcDate);
+            if (!downloadedRates.isEmpty()) {
+                dataSource.bulkInsert(downloadedRates);
+            }
+        }
+        Timber.d("All days finished downloading");
+    }
+
+    public List<ExchangeRate> downloadExchangeRatesOnDay(long utcDate) {
         //TODO check the network connection
         URL url = buildUrlFromTimestamp(utcDate);
         String jsonString = downloadJson(url);

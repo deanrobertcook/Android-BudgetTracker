@@ -73,7 +73,7 @@ public class ExchangeRateDownloaderTest {
         String jsonString = exchangeRateDownloader.downloadJson(url);
         List<ExchangeRate> localExchangeRates = exchangeRateDownloader.getRatesFromJson(jsonString, 0);
 
-        List<ExchangeRate> downloadedExchangeRates = exchangeRateDownloader.downloadExchangeRates(utcDate);
+        List<ExchangeRate> downloadedExchangeRates = exchangeRateDownloader.downloadExchangeRatesOnDay(utcDate);
 
         assertEquals("Exchange rate counts differ", localExchangeRates.size(), downloadedExchangeRates.size());
     }

@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import timber.log.Timber;
+
 public abstract class AbsDataSource<T> {
     protected BudgetTrackerApplication application;
     protected BudgetDbHelper dbHelper;
@@ -40,6 +42,7 @@ public abstract class AbsDataSource<T> {
         for (Observer observer : observers) {
             observer.onDataSourceChanged();
         }
+        Timber.d(this.getClass().toString() + " data set as invalid");
     }
 
     public long insert(T entity) {

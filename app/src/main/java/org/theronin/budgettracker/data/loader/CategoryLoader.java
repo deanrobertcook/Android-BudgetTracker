@@ -21,13 +21,12 @@ import java.util.List;
 public class CategoryLoader extends DataLoader<Category>
         implements AbsDataSource.Observer, CurrencySettings.Listener {
 
-    private DataSourceCategory dataSourceCategory;
-    private DataSourceEntry dataSourceEntry;
-    private DataSourceExchangeRate dataSourceExchangeRate;
+    private final DataSourceCategory dataSourceCategory;
+    private final DataSourceEntry dataSourceEntry;
+    private final DataSourceExchangeRate dataSourceExchangeRate;
 
-    private CurrencySettings currencySettings;
-
-    private String[] supportedCurrencies;
+    private final CurrencySettings currencySettings;
+    private final ExchangeRateDownloader downloader;
 
     private boolean calculateTotals;
 
@@ -37,11 +36,12 @@ public class CategoryLoader extends DataLoader<Category>
         dataSourceCategory = application.getDataSourceCategory();
         dataSourceEntry = application.getDataSourceEntry();
         dataSourceExchangeRate = application.getDataSourceExchangeRate();
-        setDataSources(dataSourceCategory, dataSourceEntry, dataSourceExchangeRate);
+        setObservedDataSources(dataSourceCategory, dataSourceEntry, dataSourceExchangeRate);
 
         currencySettings = new CurrencySettings(activity, this);
-
-        supportedCurrencies = getContext().getResources().getStringArray(R.array.currency_codes);
+        String[] supportedCurrencies = getContext().getResources()
+                .getStringArray(R.array.currency_codes);
+        downloader = new ExchangeRateDownloader(supportedCurrencies, dataSourceExchangeRate);
 
         this.calculateTotals = calculateTotals;
     }
@@ -63,7 +63,7 @@ public class CategoryLoader extends DataLoader<Category>
                 calculateTotals(categories, allEntries);
                 return categories;
             } else {
-                downloadMissingData(converter.getMissingExchangeRateDays());
+                downloader.downloadExchangeRateDataForDays(converter.getMissingExchangeRateDays());
                 //the data is not ready, just return a blank list
                 //this thread will be started again when the data is inserted
                 return new ArrayList<>();
@@ -91,16 +91,6 @@ public class CategoryLoader extends DataLoader<Category>
             }
             category.setTotal(categoryTotal);
             category.setMissingEntries(missingEntries);
-        }
-    }
-
-    private void downloadMissingData(List<Long> missingExchangeRateDays) {
-        for (Long utcDate : missingExchangeRateDays) {
-            List<ExchangeRate> downloadedRates =
-                    new ExchangeRateDownloader(supportedCurrencies).downloadExchangeRates(utcDate);
-            if (!downloadedRates.isEmpty()) {
-                dataSourceExchangeRate.bulkInsert(downloadedRates);
-            }
         }
     }
 

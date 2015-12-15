@@ -119,6 +119,7 @@ public class EntryDialogActivity extends AppCompatActivity
         switch (view.getId()) {
             case R.id.action_save:
                 passInputToStore();
+                finish();
                 break;
         }
     }

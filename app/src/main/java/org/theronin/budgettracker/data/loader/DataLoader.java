@@ -7,6 +7,8 @@ import org.theronin.budgettracker.data.AbsDataSource;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 public abstract class DataLoader<T> extends AsyncTaskLoader<List<T>>
     implements AbsDataSource.Observer {
 
@@ -17,7 +19,7 @@ public abstract class DataLoader<T> extends AsyncTaskLoader<List<T>>
         super(context);
     }
 
-    protected void setDataSources(AbsDataSource ... dataSources) {
+    protected void setObservedDataSources(AbsDataSource... dataSources) {
         this.dataSources = dataSources;
     }
 
@@ -54,6 +56,7 @@ public abstract class DataLoader<T> extends AsyncTaskLoader<List<T>>
 
     @Override
     public void onDataSourceChanged() {
+        Timber.d(this.getClass().toString() + " onDataSourceChanged()");
         forceLoad();
     }
 

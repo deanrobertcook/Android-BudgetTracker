@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements
 
         switch (page) {
             case ENTRIES:
+                Timber.d("Creating Entries List");
                 EntryListFragment entryListFragment = (EntryListFragment)
                         getFragmentManager().findFragmentByTag(EntryListFragment.TAG);
 
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements
                 return true;
 
             case CATEGORIES:
+                Timber.d("Creating Categories List");
                 CategoryListFragment categoryListFragment = (CategoryListFragment)
                         getFragmentManager().findFragmentByTag(CategoryListFragment.TAG);
 

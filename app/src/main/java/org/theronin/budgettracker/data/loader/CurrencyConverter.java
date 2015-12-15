@@ -8,8 +8,6 @@ import org.theronin.budgettracker.utils.DateUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import timber.log.Timber;
-
 public class CurrencyConverter {
 
     //TODO move in an instance of the DataSourceExchange rate so that this class can control
@@ -44,13 +42,13 @@ public class CurrencyConverter {
     public void assignExchangeRatesToEntries(List<Entry> allEntries) {
         missingExchangeRateDays = new ArrayList<>();
         for (Entry entry : allEntries) {
-            Timber.d(entry.toString());
+//            Timber.d(entry.toString());
             if (entry.currency.code.equals(homeCurrency.code)) {
-                Timber.d("Entry currency code matches home currency code");
+//                Timber.d("Entry currency code matches home currency code");
                 entry.setDirectExchangeRate(1);
             } else {
-                Timber.d("Entry currency differs from home currency - calculating equivalent " +
-                        "value");
+//                Timber.d("Entry currency differs from home currency - calculating equivalent " +
+//                        "value");
 
                 ExchangeRate foreignExchangeRate = searchExchangeRates(entry, allExchangeRates);
                 double directExchangeRate = foreignExchangeRate != null ?
