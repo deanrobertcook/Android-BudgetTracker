@@ -1,9 +1,9 @@
 package org.theronin.budgettracker.data.loader;
 
 import android.app.Activity;
+import android.content.Intent;
 
 import org.theronin.budgettracker.BudgetTrackerApplication;
-import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.data.AbsDataSource;
 import org.theronin.budgettracker.data.DataSourceCategory;
 import org.theronin.budgettracker.data.DataSourceEntry;
@@ -14,9 +14,10 @@ import org.theronin.budgettracker.model.Entry;
 import org.theronin.budgettracker.model.ExchangeRate;
 import org.theronin.budgettracker.utils.CurrencySettings;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static org.theronin.budgettracker.data.loader.ExchangeRateDownloadService.UTC_DATE_KEY;
 
 public class CategoryLoader extends DataLoader<Category>
         implements AbsDataSource.Observer, CurrencySettings.Listener {
@@ -26,7 +27,6 @@ public class CategoryLoader extends DataLoader<Category>
     private final DataSourceExchangeRate dataSourceExchangeRate;
 
     private final CurrencySettings currencySettings;
-    private final ExchangeRateDownloader downloader;
 
     private boolean calculateTotals;
 
@@ -39,9 +39,6 @@ public class CategoryLoader extends DataLoader<Category>
         setObservedDataSources(dataSourceCategory, dataSourceEntry, dataSourceExchangeRate);
 
         currencySettings = new CurrencySettings(activity, this);
-        String[] supportedCurrencies = getContext().getResources()
-                .getStringArray(R.array.currency_codes);
-        downloader = new ExchangeRateDownloader(supportedCurrencies, dataSourceExchangeRate);
 
         this.calculateTotals = calculateTotals;
     }
@@ -55,19 +52,18 @@ public class CategoryLoader extends DataLoader<Category>
             List<Entry> allEntries = dataSourceEntry.query();
             List<ExchangeRate> allExchangeRates = dataSourceExchangeRate.query();
 
-            CurrencyConverter converter =
-                    new CurrencyConverter(currencySettings.getHomeCurrency(), allExchangeRates);
+            CurrencyConverter converter = new CurrencyConverter(currencySettings
+                    .getHomeCurrency(), allExchangeRates);
             converter.assignExchangeRatesToEntries(allEntries);
 
-            if (converter.getMissingExchangeRateDays().isEmpty()) {
-                calculateTotals(categories, allEntries);
-                return categories;
-            } else {
-                downloader.downloadExchangeRateDataForDays(converter.getMissingExchangeRateDays());
-                //the data is not ready, just return a blank list
-                //this thread will be started again when the data is inserted
-                return new ArrayList<>();
+            for (Long date : converter.getMissingExchangeRateDays()) {
+                Intent serviceIntent = new Intent(getContext(), ExchangeRateDownloadService.class);
+                serviceIntent.putExtra(UTC_DATE_KEY, date);
+                getContext().startService(serviceIntent);
             }
+
+            calculateTotals(categories, allEntries);
+            return categories;
         }
     }
 

@@ -25,6 +25,7 @@ public abstract class DataLoader<T> extends AsyncTaskLoader<List<T>>
 
     @Override
     public void deliverResult(List<T> data) {
+        Timber.d(this.getClass().getSimpleName() + " deliverResults()");
         this.data = data;
         if (isStarted()) {
             super.deliverResult(data);
@@ -33,6 +34,7 @@ public abstract class DataLoader<T> extends AsyncTaskLoader<List<T>>
 
     @Override
     protected void onStartLoading() {
+        Timber.d(this.getClass().getSimpleName() + " onStartLoading()");
         if (data != null) {
             deliverResult(data);
         }
@@ -56,23 +58,26 @@ public abstract class DataLoader<T> extends AsyncTaskLoader<List<T>>
 
     @Override
     public void onDataSourceChanged() {
-        Timber.d(this.getClass().toString() + " onDataSourceChanged()");
+        Timber.d(this.getClass().getSimpleName() + " onDataSourceChanged()");
         forceLoad();
     }
 
     @Override
     protected void onStopLoading() {
+        Timber.d(this.getClass().getSimpleName() + " onStopLoading()");
         cancelLoad();
     }
 
     @Override
     protected void onReset() {
+        Timber.d(this.getClass().getSimpleName() + " onReset()");
         onStopLoading();
         unregisterFromDataSources();
     }
 
     private void unregisterFromDataSources() {
         for (AbsDataSource absDataSource : dataSources) {
+            Timber.d(this.getClass().getSimpleName() + " unregistering from " + absDataSource.getClass().getSimpleName());
             absDataSource.unregisterObserver(this);
         }
     }

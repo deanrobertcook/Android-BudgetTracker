@@ -1,9 +1,9 @@
 package org.theronin.budgettracker.data.loader;
 
 import android.app.Activity;
+import android.content.Intent;
 
 import org.theronin.budgettracker.BudgetTrackerApplication;
-import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.data.BudgetContract.EntryView;
 import org.theronin.budgettracker.data.DataSourceEntry;
 import org.theronin.budgettracker.data.DataSourceExchangeRate;
@@ -16,13 +16,14 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static org.theronin.budgettracker.data.loader.ExchangeRateDownloadService.UTC_DATE_KEY;
+
 public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.Listener {
 
     private final DataSourceEntry dataSourceEntry;
     private final DataSourceExchangeRate dataSourceExchangeRate;
 
     private final CurrencySettings currencySettings;
-    private final ExchangeRateDownloader downloader;
 
     public EntryLoader(Activity activity) {
         super(activity);
@@ -33,30 +34,23 @@ public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.L
         setObservedDataSources(dataSourceEntry, dataSourceExchangeRate);
 
         currencySettings = new CurrencySettings(activity, this);
-        String[] supportedCurrencies = getContext().getResources()
-                .getStringArray(R.array.currency_codes);
-        downloader = new ExchangeRateDownloader(supportedCurrencies, dataSourceExchangeRate);
-
     }
 
     @Override
     public List<Entry> loadInBackground() {
+        Timber.d("loadInBackground");
         List<Entry> entries = dataSourceEntry.query(null, null,
                 EntryView.COL_DATE + " DESC, " + EntryView._ID + " DESC");
         List<ExchangeRate> allExchangeRates = dataSourceExchangeRate.query();
 
-        final CurrencyConverter converter =
-                new CurrencyConverter(currencySettings.getHomeCurrency(), allExchangeRates);
+        final CurrencyConverter converter = new CurrencyConverter(currencySettings
+                .getHomeCurrency(), allExchangeRates);
         converter.assignExchangeRatesToEntries(entries);
 
-        if (!converter.getMissingExchangeRateDays().isEmpty()) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    //TODO this should be a form of singleton that only accepts one request at a time
-                    downloader.downloadExchangeRateDataForDays(converter.getMissingExchangeRateDays());
-                }
-            }).start();
+        for (Long date : converter.getMissingExchangeRateDays()) {
+            Intent serviceIntent = new Intent(getContext(), ExchangeRateDownloadService.class);
+            serviceIntent.putExtra(UTC_DATE_KEY, date);
+            getContext().startService(serviceIntent);
         }
 
         Timber.d("Returning entries");

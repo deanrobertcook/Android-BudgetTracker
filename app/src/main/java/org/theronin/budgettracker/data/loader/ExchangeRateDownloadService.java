@@ -1,9 +1,14 @@
 package org.theronin.budgettracker.data.loader;
 
+import android.app.IntentService;
+import android.content.Intent;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.theronin.budgettracker.BudgetTrackerApplication;
+import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.data.DataSourceExchangeRate;
 import org.theronin.budgettracker.model.ExchangeRate;
 import org.theronin.budgettracker.utils.DateUtils;
@@ -17,15 +22,17 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import timber.log.Timber;
 
-public class ExchangeRateDownloader {
-    public static final String TAG = ExchangeRateDownloader.class.getName();
+public class ExchangeRateDownloadService extends IntentService {
+
+    public static String UTC_DATE_KEY = ExchangeRateDownloadService.class.getName() + ":UTC_DATE_KEY";
+
+    private DataSourceExchangeRate dataSourceExchangeRate;
+
+    private List<Long> utcDatesQueuedToDownload;
 
     protected static final String OPEN_EXCHANGE_URL = "https://openexchangerates" +
             ".org/api/historical/%s.json?app_id=%s";
@@ -34,30 +41,53 @@ public class ExchangeRateDownloader {
 
     private static final String RATES_KEY = "rates";
 
-    private final Set<String> currenciesToSave;
-
-    private final DataSourceExchangeRate dataSource;
-
-    public ExchangeRateDownloader(String[] currenciesToSave, DataSourceExchangeRate dataSource) {
-        if (currenciesToSave == null || currenciesToSave.length == 0) {
-            throw new IllegalArgumentException("currenciesToSave cannot be null and must contain" +
-                    " at least one currency to save");
-        }
-        this.currenciesToSave = new HashSet<>(Arrays.asList(currenciesToSave));
-        this.dataSource = dataSource;
+    public ExchangeRateDownloadService() {
+        super(ExchangeRateDownloadService.class.getName());
     }
 
-    public void downloadExchangeRateDataForDays(List<Long> days) {
-        for (Long utcDate : days) {
+    @Override
+    public void onCreate() {
+        Timber.d("onCreate()");
+        this.utcDatesQueuedToDownload = new ArrayList<>();
+        this.dataSourceExchangeRate = ((BudgetTrackerApplication) getApplication())
+                .getDataSourceExchangeRate();
+        super.onCreate();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Timber.d("onStartCommand");
+
+        Long utcDateToDownload = intent.getLongExtra(UTC_DATE_KEY, -1);
+        if (DateUtils.listContainsDate(utcDatesQueuedToDownload, utcDateToDownload)) {
+            intent.removeExtra(UTC_DATE_KEY); //marks as pointless to download
+            Timber.d("Data for date already in queue: neuter the intent");
+        } else {
+            utcDatesQueuedToDownload.add(utcDateToDownload);
+        }
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        Timber.d("onHandleIntent()");
+        if (intent.hasExtra(UTC_DATE_KEY)) {
+            Long utcDate = intent.getLongExtra(UTC_DATE_KEY, -1);
+            if(utcDate == -1) {
+                throw new IllegalStateException("The date should not be -1 at this point");
+            }
+            Timber.d("Downloading for date: " + DateUtils.getStorageFormattedDate(utcDate) +
+                    " (" + utcDate + ")");
             List<ExchangeRate> downloadedRates = downloadExchangeRatesOnDay(utcDate);
             if (!downloadedRates.isEmpty()) {
-                dataSource.bulkInsert(downloadedRates);
+                Timber.d("Inserting entries into the database");
+                dataSourceExchangeRate.bulkInsert(downloadedRates);
             }
+            utcDatesQueuedToDownload.remove(utcDate);
         }
-        Timber.d("All days finished downloading");
     }
 
-    public List<ExchangeRate> downloadExchangeRatesOnDay(long utcDate) {
+    private List<ExchangeRate> downloadExchangeRatesOnDay(long utcDate) {
         //TODO check the network connection
         URL url = buildUrlFromTimestamp(utcDate);
         String jsonString = downloadJson(url);
@@ -149,7 +179,10 @@ public class ExchangeRateDownloader {
                 .getAsJsonObject(RATES_KEY);
 
         List<ExchangeRate> exchangeRates = new ArrayList<>();
-        for (String currencyCode : currenciesToSave) {
+
+        String[] supportedCurrencies = getResources()
+                .getStringArray(R.array.currency_codes);
+        for (String currencyCode : supportedCurrencies) {
             double usdRate = -1.0;
             if (ratesObject != null && ratesObject.has(currencyCode)) {
                 usdRate = ratesObject.get(currencyCode).getAsDouble();

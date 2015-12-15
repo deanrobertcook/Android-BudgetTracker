@@ -18,6 +18,8 @@
             android:name="com.google.android.backup.api_key"
             android:value="AEdPqrEAAAAIuGJiE6loq6iPMlSp3iBrDdZoYzHo-v24QSQD_Q"/>
 
+        <service android:name=".data.loader.ExchangeRateDownloadService"/>
+
         <activity
             android:name="org.theronin.budgettracker.pages.main.MainActivity"
             android:label="@string/app_name"
