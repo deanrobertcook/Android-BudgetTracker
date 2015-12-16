@@ -36,26 +36,6 @@
         <item name="android:calendarTextColor">@color/text_color_primary</item>
     </style>
 
-    <style name="QuickBarStyle">
-        <item name="android:background">@color/primary</item>
-        <item name="android:elevation">@dimen/toolbar_elevation</item>
-    </style>
-
-    <style name="TitleStyle">
-        <item name="android:textSize">@dimen/font_size_medium</item>
-        <item name="android:gravity">center_vertical</item>
-    </style>
-
-    <style name="CurrencyDisplayStyle" parent="@android:style/Widget.Material.EditText">
-        <item name="android:textSize">@dimen/font_size_medium</item>
-        <item name="android:background">@color/primary</item>
-    </style>
-
-    <style name="MainMenuTextStyle">
-        <item name="android:textSize">@dimen/font_size_medium</item>
-        <item name="android:gravity">center</item>
-    </style>
-
     <style name="ListItemStyle">
         <item name="android:textSize">@dimen/font_size_small</item>
         <item name="android:gravity">center_vertical</item>
