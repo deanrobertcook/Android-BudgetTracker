@@ -2,6 +2,8 @@ package org.theronin.budgettracker.data.loader;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -71,6 +73,12 @@ public class ExchangeRateDownloadService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Timber.d("onHandleIntent()");
+
+        if (!hasNetworkAccess()) {
+            //Just drop the request, the next time we try to calculate rates we'll request it again
+            return;
+        }
+
         if (intent.hasExtra(UTC_DATE_KEY)) {
             Long utcDate = intent.getLongExtra(UTC_DATE_KEY, -1);
             if(utcDate == -1) {
@@ -87,8 +95,13 @@ public class ExchangeRateDownloadService extends IntentService {
         }
     }
 
+    private boolean hasNetworkAccess() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
     private List<ExchangeRate> downloadExchangeRatesOnDay(long utcDate) {
-        //TODO check the network connection
         URL url = buildUrlFromTimestamp(utcDate);
         String jsonString = downloadJson(url);
         return getRatesFromJson(jsonString, utcDate);
