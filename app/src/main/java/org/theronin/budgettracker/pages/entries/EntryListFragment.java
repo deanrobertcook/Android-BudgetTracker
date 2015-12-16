@@ -13,9 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
-import com.mikepenz.iconics.IconicsDrawable;
-
 import org.theronin.budgettracker.BudgetTrackerApplication;
 import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.data.BudgetContract.EntryView;
@@ -57,12 +54,6 @@ public class EntryListFragment extends Fragment implements
 
         FloatingActionButton floatingActionButton =
                 (FloatingActionButton) rootView.findViewById(R.id.fab__add_entry_button);
-        floatingActionButton.setImageDrawable(
-                new IconicsDrawable(getActivity())
-                        .icon(GoogleMaterial.Icon.gmd_add)
-                        .sizeDp(24)
-                        .colorRes(R.color.md_white_1000)
-        );
         floatingActionButton.setOnClickListener(this);
 
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id

@@ -17,6 +17,7 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_margin="16dp"
+        android:src="@drawable/ic_add_white"
         app:layout_anchor="@id/recycler_view__entry_list"
         app:layout_anchorGravity="bottom|right|end"/>
 

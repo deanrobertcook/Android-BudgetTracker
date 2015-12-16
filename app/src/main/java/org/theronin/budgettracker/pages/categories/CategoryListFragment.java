@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Loader;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,8 +18,10 @@ import org.theronin.budgettracker.model.Category;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class CategoryListFragment extends Fragment implements
-        LoaderCallbacks<List<Category>> {
+        LoaderCallbacks<List<Category>>, View.OnClickListener {
 
     public static final String TAG = CategoryListFragment.class.getName();
 
@@ -36,6 +39,10 @@ public class CategoryListFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment__category_list, container, false);
+
+        FloatingActionButton floatingActionButton =
+                (FloatingActionButton) rootView.findViewById(R.id.fab__add_category_button);
+        floatingActionButton.setOnClickListener(this);
 
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id
                 .recycler_view__category_list);
@@ -63,5 +70,14 @@ public class CategoryListFragment extends Fragment implements
     @Override
     public void onLoaderReset(Loader<List<Category>> loader) {
         adapter.setCategories(new ArrayList<Category>());
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab__add_category_button:
+                Timber.d("FAB clicked");
+            break;
+        }
     }
 }
