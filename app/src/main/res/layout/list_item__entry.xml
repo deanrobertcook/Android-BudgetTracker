@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="72dp"
+              android:layout_height="@dimen/list_item__height_three_lines"
               android:paddingLeft="@dimen/material_default_margin">
 
     <include layout="@layout/widget__amount_display_with_home_currency"/>
@@ -12,7 +12,7 @@
         android:layout_weight="1"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:paddingLeft="16dp">
+        android:paddingLeft="@dimen/material_default_margin">
 
         <TextView
             android:id="@+id/tv__list_item__entry__category"

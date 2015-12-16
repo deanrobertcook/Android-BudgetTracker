@@ -4,7 +4,8 @@
 
 
     <!-- Entry List Dimensions -->
-    <dimen name="list_item__height_two_line_compact">56dp</dimen>
+    <dimen name="list_item__height_three_lines">72dp</dimen>
+
     <dimen name="list_item__entry_current_currency_symbol">24sp</dimen>
     <dimen name="list_item__entry_current_currency_code">8sp</dimen>
     <dimen name="list_item__entry_main_text_size">13sp</dimen>

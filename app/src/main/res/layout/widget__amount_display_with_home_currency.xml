@@ -8,7 +8,7 @@
     <include layout="@layout/widget__amount_display"/>
 
     <TextView
-        android:id="@+id/tv__list_item__entry__home_currency__amount"
+        android:id="@+id/tv__widget_amount_display__home_currency__amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="end"

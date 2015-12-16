@@ -116,11 +116,11 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         public ViewHolder(View view) {
             super(view);;
 
-            currentCurrencySymbolTextView = (TextView) itemView.findViewById(R.id.tv__list_item__entry__current_currency__symbol);
-            currentCurrencyCodeTextView = (TextView) itemView.findViewById(R.id.tv__list_item__entry__current_currency__code);
+            currentCurrencySymbolTextView = (TextView) itemView.findViewById(R.id.tv__widget_amount_display__current_currency__symbol);
+            currentCurrencyCodeTextView = (TextView) itemView.findViewById(R.id.tv__widget_amount_display__current_currency__code);
 
-            currentCurrencyAmount = (TextView) itemView.findViewById(R.id.tv__list_item__entry__current_currency__amount);
-            homeCurrencyAmount = (TextView) itemView.findViewById(R.id.tv__list_item__entry__home_currency__amount);
+            currentCurrencyAmount = (TextView) itemView.findViewById(R.id.tv__widget_amount_display__current_currency__amount);
+            homeCurrencyAmount = (TextView) itemView.findViewById(R.id.tv__widget_amount_display__home_currency__amount);
 
             categoryTextView = (TextView) itemView.findViewById(R.id.tv__list_item__entry__category);
             dateTextView = (TextView) itemView.findViewById(R.id.tv__list_item__entry__date);
