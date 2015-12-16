@@ -22,7 +22,7 @@ public class DateUtils {
         SimpleDateFormat sdf;
 
         if (daysSince(utcTime) < DAYS_IN_YEAR) {
-            sdf = new SimpleDateFormat("dd MMM.", locale);
+            sdf = new SimpleDateFormat("dd MMM", locale);
         } else {
             sdf = new SimpleDateFormat("dd.MM.yy", locale);
         }

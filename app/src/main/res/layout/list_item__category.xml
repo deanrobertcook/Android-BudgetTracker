@@ -2,54 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:padding="@dimen/padding_single">
+              android:layout_height="@dimen/list_item__height_three_lines"
+              android:paddingEnd="@dimen/material_default_margin"
+              android:paddingStart="@dimen/material_default_margin">
 
-    <TextView
-        android:id="@+id/tv__name_column"
+    <include
+        android:id="@+id/amount_display_total"
+        layout="@layout/widget__amount_display"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="4"
-        style="@style/ListItemStyle"/>
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
 
     <LinearLayout
-        android:id="@+id/ll__currency_total"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:paddingRight="@dimen/padding_single"
-        android:paddingLeft="@dimen/padding_single">
-
-        <include layout="@layout/currency_display_small"/>
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv__total_column"
+        android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:gravity="right"
-        style="@style/ListItemStyle"/>
+        android:layout_weight="2"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/material_default_margin">
 
-    <LinearLayout
-        android:id="@+id/ll__currency_monthly"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:paddingRight="@dimen/padding_single"
-        android:paddingLeft="@dimen/padding_single">
+        <TextView
+            android:id="@+id/tv__name_column"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="16sp"/>
 
-        <include layout="@layout/currency_display_small"/>
+        <TextView
+            android:id="@+id/tv__date_since"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textColor="@color/text_color_secondary"
+            android:textSize="14sp"/>
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv__monthly_column"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:gravity="right"
-        style="@style/ListItemStyle"/>
 
 </LinearLayout>

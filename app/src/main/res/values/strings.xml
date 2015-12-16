@@ -39,4 +39,6 @@
 
     <string name="select_category">Category</string>
     <string name="select_date">Date</string>
+
+    <string name="date_since">Since %s</string>
 </resources>

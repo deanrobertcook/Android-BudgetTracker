@@ -10,10 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.apache.commons.lang.WordUtils;
 import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.comparators.CategoryTotalComparator;
 import org.theronin.budgettracker.model.Category;
 import org.theronin.budgettracker.model.Currency;
+import org.theronin.budgettracker.utils.DateUtils;
 import org.theronin.budgettracker.utils.MoneyUtils;
 
 import java.util.ArrayList;
@@ -62,7 +64,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         Category category = categories.get(position);
 
-        viewHolder.nameTextView.setText(category.name);
+        viewHolder.nameTextView.setText(WordUtils.capitalize(category.name));
 
         viewHolder.currencySymbolTotalView.setText(homeCurrency.symbol);
         viewHolder.currencyCodeTotalView.setText(homeCurrency.code);
@@ -70,11 +72,9 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         viewHolder.totalTextView.setText(createAmountDisplay(category.getMissingEntries(),
                 category.getTotal()));
 
-        viewHolder.currencySymbolMonthlyView.setText(homeCurrency.symbol);
-        viewHolder.currencyCodeMonthlyView.setText(homeCurrency.code);
-
-        viewHolder.monthlyTextView.setText(createAmountDisplay(category.getMissingEntries(),
-                category.getMonthlyAverage()));
+        viewHolder.dateSinceTextView.setText(
+                String.format(context.getString(R.string.date_since),
+                        DateUtils.getDisplayFormattedDate(category.utcFirstEntryDate)));
     }
 
     private String createAmountDisplay(int missingEntries, long amount) {
@@ -101,31 +101,24 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
         public TextView currencySymbolTotalView;
         public TextView currencyCodeTotalView;
-        public TextView currencySymbolMonthlyView;
-        public TextView currencyCodeMonthlyView;
         public TextView nameTextView;
         public TextView totalTextView;
-        public TextView monthlyTextView;
+        public TextView dateSinceTextView;
 
         public ViewHolder(View listItemView) {
             super(listItemView);
             nameTextView = (TextView) listItemView.findViewById(R.id.tv__name_column);
 
-            View currencyTotalView = listItemView.findViewById(R.id.ll__currency_total);
+            View currencyTotalView = listItemView.findViewById(R.id.amount_display_total);
             currencySymbolTotalView = (TextView) currencyTotalView.findViewById(R.id
-                    .tv__list_item__currency__symbol);
+                    .tv__widget_amount_display__current_currency__symbol);
             currencyCodeTotalView = (TextView) currencyTotalView.findViewById(R.id
-                    .tv__list_item__currency__code);
+                    .tv__widget_amount_display__current_currency__code);
+            totalTextView = (TextView) currencyTotalView.findViewById(R.id
+                    .tv__widget_amount_display__current_currency__amount);
 
-            totalTextView = (TextView) listItemView.findViewById(R.id.tv__total_column);
+            dateSinceTextView = (TextView) listItemView.findViewById(R.id.tv__date_since);
 
-            View currencyMonthlyView = listItemView.findViewById(R.id.ll__currency_monthly);
-            currencySymbolMonthlyView = (TextView) currencyMonthlyView.findViewById(R.id
-                    .tv__list_item__currency__symbol);
-            currencyCodeMonthlyView = (TextView) currencyMonthlyView.findViewById(R.id
-                    .tv__list_item__currency__code);
-
-            monthlyTextView = (TextView) listItemView.findViewById(R.id.tv__monthly_column);
         }
     }
 }
