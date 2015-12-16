@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_vertical"
+              android:orientation="vertical">
+
+    <include layout="@layout/widget__amount_display"/>
+
+    <TextView
+        android:id="@+id/tv__list_item__entry__home_currency__amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="€6.60"
+        android:textColor="@color/text_color_secondary"
+        android:textSize="11sp"/>
+
+</LinearLayout>
