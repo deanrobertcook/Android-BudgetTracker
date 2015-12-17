@@ -37,9 +37,4 @@
     <style name="DatePickerStyle" parent="@android:style/Widget.Material.Light.DatePicker">
         <item name="android:calendarTextColor">@color/text_color_primary</item>
     </style>
-
-    <style name="OptionsDialogStyle" parent="Theme.AppCompat.Dialog">
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowCloseOnTouchOutside">true</item>
-    </style>
 </resources>
