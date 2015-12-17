@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -19,8 +20,11 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import org.theronin.budgettracker.BudgetTrackerApplication;
 import org.theronin.budgettracker.R;
+import org.theronin.budgettracker.data.DataSourceCategory;
 import org.theronin.budgettracker.data.loader.EntryLoader;
+import org.theronin.budgettracker.model.Category;
 import org.theronin.budgettracker.model.Entry;
+import org.theronin.budgettracker.pages.categories.CategoryDialogFragment;
 import org.theronin.budgettracker.pages.categories.CategoryListFragment;
 import org.theronin.budgettracker.pages.entries.EntryListFragment;
 import org.theronin.budgettracker.pages.settings.SettingsActivity;
@@ -34,7 +38,8 @@ import timber.log.Timber;
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<List<Entry>>,
         FileBackupAgent.Listener,
-        Drawer.OnDrawerItemClickListener {
+        Drawer.OnDrawerItemClickListener,
+        CategoryDialogFragment.Container {
 
     private static final String TAG = MainActivity.class.getName();
 
@@ -224,5 +229,24 @@ public class MainActivity extends AppCompatActivity implements
         return setPage(page);
     }
 
+    @Override
+    public void onCategoryCreated(String categoryName) {
+        if (categoryName != null && categoryName.length() > 0) {
+            DataSourceCategory dataSource = ((BudgetTrackerApplication) getApplication()).getDataSourceCategory();
+            long id = dataSource.insert(new Category(sanitiseCategoryName(categoryName)));
+            if (id == -1) {
+                Toast.makeText(this, R.string.duplicate_category_error, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, R.string.category_creation_success, Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, R.string.empty_category_name_error, Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    private String sanitiseCategoryName(String categoryName) {
+        categoryName = categoryName.toLowerCase();
+        categoryName = categoryName.trim();
+        return categoryName;
+    }
 }

@@ -21,7 +21,8 @@ import java.util.List;
 import timber.log.Timber;
 
 public class CategoryListFragment extends Fragment implements
-        LoaderCallbacks<List<Category>>, View.OnClickListener {
+        LoaderCallbacks<List<Category>>,
+        View.OnClickListener {
 
     public static final String TAG = CategoryListFragment.class.getName();
 
@@ -77,7 +78,8 @@ public class CategoryListFragment extends Fragment implements
         switch (v.getId()) {
             case R.id.fab__add_category_button:
                 Timber.d("FAB clicked");
-            break;
+                new CategoryDialogFragment().show(getFragmentManager(), CategoryDialogFragment.TAG);
+                break;
         }
     }
 }
