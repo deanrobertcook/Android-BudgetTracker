@@ -14,7 +14,6 @@ import org.theronin.budgettracker.model.Entry;
 import org.theronin.budgettracker.utils.CurrencySettings;
 import org.theronin.budgettracker.utils.DateUtils;
 import org.theronin.budgettracker.utils.MoneyUtils;
-import org.theronin.budgettracker.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -59,11 +58,10 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         final Entry boundEntry = entries.get(position);
 
-        if (position == 0) {
-            ViewUtils.addPadding(context, viewHolder.itemView, 0, 8, 0, 0);
-        }
+        viewHolder.contentLayout.setTag(R.id.entry_id, boundEntry.id);
 
-        viewHolder.itemView.setTag(R.id.entry_id, boundEntry.id);
+        displayDateBorder(viewHolder, position, DateUtils.getDisplayFormattedDate(boundEntry.utcDate));
+
         viewHolder.currentCurrencySymbolTextView.setText(boundEntry.currency.symbol);
         viewHolder.currentCurrencyCodeTextView.setText(boundEntry.currency.code);
 
@@ -90,9 +88,30 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
             viewHolder.homeCurrencyAmount.setVisibility(View.GONE);
         }
         viewHolder.categoryTextView.setText(WordUtils.capitalize(boundEntry.category.name));
-        viewHolder.dateTextView.setText(DateUtils.getDisplayFormattedDate(boundEntry.utcDate));
 
-        selectionManager.listenToItemView(viewHolder.itemView);
+        selectionManager.listenToItemView(viewHolder.contentLayout);
+    }
+
+    private void displayDateBorder(ViewHolder viewHolder, int position, String formattedDate) {
+        if (shouldDisplayDateBorder(position)) {
+            viewHolder.dateBorderTextView.setVisibility(View.VISIBLE);
+            viewHolder.dateBorder.setVisibility(View.VISIBLE);
+            viewHolder.dateBorderTextView.setText(formattedDate);
+        } else {
+            viewHolder.dateBorderTextView.setVisibility(View.GONE);
+            viewHolder.dateBorder.setVisibility(View.GONE);
+        }
+    }
+
+    private boolean shouldDisplayDateBorder(int position) {
+        if (position == 0) {
+            return true;
+        }
+
+        Entry currentEntry = entries.get(position);
+        Entry lastEntry = entries.get(position - 1);
+
+        return !DateUtils.sameDay(currentEntry.utcDate, lastEntry.utcDate);
     }
 
     @Override
@@ -102,6 +121,11 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
+        public final TextView dateBorderTextView;
+        public final View dateBorder;
+
+        public final View contentLayout;
+
         public final TextView currentCurrencySymbolTextView;
         public final TextView currentCurrencyCodeTextView;
 
@@ -109,19 +133,22 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         public final TextView homeCurrencyAmount;
 
         public final TextView categoryTextView;
-        public final TextView dateTextView;
 
         public ViewHolder(View view) {
-            super(view);;
+            super(view);
 
-            currentCurrencySymbolTextView = (TextView) itemView.findViewById(R.id.tv__widget_amount_display__current_currency__symbol);
-            currentCurrencyCodeTextView = (TextView) itemView.findViewById(R.id.tv__widget_amount_display__current_currency__code);
+            dateBorderTextView = (TextView) itemView.findViewById(R.id.tv__date_boundary_display);
+            dateBorder = itemView.findViewById(R.id.v__date_boundary_border);
 
-            currentCurrencyAmount = (TextView) itemView.findViewById(R.id.tv__widget_amount_display__current_currency__amount);
-            homeCurrencyAmount = (TextView) itemView.findViewById(R.id.tv__widget_amount_display__home_currency__amount);
+            contentLayout = itemView.findViewById(R.id.ll__list_item__content_layout);
 
-            categoryTextView = (TextView) itemView.findViewById(R.id.tv__list_item__entry__category);
-            dateTextView = (TextView) itemView.findViewById(R.id.tv__list_item__entry__date);
+            currentCurrencySymbolTextView = (TextView) contentLayout.findViewById(R.id.tv__widget_amount_display__current_currency__symbol);
+            currentCurrencyCodeTextView = (TextView) contentLayout.findViewById(R.id.tv__widget_amount_display__current_currency__code);
+
+            currentCurrencyAmount = (TextView) contentLayout.findViewById(R.id.tv__widget_amount_display__current_currency__amount);
+            homeCurrencyAmount = (TextView) contentLayout.findViewById(R.id.tv__widget_amount_display__home_currency__amount);
+
+            categoryTextView = (TextView) contentLayout.findViewById(R.id.tv__list_item__entry__category);
         }
     }
 
