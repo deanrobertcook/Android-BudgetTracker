@@ -48,4 +48,8 @@
     <string name="empty_category_name_error">Please enter a name for the new category.</string>
     <string name="duplicate_category_error">This category has already been created.</string>
     <string name="category_creation_success">Category successfully added.</string>
+    <string name="delete_selection_dialog_title">Delete Selection?</string>
+    <string name="delete_selection_dialog_positive_button">DELETE</string>
+    <string name="delete_selection_dialog_negative_button">CANCEL</string>
+    <string name="delete_selection_dialog_message">Are you sure you want to delete these %d entries? This action cannot be undone.</string>
 </resources>

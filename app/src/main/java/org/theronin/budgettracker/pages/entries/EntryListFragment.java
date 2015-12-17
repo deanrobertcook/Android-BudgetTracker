@@ -16,19 +16,22 @@ import android.widget.Toast;
 import org.theronin.budgettracker.BudgetTrackerApplication;
 import org.theronin.budgettracker.R;
 import org.theronin.budgettracker.data.BudgetContract.EntryView;
+import org.theronin.budgettracker.data.DataSourceEntry;
 import org.theronin.budgettracker.data.loader.EntryLoader;
 import org.theronin.budgettracker.model.Entry;
+import org.theronin.budgettracker.pages.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import timber.log.Timber;
 
 public class EntryListFragment extends Fragment implements
         View.OnClickListener,
-        EntriesAdapter.OnItemClickListener,
-        EntryOptionsDialogFragment.Container,
-        LoaderManager.LoaderCallbacks<List<Entry>> {
+        EntriesAdapter.SelectionListener,
+        LoaderManager.LoaderCallbacks<List<Entry>>,
+        DeleteSelectionDialogFragment.Container {
 
     public static final String TAG = EntryListFragment.class.getName();
 
@@ -79,27 +82,6 @@ public class EntryListFragment extends Fragment implements
     }
 
     @Override
-    public void onItemClicked(Entry entrySelected) {
-        this.entrySelected = entrySelected;
-        EntryOptionsDialogFragment fragment = EntryOptionsDialogFragment.newInstance(this);
-        fragment.show(getFragmentManager(), "entryClickedDialog");
-    }
-
-    @Override
-    public void onDeleteClicked() {
-        if (entrySelected != null) {
-            boolean wasDeleted = ((BudgetTrackerApplication) getActivity().getApplication())
-                    .getDataSourceEntry().delete(entrySelected);
-            if (wasDeleted) {
-                Toast.makeText(getActivity(), "Entry deleted", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
-            }
-        }
-        entrySelected = null;
-    }
-
-    @Override
     public Loader<List<Entry>> onCreateLoader(int id, Bundle args) {
         return new EntryLoader(getActivity());
     }
@@ -112,5 +94,60 @@ public class EntryListFragment extends Fragment implements
     @Override
     public void onLoaderReset(Loader<List<Entry>> loader) {
         adapter.setEntries(new ArrayList<Entry>());
+    }
+
+    @Override
+    public void onPause() {
+        adapter.exitSelectMode();
+        super.onPause();
+    }
+
+    @Override
+    public void onEnterSelectMode() {
+        Timber.d("onEnterSelectMode");
+        ((MainActivity) getActivity()).setSelectMode(true);
+        getActivity().invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onExitSelectMode() {
+        Timber.d("onExitSelectMode");
+        ((MainActivity) getActivity()).setSelectMode(false);
+        getActivity().invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onItemSelected(int count) {
+        Timber.d(count + " items selected");
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle(count + " selected");
+    }
+
+    @Override
+    public void onDeleteSelectionClicked() {
+        Timber.d("onDeleteSelectionClicked");
+        int count = adapter.getSelection().size();
+        DeleteSelectionDialogFragment dialogFragment = DeleteSelectionDialogFragment.newInstance(this, count);
+        dialogFragment.show(getFragmentManager(), DeleteSelectionDialogFragment.TAG);
+    }
+
+    @Override
+    public void onDeleteSelectionConfirmed() {
+        Timber.d("onDeleteSelectionConfirmed");
+        Set<Entry> selectedEntries = adapter.getSelection();
+
+        DataSourceEntry dataSource = ((BudgetTrackerApplication) getActivity().getApplication()).getDataSourceEntry();
+
+        for (Entry entry : selectedEntries) {
+            dataSource.delete(entry);
+        }
+
+        Toast.makeText(getActivity(), selectedEntries.size() + " entries deleted.", Toast.LENGTH_SHORT).show();
+        adapter.exitSelectMode();
+    }
+
+    @Override
+    public void onCancelSelectionClicked() {
+        Timber.d("onCancelSelectionClicked");
+        adapter.exitSelectMode();
     }
 }

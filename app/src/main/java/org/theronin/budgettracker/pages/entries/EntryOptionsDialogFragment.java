@@ -46,7 +46,7 @@ public class EntryOptionsDialogFragment extends DialogFragment implements View.O
         this.dismiss();
     }
 
-    public void setContainer(Container container) {
+    private void setContainer(Container container) {
         this.container = container;
     }
 

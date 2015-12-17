@@ -26,6 +26,7 @@ import org.theronin.budgettracker.model.Category;
 import org.theronin.budgettracker.model.Entry;
 import org.theronin.budgettracker.pages.categories.CategoryDialogFragment;
 import org.theronin.budgettracker.pages.categories.CategoryListFragment;
+import org.theronin.budgettracker.pages.entries.EntriesAdapter.SelectionListener;
 import org.theronin.budgettracker.pages.entries.EntryListFragment;
 import org.theronin.budgettracker.pages.settings.SettingsActivity;
 import org.theronin.budgettracker.task.FileBackupAgent;
@@ -47,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements
     private Toolbar toolbar;
 
     private Drawer navDrawer;
+
+    private boolean selectMode;
 
     private final static String CURRENT_PAGE_KEY = "CURRENT_PAGE";
     private Page currentPage;
@@ -85,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements
             return false;
         }
         currentPage = page;
-        toolbar.setTitle(page.title);
         navDrawer.setSelection(page.id);
 
         switch (page) {
@@ -96,6 +98,9 @@ public class MainActivity extends AppCompatActivity implements
 
                 if (entryListFragment == null) {
                     entryListFragment = new EntryListFragment();
+                    //only set the title if the fragment is null
+                    //TODO this feels dirty
+                    toolbar.setTitle(page.title);
                 }
 
                 getFragmentManager().beginTransaction()
@@ -112,6 +117,9 @@ public class MainActivity extends AppCompatActivity implements
 
                 if (categoryListFragment == null) {
                     categoryListFragment = new CategoryListFragment();
+                    //only set the title if the fragment is null
+                    //TODO this feels dirty
+                    toolbar.setTitle(page.title);
                 }
 
                 getFragmentManager().beginTransaction()
@@ -166,8 +174,18 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        if (selectMode) {
+            getMenuInflater().inflate(R.menu.menu_select_mode, menu);
+        } else {
+            toolbar.setTitle(currentPage.title);
+            getMenuInflater().inflate(R.menu.menu_main, menu);
+        }
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -183,6 +201,16 @@ public class MainActivity extends AppCompatActivity implements
                 return true;
             case R.id.action_restore:
                 restoreEntries();
+                return true;
+
+            /**
+             * We can count on their being a SelectionListener ONLY if these menu items exist
+             */
+            case R.id.action_delete_selection:
+                deleteSelection();
+                return true;
+            case R.id.action_cancel_selection:
+                cancelSelection();
                 return true;
         }
 
@@ -200,6 +228,20 @@ public class MainActivity extends AppCompatActivity implements
 
     private void restoreEntries() {
         new FileBackupAgent().restoreEntriesFromBackup(this);
+    }
+
+    private void deleteSelection() {
+        SelectionListener selectionListener = (SelectionListener) getFragmentManager().findFragmentById(R.id.fl__main_content);
+        selectionListener.onDeleteSelectionClicked();
+    }
+
+    private void cancelSelection() {
+        SelectionListener selectionListener = (SelectionListener) getFragmentManager().findFragmentById(R.id.fl__main_content);
+        selectionListener.onCancelSelectionClicked();
+    }
+
+    public void setSelectMode(boolean selectMode) {
+        this.selectMode = selectMode;
     }
 
     @Override
