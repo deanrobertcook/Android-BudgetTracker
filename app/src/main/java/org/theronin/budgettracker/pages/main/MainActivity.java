@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         Timber.d("onCreate");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity__main);
+        setContentView(R.layout.activity__basic);
 
         toolbar = (Toolbar) findViewById(R.id.tb__toolbar);
         //TODO figure out why having this here prevents "BudgetTracker" from appearing...
