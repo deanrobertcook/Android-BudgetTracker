@@ -40,33 +40,37 @@
                   android:paddingRight="@dimen/material_default_margin">
 
         <include
-            layout="@layout/widget__amount_display_with_home_currency"
+            layout="@layout/widget__amount_display"
+            android:id="@+id/widget__amount_display__current"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"/>
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv__list_item__entry__category"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/material_default_margin">
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="@dimen/material_default_margin"
 
-            <TextView
-                android:id="@+id/tv__list_item__entry__category"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:fontFamily="sans-serif"
-                android:maxLines="1"
-                android:paddingBottom="2dp"
-                android:text="A Much Longer Category That Will Overflow"
-                android:textSize="16sp"/>
+            android:ellipsize="end"
+            android:fontFamily="sans-serif"
+            android:maxLines="1"
+            android:paddingBottom="2dp"
+            android:text="A Much Longer Category That Will Overflow"
+            android:textSize="16sp"/>
 
-        </LinearLayout>
-
+        <include
+            layout="@layout/widget__amount_display"
+            android:id="@+id/widget__amount_display__home"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:visibility="invisible"
+            />
     </LinearLayout>
 
 

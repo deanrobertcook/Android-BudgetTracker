@@ -64,30 +64,19 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
         viewHolder.currentCurrencySymbolTextView.setText(boundEntry.currency.symbol);
         viewHolder.currentCurrencyCodeTextView.setText(boundEntry.currency.code);
+        viewHolder.currentCurrencyAmount.setText(MoneyUtils.convertCentsToDisplayAmount(boundEntry.amount));
 
-        viewHolder.currentCurrencyAmount.setText(
-                MoneyUtils.convertCentsToDisplayAmount(boundEntry.amount));
+        viewHolder.categoryTextView.setText(WordUtils.capitalize(boundEntry.category.name));
 
         if (!boundEntry.currency.code.equals(currencySettings.getHomeCurrency().code)) {
-            viewHolder.homeCurrencyAmount.setVisibility(View.VISIBLE);
+            viewHolder.homeCurrencyDisplay.setVisibility(View.VISIBLE);
 
-            StringBuilder sb = new StringBuilder();
-            sb.append(currencySettings.getHomeCurrency().symbol);
-
-            if (boundEntry.getDirectExchangeRate() > 0) {
-                long homeAmount = Math.round(
-                        (double) boundEntry.amount * boundEntry.getDirectExchangeRate());
-                sb.append(MoneyUtils.convertCentsToDisplayAmount(homeAmount));
-            } else {
-                sb.append("??.??");
-            }
-            viewHolder.homeCurrencyAmount.setText(sb.toString());
-
-
+            viewHolder.homeCurrencySymbolTextView.setText(currencySettings.getHomeCurrency().symbol);
+            viewHolder.homeCurrencyCodeTextView.setText(currencySettings.getHomeCurrency().code);
+            viewHolder.homeCurrencyAmount.setText(getHomeCurrencyAmount(boundEntry));
         } else {
-            viewHolder.homeCurrencyAmount.setVisibility(View.GONE);
+            viewHolder.homeCurrencyDisplay.setVisibility(View.INVISIBLE);
         }
-        viewHolder.categoryTextView.setText(WordUtils.capitalize(boundEntry.category.name));
 
         selectionManager.listenToItemView(viewHolder.contentLayout);
     }
@@ -114,6 +103,18 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         return !DateUtils.sameDay(currentEntry.utcDate, lastEntry.utcDate);
     }
 
+    private String getHomeCurrencyAmount(Entry entry) {
+        StringBuilder sb = new StringBuilder();
+
+        if (entry.getDirectExchangeRate() > 0) {
+            long homeAmount = Math.round((double) entry.amount * entry.getDirectExchangeRate());
+            sb.append(MoneyUtils.convertCentsToDisplayAmount(homeAmount));
+        } else {
+            sb.append("??.??");
+        }
+        return sb.toString();
+    }
+
     @Override
     public int getItemCount() {
         return entries.size();
@@ -128,11 +129,14 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
         public final TextView currentCurrencySymbolTextView;
         public final TextView currentCurrencyCodeTextView;
-
         public final TextView currentCurrencyAmount;
-        public final TextView homeCurrencyAmount;
 
         public final TextView categoryTextView;
+
+        private final View homeCurrencyDisplay;
+        private final TextView homeCurrencySymbolTextView;
+        private final TextView homeCurrencyCodeTextView;
+        private final TextView homeCurrencyAmount;
 
         public ViewHolder(View view) {
             super(view);
@@ -142,13 +146,17 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
             contentLayout = itemView.findViewById(R.id.ll__list_item__content_layout);
 
-            currentCurrencySymbolTextView = (TextView) contentLayout.findViewById(R.id.tv__widget_amount_display__current_currency__symbol);
-            currentCurrencyCodeTextView = (TextView) contentLayout.findViewById(R.id.tv__widget_amount_display__current_currency__code);
-
-            currentCurrencyAmount = (TextView) contentLayout.findViewById(R.id.tv__widget_amount_display__current_currency__amount);
-            homeCurrencyAmount = (TextView) contentLayout.findViewById(R.id.tv__widget_amount_display__home_currency__amount);
+            View currentCurrencyDisplay = contentLayout.findViewById(R.id.widget__amount_display__current);
+            currentCurrencySymbolTextView = (TextView) currentCurrencyDisplay.findViewById(R.id.tv__widget_amount_display__current_currency__symbol);
+            currentCurrencyCodeTextView = (TextView) currentCurrencyDisplay.findViewById(R.id.tv__widget_amount_display__current_currency__code);
+            currentCurrencyAmount = (TextView) currentCurrencyDisplay.findViewById(R.id.tv__widget_amount_display__current_currency__amount);
 
             categoryTextView = (TextView) contentLayout.findViewById(R.id.tv__list_item__entry__category);
+
+            homeCurrencyDisplay = contentLayout.findViewById(R.id.widget__amount_display__home);
+            homeCurrencySymbolTextView = (TextView) homeCurrencyDisplay.findViewById(R.id.tv__widget_amount_display__current_currency__symbol);
+            homeCurrencyCodeTextView = (TextView) homeCurrencyDisplay.findViewById(R.id.tv__widget_amount_display__current_currency__code);
+            homeCurrencyAmount = (TextView) homeCurrencyDisplay.findViewById(R.id.tv__widget_amount_display__current_currency__amount);
         }
     }
 
