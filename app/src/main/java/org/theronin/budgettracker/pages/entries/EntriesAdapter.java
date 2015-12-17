@@ -137,8 +137,8 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         void onEnterSelectMode();
         void onExitSelectMode();
         void onItemSelected(int count);
-        void onDeleteSelectionClicked();
-        void onCancelSelectionClicked();
+        void deleteSelection();
+        void cancelSelection();
     }
 
     private class SelectionManager implements View.OnClickListener, View.OnLongClickListener {

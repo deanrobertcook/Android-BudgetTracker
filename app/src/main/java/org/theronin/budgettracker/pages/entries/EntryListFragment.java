@@ -123,8 +123,8 @@ public class EntryListFragment extends Fragment implements
     }
 
     @Override
-    public void onDeleteSelectionClicked() {
-        Timber.d("onDeleteSelectionClicked");
+    public void deleteSelection() {
+        Timber.d("deleteSelection");
         int count = adapter.getSelection().size();
         DeleteSelectionDialogFragment dialogFragment = DeleteSelectionDialogFragment.newInstance(this, count);
         dialogFragment.show(getFragmentManager(), DeleteSelectionDialogFragment.TAG);
@@ -146,8 +146,10 @@ public class EntryListFragment extends Fragment implements
     }
 
     @Override
-    public void onCancelSelectionClicked() {
-        Timber.d("onCancelSelectionClicked");
+    public void cancelSelection() {
+        Timber.d("cancelSelection");
         adapter.exitSelectMode();
     }
+
+
 }

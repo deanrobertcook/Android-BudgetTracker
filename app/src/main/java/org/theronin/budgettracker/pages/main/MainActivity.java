@@ -231,13 +231,15 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void deleteSelection() {
-        SelectionListener selectionListener = (SelectionListener) getFragmentManager().findFragmentById(R.id.fl__main_content);
-        selectionListener.onDeleteSelectionClicked();
+        selectionListener().deleteSelection();
+    }
+
+    private SelectionListener selectionListener() {
+        return (SelectionListener) getFragmentManager().findFragmentById(R.id.fl__main_content);
     }
 
     private void cancelSelection() {
-        SelectionListener selectionListener = (SelectionListener) getFragmentManager().findFragmentById(R.id.fl__main_content);
-        selectionListener.onCancelSelectionClicked();
+        selectionListener().cancelSelection();
     }
 
     public void setSelectMode(boolean selectMode) {
@@ -290,5 +292,14 @@ public class MainActivity extends AppCompatActivity implements
         categoryName = categoryName.toLowerCase();
         categoryName = categoryName.trim();
         return categoryName;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (selectMode) {
+            selectionListener().cancelSelection();
+        } else {
+            super.onBackPressed();
+        }
     }
 }
