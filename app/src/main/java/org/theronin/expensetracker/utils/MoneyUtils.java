@@ -10,6 +10,9 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 public class MoneyUtils {
 
@@ -37,15 +40,22 @@ public class MoneyUtils {
         return new Currency(currencyCode, currencySymbol);
     }
 
-    public static String getDisplay(long cents) {
-        return getDisplay(cents, false);
+    public static String getDisplay(Context context, long cents) {
+        return getDisplay(context, cents, false);
     }
 
-    public static String getDisplayCompact(long cents) {
-        return getDisplay(cents, true);
+    public static String getDisplayCompact(Context context, long cents) {
+        return getDisplay(context, cents, true);
     }
 
-    private static String getDisplay(long cents, boolean compact) {
+    private static final NavigableMap<Long, Integer> suffixes = new TreeMap<>();
+    static {
+        suffixes.put(1_000_00L, R.string.suffix_thousand);
+        suffixes.put(1_000_000_00L, R.string.suffix_million);
+        suffixes.put(1_000_000_000_00L, R.string.suffix_billion);
+    }
+
+    private static String getDisplay(Context context, long cents, boolean compact) {
         if (cents < 0) {
             return "-.--";
         }
@@ -54,28 +64,22 @@ public class MoneyUtils {
         numberFormat.setGroupingUsed(true);
         numberFormat.setMinimumFractionDigits(2);
 
-        String placeHolder = "";
+        String suffix = "";
         if (compact) {
-            if (cents >= 100000000) {
-                cents = cents / 1000000;
-                placeHolder = "m";
-                numberFormat.setMaximumFractionDigits(1);
-            }
-            if (cents >= 1000000) {
-                cents = cents / 1000;
-                placeHolder = "k";
+            if (cents >= 10_000_00L) {
+                Map.Entry<Long, Integer> mapEntry = suffixes.floorEntry(cents);
+                suffix = context.getString(mapEntry.getValue());
+                cents = cents / (mapEntry.getKey() / 100);
                 numberFormat.setMaximumFractionDigits(1);
 
-            } else if (cents >= 10000) {
+            } else if (cents >= 100_00L) {
                 numberFormat.setMaximumFractionDigits(0);
             }
         }
 
         BigDecimal centsFormatted = new BigDecimal(Long.toString(cents)).setScale(2, BigDecimal.ROUND_FLOOR);
-
         BigDecimal parsed = centsFormatted.divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
-
-        return numberFormat.format((parsed)) + placeHolder;
+        return numberFormat.format((parsed)) + suffix;
     }
 
     /**

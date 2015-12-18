@@ -52,4 +52,7 @@
     <string name="delete_selection_dialog_positive_button">DELETE</string>
     <string name="delete_selection_dialog_negative_button">CANCEL</string>
     <string name="delete_selection_dialog_message">Are you sure you want to delete these %d entries? This action cannot be undone.</string>
+    <string name="suffix_thousand">k</string>
+    <string name="suffix_million">m</string>
+    <string name="suffix_billion">b</string>
 </resources>

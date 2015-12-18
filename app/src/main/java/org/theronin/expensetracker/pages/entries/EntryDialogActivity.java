@@ -154,7 +154,7 @@ public class EntryDialogActivity extends AppCompatActivity
     }
 
     private String currentAmountText() {
-        return MoneyUtils.getDisplay(currentAmount);
+        return MoneyUtils.getDisplay(this, currentAmount);
     }
 
     private long getAmountEditText() {
