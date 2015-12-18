@@ -26,7 +26,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:text="12 December 2015"
-                android:textColor="@color/text_color_secondary"
+                android:textColor="@color/primary"
                 android:textSize="14sp"/>
 
             <TextView
@@ -36,14 +36,14 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:text="€100.50"
-                android:textColor="@color/text_color_secondary"
+                android:textColor="@color/primary"
                 android:textSize="14sp"/>
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/text_color_secondary"/>
+            android:background="@color/primary"/>
 
     </LinearLayout>
 
