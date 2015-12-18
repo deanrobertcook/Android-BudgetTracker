@@ -64,7 +64,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
         viewHolder.currentCurrencySymbolTextView.setText(boundEntry.currency.symbol);
         viewHolder.currentCurrencyCodeTextView.setText(boundEntry.currency.code);
-        viewHolder.currentCurrencyAmount.setText(MoneyUtils.convertCentsToDisplayAmount(boundEntry.amount));
+        viewHolder.currentCurrencyAmount.setText(MoneyUtils.getDisplayCompact(boundEntry.amount));
 
         viewHolder.categoryTextView.setText(WordUtils.capitalize(boundEntry.category.name));
 
@@ -108,7 +108,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
         if (entry.getDirectExchangeRate() > 0) {
             long homeAmount = Math.round((double) entry.amount * entry.getDirectExchangeRate());
-            sb.append(MoneyUtils.convertCentsToDisplayAmount(homeAmount));
+            sb.append(MoneyUtils.getDisplayCompact(homeAmount));
         } else {
             sb.append("??.??");
         }

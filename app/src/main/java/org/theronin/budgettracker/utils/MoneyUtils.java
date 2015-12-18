@@ -37,51 +37,54 @@ public class MoneyUtils {
         return new Currency(currencyCode, currencySymbol);
     }
 
-    public static long convertToCents(String amount) {
-        String[] parts = amount.split("\\.");
-
-        long dollars = Long.parseLong(parts[0]);
-        long cents = 0;
-
-        if (parts.length == 2) {
-            String centsStr = parts[1];
-            cents = Long.parseLong(centsStr);
-            if (centsStr.length() == 1) {
-                cents = cents * 10;
-            }
-        }
-
-        return dollars * 100 + cents;
+    public static String getDisplay(long cents) {
+        return getDisplay(cents, false);
     }
 
-    public static String convertToDollars(long amount) {
-        if (amount < 0) {
-            return "-.--";
-        }
-        long cents = amount % 100;
-        String centsStr = Long.toString(cents);
-        if (cents < 10) {
-            centsStr = "0" + centsStr;
-        }
-
-        long dollars = amount / 100;
-        return Long.toString(dollars) + "." + centsStr;
+    public static String getDisplayCompact(long cents) {
+        return getDisplay(cents, true);
     }
 
-    public static String convertCentsToDisplayAmount(long cents){
+    private static String getDisplay(long cents, boolean compact) {
         if (cents < 0) {
             return "-.--";
         }
-        NumberFormat numberFormat = NumberFormat.getNumberInstance();
-        numberFormat.setMinimumFractionDigits(2);
-        numberFormat.setGroupingUsed(true);
 
-        BigDecimal parsed = new BigDecimal(Long.toString(cents)).setScale(2,BigDecimal.ROUND_FLOOR)
-                .divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
-        return numberFormat.format((parsed));
+        NumberFormat numberFormat = NumberFormat.getNumberInstance();
+        numberFormat.setGroupingUsed(true);
+        numberFormat.setMinimumFractionDigits(2);
+
+        String placeHolder = "";
+        if (compact) {
+            if (cents >= 100000000) {
+                cents = cents / 1000000;
+                placeHolder = "m";
+                numberFormat.setMaximumFractionDigits(1);
+            }
+            if (cents >= 1000000) {
+                cents = cents / 1000;
+                placeHolder = "k";
+                numberFormat.setMaximumFractionDigits(1);
+
+            } else if (cents >= 10000) {
+                numberFormat.setMaximumFractionDigits(0);
+            }
+        }
+
+        BigDecimal centsFormatted = new BigDecimal(Long.toString(cents)).setScale(2, BigDecimal.ROUND_FLOOR);
+
+        BigDecimal parsed = centsFormatted.divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
+
+        return numberFormat.format((parsed)) + placeHolder;
     }
 
-    public static long convertDisplayAmountToCents(String displayAmount) {
+    /**
+     * Converts a non-compact amount in display format back into cents
+     *
+     * @param displayAmount The amount in display format e.g. ($1,000.00)
+     * @return the amount in cents
+     */
+    public static long getCents(String displayAmount) {
         double result = 0;
         NumberFormat numberFormat = NumberFormat.getNumberInstance();
         numberFormat.setMinimumFractionDigits(2);
@@ -92,8 +95,7 @@ public class MoneyUtils {
             e.printStackTrace();
         }
 
-
-        return (long) (Math.round(result * 100));
+        return (Math.round(result * 100));
     }
 
 }

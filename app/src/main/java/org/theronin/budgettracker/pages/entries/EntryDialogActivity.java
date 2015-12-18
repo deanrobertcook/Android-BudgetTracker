@@ -50,7 +50,7 @@ public class EntryDialogActivity extends AppCompatActivity
     private TextView currencyCodeTextView;
 
     private EditText amountEditText;
-    private String currentAmountText;
+    private long currentAmount;
 
     private Spinner categorySpinner;
     private CategorySpinnerAdapter categorySpinnerAdapter;
@@ -145,17 +145,21 @@ public class EntryDialogActivity extends AppCompatActivity
     private void setAmountEditText(long amount) {
         amountEditText.removeTextChangedListener(this);
 
-        currentAmountText = MoneyUtils.convertCentsToDisplayAmount(amount);
+        currentAmount = amount;
 
-        amountEditText.setText(currentAmountText);
-        amountEditText.setSelection(currentAmountText.length());
+        amountEditText.setText(currentAmountText());
+        amountEditText.setSelection(currentAmountText().length());
 
         amountEditText.addTextChangedListener(this);
     }
 
+    private String currentAmountText() {
+        return MoneyUtils.getDisplay(currentAmount);
+    }
+
     private long getAmountEditText() {
         String displayAmount = amountEditText.getText().toString();
-        return MoneyUtils.convertDisplayAmountToCents(displayAmount);
+        return MoneyUtils.getCents(displayAmount);
     }
 
     private void setDateTextView(long utcTime) {
@@ -176,7 +180,7 @@ public class EntryDialogActivity extends AppCompatActivity
 
     @Override
     public void onTextChanged(CharSequence input, int start, int before, int count) {
-        if (!input.toString().equals(currentAmountText) && input.length() != 0) {
+        if (!input.toString().equals(currentAmountText()) && input.length() != 0) {
             String cleanString = input.toString().replaceAll("[,.]", "");
             long cents = Long.parseLong(cleanString);
             setAmountEditText(cents);

@@ -82,7 +82,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         if (missingEntries > 0) {
             sb.append("~");
         }
-        sb.append(MoneyUtils.convertCentsToDisplayAmount(amount));
+        sb.append(MoneyUtils.getDisplayCompact(amount));
         return sb.toString();
     }
 
