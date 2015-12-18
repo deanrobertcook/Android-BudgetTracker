@@ -60,7 +60,9 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
         viewHolder.contentLayout.setTag(R.id.entry_id, boundEntry.id);
 
-        displayDateBorder(viewHolder, position, DateUtils.getDisplayFormattedDate(boundEntry.utcDate));
+        String formattedDate = DateUtils.getDisplayFormattedDate(boundEntry.utcDate);
+        String formattedDayTotal = getFormattedDayTotal(boundEntry.utcDate);
+        displayDateBorder(viewHolder, position, formattedDate, formattedDayTotal);
 
         viewHolder.currentCurrencySymbolTextView.setText(boundEntry.currency.symbol);
         viewHolder.currentCurrencyCodeTextView.setText(boundEntry.currency.code);
@@ -81,14 +83,28 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         selectionManager.listenToItemView(viewHolder.contentLayout);
     }
 
-    private void displayDateBorder(ViewHolder viewHolder, int position, String formattedDate) {
+    private String getFormattedDayTotal(long utcDate) {
+        long total = 0;
+        int missingEntries = 0;
+        for (Entry entry : entries) {
+            if (DateUtils.sameDay(utcDate, entry.utcDate)) {
+                if (entry.getDirectExchangeRate() < 0) {
+                    missingEntries++;
+                }
+                total += Math.round((double) entry.amount * entry.getDirectExchangeRate());
+            }
+        }
+        return (missingEntries > 0 ? "~" : "") + currencySettings.getHomeCurrency().symbol + MoneyUtils.getDisplayCompact(context, total);
+    }
+
+    private void displayDateBorder(ViewHolder viewHolder, int position, String formattedDate, String formattedTotal) {
         if (shouldDisplayDateBorder(position)) {
-            viewHolder.dateBorderTextView.setVisibility(View.VISIBLE);
-            viewHolder.dateBorder.setVisibility(View.VISIBLE);
-            viewHolder.dateBorderTextView.setText(formattedDate);
+            viewHolder.borderLayout.setVisibility(View.VISIBLE);
+
+            viewHolder.borderDateTextView.setText(formattedDate);
+            viewHolder.borderTotalTextView.setText(formattedTotal);
         } else {
-            viewHolder.dateBorderTextView.setVisibility(View.GONE);
-            viewHolder.dateBorder.setVisibility(View.GONE);
+            viewHolder.borderLayout.setVisibility(View.GONE);
         }
     }
 
@@ -122,8 +138,9 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public final TextView dateBorderTextView;
-        public final View dateBorder;
+        public final View borderLayout;
+        public final TextView borderDateTextView;
+        private final TextView borderTotalTextView;
 
         public final View contentLayout;
 
@@ -141,8 +158,9 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         public ViewHolder(View view) {
             super(view);
 
-            dateBorderTextView = (TextView) itemView.findViewById(R.id.tv__date_boundary_display);
-            dateBorder = itemView.findViewById(R.id.v__date_boundary_border);
+            borderLayout = itemView.findViewById(R.id.ll__border);
+            borderDateTextView = (TextView) itemView.findViewById(R.id.tv__boundary_date);
+            borderTotalTextView = (TextView) itemView.findViewById(R.id.tv__boundary_total);
 
             contentLayout = itemView.findViewById(R.id.ll__list_item__content_layout);
 

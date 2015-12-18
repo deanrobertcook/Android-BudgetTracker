@@ -81,8 +81,7 @@ public class CategoryLoader extends DataLoader<Category>
                         //But for now I'll just drop them from the calculation
                         missingEntries++;
                     } else {
-                        categoryTotal += Math.round(
-                                (double) entry.amount * entry.getDirectExchangeRate());
+                        categoryTotal += Math.round((double) entry.amount * entry.getDirectExchangeRate());
                     }
                 }
             }
