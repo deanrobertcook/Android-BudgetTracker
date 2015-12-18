@@ -86,13 +86,25 @@ public class ExchangeRateDownloadService extends IntentService {
             }
             Timber.d("Downloading for date: " + DateUtils.getStorageFormattedDate(utcDate) +
                     " (" + utcDate + ")");
-            List<ExchangeRate> downloadedRates = downloadExchangeRatesOnDay(utcDate);
-            if (!downloadedRates.isEmpty()) {
-                Timber.d("Inserting entries into the database");
-                dataSourceExchangeRate.bulkInsert(downloadedRates);
+
+            try {
+                List<ExchangeRate> downloadedRates = downloadExchangeRatesOnDay(utcDate);
+                if (!downloadedRates.isEmpty()) {
+                    Timber.d("Inserting entries into the database");
+                    dataSourceExchangeRate.bulkInsert(downloadedRates);
+                }
+                utcDatesQueuedToDownload.remove(utcDate);
+            } catch (Exception e) {
+                e.printStackTrace();
+                onDownloadFailed();
+                return;
             }
-            utcDatesQueuedToDownload.remove(utcDate);
         }
+    }
+
+    private void onDownloadFailed() {
+        //TODO show warning to users that today's exchange rate could not be downloaded
+        return;
     }
 
     private boolean hasNetworkAccess() {
