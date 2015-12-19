@@ -5,11 +5,13 @@ import android.content.SharedPreferences;
 
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.model.Currency;
+import org.theronin.expensetracker.model.Entry;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
@@ -102,4 +104,49 @@ public class MoneyUtils {
         return (Math.round(result * 100));
     }
 
+    public static class EntrySum {
+        public final long amount;
+        public final int missingEntries;
+
+        public EntrySum(long amount, int missingEntries) {
+            this.amount = amount;
+            this.missingEntries = missingEntries;
+        }
+    }
+
+    public interface EntryCondition {
+        boolean check(Entry entry);
+    }
+
+    /**
+     * Loops through the Collection of entries and calculates the total amount this list of
+     * entries represents. The amount of each entry is only added to the total amount if some
+     * predicate is true - that is the
+     * {@link org.theronin.expensetracker.utils.MoneyUtils.EntryCondition#check(Entry)} method
+     * returns true.
+     *
+     * The entries should have all of their exchange rate data set for a give home and current
+     * currency. If any entries are missing their exchange rate data, then the number of missing
+     * entries in the {@link org.theronin.expensetracker.utils.MoneyUtils.EntrySum} object will
+     * be incremented, and the total sum will currently disregard the value of that entry.
+     * @param entries The list of entries to sum over
+     * @param condition a condition to test each entry against to see if it should be added to the
+     *                  collection.
+     * @return An EntrySum, representing the total amount given all of the entries that have
+     * exchange rate data.
+     */
+    public static EntrySum calculateTotals(Collection<Entry> entries, EntryCondition condition) {
+        long total = 0;
+        int missingEntries = 0;
+        for (Entry entry : entries) {
+            if (condition == null || condition.check(entry)) {
+                if (entry.getDirectExchangeRate() < 0) {
+                    missingEntries++;
+                } else {
+                    total += Math.round((double) entry.amount * entry.getDirectExchangeRate());
+                }
+            }
+        }
+        return new EntrySum(total, missingEntries);
+    }
 }

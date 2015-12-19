@@ -14,11 +14,17 @@ import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.utils.CurrencySettings;
 import org.theronin.expensetracker.utils.DateUtils;
 import org.theronin.expensetracker.utils.MoneyUtils;
+import org.theronin.expensetracker.utils.MoneyUtils.EntryCondition;
+import org.theronin.expensetracker.utils.MoneyUtils.EntrySum;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static org.theronin.expensetracker.utils.DateUtils.sameDay;
+import static org.theronin.expensetracker.utils.MoneyUtils.calculateTotals;
 
 public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHolder> {
 
@@ -83,18 +89,16 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         selectionManager.listenToItemView(viewHolder.contentLayout);
     }
 
-    private String getFormattedDayTotal(long utcDate) {
-        long total = 0;
-        int missingEntries = 0;
-        for (Entry entry : entries) {
-            if (DateUtils.sameDay(utcDate, entry.utcDate)) {
-                if (entry.getDirectExchangeRate() < 0) {
-                    missingEntries++;
-                }
-                total += Math.round((double) entry.amount * entry.getDirectExchangeRate());
+    private String getFormattedDayTotal(final long utcDate) {
+        EntrySum entrySum = calculateTotals(entries, new EntryCondition() {
+            @Override
+            public boolean check(Entry entry) {
+                return sameDay(entry.utcDate, utcDate);
             }
-        }
-        return (missingEntries > 0 ? "~" : "") + currencySettings.getHomeCurrency().symbol + MoneyUtils.getDisplayCompact(context, total);
+        });
+        return (entrySum.missingEntries > 0 ? "~" : "") +
+                currencySettings.getHomeCurrency().symbol +
+                MoneyUtils.getDisplayCompact(context, entrySum.amount);
     }
 
     private void displayDateBorder(ViewHolder viewHolder, int position, String formattedDate, String formattedTotal) {
@@ -116,7 +120,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         Entry currentEntry = entries.get(position);
         Entry lastEntry = entries.get(position - 1);
 
-        return !DateUtils.sameDay(currentEntry.utcDate, lastEntry.utcDate);
+        return !sameDay(currentEntry.utcDate, lastEntry.utcDate);
     }
 
     private String getHomeCurrencyAmount(Entry entry) {
@@ -189,7 +193,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
     public interface SelectionListener {
         void onEnterSelectMode();
         void onExitSelectMode();
-        void onItemSelected(int count);
+        void onItemSelected(int count, String amount);
         void deleteSelection();
         void cancelSelection();
     }
@@ -268,8 +272,15 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
                     setViewSelected(itemView);
                     selectedEntries.add(entry);
                 }
-                listener.onItemSelected(selectedEntries.size());
+                listener.onItemSelected(selectedEntries.size(), getEntrySumAmountDisplay(selectedEntries));
             }
+        }
+
+        private String getEntrySumAmountDisplay(Collection<Entry> entries) {
+            EntrySum entrySum = calculateTotals(entries, null);
+            return (entrySum.missingEntries > 0 ? "~" : "") +
+                    currencySettings.getHomeCurrency().symbol +
+                    MoneyUtils.getDisplayCompact(context, entrySum.amount);
         }
         
         private Entry findEntryFromTag(View view) {

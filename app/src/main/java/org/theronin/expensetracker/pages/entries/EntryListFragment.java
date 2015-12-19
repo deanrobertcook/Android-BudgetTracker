@@ -117,9 +117,10 @@ public class EntryListFragment extends Fragment implements
     }
 
     @Override
-    public void onItemSelected(int count) {
+    public void onItemSelected(int count, String amount) {
         Timber.d(count + " items selected");
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle(count + " selected");
+        String display = count == 1 ? (count + " entry: " + amount) : (count + " entries: " + amount);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle(display);
     }
 
     @Override
