@@ -16,6 +16,7 @@ import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.parse.ParseUser;
 
@@ -29,6 +30,7 @@ import org.theronin.expensetracker.pages.categories.CategoryDialogFragment;
 import org.theronin.expensetracker.pages.categories.CategoryListFragment;
 import org.theronin.expensetracker.pages.entries.EntriesAdapter.SelectionListener;
 import org.theronin.expensetracker.pages.entries.EntryListFragment;
+import org.theronin.expensetracker.pages.launch.LaunchActivity;
 import org.theronin.expensetracker.pages.settings.SettingsActivity;
 import org.theronin.expensetracker.task.FileBackupAgent;
 
@@ -135,8 +137,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private Drawer buildNavigationDrawer() {
+        ProfileDrawerItem profile = new ProfileDrawerItem()
+                .withEmail(ParseUser.getCurrentUser().getEmail());
+
         AccountHeader accountHeader = new AccountHeaderBuilder()
                 .withActivity(this)
+                .addProfiles(profile)
                 .withHeaderBackground(getDrawable(R.color.primary))
                 .build();
 
@@ -169,12 +175,10 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onStart() {
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        if (currentUser != null) {
-            Timber.d("Current user: " + currentUser.getEmail());
-
-        } else {
-            Timber.d("No user logged in");
+        if (ParseUser.getCurrentUser() == null) {
+            Timber.d("User session has expired");
+            Intent signInIntent = new Intent(this, LaunchActivity.class);
+            startActivity(signInIntent);
         }
         super.onStart();
     }
