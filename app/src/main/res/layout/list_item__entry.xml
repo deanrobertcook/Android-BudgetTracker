@@ -50,7 +50,7 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:id="@+id/ll__list_item__content_layout"
                   android:layout_width="match_parent"
-                  android:layout_height="@dimen/list_item__height_three_lines"
+                  android:layout_height="@dimen/list_item__height_two_lines"
                   android:paddingLeft="@dimen/material_default_margin"
                   android:paddingRight="@dimen/material_default_margin">
 

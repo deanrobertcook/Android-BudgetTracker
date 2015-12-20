@@ -124,15 +124,8 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
     }
 
     private String getHomeCurrencyAmount(Entry entry) {
-        StringBuilder sb = new StringBuilder();
-
-        if (entry.getDirectExchangeRate() > 0) {
-            long homeAmount = Math.round((double) entry.amount * entry.getDirectExchangeRate());
-            sb.append(MoneyUtils.getDisplayCompact(context, homeAmount));
-        } else {
-            sb.append("??.??");
-        }
-        return sb.toString();
+        long homeAmount = Math.round((double) entry.amount * entry.getDirectExchangeRate());
+        return MoneyUtils.getDisplayCompact(context, homeAmount);
     }
 
     @Override

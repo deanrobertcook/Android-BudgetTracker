@@ -59,7 +59,7 @@ public class MoneyUtils {
 
     private static String getDisplay(Context context, long cents, boolean compact) {
         if (cents < 0) {
-            return "-.--";
+            return context.getString(R.string.amount_placeholder);
         }
 
         NumberFormat numberFormat = NumberFormat.getNumberInstance();

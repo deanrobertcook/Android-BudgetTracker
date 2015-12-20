@@ -55,4 +55,5 @@
     <string name="suffix_thousand">k</string>
     <string name="suffix_million">m</string>
     <string name="suffix_billion">b</string>
+    <string name="amount_placeholder">\??.??</string>
 </resources>
