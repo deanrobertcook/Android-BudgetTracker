@@ -3,11 +3,9 @@ package org.theronin.expensetracker.data;
 import android.provider.BaseColumns;
 
 public class Contract {
-
+    
     public static final class CategoryTable implements BaseColumns {
-        /**
-         * SQLite constants
-         */
+
         public static final String TABLE_NAME = "category_base";
 
         public static final String COL_NAME = "name";
@@ -17,24 +15,10 @@ public class Contract {
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COL_NAME + " TEXT NOT NULL, " +
                 "UNIQUE (" + COL_NAME + ") ON CONFLICT IGNORE)";
-
-        /**
-         * Helper projections for faster query write-ups
-         */
-        public static final String[] PROJECTION = {
-                _ID,
-                COL_NAME
-        };
-
-        public static final int INDEX_ID = 0;
-        public static final int INDEX_NAME = 1;
     }
 
     public static final class EntryTable implements BaseColumns {
 
-        /**
-         * SQLite constants
-         */
         public static final String TABLE_NAME = "entry_base";
 
         public static final String COL_DATE = "date";
@@ -57,23 +41,6 @@ public class Contract {
 
                 "FOREIGN KEY (" + COL_CURRENCY_ID + ") REFERENCES " +
                 CurrencyTable.TABLE_NAME + " (" + CurrencyTable._ID + "))";
-
-        /**
-         * Helper projections for faster query write-ups
-         */
-        public static final String[] PROJECTION = {
-                _ID,
-                COL_DATE,
-                COL_CATEGORY_ID,
-                COL_AMOUNT,
-                COL_CURRENCY_ID
-        };
-
-        public static final int INDEX_ID = 0;
-        public static final int INDEX_DATE = 1;
-        public static final int INDEX_CATEGORY_ID = 2;
-        public static final int INDEX_AMOUNT = 3;
-        public static final int INDEX_CURRENCY_ENTERED = 4;
     }
 
     public static final class CurrencyTable implements BaseColumns {
