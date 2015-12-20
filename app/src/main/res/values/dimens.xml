@@ -3,6 +3,10 @@
     <dimen name="material_default_margin">16dp</dimen>
     <dimen name="material_dialog_default_margin">24dp</dimen>
 
+    <!-- Welcome Screen dimensions-->
+    <dimen name="welcome_appbar_height">224dp</dimen>
+    <dimen name="welcome_image_width">200dp</dimen>
+    <dimen name="welcome_image_height">80dp</dimen>
 
     <!-- Entry List Dimensions -->
     <dimen name="list_item__height_two_lines">56dp</dimen>
@@ -29,4 +33,7 @@
     <dimen name="font_size_small">18sp</dimen>
     <dimen name="font_size_extra_small">12sp</dimen>
     <dimen name="font_size_miniscule">6sp</dimen>
+    <dimen name="welcome_content_padding_top">168dp</dimen>
+    <dimen name="welcome_button_bar_elevation">6dp</dimen>
+
 </resources>

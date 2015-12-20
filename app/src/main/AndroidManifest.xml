@@ -22,14 +22,20 @@
         <service android:name="org.theronin.expensetracker.data.loader.ExchangeRateDownloadService"/>
 
         <activity
-            android:name="org.theronin.expensetracker.pages.main.MainActivity"
-            android:label="@string/app_name"
-            android:windowSoftInputMode="stateAlwaysHidden">
+            android:name=".pages.launch.LaunchActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="org.theronin.expensetracker.pages.main.MainActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="stateAlwaysHidden">
+        </activity>
+
         <activity
             android:name="org.theronin.expensetracker.pages.entries.EntryDialogActivity"
             android:parentActivityName="org.theronin.expensetracker.pages.main.MainActivity"
@@ -39,6 +45,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.theronin.expensetracker.pages.main.MainActivity"/>
         </activity>
+
         <activity
             android:name="org.theronin.expensetracker.pages.settings.SettingsActivity"
             android:label="@string/settings_activity"

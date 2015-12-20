@@ -2,7 +2,6 @@
     <string name="app_name">Expense Tracker</string>
 
     <string name="shared_preferences_key">org.theronin.budgettracker.PREFERENCES</string>
-
     <string name="prefcat_currency_title">Currency Settings</string>
 
     <string name="pref_home_currency_key">home_currency</string>
@@ -56,4 +55,25 @@
     <string name="suffix_million">m</string>
     <string name="suffix_billion">b</string>
     <string name="amount_placeholder">\??.??</string>
+    <string name="cancel">CANCEL</string>
+    <string name="accept">ACCEPT</string>
+
+    <string name="next">NEXT</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="back">BACK</string>
+    <string name="create_account">CREATE ACCOUNT</string>
+
+    <string name="launch_welcome_title">Welcome to Expense Tracker!</string>
+    <string name="launch_welcome_message">Put some description of how to use the app here.</string>
+    <string name="hint_username_or_email">Username or email</string>
+    <string name="hint_password">Password</string>
+    <string name="launch_sign_in_title">Sign in with an existing account</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_email">Email</string>
+    <string name="launch_create_account_title">Create a new account</string>
+    <string name="existing_account">EXISTING ACCOUNT</string>
+    <string name="sign_up">SIGN UP</string>
+
+
+    <string name="pref_welcome_screen_has_been_shown">pref_welcome_screen_has_been_shown</string>
 </resources>

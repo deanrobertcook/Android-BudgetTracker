@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements
     private boolean selectMode;
 
     private final static String CURRENT_PAGE_KEY = "CURRENT_PAGE";
-    private Page currentPage;
+    private MainPage currentPage;
 
 
     @Override
@@ -72,18 +72,18 @@ public class MainActivity extends AppCompatActivity implements
         setPage(currentPage);
     }
 
-    private Page findCurrentPage(Bundle savedInstanceState) {
-        Page defaultPage = Page.ENTRIES;
+    private MainPage findCurrentPage(Bundle savedInstanceState) {
+        MainPage defaultPage = MainPage.ENTRIES;
         if (savedInstanceState != null) {
             int currentPageId = savedInstanceState.getInt(CURRENT_PAGE_KEY, -1);
             if (currentPageId > -1) {
-                return Page.valueOf(currentPageId);
+                return MainPage.valueOf(currentPageId);
             }
         }
         return defaultPage;
     }
 
-    private boolean setPage(Page page) {
+    private boolean setPage(MainPage page) {
         if (page == null) {
             return false;
         }
@@ -153,9 +153,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private PrimaryDrawerItem[] buildPrimaryDrawerItems() {
-        PrimaryDrawerItem[] drawerItems = new PrimaryDrawerItem[Page.values().length];
+        PrimaryDrawerItem[] drawerItems = new PrimaryDrawerItem[MainPage.values().length];
         for (int i = 0; i < drawerItems.length; i++) {
-            Page page = Page.values()[i];
+            MainPage page = MainPage.values()[i];
             drawerItems[i] = new PrimaryDrawerItem()
                     .withName(page.title)
                     .withIdentifier(page.ordinal())
@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
         //The AccountHeader in the navigation view also has a position
-        Page page = Page.valueOf(position - 1);
+        MainPage page = MainPage.valueOf(position - 1);
         return setPage(page);
     }
 
