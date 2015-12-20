@@ -13,8 +13,6 @@ import com.parse.ParseUser;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.pages.main.MainActivity;
 
-import timber.log.Timber;
-
 public class LaunchActivity extends AppCompatActivity implements View.OnClickListener {
 
     private LaunchFragment currentFragment;

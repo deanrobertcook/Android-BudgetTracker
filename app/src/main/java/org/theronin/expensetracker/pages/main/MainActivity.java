@@ -17,6 +17,7 @@ import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.parse.ParseUser;
 
 import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.R;
@@ -164,6 +165,18 @@ public class MainActivity extends AppCompatActivity implements
                     .withOnDrawerItemClickListener(this);
         }
         return drawerItems;
+    }
+
+    @Override
+    protected void onStart() {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null) {
+            Timber.d("Current user: " + currentUser.getEmail());
+
+        } else {
+            Timber.d("No user logged in");
+        }
+        super.onStart();
     }
 
     @Override

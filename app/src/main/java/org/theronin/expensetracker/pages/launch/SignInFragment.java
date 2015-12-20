@@ -6,6 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 
 import org.theronin.expensetracker.R;
 
@@ -39,7 +44,21 @@ public class SignInFragment extends LaunchFragment {
     public void onPositiveButtonClicked() {
         Timber.d("userNameOrEmail: " + userNameOrEmailField.getText().toString());
         Timber.d("password: " + passwordField.getText().toString());
-        setPage(null);
+
+        ParseUser.logInInBackground(
+                userNameOrEmailField.getText().toString(),
+                passwordField.getText().toString(),
+                new LogInCallback() {
+                    @Override
+                    public void done(ParseUser user, ParseException e) {
+                        if (e == null) {
+                            setPage(null);
+                        } else {
+                            e.printStackTrace();
+                            Toast.makeText(getActivity(), "Couldn't log in", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     @Override
