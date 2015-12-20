@@ -25,7 +25,7 @@ public class SignInFragment extends LaunchFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment__launch_sign_in, container, false);
-        userNameOrEmailField = (EditText) view.findViewById(R.id.et__username_or_email);
+        userNameOrEmailField = (EditText) view.findViewById(R.id.et__email);
         passwordField = (EditText) view.findViewById(R.id.et__password);
         return view;
     }

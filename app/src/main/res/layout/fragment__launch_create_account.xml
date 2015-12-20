@@ -13,15 +13,6 @@
         android:textSize="20sp"/>
 
     <EditText
-        android:id="@+id/et__username"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/hint_username"
-        android:inputType="text"
-        android:layout_marginTop="@dimen/material_default_margin"
-        />
-
-    <EditText
         android:id="@+id/et__email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

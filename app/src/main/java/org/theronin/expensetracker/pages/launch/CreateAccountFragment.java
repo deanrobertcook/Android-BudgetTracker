@@ -17,7 +17,6 @@ import timber.log.Timber;
 
 public class CreateAccountFragment extends LaunchFragment {
 
-    private EditText userNameField;
     private EditText emailField;
     private EditText passwordField;
 
@@ -25,7 +24,6 @@ public class CreateAccountFragment extends LaunchFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment__launch_create_account, container, false);
-        userNameField = (EditText) view.findViewById(R.id.et__username);
         emailField = (EditText) view.findViewById(R.id.et__email);
         passwordField = (EditText) view.findViewById(R.id.et__password);
         return view;
@@ -43,13 +41,13 @@ public class CreateAccountFragment extends LaunchFragment {
 
     @Override
     public void onPositiveButtonClicked() {
-        Timber.d("username: " + userNameField.getText().toString());
         Timber.d("email: " + emailField.getText().toString());
         Timber.d("password: " + passwordField.getText().toString());
         //TODO handle input credentials properly
         ParseUser user = new ParseUser();
-        user.setUsername(userNameField.getText().toString());
         user.setEmail(emailField.getText().toString());
+        //TODO how can I disable usernames?
+        user.setUsername(emailField.getText().toString());
         user.setPassword(passwordField.getText().toString());
 
         user.signUpInBackground(new SignUpCallback() {

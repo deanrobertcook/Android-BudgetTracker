@@ -69,7 +69,6 @@
 
     <string name="launch_welcome_title">Welcome to Expense Tracker!</string>
     <string name="launch_welcome_message">Put some description of how to use the app here.</string>
-    <string name="hint_username_or_email">Username or email</string>
     <string name="hint_password">Password</string>
     <string name="launch_sign_in_title">Sign in with an existing account</string>
     <string name="hint_username">Username</string>

@@ -13,11 +13,11 @@
         android:textSize="20sp"/>
 
     <EditText
-        android:id="@+id/et__username_or_email"
+        android:id="@+id/et__email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_username_or_email"
-        android:inputType="text|textEmailAddress"
+        android:hint="@string/hint_email"
+        android:inputType="textEmailAddress"
         android:layout_marginTop="@dimen/material_default_margin"
         />
 
