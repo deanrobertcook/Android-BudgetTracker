@@ -8,8 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.parse.ParseUser;
+
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.pages.main.MainActivity;
+
+import timber.log.Timber;
 
 public class LaunchActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -57,6 +61,9 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
     private LaunchPage getFirstPageToDisplay() {
         if (!hasWelcomeScreenBeenShown()) {
             return LaunchPage.WELCOME;
+        }
+        if (ParseUser.getCurrentUser() == null) {
+            return LaunchPage.SIGN_IN;
         }
         return null;
     }
