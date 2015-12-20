@@ -2,6 +2,10 @@
     <string name="app_name">Expense Tracker</string>
 
     <string name="shared_preferences_key">org.theronin.budgettracker.PREFERENCES</string>
+
+    <string name="parse_app_id"></string>
+    <string name="parse_client_key"></string>
+
     <string name="prefcat_currency_title">Currency Settings</string>
 
     <string name="pref_home_currency_key">home_currency</string>
