@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.parse'
-apply from: "hidden.gradle"
 
 buildscript {
     repositories {

@@ -38,8 +38,6 @@ public class ExchangeRateDownloadService extends IntentService {
 
     protected static final String OPEN_EXCHANGE_URL = "https://openexchangerates" +
             ".org/api/historical/%s.json?app_id=%s";
-    //TODO don't commit this to github!
-    protected static final String API_KEY = "";
 
     private static final String RATES_KEY = "rates";
 
@@ -152,7 +150,7 @@ public class ExchangeRateDownloadService extends IntentService {
 
     protected URL buildUrlFromTimestamp(long utcDate) {
         String formattedDate = DateUtils.getStorageFormattedDate(utcDate);
-        String urlString = String.format(OPEN_EXCHANGE_URL, formattedDate, API_KEY);
+        String urlString = String.format(OPEN_EXCHANGE_URL, formattedDate, getApiKey());
         Timber.d("urlString: " + urlString);
         try {
             return new URL(urlString);
@@ -160,6 +158,10 @@ public class ExchangeRateDownloadService extends IntentService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private String getApiKey() {
+        return getApplicationContext().getString(R.string.open_exchange_api_key);
     }
 
     protected URLConnection getConnectedUrlConnection(URL url) {

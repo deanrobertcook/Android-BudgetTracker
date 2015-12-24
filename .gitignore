@@ -1,5 +1,5 @@
 .gradle
-*hidden.gradle
+*strings-hidden.xml
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
