@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.parse.ParseUser;
+
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.Contract.CategoryTable;
 import org.theronin.expensetracker.data.Contract.CategoryView;
@@ -16,22 +18,33 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public static final String TAG = DbHelper.class.getName();
 
-    public static final String DATABASE_NAME = "database.db";
     public static final int DATABASE_VERSION = 1;
 
     private static DbHelper instance;
 
     private Context context;
+    private ParseUser currentUser;
 
     public static synchronized DbHelper getInstance(Context context) {
-        if (instance == null) {
+        //TODO check to see if there's anything I need to do when the database changes
+        if (instance == null || ParseUser.getCurrentUser() != instance.currentUser) {
+            if (ParseUser.getCurrentUser() == null) {
+                throw new IllegalStateException("The current user is null, there is no database " +
+                        "that can be created or retrieved");
+            }
+
+            if (instance != null) {
+                instance.close();
+            }
+
             instance = new DbHelper(context.getApplicationContext());
         }
         return instance;
     }
 
     private DbHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, ParseUser.getCurrentUser().getObjectId(), null, DATABASE_VERSION);
+        this.currentUser = ParseUser.getCurrentUser();
         this.context = context;
     }
 

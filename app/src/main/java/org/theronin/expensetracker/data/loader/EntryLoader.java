@@ -5,8 +5,6 @@ import android.content.Intent;
 
 import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.data.Contract.EntryView;
-import org.theronin.expensetracker.data.DataSourceEntry;
-import org.theronin.expensetracker.data.DataSourceExchangeRate;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.ExchangeRate;
@@ -20,18 +18,17 @@ import static org.theronin.expensetracker.data.loader.ExchangeRateDownloadServic
 
 public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.Listener {
 
-    private final DataSourceEntry dataSourceEntry;
-    private final DataSourceExchangeRate dataSourceExchangeRate;
+    private CustomApplication app;
 
     private final CurrencySettings currencySettings;
 
     public EntryLoader(Activity activity) {
         super(activity);
-        dataSourceEntry = ((CustomApplication) activity.getApplication())
-                .getDataSourceEntry();
-        dataSourceExchangeRate = ((CustomApplication) activity.getApplication())
-                .getDataSourceExchangeRate();
-        setObservedDataSources(dataSourceEntry, dataSourceExchangeRate);
+        app = ((CustomApplication) activity.getApplication());
+
+        setObservedDataSources(
+                app.getDataSourceEntry(),
+                app.getDataSourceExchangeRate());
 
         currencySettings = new CurrencySettings(activity, this);
     }
@@ -39,9 +36,9 @@ public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.L
     @Override
     public List<Entry> loadInBackground() {
         Timber.d("loadInBackground");
-        List<Entry> entries = dataSourceEntry.query(null, null,
+        List<Entry> entries = app.getDataSourceEntry().query(null, null,
                 EntryView.COL_DATE + " DESC, " + EntryView._ID + " DESC");
-        List<ExchangeRate> allExchangeRates = dataSourceExchangeRate.query();
+        List<ExchangeRate> allExchangeRates = app.getDataSourceExchangeRate().query();
 
         final CurrencyConverter converter = new CurrencyConverter(currencySettings
                 .getHomeCurrency(), allExchangeRates);

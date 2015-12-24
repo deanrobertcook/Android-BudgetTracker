@@ -52,7 +52,7 @@ public class SignInFragment extends LaunchFragment {
                     @Override
                     public void done(ParseUser user, ParseException e) {
                         if (e == null) {
-                            setPage(null);
+                            setPage(LaunchPage.ENTER_APP);
                         } else {
                             e.printStackTrace();
                             Toast.makeText(getActivity(), "Couldn't log in", Toast.LENGTH_SHORT).show();

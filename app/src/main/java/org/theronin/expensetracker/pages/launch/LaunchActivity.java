@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import com.parse.ParseUser;
 
+import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.pages.main.MainActivity;
 
@@ -48,7 +49,13 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private boolean startApplication(LaunchPage page) {
-        if (page == null) {
+        if (page == LaunchPage.ENTER_APP) {
+            if (ParseUser.getCurrentUser() == null) {
+                throw new IllegalStateException("The app can only be entered when there is a signed in user");
+            }
+            //Create or Set the database for the user:
+            ((CustomApplication) getApplication()).setDatabase();
+
             Intent startAppIntent = new Intent(this, MainActivity.class);
             startActivity(startAppIntent);
             return true;
@@ -63,7 +70,9 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
         if (ParseUser.getCurrentUser() == null) {
             return LaunchPage.SIGN_IN;
         }
-        return null;
+        return LaunchPage.ENTER_APP;
+        //return the welcome page to manually test signing in with different users
+//        return LaunchPage.WELCOME;
     }
 
     private boolean hasWelcomeScreenBeenShown() {

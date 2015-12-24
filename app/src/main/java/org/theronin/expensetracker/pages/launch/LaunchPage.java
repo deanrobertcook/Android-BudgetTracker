@@ -3,7 +3,8 @@ package org.theronin.expensetracker.pages.launch;
 public enum LaunchPage {
     WELCOME(new WelcomeFragment()),
     SIGN_IN(new SignInFragment()),
-    CREATE_ACCOUNT(new CreateAccountFragment());
+    CREATE_ACCOUNT(new CreateAccountFragment()),
+    ENTER_APP(null);
 
     public LaunchFragment fragment;
 

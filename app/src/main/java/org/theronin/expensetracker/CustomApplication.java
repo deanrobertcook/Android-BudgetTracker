@@ -25,12 +25,6 @@ public class CustomApplication extends Application {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
-
-        dataSourceEntry = new DataSourceEntry(this);
-        dataSourceCategory = new DataSourceCategory(this);
-        dataSourceCurrency = new DataSourceCurrency(this);
-        dataSourceExchangeRate = new DataSourceExchangeRate(this);
-
         // Enable Local Datastore.
         Parse.enableLocalDatastore(this);
 
@@ -41,6 +35,13 @@ public class CustomApplication extends Application {
         // Optionally enable public read access.
         // defaultACL.setPublicReadAccess(true);
         ParseACL.setDefaultACL(defaultACL, true);
+    }
+
+    public void setDatabase() {
+        dataSourceEntry = new DataSourceEntry(this);
+        dataSourceCategory = new DataSourceCategory(this);
+        dataSourceCurrency = new DataSourceCurrency(this);
+        dataSourceExchangeRate = new DataSourceExchangeRate(this);
     }
 
     public DataSourceEntry getDataSourceEntry() {

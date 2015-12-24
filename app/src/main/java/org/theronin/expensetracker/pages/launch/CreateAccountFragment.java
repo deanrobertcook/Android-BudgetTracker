@@ -54,7 +54,7 @@ public class CreateAccountFragment extends LaunchFragment {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
-                    setPage(null);
+                    setPage(LaunchPage.ENTER_APP);
                 } else {
                     e.printStackTrace();
                 }
