@@ -22,10 +22,6 @@
             android:name="com.parse.CLIENT_KEY"
             android:value="@string/parse_client_key" />
 
-        <meta-data
-            android:name="com.google.android.backup.api_key"
-            android:value="AEdPqrEAAAAIuGJiE6loq6iPMlSp3iBrDdZoYzHo-v24QSQD_Q"/>
-
         <service android:name="org.theronin.expensetracker.data.loader.ExchangeRateDownloadService"/>
 
         <activity
