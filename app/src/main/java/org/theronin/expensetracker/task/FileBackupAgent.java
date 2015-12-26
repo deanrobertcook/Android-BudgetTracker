@@ -85,11 +85,19 @@ public class FileBackupAgent  {
             JsonArray jsonArray = gson.fromJson(entriesJson, JsonElement.class).getAsJsonArray();
             for (JsonElement element : jsonArray) {
                 JsonObject object = (JsonObject) element;
+                remove(object, "id");
                 replaceCategoryObjectWithName(object);
                 replaceCurrencyObjectWithCode(object);
-                removeExchangeRateField(object);
+                remove(object, "directExchangeRate");
+                remove(object, "toSync");
             }
             return gson.toJson(jsonArray);
+        }
+
+        private void remove(JsonObject object, String fieldName) {
+            if (object.has(fieldName)) {
+                object.remove(fieldName);
+            }
         }
 
         private void replaceCategoryObjectWithName(JsonObject object) {
@@ -105,12 +113,6 @@ public class FileBackupAgent  {
                 JsonObject category = (JsonObject) object.get("currency");
                 String categoryName = category.get("code").getAsString();
                 object.addProperty("currency", categoryName);
-            }
-        }
-
-        private void removeExchangeRateField(JsonObject object) {
-            if (object.has("directExchangeRate")) {
-                object.remove("directExchangeRate");
             }
         }
 
@@ -172,7 +174,7 @@ public class FileBackupAgent  {
             for (int i = 0; i < jsonArray.size(); i++) {
                 JsonObject object = (JsonObject) jsonArray.get(i);
                 Entry entry = new Entry(
-                        findId(object),
+                        findGlobalId(object),
                         findDate(object),
                         findAmount(object),
                         findCategory(object),
@@ -183,8 +185,8 @@ public class FileBackupAgent  {
             return entries;
         }
 
-        private long findId(JsonObject object) {
-            return object.get("id").getAsLong();
+        private String findGlobalId(JsonObject object) {
+            return object.get("globalId").getAsString();
         }
 
         private long findDate(JsonObject object) {

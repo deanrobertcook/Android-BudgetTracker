@@ -14,10 +14,14 @@ import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_CURRENCY
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_CURRENCY_ID;
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_CURRENCY_SYMBOL;
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_DATE;
+import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_GLOBAL_ID;
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_ID;
+import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_TO_SYNC;
 
 public class Entry {
     public final long id;
+    public final String globalId;
+    public final boolean toSync;
     public final long utcDate;
     public final long amount;
     public final Category category;
@@ -30,16 +34,29 @@ public class Entry {
             long amount,
             Category category,
             Currency currency) {
-        this(-1, utcDate, amount, category, currency);
+        this(-1, null, false, utcDate, amount, category, currency);
+    }
+
+    public Entry(
+            String globalId,
+            long utcDate,
+            long amount,
+            Category category,
+            Currency currency) {
+        this(-1, globalId, false, utcDate, amount, category, currency);
     }
 
     public Entry(
             long id,
+            String globalId,
+            boolean toSync,
             long utcDate,
             long amount,
             Category category,
             Currency currency) {
         this.id = id;
+        this.globalId = globalId;
+        this.toSync = toSync;
         this.utcDate = utcDate;
         this.amount = amount;
         this.category = category;
@@ -48,6 +65,8 @@ public class Entry {
 
     public static Entry fromCursor(Cursor cursor) {
         long id = cursor.getLong(INDEX_ID);
+        String globalId = cursor.getString(INDEX_GLOBAL_ID);
+        boolean toSync = cursor.getInt(INDEX_TO_SYNC) == 1;
         long utcDateEntered = cursor.getLong(INDEX_DATE);
         long amount = cursor.getLong(INDEX_AMOUNT);
 
@@ -62,7 +81,7 @@ public class Entry {
                 cursor.getString(INDEX_CURRENCY_SYMBOL)
         );
 
-        return new Entry(id, utcDateEntered, amount, category, currency);
+        return new Entry(id, globalId, toSync, utcDateEntered, amount, category, currency);
     }
 
     public ContentValues toValues() {
