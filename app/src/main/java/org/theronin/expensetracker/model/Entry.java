@@ -3,6 +3,8 @@ package org.theronin.expensetracker.model;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.parse.ParseObject;
+
 import org.theronin.expensetracker.data.Contract.EntryTable;
 import org.theronin.expensetracker.data.Contract.EntryView;
 import org.theronin.expensetracker.data.sync.SyncState;
@@ -22,12 +24,12 @@ import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_SYNC_STA
 public class Entry {
     public final long id;
     public final String globalId;
-    public final SyncState syncState;
     public final long utcDate;
     public final long amount;
     public final Category category;
     public final Currency currency;
 
+    private SyncState syncState;
     private double directExchangeRate = -1;
 
     public Entry(
@@ -51,6 +53,17 @@ public class Entry {
     }
 
     public Entry(
+            String globalId,
+            SyncState syncState,
+            long utcDate,
+            long amount,
+            Category category,
+            Currency currency) {
+        this(-1, globalId, syncState, utcDate, amount, category, currency);
+    }
+
+
+    public Entry(
             long id,
             String globalId,
             SyncState syncState,
@@ -70,7 +83,7 @@ public class Entry {
     public static Entry fromCursor(Cursor cursor) {
         long id = cursor.getLong(INDEX_ID);
         String globalId = cursor.getString(INDEX_GLOBAL_ID);
-        SyncState syncStatus = SyncState.valueOf(cursor.getString(INDEX_SYNC_STATUS));
+        SyncState syncState = SyncState.valueOf(cursor.getString(INDEX_SYNC_STATUS));
         long utcDateEntered = cursor.getLong(INDEX_DATE);
         long amount = cursor.getLong(INDEX_AMOUNT);
 
@@ -85,7 +98,38 @@ public class Entry {
                 cursor.getString(INDEX_CURRENCY_SYMBOL)
         );
 
-        return new Entry(id, globalId, syncStatus, utcDateEntered, amount, category, currency);
+        return new Entry(id, globalId, syncState, utcDateEntered, amount, category, currency);
+    }
+
+    public static Entry fromParseObject(ParseObject object) {
+        String globalId = object.getObjectId();
+        SyncState syncState = SyncState.SYNCED;
+        long utcDate = object.getLong("date");
+        long amount = object.getLong("amount");
+
+        Category category = new Category(
+                object.getString("category")
+        );
+
+        Currency currency = new Currency(
+                object.getString("currency")
+        );
+
+        return new Entry(globalId, syncState, utcDate, amount, category, currency);
+    }
+
+    public ParseObject toParseObject() {
+        ParseObject object;
+        if (hasObjectId()) {
+            object = ParseObject.createWithoutData(EntryView.VIEW_NAME, globalId);
+        } else {
+            object = new ParseObject(EntryView.VIEW_NAME);
+        }
+        object.put("amount", this.amount);
+        object.put("category", this.category.name);
+        object.put("currency", this.currency.code);
+        object.put("date", this.utcDate);
+        return object;
     }
 
     public ContentValues toValues() {
@@ -119,6 +163,18 @@ public class Entry {
                 amount,
                 currency.code
         );
+    }
+
+    public boolean hasObjectId() {
+        return globalId != null && globalId.length() > 0;
+    }
+
+    public SyncState getSyncState() {
+        return syncState;
+    }
+
+    public void setSyncState(SyncState syncState) {
+        this.syncState = syncState;
     }
 
     public double getDirectExchangeRate() {

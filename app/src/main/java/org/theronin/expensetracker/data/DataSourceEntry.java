@@ -11,7 +11,10 @@ import org.theronin.expensetracker.data.sync.SyncState;
 import org.theronin.expensetracker.model.Entry;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import timber.log.Timber;
 
 public class DataSourceEntry extends AbsDataSource<Entry> {
 
@@ -26,42 +29,66 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
 
     @Override
     public long insert(Entry entry) {
-        //TODO consider moving the toValues method to this class now
-        ContentValues values = entry.toValues();
-        checkEntryValues(values);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        long entryId = db.insert(EntryTable.TABLE_NAME, null, values);
+        long entryId = insertOperation(db, entry);
         setDataInValid();
         return entryId;
     }
 
-    @Override
-    public boolean update(Entry entry) {
+    private long insertOperation(SQLiteDatabase db, Entry entry) {
+        //TODO consider moving the toValues method to this class now
         ContentValues values = entry.toValues();
         checkEntryValues(values);
-
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        int affected = db.update(EntryTable.TABLE_NAME, values,
-                EntryTable._ID + " = ?",
-                new String[]{Long.toString(entry.id)});
-
-        setDataInValid();
-        return affected != 0;
+        return db.insert(EntryTable.TABLE_NAME, null, values);
     }
 
     @Override
-    public int bulkInsert(List<Entry> entries) {
+    public int bulkInsert(Collection<Entry> entries) {
+        if (entries.size() == 0) {
+            return 0;
+        }
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
             for (Entry entry : entries) {
-                ContentValues values = entry.toValues();
-                checkEntryValues(values);
-                db.insert(
-                        EntryTable.TABLE_NAME,
-                        null,
-                        values
-                );
+                insertOperation(db, entry);
+            }
+            db.setTransactionSuccessful();
+            setDataInValid();
+        } finally {
+            db.endTransaction();
+        }
+        return entries.size();
+    }
+
+    @Override
+    public boolean update(Entry entry) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int affected = updateOperation(db, entry);
+        setDataInValid();
+        return affected != 0;
+    }
+
+    private int updateOperation(SQLiteDatabase db, Entry entry) {
+        ContentValues values = entry.toValues();
+        checkEntryValues(values);
+        return db.update(EntryTable.TABLE_NAME, values,
+                EntryTable._ID + " = ?",
+                new String[]{Long.toString(entry.id)});
+    }
+
+    @Override
+    public int bulkUpdate(Collection<Entry> entries) {
+        Timber.d("Bulk updating " + entries.size() + " entries");
+        if (entries.size() == 0) {
+            return 0;
+        }
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            for (Entry entry : entries) {
+                updateOperation(db, entry);
             }
             db.setTransactionSuccessful();
             setDataInValid();
@@ -73,7 +100,7 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
 
     private void checkEntryValues(ContentValues values) {
         changeCategoryObjectToId(values);
-        changeCurrencyObejctToId(values);
+        changeCurrencyObjectToId(values);
     }
 
     private void changeCategoryObjectToId(ContentValues values) {
@@ -87,7 +114,7 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
         values.remove(EntryView.COL_CATEGORY_NAME);
     }
 
-    private void changeCurrencyObejctToId(ContentValues values) {
+    private void changeCurrencyObjectToId(ContentValues values) {
         long currencyId = values.getAsLong(EntryView.COL_CURRENCY_ID);
         if (currencyId == -1) {
             String currencyCode = values.getAsString(EntryView.COL_CURRENCY_CODE);
@@ -98,26 +125,57 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
         values.remove(EntryView.COL_CURRENCY_CODE);
     }
 
-    public boolean markAsDeleted(Entry entry) {
-        Entry updatedEntry = new Entry(
-                entry.id, entry.globalId, SyncState.DELETED,
-                entry.utcDate, entry.amount, entry.category, entry.currency
-        );
-        return update(updatedEntry);
+    public int bulkMarkAsDeleted(Collection<Entry> entries) {
+        for (Entry entry : entries) {
+            entry.setSyncState(SyncState.MARKED_AS_DELETED);
+        }
+        return bulkUpdate(entries);
     }
 
     @Override
     public boolean delete(Entry entry) {
-        if (entry.syncState != SyncState.DELETED) {
-            throw new IllegalStateException("To delete an entry, it needs to be marked as deleted first");
+        List<Entry> entries = new ArrayList<>();
+        entries.add(entry);
+        int numDeleted = bulkDelete(entries);
+        return numDeleted == 1;
+    }
+
+    @Override
+    public int bulkDelete(Collection<Entry> entries) {
+        Timber.d("Bulk deleting " + entries.size() + " entries");
+        if (entries.size() == 0) {
+            return 0;
         }
+
+        String ids = createEntryIdsArgument(new ArrayList<>(entries));
+
         int numDeleted = dbHelper.getWritableDatabase().delete(
                 EntryTable.TABLE_NAME,
-                EntryTable._ID + " = ?",
-                new String[]{Long.toString(entry.id)}
+                EntryTable._ID + " IN (" + ids + ")", null
         );
         setDataInValid();
-        return numDeleted == 1;
+        return numDeleted;
+    }
+
+    private String createEntryIdsArgument(Collection<Entry> entries) {
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        for (Entry entry : entries) {
+            checkEntryDeleted(entry);
+            sb.append(entry.id);
+            if (i != entries.size() - 1) {
+                sb.append(", ");
+            }
+            i++;
+        }
+        return sb.toString();
+    }
+
+    public void checkEntryDeleted(Entry entry) {
+        if (entry.getSyncState() != SyncState.DELETE_SYNCED) {
+            throw new IllegalStateException("An entry needs to be deleted on the backend (DELETE_SYNCED) before it can" +
+                    " be removed from the local database");
+        }
     }
 
     @Override

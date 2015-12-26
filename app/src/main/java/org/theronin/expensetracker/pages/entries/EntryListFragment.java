@@ -138,10 +138,7 @@ public class EntryListFragment extends Fragment implements
 
         DataSourceEntry dataSource = ((CustomApplication) getActivity().getApplication()).getDataSourceEntry();
 
-        //TODO consider making a bulk update method?
-        for (Entry entry : selectedEntries) {
-            dataSource.markAsDeleted(entry);
-        }
+        dataSource.bulkMarkAsDeleted(selectedEntries);
 
         Toast.makeText(getActivity(), selectedEntries.size() + " entries deleted.", Toast.LENGTH_SHORT).show();
         adapter.exitSelectMode();

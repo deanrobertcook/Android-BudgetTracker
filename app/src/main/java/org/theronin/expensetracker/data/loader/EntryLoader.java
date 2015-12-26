@@ -1,7 +1,6 @@
 package org.theronin.expensetracker.data.loader;
 
 import android.app.Activity;
-import android.content.Intent;
 
 import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.data.Contract.EntryView;
@@ -14,8 +13,6 @@ import org.theronin.expensetracker.utils.CurrencySettings;
 import java.util.List;
 
 import timber.log.Timber;
-
-import static org.theronin.expensetracker.data.loader.ExchangeRateDownloadService.UTC_DATE_KEY;
 
 public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.Listener {
 
@@ -38,7 +35,7 @@ public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.L
     public List<Entry> loadInBackground() {
         Timber.d("loadInBackground");
         List<Entry> entries = app.getDataSourceEntry().query(
-                EntryView.COL_SYNC_STATUS + " != ?", new String[] {SyncState.DELETED.name()},
+                EntryView.COL_SYNC_STATUS + " NOT IN (" + SyncState.deleteStateSelection() + ")", null,
                 EntryView.COL_DATE + " DESC, " + EntryView._ID + " DESC");
         List<ExchangeRate> allExchangeRates = app.getDataSourceExchangeRate().query();
 
@@ -46,11 +43,11 @@ public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.L
                 .getHomeCurrency(), allExchangeRates);
         converter.assignExchangeRatesToEntries(entries);
 
-        for (Long date : converter.getMissingExchangeRateDays()) {
-            Intent serviceIntent = new Intent(getContext(), ExchangeRateDownloadService.class);
-            serviceIntent.putExtra(UTC_DATE_KEY, date);
-            getContext().startService(serviceIntent);
-        }
+//        for (Long date : converter.getMissingExchangeRateDays()) {
+//            Intent serviceIntent = new Intent(getContext(), ExchangeRateDownloadService.class);
+//            serviceIntent.putExtra(UTC_DATE_KEY, date);
+//            getContext().startService(serviceIntent);
+//        }
 
         Timber.d("Returning entries");
         return entries;

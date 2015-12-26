@@ -9,6 +9,7 @@ import org.theronin.expensetracker.data.Contract.ExchangeRateTable;
 import org.theronin.expensetracker.model.ExchangeRate;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class DataSourceExchangeRate extends AbsDataSource<ExchangeRate> {
@@ -23,7 +24,7 @@ public class DataSourceExchangeRate extends AbsDataSource<ExchangeRate> {
     }
 
     @Override
-    public int bulkInsert(List<ExchangeRate> entities) {
+    public int bulkInsert(Collection<ExchangeRate> entities) {
         //TODO check that the rates for the given days are not already in the database
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();

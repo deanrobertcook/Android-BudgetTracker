@@ -6,9 +6,11 @@ import android.content.ContentResolver;
 import android.database.DatabaseUtils;
 import android.os.Bundle;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.R;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -66,19 +68,27 @@ public abstract class AbsDataSource<T> {
     }
 
     public long insert(T entity) {
-        return -1;
+        throw new NotImplementedException();
     }
 
-    public int bulkInsert(List<T> entities) {
-        return -1;
+    public int bulkInsert(Collection<T> entities) {
+        throw new NotImplementedException();
     }
 
     public boolean delete(T entity) {
-        return false;
+        throw new NotImplementedException();
+    }
+
+    public int bulkDelete(Collection<T> entities) {
+        throw new NotImplementedException();
     }
 
     public boolean update(T entity) {
-        return false;
+        throw new NotImplementedException();
+    }
+
+    public int bulkUpdate(Collection<T> entities) {
+        throw new NotImplementedException();
     }
 
     public long count() {
@@ -98,7 +108,7 @@ public abstract class AbsDataSource<T> {
     public List<T> query(String selection,
                                   String[] selectionArgs,
                                   String orderBy) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public interface Observer {

@@ -1,8 +1,6 @@
 package org.theronin.expensetracker.pages.main;
 
-import android.app.LoaderManager;
 import android.content.Intent;
-import android.content.Loader;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,8 +20,9 @@ import com.parse.ParseUser;
 
 import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.R;
+import org.theronin.expensetracker.data.Contract;
 import org.theronin.expensetracker.data.DataSourceCategory;
-import org.theronin.expensetracker.data.loader.EntryLoader;
+import org.theronin.expensetracker.data.sync.SyncState;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.pages.categories.CategoryDialogFragment;
@@ -40,7 +39,6 @@ import timber.log.Timber;
 
 
 public class MainActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<List<Entry>>,
         FileBackupAgent.Listener,
         Drawer.OnDrawerItemClickListener,
         CategoryDialogFragment.Container {
@@ -73,6 +71,13 @@ public class MainActivity extends AppCompatActivity implements
 
         currentPage = findCurrentPage(savedInstanceState);
         setPage(currentPage);
+
+        if (!isUserSessionValid()) {
+            finish();
+            return;
+        }
+        ((CustomApplication) getApplication()).getDataSourceEntry().requestSync();
+
     }
 
     private MainPage findCurrentPage(Bundle savedInstanceState) {
@@ -175,12 +180,22 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onStart() {
+        Timber.d("onStart");
+        if (!isUserSessionValid()) {
+            finish();
+            return;
+        }
+        super.onStart();
+    }
+
+    private boolean isUserSessionValid() {
         if (ParseUser.getCurrentUser() == null) {
             Timber.d("User session has expired");
             Intent signInIntent = new Intent(this, LaunchActivity.class);
             startActivity(signInIntent);
+            return false;
         }
-        super.onStart();
+        return true;
     }
 
     @Override
@@ -240,7 +255,14 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void backupEntries() {
-        getLoaderManager().initLoader(ENTRY_LOADER_ID, null, this);
+        //TODO tidy this up
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                new FileBackupAgent().backupEntries(((CustomApplication) getApplication()).getDataSourceEntry()
+                        .query(Contract.EntryView.COL_SYNC_STATUS + " NOT IN (?)", new String[]{SyncState.deleteStateSelection()}, null));
+            }
+        }).start();
     }
 
     private void restoreEntries() {
@@ -261,22 +283,6 @@ public class MainActivity extends AppCompatActivity implements
 
     public void setSelectMode(boolean selectMode) {
         this.selectMode = selectMode;
-    }
-
-    @Override
-    public Loader<List<Entry>> onCreateLoader(int id, Bundle args) {
-        return new EntryLoader(this);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<Entry>> loader, List<Entry> data) {
-        //TODO this happens on each call to the data being invalidated!
-        new FileBackupAgent().backupEntries(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<Entry>> loader) {
-        //do nothing
     }
 
     @Override

@@ -189,7 +189,11 @@ public class FileBackupAgent  {
         }
 
         private String findGlobalId(JsonObject object) {
-            return object.get("globalId").getAsString();
+            if (object.has("globalId")) {
+                return object.get("globalId").getAsString();
+            } else {
+                return null;
+            }
         }
 
         private long findDate(JsonObject object) {

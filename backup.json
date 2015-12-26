@@ -1,3138 +1,3712 @@
 [
   {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 1,
-    "dateEntered": "2015-08-02"
-  },
-  {
-    "amount": 350,
-    "category": "chinese",
-    "currency": "EUR",
-    "id": 2,
-    "dateEntered": "2015-08-02"
-  },
-  {
-    "amount": 250,
+    "amount": 325,
     "category": "coffee",
     "currency": "EUR",
-    "id": 3,
-    "dateEntered": "2015-08-02"
-  },
-  {
-    "amount": 1200,
-    "category": "climbing",
-    "currency": "EUR",
-    "id": 4,
-    "dateEntered": "2015-08-02"
-  },
-  {
-    "amount": 180,
-    "category": "bread",
-    "currency": "EUR",
-    "id": 5,
-    "dateEntered": "2015-08-01"
-  },
-  {
-    "amount": 329,
-    "category": "salmon",
-    "currency": "EUR",
-    "id": 6,
-    "dateEntered": "2015-08-01"
-  },
-  {
-    "amount": 99,
-    "category": "salami",
-    "currency": "EUR",
-    "id": 8,
-    "dateEntered": "2015-08-01"
-  },
-  {
-    "amount": 118,
-    "category": "mango ayran",
-    "currency": "EUR",
-    "id": 9,
-    "dateEntered": "2015-08-01"
-  },
-  {
-    "amount": 2200,
-    "category": "breakfast",
-    "currency": "EUR",
-    "id": 10,
-    "dateEntered": "2015-08-01"
-  },
-  {
-    "amount": 299,
-    "category": "mouthwash",
-    "currency": "EUR",
-    "id": 11,
-    "dateEntered": "2015-07-31"
-  },
-  {
-    "amount": 140,
-    "category": "bread",
-    "currency": "EUR",
-    "id": 12,
-    "dateEntered": "2015-07-31"
-  },
-  {
-    "amount": 329,
-    "category": "salmon",
-    "currency": "EUR",
-    "id": 13,
-    "dateEntered": "2015-07-31"
-  },
-  {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 15,
-    "dateEntered": "2015-07-28"
-  },
-  {
-    "amount": 640,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 16,
-    "dateEntered": "2015-07-29"
-  },
-  {
-    "amount": 350,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 17,
-    "dateEntered": "2015-07-29"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 18,
-    "dateEntered": "2015-07-29"
-  },
-  {
-    "amount": 119,
-    "category": "cream cheese",
-    "currency": "EUR",
-    "id": 19,
-    "dateEntered": "2015-07-31"
-  },
-  {
-    "amount": 330,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 21,
-    "dateEntered": "2015-08-03"
-  },
-  {
-    "amount": 135,
-    "category": "bread",
-    "currency": "EUR",
-    "id": 22,
-    "dateEntered": "2015-08-03"
-  },
-  {
-    "amount": 1200,
-    "category": "climbing",
-    "currency": "EUR",
-    "id": 24,
-    "dateEntered": "2015-08-04"
-  },
-  {
-    "amount": 118,
-    "category": "mango ayran",
-    "currency": "EUR",
-    "id": 25,
-    "dateEntered": "2015-08-04"
-  },
-  {
-    "amount": 200,
-    "category": "soft drink",
-    "currency": "EUR",
-    "id": 26,
-    "dateEntered": "2015-08-04"
-  },
-  {
-    "amount": 720,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 27,
-    "dateEntered": "2015-08-04"
-  },
-  {
-    "amount": 120,
-    "category": "mango ayran",
-    "currency": "EUR",
-    "id": 28,
-    "dateEntered": "2015-08-05"
-  },
-  {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 30,
-    "dateEntered": "2015-08-05"
-  },
-  {
-    "amount": 750,
-    "category": "breakfast",
-    "currency": "EUR",
-    "id": 32,
-    "dateEntered": "2015-08-06"
-  },
-  {
-    "amount": 2870,
-    "category": "taxis",
-    "currency": "EUR",
-    "id": 33,
-    "dateEntered": "2015-08-05"
-  },
-  {
-    "amount": 350,
-    "category": "schwarma",
-    "currency": "EUR",
-    "id": 34,
-    "dateEntered": "2015-08-06"
-  },
-  {
-    "amount": 4300,
-    "category": "club entry",
-    "currency": "EUR",
-    "id": 35,
-    "dateEntered": "2015-08-07"
-  },
-  {
-    "amount": 1200,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 36,
-    "dateEntered": "2015-08-07"
-  },
-  {
-    "amount": 200,
-    "category": "miscellaneous",
-    "currency": "EUR",
-    "id": 37,
-    "dateEntered": "2015-08-07"
-  },
-  {
-    "amount": 500,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 38,
-    "dateEntered": "2015-08-07"
-  },
-  {
-    "amount": 538,
-    "category": "subway",
-    "currency": "EUR",
-    "id": 39,
-    "dateEntered": "2015-08-09"
-  },
-  {
-    "amount": 1150,
-    "category": "climbing",
-    "currency": "EUR",
-    "id": 40,
-    "dateEntered": "2015-08-09"
-  },
-  {
-    "amount": 520,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 41,
-    "dateEntered": "2015-08-09"
-  },
-  {
-    "amount": 320,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 42,
-    "dateEntered": "2015-08-09"
-  },
-  {
-    "amount": 135,
-    "category": "bread",
-    "currency": "EUR",
-    "id": 43,
-    "dateEntered": "2015-08-10"
-  },
-  {
-    "amount": 299,
-    "category": "nut mix",
-    "currency": "EUR",
-    "id": 44,
-    "dateEntered": "2015-08-10"
-  },
-  {
-    "amount": 115,
-    "category": "chicken",
-    "currency": "EUR",
-    "id": 45,
-    "dateEntered": "2015-08-10"
-  },
-  {
-    "amount": 350,
-    "category": "schwarma",
-    "currency": "EUR",
-    "id": 46,
-    "dateEntered": "2015-08-10"
-  },
-  {
-    "amount": 3700,
-    "category": "spirits",
-    "currency": "EUR",
-    "id": 47,
-    "dateEntered": "2015-08-10"
-  },
-  {
-    "amount": 580,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 48,
-    "dateEntered": "2015-08-10"
-  },
-  {
-    "amount": 2000,
-    "category": "wine",
-    "currency": "EUR",
-    "id": 49,
-    "dateEntered": "2015-08-11"
-  },
-  {
-    "amount": 700,
-    "category": "water",
-    "currency": "EUR",
-    "id": 50,
-    "dateEntered": "2015-08-11"
-  },
-  {
-    "amount": 400,
-    "category": "schwarma",
-    "currency": "EUR",
-    "id": 51,
-    "dateEntered": "2015-08-12"
-  },
-  {
-    "amount": 350,
-    "category": "chinese",
-    "currency": "EUR",
-    "id": 52,
-    "dateEntered": "2015-08-13"
+    "id": 583,
+    "utcDate": 1451139490482
   },
   {
     "amount": 340,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 53,
-    "dateEntered": "2015-08-13"
-  },
-  {
-    "amount": 140,
-    "category": "bread",
-    "currency": "EUR",
-    "id": 54,
-    "dateEntered": "2015-08-14"
-  },
-  {
-    "amount": 329,
-    "category": "salmon",
-    "currency": "EUR",
-    "id": 55,
-    "dateEntered": "2015-08-14"
-  },
-  {
-    "amount": 1800,
-    "category": "taxis",
-    "currency": "EUR",
-    "id": 56,
-    "dateEntered": "2015-08-14"
-  },
-  {
-    "amount": 205,
     "category": "sandwiches",
     "currency": "EUR",
-    "id": 61,
-    "dateEntered": "2015-08-16"
+    "id": 582,
+    "utcDate": 1451124223254
   },
   {
-    "amount": 205,
-    "category": "coffee",
+    "amount": 7950,
+    "category": "local transport",
     "currency": "EUR",
-    "id": 62,
-    "dateEntered": "2015-08-16"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 63,
-    "dateEntered": "2015-08-15"
-  },
-  {
-    "amount": 195,
-    "category": "milk",
-    "currency": "EUR",
-    "id": 64,
-    "dateEntered": "2015-08-16"
-  },
-  {
-    "amount": 550,
-    "category": "indian",
-    "currency": "EUR",
-    "id": 65,
-    "dateEntered": "2015-08-16"
-  },
-  {
-    "amount": 560,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 66,
-    "dateEntered": "2015-08-16"
-  },
-  {
-    "amount": 249,
-    "category": "avacado",
-    "currency": "EUR",
-    "id": 67,
-    "dateEntered": "2015-08-17"
-  },
-  {
-    "amount": 180,
-    "category": "bread",
-    "currency": "EUR",
-    "id": 68,
-    "dateEntered": "2015-08-17"
-  },
-  {
-    "amount": 88,
-    "category": "cream cheese",
-    "currency": "EUR",
-    "id": 69,
-    "dateEntered": "2015-08-17"
-  },
-  {
-    "amount": 329,
-    "category": "salmon",
-    "currency": "EUR",
-    "id": 70,
-    "dateEntered": "2015-08-17"
-  },
-  {
-    "amount": 60,
-    "category": "mango ayran",
-    "currency": "EUR",
-    "id": 71,
-    "dateEntered": "2015-08-18"
+    "id": 581,
+    "utcDate": 1451124202033
   },
   {
     "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 72,
-    "dateEntered": "2015-08-18"
-  },
-  {
-    "amount": 149,
-    "category": "deodorant",
-    "currency": "EUR",
-    "id": 73,
-    "dateEntered": "2015-08-18"
-  },
-  {
-    "amount": 2500,
-    "category": "lunch",
-    "currency": "EUR",
-    "id": 76,
-    "dateEntered": "2015-08-19"
-  },
-  {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 77,
-    "dateEntered": "2015-08-19"
-  },
-  {
-    "amount": 189,
-    "category": "juice",
-    "currency": "EUR",
-    "id": 78,
-    "dateEntered": "2015-08-19"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 79,
-    "dateEntered": "2015-08-20"
-  },
-  {
-    "amount": 350,
-    "category": "schwarma",
-    "currency": "EUR",
-    "id": 80,
-    "dateEntered": "2015-08-20"
-  },
-  {
-    "amount": 140,
-    "category": "bread",
-    "currency": "EUR",
-    "id": 81,
-    "dateEntered": "2015-08-21"
-  },
-  {
-    "amount": 88,
-    "category": "cream cheese",
-    "currency": "EUR",
-    "id": 82,
-    "dateEntered": "2015-08-21"
-  },
-  {
-    "amount": 329,
-    "category": "salmon",
-    "currency": "EUR",
-    "id": 83,
-    "dateEntered": "2015-08-21"
-  },
-  {
-    "amount": 179,
-    "category": "chicken",
-    "currency": "EUR",
-    "id": 84,
-    "dateEntered": "2015-08-21"
-  },
-  {
-    "amount": 118,
-    "category": "mango ayran",
-    "currency": "EUR",
-    "id": 85,
-    "dateEntered": "2015-08-21"
-  },
-  {
-    "amount": 283,
-    "category": "avacado",
-    "currency": "EUR",
-    "id": 86,
-    "dateEntered": "2015-08-21"
-  },
-  {
-    "amount": 710,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 87,
-    "dateEntered": "2015-08-22"
-  },
-  {
-    "amount": 1600,
-    "category": "taxis",
-    "currency": "EUR",
-    "id": 88,
-    "dateEntered": "2015-08-22"
-  },
-  {
-    "amount": 320,
-    "category": "crepes",
-    "currency": "EUR",
-    "id": 89,
-    "dateEntered": "2015-08-22"
-  },
-  {
-    "amount": 2000,
-    "category": "spirits",
-    "currency": "EUR",
-    "id": 90,
-    "dateEntered": "2015-08-21"
-  },
-  {
-    "amount": 500,
     "category": "coffee",
     "currency": "EUR",
-    "id": 91,
-    "dateEntered": "2015-08-22"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 92,
-    "dateEntered": "2015-08-23"
-  },
-  {
-    "amount": 100,
-    "category": "public toilets",
-    "currency": "EUR",
-    "id": 93,
-    "dateEntered": "2015-08-22"
-  },
-  {
-    "amount": 79,
-    "category": "cream cheese",
-    "currency": "EUR",
-    "id": 94,
-    "dateEntered": "2015-08-22"
-  },
-  {
-    "amount": 99,
-    "category": "chicken",
-    "currency": "EUR",
-    "id": 95,
-    "dateEntered": "2015-08-22"
-  },
-  {
-    "amount": 55,
-    "category": "milk",
-    "currency": "EUR",
-    "id": 96,
-    "dateEntered": "2015-08-22"
-  },
-  {
-    "amount": 140,
-    "category": "bread",
-    "currency": "EUR",
-    "id": 97,
-    "dateEntered": "2015-08-22"
-  },
-  {
-    "amount": 7,
-    "category": "plastic bags",
-    "currency": "EUR",
-    "id": 98,
-    "dateEntered": "2015-08-22"
-  },
-  {
-    "amount": 70,
-    "category": "bread",
-    "currency": "EUR",
-    "id": 99,
-    "dateEntered": "2015-08-24"
-  },
-  {
-    "amount": 249,
-    "category": "avacado",
-    "currency": "EUR",
-    "id": 100,
-    "dateEntered": "2015-08-24"
-  },
-  {
-    "amount": 279,
-    "category": "washing detergent",
-    "currency": "EUR",
-    "id": 101,
-    "dateEntered": "2015-08-24"
-  },
-  {
-    "amount": 350,
-    "category": "schwarma",
-    "currency": "EUR",
-    "id": 102,
-    "dateEntered": "2015-08-24"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 103,
-    "dateEntered": "2015-08-25"
-  },
-  {
-    "amount": 380,
-    "category": "pens",
-    "currency": "EUR",
-    "id": 104,
-    "dateEntered": "2015-08-26"
-  },
-  {
-    "amount": 350,
-    "category": "chinese",
-    "currency": "EUR",
-    "id": 105,
-    "dateEntered": "2015-08-26"
-  },
-  {
-    "amount": 350,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 106,
-    "dateEntered": "2015-08-26"
-  },
-  {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 107,
-    "dateEntered": "2015-08-26"
-  },
-  {
-    "amount": 350,
-    "category": "schwarma",
-    "currency": "EUR",
-    "id": 109,
-    "dateEntered": "2015-08-27"
-  },
-  {
-    "amount": 1795,
-    "category": "books",
-    "currency": "EUR",
-    "id": 110,
-    "dateEntered": "2015-08-29"
-  },
-  {
-    "amount": 2290,
-    "category": "guitar strings",
-    "currency": "EUR",
-    "id": 111,
-    "dateEntered": "2015-08-29"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 112,
-    "dateEntered": "2015-08-29"
-  },
-  {
-    "amount": 115,
-    "category": "cream cheese",
-    "currency": "EUR",
-    "id": 113,
-    "dateEntered": "2015-08-29"
-  },
-  {
-    "amount": 70,
-    "category": "bread",
-    "currency": "EUR",
-    "id": 114,
-    "dateEntered": "2015-08-29"
-  },
-  {
-    "amount": 59,
-    "category": "mango ayran",
-    "currency": "EUR",
-    "id": 115,
-    "dateEntered": "2015-08-29"
-  },
-  {
-    "amount": 89,
-    "category": "chicken",
-    "currency": "EUR",
-    "id": 116,
-    "dateEntered": "2015-08-29"
-  },
-  {
-    "amount": 165,
-    "category": "tea",
-    "currency": "EUR",
-    "id": 117,
-    "dateEntered": "2015-08-29"
-  },
-  {
-    "amount": 350,
-    "category": "schwarma",
-    "currency": "EUR",
-    "id": 118,
-    "dateEntered": "2015-08-30"
-  },
-  {
-    "amount": 1150,
-    "category": "climbing",
-    "currency": "EUR",
-    "id": 119,
-    "dateEntered": "2015-08-30"
-  },
-  {
-    "amount": 150,
-    "category": "soft drinks",
-    "currency": "EUR",
-    "id": 120,
-    "dateEntered": "2015-08-30"
-  },
-  {
-    "amount": 399,
-    "category": "cashews",
-    "currency": "EUR",
-    "id": 121,
-    "dateEntered": "2015-08-30"
-  },
-  {
-    "amount": 130,
-    "category": "pencils",
-    "currency": "EUR",
-    "id": 122,
-    "dateEntered": "2015-08-31"
-  },
-  {
-    "amount": 350,
-    "category": "chinese",
-    "currency": "EUR",
-    "id": 123,
-    "dateEntered": "2015-08-31"
-  },
-  {
-    "amount": 500,
-    "category": "wire cutters",
-    "currency": "EUR",
-    "id": 124,
-    "dateEntered": "2015-08-31"
-  },
-  {
-    "amount": 42500,
-    "category": "rent",
-    "currency": "EUR",
-    "id": 125,
-    "dateEntered": "2015-08-31"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 126,
-    "dateEntered": "2015-09-02"
-  },
-  {
-    "amount": 1600,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 127,
-    "dateEntered": "2015-09-01"
-  },
-  {
-    "amount": 600,
-    "category": "dinner",
-    "currency": "EUR",
-    "id": 128,
-    "dateEntered": "2015-09-01"
-  },
-  {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 129,
-    "dateEntered": "2015-09-01"
-  },
-  {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 130,
-    "dateEntered": "2015-09-02"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 131,
-    "dateEntered": "2015-09-04"
-  },
-  {
-    "amount": 1100,
-    "category": "climbing",
-    "currency": "EUR",
-    "id": 132,
-    "dateEntered": "2015-09-05"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 133,
-    "dateEntered": "2015-09-05"
-  },
-  {
-    "amount": 60,
-    "category": "mango ayran",
-    "currency": "EUR",
-    "id": 134,
-    "dateEntered": "2015-09-05"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 135,
-    "dateEntered": "2015-09-05"
-  },
-  {
-    "amount": 1000,
-    "category": "dinner",
-    "currency": "EUR",
-    "id": 137,
-    "dateEntered": "2015-09-05"
-  },
-  {
-    "amount": 280,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 138,
-    "dateEntered": "2015-09-05"
-  },
-  {
-    "amount": 499,
-    "category": "socks",
-    "currency": "EUR",
-    "id": 139,
-    "dateEntered": "2015-09-05"
-  },
-  {
-    "amount": 500,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 140,
-    "dateEntered": "2015-09-06"
-  },
-  {
-    "amount": 300,
-    "category": "chinese",
-    "currency": "EUR",
-    "id": 141,
-    "dateEntered": "2015-09-06"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 142,
-    "dateEntered": "2015-09-07"
-  },
-  {
-    "amount": 70,
-    "category": "bread",
-    "currency": "EUR",
-    "id": 143,
-    "dateEntered": "2015-09-07"
-  },
-  {
-    "amount": 329,
-    "category": "salmon",
-    "currency": "EUR",
-    "id": 144,
-    "dateEntered": "2015-09-07"
-  },
-  {
-    "amount": 119,
-    "category": "cream cheese",
-    "currency": "EUR",
-    "id": 145,
-    "dateEntered": "2015-09-07"
-  },
-  {
-    "amount": 850,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 146,
-    "dateEntered": "2015-09-08"
-  },
-  {
-    "amount": 550,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 147,
-    "dateEntered": "2015-09-08"
-  },
-  {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 148,
-    "dateEntered": "2015-09-08"
-  },
-  {
-    "amount": 600,
-    "category": "wine",
-    "currency": "EUR",
-    "id": 149,
-    "dateEntered": "2015-09-08"
-  },
-  {
-    "amount": 200,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 150,
-    "dateEntered": "2015-09-08"
-  },
-  {
-    "amount": 350,
-    "category": "schwarma",
-    "currency": "EUR",
-    "id": 151,
-    "dateEntered": "2015-09-09"
-  },
-  {
-    "amount": 289,
-    "category": "cereal",
-    "currency": "EUR",
-    "id": 152,
-    "dateEntered": "2015-09-11"
-  },
-  {
-    "amount": 59,
-    "category": "mango ayran",
-    "currency": "EUR",
-    "id": 153,
-    "dateEntered": "2015-09-11"
-  },
-  {
-    "amount": 70,
-    "category": "bread",
-    "currency": "EUR",
-    "id": 154,
-    "dateEntered": "2015-09-08"
-  },
-  {
-    "amount": 59,
-    "category": "mango ayran",
-    "currency": "EUR",
-    "id": 155,
-    "dateEntered": "2015-09-08"
-  },
-  {
-    "amount": 215,
-    "category": "bread",
-    "currency": "EUR",
-    "id": 156,
-    "dateEntered": "2015-09-12"
-  },
-  {
-    "amount": 55,
-    "category": "milk",
-    "currency": "EUR",
-    "id": 157,
-    "dateEntered": "2015-09-12"
-  },
-  {
-    "amount": 219,
-    "category": "peanut butter",
-    "currency": "EUR",
-    "id": 158,
-    "dateEntered": "2015-09-12"
-  },
-  {
-    "amount": 259,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 159,
-    "dateEntered": "2015-09-12"
-  },
-  {
-    "amount": 279,
-    "category": "apples",
-    "currency": "EUR",
-    "id": 160,
-    "dateEntered": "2015-09-12"
-  },
-  {
-    "amount": 10,
-    "category": "plastic bags",
-    "currency": "EUR",
-    "id": 161,
-    "dateEntered": "2015-09-12"
-  },
-  {
-    "amount": 300,
-    "category": "soft drink",
-    "currency": "EUR",
-    "id": 162,
-    "dateEntered": "2015-09-12"
-  },
-  {
-    "amount": 250,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 163,
-    "dateEntered": "2015-09-12"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 164,
-    "dateEntered": "2015-09-12"
-  },
-  {
-    "amount": 1150,
-    "category": "climbing",
-    "currency": "EUR",
-    "id": 165,
-    "dateEntered": "2015-09-13"
-  },
-  {
-    "amount": 538,
-    "category": "subway",
-    "currency": "EUR",
-    "id": 166,
-    "dateEntered": "2015-09-13"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 167,
-    "dateEntered": "2015-09-14"
-  },
-  {
-    "amount": 2500,
-    "category": "pants",
-    "currency": "EUR",
-    "id": 168,
-    "dateEntered": "2015-09-15"
-  },
-  {
-    "amount": 495,
-    "category": "smoothies",
-    "currency": "EUR",
-    "id": 169,
-    "dateEntered": "2015-09-15"
-  },
-  {
-    "amount": 140,
-    "category": "public toilets",
-    "currency": "EUR",
-    "id": 170,
-    "dateEntered": "2015-09-15"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 171,
-    "dateEntered": "2015-09-16"
-  },
-  {
-    "amount": 900,
-    "category": "lunch",
-    "currency": "EUR",
-    "id": 172,
-    "dateEntered": "2015-09-16"
-  },
-  {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 173,
-    "dateEntered": "2015-09-16"
-  },
-  {
-    "amount": 560,
-    "category": "train tickets",
-    "currency": "EUR",
-    "id": 174,
-    "dateEntered": "2015-09-14"
-  },
-  {
-    "amount": 1900,
-    "category": "shoes",
-    "currency": "EUR",
-    "id": 175,
-    "dateEntered": "2015-09-19"
-  },
-  {
-    "amount": 1000,
-    "category": "jump ropes",
-    "currency": "EUR",
-    "id": 176,
-    "dateEntered": "2015-09-19"
-  },
-  {
-    "amount": 400,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 177,
-    "dateEntered": "2015-09-19"
-  },
-  {
-    "amount": 350,
-    "category": "crepes",
-    "currency": "EUR",
-    "id": 178,
-    "dateEntered": "2015-09-19"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 179,
-    "dateEntered": "2015-09-18"
-  },
-  {
-    "amount": 350,
-    "category": "chinese",
-    "currency": "EUR",
-    "id": 180,
-    "dateEntered": "2015-09-17"
-  },
-  {
-    "amount": 320,
-    "category": "wine",
-    "currency": "EUR",
-    "id": 181,
-    "dateEntered": "2015-09-19"
-  },
-  {
-    "amount": 300,
-    "category": "dinner",
-    "currency": "EUR",
-    "id": 182,
-    "dateEntered": "2015-09-19"
-  },
-  {
-    "amount": 340,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 183,
-    "dateEntered": "2015-09-19"
-  },
-  {
-    "amount": 300,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 184,
-    "dateEntered": "2015-09-19"
-  },
-  {
-    "amount": 490,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 185,
-    "dateEntered": "2015-09-19"
-  },
-  {
-    "amount": 300,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 186,
-    "dateEntered": "2015-09-19"
-  },
-  {
-    "amount": 350,
-    "category": "schwarma",
-    "currency": "EUR",
-    "id": 187,
-    "dateEntered": "2015-09-20"
-  },
-  {
-    "amount": 120,
-    "category": "mango ayran",
-    "currency": "EUR",
-    "id": 188,
-    "dateEntered": "2015-09-20"
-  },
-  {
-    "amount": 260,
-    "category": "pencils",
-    "currency": "EUR",
-    "id": 190,
-    "dateEntered": "2015-09-19"
-  },
-  {
-    "amount": 140,
-    "category": "erasers",
-    "currency": "EUR",
-    "id": 191,
-    "dateEntered": "2015-09-19"
-  },
-  {
-    "amount": 220,
-    "category": "sketch books",
-    "currency": "EUR",
-    "id": 192,
-    "dateEntered": "2015-09-19"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 193,
-    "dateEntered": "2015-09-21"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 194,
-    "dateEntered": "2015-09-21"
-  },
-  {
-    "amount": 350,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 195,
-    "dateEntered": "2015-09-22"
-  },
-  {
-    "amount": 150,
-    "category": "mango ayran",
-    "currency": "EUR",
-    "id": 196,
-    "dateEntered": "2015-09-22"
-  },
-  {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 197,
-    "dateEntered": "2015-09-22"
-  },
-  {
-    "amount": 690,
-    "category": "wine",
-    "currency": "EUR",
-    "id": 198,
-    "dateEntered": "2015-09-22"
-  },
-  {
-    "amount": 70,
-    "category": "bread",
-    "currency": "EUR",
-    "id": 199,
-    "dateEntered": "2015-09-22"
-  },
-  {
-    "amount": 289,
-    "category": "cereal",
-    "currency": "EUR",
-    "id": 200,
-    "dateEntered": "2015-09-22"
-  },
-  {
-    "amount": 50,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 201,
-    "dateEntered": "2015-09-24"
-  },
-  {
-    "amount": 1050,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 202,
-    "dateEntered": "2015-09-24"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 203,
-    "dateEntered": "2015-09-24"
-  },
-  {
-    "amount": 450,
-    "category": "chinese",
-    "currency": "EUR",
-    "id": 204,
-    "dateEntered": "2015-09-24"
-  },
-  {
-    "amount": 290,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 205,
-    "dateEntered": "2015-09-26"
-  },
-  {
-    "amount": 800,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 206,
-    "dateEntered": "2015-09-26"
-  },
-  {
-    "amount": 800,
-    "category": "club entry",
-    "currency": "EUR",
-    "id": 207,
-    "dateEntered": "2015-09-26"
-  },
-  {
-    "amount": 280,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 208,
-    "dateEntered": "2015-09-26"
-  },
-  {
-    "amount": 540,
-    "category": "börek",
-    "currency": "EUR",
-    "id": 209,
-    "dateEntered": "2015-09-28"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 210,
-    "dateEntered": "2015-09-29"
-  },
-  {
-    "amount": 67,
-    "category": "bananas",
-    "currency": "EUR",
-    "id": 211,
-    "dateEntered": "2015-09-26"
-  },
-  {
-    "amount": 110,
-    "category": "milk",
-    "currency": "EUR",
-    "id": 212,
-    "dateEntered": "2015-09-26"
-  },
-  {
-    "amount": 205,
-    "category": "bread",
-    "currency": "EUR",
-    "id": 213,
-    "dateEntered": "2015-09-26"
-  },
-  {
-    "amount": 149,
-    "category": "peanuts",
-    "currency": "EUR",
-    "id": 214,
-    "dateEntered": "2015-09-26"
-  },
-  {
-    "amount": 175,
-    "category": "cereal",
-    "currency": "EUR",
-    "id": 215,
-    "dateEntered": "2015-09-26"
-  },
-  {
-    "amount": 10,
-    "category": "plastic bags",
-    "currency": "EUR",
-    "id": 216,
-    "dateEntered": "2015-09-26"
-  },
-  {
-    "amount": 70,
-    "category": "bread",
-    "currency": "EUR",
-    "id": 217,
-    "dateEntered": "2015-09-30"
-  },
-  {
-    "amount": 329,
-    "category": "salmon",
-    "currency": "EUR",
-    "id": 218,
-    "dateEntered": "2015-09-30"
-  },
-  {
-    "amount": 199,
-    "category": "avacado",
-    "currency": "EUR",
-    "id": 219,
-    "dateEntered": "2015-09-30"
-  },
-  {
-    "amount": 59,
-    "category": "mango ayran",
-    "currency": "EUR",
-    "id": 220,
-    "dateEntered": "2015-09-30"
-  },
-  {
-    "amount": 42500,
-    "category": "rent",
-    "currency": "EUR",
-    "id": 221,
-    "dateEntered": "2015-09-30"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 222,
-    "dateEntered": "2015-10-01"
-  },
-  {
-    "amount": 70,
-    "category": "bread",
-    "currency": "EUR",
-    "id": 223,
-    "dateEntered": "2015-10-01"
-  },
-  {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 224,
-    "dateEntered": "2015-10-01"
-  },
-  {
-    "amount": 1200,
-    "category": "cocktails",
-    "currency": "EUR",
-    "id": 225,
-    "dateEntered": "2015-10-03"
-  },
-  {
-    "amount": 300,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 226,
-    "dateEntered": "2015-10-02"
-  },
-  {
-    "amount": 250,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 227,
-    "dateEntered": "2015-10-02"
-  },
-  {
-    "amount": 300,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 228,
-    "dateEntered": "2015-10-02"
-  },
-  {
-    "amount": 50,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 229,
-    "dateEntered": "2015-10-03"
-  },
-  {
-    "amount": 50,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 230,
-    "dateEntered": "2015-10-03"
-  },
-  {
-    "amount": 350,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 231,
-    "dateEntered": "2015-10-02"
-  },
-  {
-    "amount": 50,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 232,
-    "dateEntered": "2015-10-03"
-  },
-  {
-    "amount": 900,
-    "category": "climbing",
-    "currency": "EUR",
-    "id": 233,
-    "dateEntered": "2015-10-03"
-  },
-  {
-    "amount": 690,
-    "category": "pizza",
-    "currency": "EUR",
-    "id": 234,
-    "dateEntered": "2015-10-03"
-  },
-  {
-    "amount": 710,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 235,
-    "dateEntered": "2015-10-03"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 236,
-    "dateEntered": "2015-10-03"
-  },
-  {
-    "amount": 260,
-    "category": "ice cream",
-    "currency": "EUR",
-    "id": 237,
-    "dateEntered": "2015-10-03"
-  },
-  {
-    "amount": 230,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 238,
-    "dateEntered": "2015-10-03"
-  },
-  {
-    "amount": 50,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 239,
-    "dateEntered": "2015-10-04"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 240,
-    "dateEntered": "2015-10-04"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 241,
-    "dateEntered": "2015-10-04"
-  },
-  {
-    "amount": 350,
-    "category": "crepes",
-    "currency": "EUR",
-    "id": 242,
-    "dateEntered": "2015-10-04"
-  },
-  {
-    "amount": 140,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 243,
-    "dateEntered": "2015-10-04"
-  },
-  {
-    "amount": 50,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 244,
-    "dateEntered": "2015-10-04"
-  },
-  {
-    "amount": 389,
-    "category": "burgers",
-    "currency": "EUR",
-    "id": 245,
-    "dateEntered": "2015-10-04"
-  },
-  {
-    "amount": 490,
-    "category": "smoxey\u0027s",
-    "currency": "EUR",
-    "id": 246,
-    "dateEntered": "2015-10-05"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 247,
-    "dateEntered": "2015-10-05"
-  },
-  {
-    "amount": 50,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 248,
-    "dateEntered": "2015-10-05"
-  },
-  {
-    "amount": 50,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 249,
-    "dateEntered": "2015-10-07"
-  },
-  {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 252,
-    "dateEntered": "2015-10-06"
-  },
-  {
-    "amount": 359,
-    "category": "smoothie",
-    "currency": "EUR",
-    "id": 253,
-    "dateEntered": "2015-10-06"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 254,
-    "dateEntered": "2015-10-07"
-  },
-  {
-    "amount": 1000,
-    "category": "presents",
-    "currency": "EUR",
-    "id": 255,
-    "dateEntered": "2015-10-07"
-  },
-  {
-    "amount": 100,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 256,
-    "dateEntered": "2015-10-08"
-  },
-  {
-    "amount": 650,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 257,
-    "dateEntered": "2015-10-08"
-  },
-  {
-    "amount": 350,
-    "category": "gozleme",
-    "currency": "EUR",
-    "id": 258,
-    "dateEntered": "2015-10-08"
-  },
-  {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 259,
-    "dateEntered": "2015-10-07"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 260,
-    "dateEntered": "2015-10-07"
-  },
-  {
-    "amount": 70,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 261,
-    "dateEntered": "2015-10-09"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 262,
-    "dateEntered": "2015-10-09"
-  },
-  {
-    "amount": 350,
-    "category": "schwarma",
-    "currency": "EUR",
-    "id": 263,
-    "dateEntered": "2015-10-09"
-  },
-  {
-    "amount": 60,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 264,
-    "dateEntered": "2015-10-09"
-  },
-  {
-    "amount": 50,
-    "category": "bananas",
-    "currency": "EUR",
-    "id": 265,
-    "dateEntered": "2015-10-10"
-  },
-  {
-    "amount": 59,
-    "category": "milk",
-    "currency": "EUR",
-    "id": 266,
-    "dateEntered": "2015-10-10"
-  },
-  {
-    "amount": 99,
-    "category": "chocolate",
-    "currency": "EUR",
-    "id": 267,
-    "dateEntered": "2015-10-10"
-  },
-  {
-    "amount": 325,
-    "category": "toilet paper",
-    "currency": "EUR",
-    "id": 268,
-    "dateEntered": "2015-10-10"
-  },
-  {
-    "amount": 95,
-    "category": "shower gel",
-    "currency": "EUR",
-    "id": 269,
-    "dateEntered": "2015-10-10"
-  },
-  {
-    "amount": 115,
-    "category": "toilet freshener",
-    "currency": "EUR",
-    "id": 270,
-    "dateEntered": "2015-10-10"
-  },
-  {
-    "amount": 75,
-    "category": "toilet cleaner",
-    "currency": "EUR",
-    "id": 271,
-    "dateEntered": "2015-10-10"
-  },
-  {
-    "amount": 179,
-    "category": "candles",
-    "currency": "EUR",
-    "id": 272,
-    "dateEntered": "2015-10-10"
-  },
-  {
-    "amount": 1500,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 273,
-    "dateEntered": "2015-10-10"
-  },
-  {
-    "amount": 1400,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 274,
-    "dateEntered": "2015-10-10"
-  },
-  {
-    "amount": 650,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 275,
-    "dateEntered": "2015-10-10"
-  },
-  {
-    "amount": 1100,
-    "category": "burgers",
-    "currency": "EUR",
-    "id": 276,
-    "dateEntered": "2015-10-11"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 277,
-    "dateEntered": "2015-10-11"
-  },
-  {
-    "amount": 2298,
-    "category": "guitar strings",
-    "currency": "EUR",
-    "id": 280,
-    "dateEntered": "2015-10-10"
-  },
-  {
-    "amount": 1000,
-    "category": "burgers",
-    "currency": "EUR",
-    "id": 281,
-    "dateEntered": "2015-10-14"
-  },
-  {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 282,
-    "dateEntered": "2015-10-14"
-  },
-  {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 283,
-    "dateEntered": "2015-10-13"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 284,
-    "dateEntered": "2015-10-13"
-  },
-  {
-    "amount": 150,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 285,
-    "dateEntered": "2015-10-12"
-  },
-  {
-    "amount": 350,
-    "category": "chinese",
-    "currency": "EUR",
-    "id": 286,
-    "dateEntered": "2015-10-12"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 287,
-    "dateEntered": "2015-10-12"
-  },
-  {
-    "amount": 100,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 288,
-    "dateEntered": "2015-10-14"
-  },
-  {
-    "amount": 70,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 289,
-    "dateEntered": "2015-10-15"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 290,
-    "dateEntered": "2015-10-14"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 291,
-    "dateEntered": "2015-10-16"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 292,
-    "dateEntered": "2015-10-15"
-  },
-  {
-    "amount": 650,
-    "category": "turkish",
-    "currency": "EUR",
-    "id": 293,
-    "dateEntered": "2015-10-15"
-  },
-  {
-    "amount": 100,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 295,
-    "dateEntered": "2015-10-16"
-  },
-  {
-    "amount": 1600,
-    "category": "lunch",
-    "currency": "EUR",
-    "id": 296,
-    "dateEntered": "2015-10-17"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 299,
-    "dateEntered": "2015-10-18"
-  },
-  {
-    "amount": 120,
-    "category": "mango ayran",
-    "currency": "EUR",
-    "id": 300,
-    "dateEntered": "2015-10-18"
-  },
-  {
-    "amount": 259,
-    "category": "ciabatta",
-    "currency": "EUR",
-    "id": 301,
-    "dateEntered": "2015-10-18"
-  },
-  {
-    "amount": 259,
-    "category": "bagels",
-    "currency": "EUR",
-    "id": 302,
-    "dateEntered": "2015-10-18"
-  },
-  {
-    "amount": 1250,
-    "category": "climbing",
-    "currency": "EUR",
-    "id": 303,
-    "dateEntered": "2015-10-18"
-  },
-  {
-    "amount": 250,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 304,
-    "dateEntered": "2015-10-18"
-  },
-  {
-    "amount": 200,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 305,
-    "dateEntered": "2015-10-18"
-  },
-  {
-    "amount": 350,
-    "category": "crepes",
-    "currency": "EUR",
-    "id": 306,
-    "dateEntered": "2015-10-18"
-  },
-  {
-    "amount": 400,
-    "category": "schwarma",
-    "currency": "EUR",
-    "id": 307,
-    "dateEntered": "2015-10-18"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 308,
-    "dateEntered": "2015-10-19"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 309,
-    "dateEntered": "2015-10-19"
-  },
-  {
-    "amount": 1300,
-    "category": "presents",
-    "currency": "EUR",
-    "id": 310,
-    "dateEntered": "2015-10-20"
-  },
-  {
-    "amount": 2000,
-    "category": "dinner",
-    "currency": "EUR",
-    "id": 311,
-    "dateEntered": "2015-10-20"
-  },
-  {
-    "amount": 500,
-    "category": "beer",
-    "currency": "EUR",
-    "id": 312,
-    "dateEntered": "2015-10-20"
-  },
-  {
-    "amount": 7995,
-    "category": "train tickets",
-    "currency": "EUR",
-    "id": 313,
-    "dateEntered": "2015-10-17"
-  },
-  {
-    "amount": 60,
-    "category": "mango ayran",
-    "currency": "EUR",
-    "id": 314,
-    "dateEntered": "2015-10-21"
-  },
-  {
-    "amount": 100,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 315,
-    "dateEntered": "2015-10-22"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 316,
-    "dateEntered": "2015-10-22"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 317,
-    "dateEntered": "2015-10-22"
-  },
-  {
-    "amount": 3500,
-    "category": "indian",
-    "currency": "EUR",
-    "id": 318,
-    "dateEntered": "2015-10-21"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 319,
-    "dateEntered": "2015-10-24"
-  },
-  {
-    "amount": 380,
-    "category": "pens",
-    "currency": "EUR",
-    "id": 320,
-    "dateEntered": "2015-10-24"
-  },
-  {
-    "amount": 350,
-    "category": "chinese",
-    "currency": "EUR",
-    "id": 321,
-    "dateEntered": "2015-10-24"
-  },
-  {
-    "amount": 400,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 322,
-    "dateEntered": "2015-10-25"
-  },
-  {
-    "amount": 100,
-    "category": "snickers",
-    "currency": "EUR",
-    "id": 327,
-    "dateEntered": "2015-10-25"
-  },
-  {
-    "amount": 450,
-    "category": "bagels",
-    "currency": "EUR",
-    "id": 328,
-    "dateEntered": "2015-10-25"
-  },
-  {
-    "amount": 1250,
-    "category": "climbing",
-    "currency": "EUR",
-    "id": 329,
-    "dateEntered": "2015-10-25"
-  },
-  {
-    "amount": 350,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 330,
-    "dateEntered": "2015-10-25"
-  },
-  {
-    "amount": 538,
-    "category": "subway",
-    "currency": "EUR",
-    "id": 331,
-    "dateEntered": "2015-10-25"
-  },
-  {
-    "amount": 3180,
-    "category": "costumes",
-    "currency": "EUR",
-    "id": 332,
-    "dateEntered": "2015-10-24"
-  },
-  {
-    "amount": 200,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 333,
-    "dateEntered": "2015-10-26"
-  },
-  {
-    "amount": 395,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 334,
-    "dateEntered": "2015-10-27"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 335,
-    "dateEntered": "2015-10-27"
-  },
-  {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 336,
-    "dateEntered": "2015-10-27"
-  },
-  {
-    "amount": 300,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 337,
-    "dateEntered": "2015-10-28"
-  },
-  {
-    "amount": 350,
-    "category": "schwarma",
-    "currency": "EUR",
-    "id": 338,
-    "dateEntered": "2015-10-28"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 339,
-    "dateEntered": "2015-10-29"
-  },
-  {
-    "amount": 300,
-    "category": "pizza",
-    "currency": "EUR",
-    "id": 340,
-    "dateEntered": "2015-10-30"
-  },
-  {
-    "amount": 200,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 341,
-    "dateEntered": "2015-10-29"
-  },
-  {
-    "amount": 42500,
-    "category": "rent",
-    "currency": "EUR",
-    "id": 342,
-    "dateEntered": "2015-10-30"
-  },
-  {
-    "amount": 100,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 343,
-    "dateEntered": "2015-10-30"
-  },
-  {
-    "amount": 200,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 344,
-    "dateEntered": "2015-10-31"
-  },
-  {
-    "amount": 350,
-    "category": "chinese",
-    "currency": "EUR",
-    "id": 345,
-    "dateEntered": "2015-10-31"
-  },
-  {
-    "amount": 200,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 346,
-    "dateEntered": "2015-10-31"
-  },
-  {
-    "amount": 250,
-    "category": "cake",
-    "currency": "EUR",
-    "id": 347,
-    "dateEntered": "2015-10-31"
-  },
-  {
-    "amount": 350,
-    "category": "schwarma",
-    "currency": "EUR",
-    "id": 348,
-    "dateEntered": "2015-10-31"
-  },
-  {
-    "amount": 1500,
-    "category": "whiskey",
-    "currency": "EUR",
-    "id": 349,
-    "dateEntered": "2015-10-31"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 350,
-    "dateEntered": "2015-10-31"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 351,
-    "dateEntered": "2015-11-01"
-  },
-  {
-    "amount": 1200,
-    "category": "climbing",
-    "currency": "EUR",
-    "id": 352,
-    "dateEntered": "2015-11-01"
-  },
-  {
-    "amount": 120,
-    "category": "mango ayran",
-    "currency": "EUR",
-    "id": 353,
-    "dateEntered": "2015-11-01"
-  },
-  {
-    "amount": 270,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 354,
-    "dateEntered": "2015-11-01"
-  },
-  {
-    "amount": 270,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 355,
-    "dateEntered": "2015-11-02"
-  },
-  {
-    "amount": 200,
-    "category": "chocolate",
-    "currency": "EUR",
-    "id": 356,
-    "dateEntered": "2015-11-02"
-  },
-  {
-    "amount": 1000,
-    "category": "underwear",
-    "currency": "EUR",
-    "id": 357,
-    "dateEntered": "2015-11-02"
-  },
-  {
-    "amount": 430,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 358,
-    "dateEntered": "2015-11-02"
-  },
-  {
-    "amount": 350,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 359,
-    "dateEntered": "2015-11-03"
-  },
-  {
-    "amount": 330,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 360,
-    "dateEntered": "2015-11-03"
-  },
-  {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 361,
-    "dateEntered": "2015-11-04"
-  },
-  {
-    "amount": 1090,
-    "category": "schwarma",
-    "currency": "EUR",
-    "id": 362,
-    "dateEntered": "2015-11-04"
-  },
-  {
-    "amount": 250,
-    "category": "soft drink",
-    "currency": "EUR",
-    "id": 363,
-    "dateEntered": "2015-11-04"
-  },
-  {
-    "amount": 700,
-    "category": "shirts",
-    "currency": "EUR",
-    "id": 364,
-    "dateEntered": "2015-11-03"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 365,
-    "dateEntered": "2015-11-05"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 366,
-    "dateEntered": "2015-11-05"
-  },
-  {
-    "amount": 425,
-    "category": "bagels",
-    "currency": "EUR",
-    "id": 368,
-    "dateEntered": "2015-11-07"
-  },
-  {
-    "amount": 395,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 369,
-    "dateEntered": "2015-11-07"
-  },
-  {
-    "amount": 350,
-    "category": "ice cream",
-    "currency": "EUR",
-    "id": 370,
-    "dateEntered": "2015-11-07"
-  },
-  {
-    "amount": 300,
-    "category": "chocolate",
-    "currency": "EUR",
-    "id": 371,
-    "dateEntered": "2015-11-07"
-  },
-  {
-    "amount": 1200,
-    "category": "dinner",
-    "currency": "EUR",
-    "id": 372,
-    "dateEntered": "2015-11-07"
-  },
-  {
-    "amount": 290,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 373,
-    "dateEntered": "2015-11-08"
-  },
-  {
-    "amount": 1800,
-    "category": "pizza",
-    "currency": "EUR",
-    "id": 374,
-    "dateEntered": "2015-11-08"
-  },
-  {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 378,
-    "dateEntered": "2015-11-10"
-  },
-  {
-    "amount": 390,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 379,
-    "dateEntered": "2015-11-10"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 380,
-    "dateEntered": "2015-11-11"
-  },
-  {
-    "amount": 350,
-    "category": "schwarma",
-    "currency": "EUR",
-    "id": 381,
-    "dateEntered": "2015-11-11"
-  },
-  {
-    "amount": 350,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 382,
-    "dateEntered": "2015-11-12"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 383,
-    "dateEntered": "2015-11-12"
-  },
-  {
-    "amount": 350,
-    "category": "schwarma",
-    "currency": "EUR",
-    "id": 384,
-    "dateEntered": "2015-11-12"
-  },
-  {
-    "amount": 60,
-    "category": "mango ayran",
-    "currency": "EUR",
-    "id": 385,
-    "dateEntered": "2015-11-12"
-  },
-  {
-    "amount": 220,
-    "category": "chocolate",
-    "currency": "EUR",
-    "id": 386,
-    "dateEntered": "2015-11-12"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 387,
-    "dateEntered": "2015-11-09"
-  },
-  {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 389,
-    "dateEntered": "2015-11-13"
-  },
-  {
-    "amount": 1250,
-    "category": "climbing",
-    "currency": "EUR",
-    "id": 390,
-    "dateEntered": "2015-11-13"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 391,
-    "dateEntered": "2015-11-13"
-  },
-  {
-    "amount": 200,
-    "category": "smoothie",
-    "currency": "EUR",
-    "id": 392,
-    "dateEntered": "2015-11-13"
-  },
-  {
-    "amount": 2000,
-    "category": "donations",
-    "currency": "EUR",
-    "id": 393,
-    "dateEntered": "2015-11-14"
-  },
-  {
-    "amount": 235,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 394,
-    "dateEntered": "2015-11-14"
-  },
-  {
-    "amount": 425,
-    "category": "bagels",
-    "currency": "EUR",
-    "id": 395,
-    "dateEntered": "2015-11-14"
-  },
-  {
-    "amount": 1598,
-    "category": "socks",
-    "currency": "EUR",
-    "id": 396,
-    "dateEntered": "2015-11-14"
-  },
-  {
-    "amount": 350,
-    "category": "chinese",
-    "currency": "EUR",
-    "id": 397,
-    "dateEntered": "2015-11-14"
-  },
-  {
-    "amount": 1500,
-    "category": "dinner",
-    "currency": "EUR",
-    "id": 398,
-    "dateEntered": "2015-11-15"
-  },
-  {
-    "amount": 235,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 399,
-    "dateEntered": "2015-11-15"
-  },
-  {
-    "amount": 350,
-    "category": "schwarma",
-    "currency": "EUR",
-    "id": 400,
-    "dateEntered": "2015-11-15"
-  },
-  {
-    "amount": 99,
-    "category": "soup",
-    "currency": "EUR",
-    "id": 401,
-    "dateEntered": "2015-11-16"
-  },
-  {
-    "amount": 177,
-    "category": "bread",
-    "currency": "EUR",
-    "id": 402,
-    "dateEntered": "2015-11-16"
-  },
-  {
-    "amount": 229,
-    "category": "juice",
-    "currency": "EUR",
-    "id": 403,
-    "dateEntered": "2015-11-16"
-  },
-  {
-    "amount": 125,
-    "category": "bananas",
-    "currency": "EUR",
-    "id": 404,
-    "dateEntered": "2015-11-16"
-  },
-  {
-    "amount": 30,
-    "category": "plastic bags",
-    "currency": "EUR",
-    "id": 405,
-    "dateEntered": "2015-11-16"
-  },
-  {
-    "amount": 69,
-    "category": "gummy bears",
-    "currency": "EUR",
-    "id": 407,
-    "dateEntered": "2015-11-17"
-  },
-  {
-    "amount": 179,
-    "category": "crackers",
-    "currency": "EUR",
-    "id": 408,
-    "dateEntered": "2015-11-17"
-  },
-  {
-    "amount": 1200,
-    "category": "pizza",
-    "currency": "EUR",
-    "id": 409,
-    "dateEntered": "2015-11-17"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 410,
-    "dateEntered": "2015-11-18"
-  },
-  {
-    "amount": 100,
-    "category": "juice",
-    "currency": "EUR",
-    "id": 411,
-    "dateEntered": "2015-11-17"
-  },
-  {
-    "amount": 250,
-    "category": "cake",
-    "currency": "EUR",
-    "id": 412,
-    "dateEntered": "2015-11-17"
-  },
-  {
-    "amount": 690,
-    "category": "burgers",
-    "currency": "EUR",
-    "id": 413,
-    "dateEntered": "2015-11-19"
-  },
-  {
-    "amount": 500,
-    "category": "pizza",
-    "currency": "EUR",
-    "id": 414,
-    "dateEntered": "2015-11-19"
-  },
-  {
-    "amount": 250,
-    "category": "movies",
-    "currency": "EUR",
-    "id": 415,
-    "dateEntered": "2015-11-19"
-  },
-  {
-    "amount": 390,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 416,
-    "dateEntered": "2015-11-20"
-  },
-  {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 417,
-    "dateEntered": "2015-11-20"
-  },
-  {
-    "amount": 2990,
-    "category": "train tickets",
-    "currency": "EUR",
-    "id": 418,
-    "dateEntered": "2015-11-20"
-  },
-  {
-    "amount": 900,
-    "category": "train tickets",
-    "currency": "EUR",
-    "id": 419,
-    "dateEntered": "2015-11-18"
-  },
-  {
-    "amount": 100,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 420,
-    "dateEntered": "2015-11-22"
-  },
-  {
-    "amount": 1500,
-    "category": "indian",
-    "currency": "EUR",
-    "id": 422,
-    "dateEntered": "2015-11-21"
-  },
-  {
-    "amount": 1500,
-    "category": "movies",
-    "currency": "EUR",
-    "id": 423,
-    "dateEntered": "2015-11-21"
-  },
-  {
-    "amount": 200,
-    "category": "cookies",
-    "currency": "EUR",
-    "id": 424,
-    "dateEntered": "2015-11-21"
-  },
-  {
-    "amount": 390,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 425,
-    "dateEntered": "2015-11-21"
-  },
-  {
-    "amount": 350,
-    "category": "pizza",
-    "currency": "EUR",
-    "id": 426,
-    "dateEntered": "2015-11-21"
-  },
-  {
-    "amount": 140,
-    "category": "croissants",
-    "currency": "EUR",
-    "id": 427,
-    "dateEntered": "2015-11-21"
-  },
-  {
-    "amount": 250,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 428,
-    "dateEntered": "2015-11-21"
-  },
-  {
-    "amount": 350,
-    "category": "pizza",
-    "currency": "EUR",
-    "id": 429,
-    "dateEntered": "2015-11-22"
-  },
-  {
-    "amount": 360,
-    "category": "burritos",
-    "currency": "EUR",
-    "id": 430,
-    "dateEntered": "2015-11-23"
-  },
-  {
-    "amount": 380,
-    "category": "döner",
-    "currency": "EUR",
-    "id": 431,
-    "dateEntered": "2015-11-23"
+    "id": 580,
+    "utcDate": 1451032134732
   },
   {
     "amount": 460,
+    "category": "losses",
+    "currency": "AUD",
+    "id": 575,
+    "utcDate": 1450957780019
+  },
+  {
+    "amount": 1000,
+    "category": "chocolate",
+    "currency": "AUD",
+    "id": 578,
+    "utcDate": 1450938300262
+  },
+  {
+    "amount": 2000,
+    "category": "climbing",
+    "currency": "AUD",
+    "id": 577,
+    "utcDate": 1450938274893
+  },
+  {
+    "amount": 1225,
+    "category": "subway",
+    "currency": "AUD",
+    "id": 576,
+    "utcDate": 1450938211305
+  },
+  {
+    "amount": 590,
     "category": "ice cream",
-    "currency": "EUR",
-    "id": 432,
-    "dateEntered": "2015-11-22"
+    "currency": "AUD",
+    "id": 574,
+    "utcDate": 1450881604929
   },
   {
-    "amount": 330,
-    "category": "falafel",
-    "currency": "EUR",
-    "id": 433,
-    "dateEntered": "2015-11-22"
+    "amount": 4000,
+    "category": "vietnamese",
+    "currency": "AUD",
+    "id": 573,
+    "utcDate": 1450874332594
   },
   {
-    "amount": 120,
-    "category": "mango ayran",
-    "currency": "EUR",
-    "id": 434,
-    "dateEntered": "2015-11-22"
+    "amount": 500,
+    "category": "chocolate",
+    "currency": "AUD",
+    "id": 572,
+    "utcDate": 1450857202214
   },
   {
-    "amount": 1000,
-    "category": "frank\u0027s",
-    "currency": "EUR",
-    "id": 435,
-    "dateEntered": "2015-11-24"
+    "amount": 2000,
+    "category": "candles",
+    "currency": "AUD",
+    "id": 571,
+    "utcDate": 1450857190602
   },
   {
-    "amount": 330,
-    "category": "schwarma",
-    "currency": "EUR",
-    "id": 436,
-    "dateEntered": "2015-11-24"
+    "amount": 560,
+    "category": "pies",
+    "currency": "AUD",
+    "id": 570,
+    "utcDate": 1450857173899
   },
   {
-    "amount": 150,
-    "category": "mango ayran",
-    "currency": "EUR",
-    "id": 437,
-    "dateEntered": "2015-11-24"
+    "amount": 250,
+    "category": "bank fees",
+    "currency": "AUD",
+    "id": 579,
+    "utcDate": 1450852079495
   },
   {
-    "amount": 390,
-    "category": "sandwiches",
-    "currency": "EUR",
-    "id": 438,
-    "dateEntered": "2015-11-25"
+    "amount": 300,
+    "category": "local transport",
+    "currency": "AUD",
+    "id": 569,
+    "utcDate": 1450772486360
   },
   {
-    "amount": 1000,
-    "category": "condoms",
-    "currency": "EUR",
-    "id": 439,
-    "dateEntered": "2015-11-25"
+    "amount": 3600,
+    "category": "wine",
+    "currency": "AUD",
+    "id": 568,
+    "utcDate": 1450768219669
   },
   {
-    "amount": 50,
-    "category": "public toilets",
-    "currency": "EUR",
-    "id": 440,
-    "dateEntered": "2015-11-26"
+    "amount": 300,
+    "category": "local transport",
+    "currency": "AUD",
+    "id": 567,
+    "utcDate": 1450764936467
   },
   {
-    "amount": 1000,
-    "category": "groceries",
-    "currency": "EUR",
-    "id": 441,
-    "dateEntered": "2015-11-26"
+    "amount": 900,
+    "category": "smoothies",
+    "currency": "AUD",
+    "id": 566,
+    "utcDate": 1450764926725
   },
   {
-    "amount": 1000,
-    "category": "dinner",
-    "currency": "EUR",
-    "id": 442,
-    "dateEntered": "2015-11-26"
+    "amount": 500,
+    "category": "coffee",
+    "currency": "AUD",
+    "id": 565,
+    "utcDate": 1450761048495
   },
   {
-    "amount": 100,
-    "category": "donuts",
-    "currency": "EUR",
-    "id": 443,
-    "dateEntered": "2015-11-26"
+    "amount": 300,
+    "category": "local transport",
+    "currency": "AUD",
+    "id": 564,
+    "utcDate": 1450700458817
   },
   {
-    "amount": 100,
-    "category": "donuts",
-    "currency": "EUR",
-    "id": 444,
-    "dateEntered": "2015-11-26"
+    "amount": 1200,
+    "category": "beer",
+    "currency": "AUD",
+    "id": 563,
+    "utcDate": 1450694567316
+  },
+  {
+    "amount": 1200,
+    "category": "beer",
+    "currency": "AUD",
+    "id": 562,
+    "utcDate": 1450694555188
+  },
+  {
+    "amount": 960,
+    "category": "coffee",
+    "currency": "AUD",
+    "id": 561,
+    "utcDate": 1450692702316
   },
   {
     "amount": 350,
-    "category": "train tickets",
-    "currency": "EUR",
-    "id": 445,
-    "dateEntered": "2015-11-27"
+    "category": "soft drinks",
+    "currency": "AUD",
+    "id": 560,
+    "utcDate": 1450680666608
   },
   {
-    "amount": 595,
+    "amount": 1300,
     "category": "burgers",
-    "currency": "EUR",
-    "id": 446,
-    "dateEntered": "2015-11-27"
+    "currency": "AUD",
+    "id": 559,
+    "utcDate": 1450680573181
+  },
+  {
+    "amount": 720,
+    "category": "subway",
+    "currency": "AUD",
+    "id": 558,
+    "utcDate": 1450667984967
+  },
+  {
+    "amount": 450,
+    "category": "local transport",
+    "currency": "AUD",
+    "id": 557,
+    "utcDate": 1450667952630
+  },
+  {
+    "amount": 1025,
+    "category": "subway",
+    "currency": "AUD",
+    "id": 556,
+    "utcDate": 1450581483416
+  },
+  {
+    "amount": 1650,
+    "category": "beer",
+    "currency": "AUD",
+    "id": 555,
+    "utcDate": 1450517531971
+  },
+  {
+    "amount": 675,
+    "category": "haloumi",
+    "currency": "AUD",
+    "id": 554,
+    "utcDate": 1450517510426
+  },
+  {
+    "amount": 649,
+    "category": "sausages",
+    "currency": "AUD",
+    "id": 553,
+    "utcDate": 1450517487680
+  },
+  {
+    "amount": 1200,
+    "category": "shoes",
+    "currency": "AUD",
+    "id": 552,
+    "utcDate": 1450493427064
+  },
+  {
+    "amount": 940,
+    "category": "subway",
+    "currency": "AUD",
+    "id": 551,
+    "utcDate": 1450491282661
+  },
+  {
+    "amount": 450,
+    "category": "local transport",
+    "currency": "AUD",
+    "id": 550,
+    "utcDate": 1450488010426
+  },
+  {
+    "amount": 400,
+    "category": "chips",
+    "currency": "AUD",
+    "id": 549,
+    "utcDate": 1450468751536
+  },
+  {
+    "amount": 2000,
+    "category": "spirits",
+    "currency": "AUD",
+    "id": 548,
+    "utcDate": 1450468737079
+  },
+  {
+    "amount": 2000,
+    "category": "club entry",
+    "currency": "AUD",
+    "id": 547,
+    "utcDate": 1450462282752
+  },
+  {
+    "amount": 2200,
+    "category": "spirits",
+    "currency": "AUD",
+    "id": 546,
+    "utcDate": 1450461113157
+  },
+  {
+    "amount": 1000,
+    "category": "club entry",
+    "currency": "AUD",
+    "id": 545,
+    "utcDate": 1450461067642
+  },
+  {
+    "amount": 500,
+    "category": "coffee",
+    "currency": "AUD",
+    "id": 543,
+    "utcDate": 1450442647100
+  },
+  {
+    "amount": 1695,
+    "category": "burgers",
+    "currency": "AUD",
+    "id": 542,
+    "utcDate": 1450442629065
+  },
+  {
+    "amount": 500,
+    "category": "coffee",
+    "currency": "AUD",
+    "id": 541,
+    "utcDate": 1450427791027
+  },
+  {
+    "amount": 2800,
+    "category": "indian",
+    "currency": "AUD",
+    "id": 540,
+    "utcDate": 1450427770176
+  },
+  {
+    "amount": 300,
+    "category": "ice coffee",
+    "currency": "AUD",
+    "id": 539,
+    "utcDate": 1450419926560
+  },
+  {
+    "amount": 560,
+    "category": "pies",
+    "currency": "AUD",
+    "id": 538,
+    "utcDate": 1450419906232
+  },
+  {
+    "amount": 900,
+    "category": "smoothies",
+    "currency": "AUD",
+    "id": 537,
+    "utcDate": 1450419865796
+  },
+  {
+    "amount": 2000,
+    "category": "climbing",
+    "currency": "AUD",
+    "id": 535,
+    "utcDate": 1450358573367
+  },
+  {
+    "amount": 2140,
+    "category": "nandos",
+    "currency": "AUD",
+    "id": 534,
+    "utcDate": 1450358562007
+  },
+  {
+    "amount": 300,
+    "category": "water",
+    "currency": "AUD",
+    "id": 533,
+    "utcDate": 1450338031889
+  },
+  {
+    "amount": 1095,
+    "category": "subway",
+    "currency": "AUD",
+    "id": 532,
+    "utcDate": 1450337999301
+  },
+  {
+    "amount": 1100,
+    "category": "gozleme",
+    "currency": "AUD",
+    "id": 531,
+    "utcDate": 1450264903374
+  },
+  {
+    "amount": 450,
+    "category": "local transport",
+    "currency": "AUD",
+    "id": 524,
+    "utcDate": 1450257614343
+  },
+  {
+    "amount": 900,
+    "category": "coffee",
+    "currency": "AUD",
+    "id": 523,
+    "utcDate": 1450257564873
+  },
+  {
+    "amount": 3560,
+    "category": "vietnamese",
+    "currency": "AUD",
+    "id": 522,
+    "utcDate": 1450257564873
+  },
+  {
+    "amount": 300,
+    "category": "local transport",
+    "currency": "AUD",
+    "id": 521,
+    "utcDate": 1450194275605
+  },
+  {
+    "amount": 400,
+    "category": "muffins",
+    "currency": "AUD",
+    "id": 520,
+    "utcDate": 1450194179836
   },
   {
     "amount": 400,
     "category": "coffee",
-    "currency": "EUR",
-    "id": 447,
-    "dateEntered": "2015-11-27"
-  },
-  {
-    "amount": 500,
-    "category": "train tickets",
-    "currency": "EUR",
-    "id": 448,
-    "dateEntered": "2015-11-28"
-  },
-  {
-    "amount": 390,
-    "category": "bank fees",
-    "currency": "EUR",
-    "id": 449,
-    "dateEntered": "2015-11-26"
-  },
-  {
-    "amount": 320,
-    "category": "coffee",
-    "currency": "EUR",
-    "id": 450,
-    "dateEntered": "2015-11-28"
-  },
-  {
-    "amount": 2800,
-    "category": "cocktails",
     "currency": "AUD",
-    "id": 459,
-    "dateEntered": "2015-11-30"
-  },
-  {
-    "amount": 1800,
-    "category": "parking tickets",
-    "currency": "AUD",
-    "id": 460,
-    "dateEntered": "2015-11-30"
-  },
-  {
-    "amount": 900,
-    "category": "ice cream",
-    "currency": "AUD",
-    "id": 461,
-    "dateEntered": "2015-11-30"
-  },
-  {
-    "amount": 2000,
-    "category": "sim cards",
-    "currency": "AUD",
-    "id": 462,
-    "dateEntered": "2015-11-30"
-  },
-  {
-    "amount": 2350,
-    "category": "beer",
-    "currency": "AUD",
-    "id": 463,
-    "dateEntered": "2015-12-01"
-  },
-  {
-    "amount": 1400,
-    "category": "dinner",
-    "currency": "AUD",
-    "id": 464,
-    "dateEntered": "2015-11-30"
+    "id": 519,
+    "utcDate": 1450194137863
   },
   {
     "amount": 800,
-    "category": "churos",
+    "category": "gozleme",
     "currency": "AUD",
-    "id": 465,
-    "dateEntered": "2015-11-30"
+    "id": 518,
+    "utcDate": 1450194137863
   },
   {
-    "amount": 760,
-    "category": "subway",
+    "amount": 360,
+    "category": "ice coffee",
     "currency": "AUD",
-    "id": 466,
-    "dateEntered": "2015-12-02"
+    "id": 517,
+    "utcDate": 1450053108300
+  },
+  {
+    "amount": 2350,
+    "category": "burgers",
+    "currency": "AUD",
+    "id": 516,
+    "utcDate": 1450053108300
+  },
+  {
+    "amount": 1790,
+    "category": "nandos",
+    "currency": "AUD",
+    "id": 514,
+    "utcDate": 1449983749694
+  },
+  {
+    "amount": 767,
+    "category": "ice coffee",
+    "currency": "AUD",
+    "id": 515,
+    "utcDate": 1449982537187
+  },
+  {
+    "amount": 1050,
+    "category": "gozleme",
+    "currency": "AUD",
+    "id": 513,
+    "utcDate": 1449915751324
+  },
+  {
+    "amount": 1000,
+    "category": "shorts",
+    "currency": "AUD",
+    "id": 512,
+    "utcDate": 1449915751324
   },
   {
     "amount": 1800,
-    "category": "burgers",
+    "category": "shirts",
     "currency": "AUD",
-    "id": 467,
-    "dateEntered": "2015-12-02"
+    "id": 511,
+    "utcDate": 1449915734362
+  },
+  {
+    "amount": 830,
+    "category": "parking tickets",
+    "currency": "AUD",
+    "id": 510,
+    "utcDate": 1449829716634
+  },
+  {
+    "amount": 1000,
+    "category": "beer",
+    "currency": "AUD",
+    "id": 509,
+    "utcDate": 1449829716634
+  },
+  {
+    "amount": 3040,
+    "category": "dinner",
+    "currency": "AUD",
+    "id": 508,
+    "utcDate": 1449829716634
   },
   {
     "amount": 540,
     "category": "subway",
     "currency": "AUD",
-    "id": 469,
-    "dateEntered": "2015-12-03"
+    "id": 507,
+    "utcDate": 1449829716634
   },
   {
-    "amount": 300,
-    "category": "parking tickets",
+    "amount": 970,
+    "category": "ice cream",
     "currency": "AUD",
-    "id": 470,
-    "dateEntered": "2015-12-01"
+    "id": 506,
+    "utcDate": 1449752365215
+  },
+  {
+    "amount": 480,
+    "category": "döner",
+    "currency": "AUD",
+    "id": 505,
+    "utcDate": 1449752365215
+  },
+  {
+    "amount": 3450,
+    "category": "cocktails",
+    "currency": "AUD",
+    "id": 504,
+    "utcDate": 1449683787472
+  },
+  {
+    "amount": 950,
+    "category": "falafel",
+    "currency": "AUD",
+    "id": 503,
+    "utcDate": 1449683787472
+  },
+  {
+    "amount": 3800,
+    "category": "cocktails",
+    "currency": "AUD",
+    "id": 500,
+    "utcDate": 1449669341425
   },
   {
     "amount": 740,
     "category": "subway",
     "currency": "AUD",
-    "id": 471,
-    "dateEntered": "2015-12-04"
-  },
-  {
-    "amount": 1140,
-    "category": "subscriptions",
-    "currency": "AUD",
-    "id": 472,
-    "dateEntered": "2015-12-03"
-  },
-  {
-    "amount": 1100,
-    "category": "beer",
-    "currency": "AUD",
-    "id": 474,
-    "dateEntered": "2015-12-04"
-  },
-  {
-    "amount": 1000,
-    "category": "beer",
-    "currency": "AUD",
-    "id": 475,
-    "dateEntered": "2015-12-04"
-  },
-  {
-    "amount": 1200,
-    "category": "gozleme",
-    "currency": "AUD",
-    "id": 476,
-    "dateEntered": "2015-12-04"
-  },
-  {
-    "amount": 200,
-    "category": "market entries",
-    "currency": "AUD",
-    "id": 478,
-    "dateEntered": "2015-12-04"
-  },
-  {
-    "amount": 1900,
-    "category": "pizza",
-    "currency": "AUD",
-    "id": 479,
-    "dateEntered": "2015-12-04"
-  },
-  {
-    "amount": 2000,
-    "category": "beer",
-    "currency": "AUD",
-    "id": 480,
-    "dateEntered": "2015-12-04"
-  },
-  {
-    "amount": 1250,
-    "category": "shisha",
-    "currency": "AUD",
-    "id": 483,
-    "dateEntered": "2015-12-05"
-  },
-  {
-    "amount": 500,
-    "category": "chips",
-    "currency": "AUD",
-    "id": 486,
-    "dateEntered": "2015-12-05"
-  },
-  {
-    "amount": 560,
-    "category": "atm fees",
-    "currency": "AUD",
-    "id": 487,
-    "dateEntered": "2015-12-04"
-  },
-  {
-    "amount": 1100,
-    "category": "döner",
-    "currency": "AUD",
-    "id": 488,
-    "dateEntered": "2015-12-05"
-  },
-  {
-    "amount": 550,
-    "category": "shisha",
-    "currency": "AUD",
-    "id": 490,
-    "dateEntered": "2015-12-05"
-  },
-  {
-    "amount": 2180,
-    "category": "burgers",
-    "currency": "AUD",
-    "id": 491,
-    "dateEntered": "2015-12-06"
-  },
-  {
-    "amount": 450,
-    "category": "coffee",
-    "currency": "AUD",
-    "id": 492,
-    "dateEntered": "2015-12-06"
-  },
-  {
-    "amount": 270,
-    "category": "juice",
-    "currency": "AUD",
-    "id": 493,
-    "dateEntered": "2015-12-06"
-  },
-  {
-    "amount": 380,
-    "category": "pastries",
-    "currency": "AUD",
-    "id": 494,
-    "dateEntered": "2015-12-06"
-  },
-  {
-    "amount": 540,
-    "category": "subway",
-    "currency": "AUD",
-    "id": 495,
-    "dateEntered": "2015-12-07"
-  },
-  {
-    "amount": 400,
-    "category": "coffee",
-    "currency": "AUD",
-    "id": 496,
-    "dateEntered": "2015-12-08"
+    "id": 498,
+    "utcDate": 1449635700656
   },
   {
     "amount": 4450,
     "category": "lunch",
     "currency": "AUD",
     "id": 497,
-    "dateEntered": "2015-12-08"
+    "utcDate": 1449504000000
+  },
+  {
+    "amount": 400,
+    "category": "coffee",
+    "currency": "AUD",
+    "id": 496,
+    "utcDate": 1449504000000
+  },
+  {
+    "amount": 540,
+    "category": "subway",
+    "currency": "AUD",
+    "id": 495,
+    "utcDate": 1449417600000
+  },
+  {
+    "amount": 380,
+    "category": "pastries",
+    "currency": "AUD",
+    "id": 494,
+    "utcDate": 1449331200000
+  },
+  {
+    "amount": 270,
+    "category": "juice",
+    "currency": "AUD",
+    "id": 493,
+    "utcDate": 1449331200000
+  },
+  {
+    "amount": 450,
+    "category": "coffee",
+    "currency": "AUD",
+    "id": 492,
+    "utcDate": 1449331200000
+  },
+  {
+    "amount": 2180,
+    "category": "burgers",
+    "currency": "AUD",
+    "id": 491,
+    "utcDate": 1449331200000
+  },
+  {
+    "amount": 550,
+    "category": "shisha",
+    "currency": "AUD",
+    "id": 490,
+    "utcDate": 1449244800000
+  },
+  {
+    "amount": 1100,
+    "category": "döner",
+    "currency": "AUD",
+    "id": 488,
+    "utcDate": 1449244800000
+  },
+  {
+    "amount": 500,
+    "category": "chips",
+    "currency": "AUD",
+    "id": 486,
+    "utcDate": 1449244800000
+  },
+  {
+    "amount": 1250,
+    "category": "shisha",
+    "currency": "AUD",
+    "id": 483,
+    "utcDate": 1449244800000
+  },
+  {
+    "amount": 560,
+    "category": "atm fees",
+    "currency": "AUD",
+    "id": 487,
+    "utcDate": 1449158400000
+  },
+  {
+    "amount": 2000,
+    "category": "beer",
+    "currency": "AUD",
+    "id": 480,
+    "utcDate": 1449158400000
+  },
+  {
+    "amount": 1900,
+    "category": "pizza",
+    "currency": "AUD",
+    "id": 479,
+    "utcDate": 1449158400000
+  },
+  {
+    "amount": 200,
+    "category": "market entries",
+    "currency": "AUD",
+    "id": 478,
+    "utcDate": 1449158400000
+  },
+  {
+    "amount": 1200,
+    "category": "gozleme",
+    "currency": "AUD",
+    "id": 476,
+    "utcDate": 1449158400000
+  },
+  {
+    "amount": 1000,
+    "category": "beer",
+    "currency": "AUD",
+    "id": 475,
+    "utcDate": 1449158400000
+  },
+  {
+    "amount": 1100,
+    "category": "beer",
+    "currency": "AUD",
+    "id": 474,
+    "utcDate": 1449158400000
+  },
+  {
+    "amount": 740,
+    "category": "subway",
+    "currency": "AUD",
+    "id": 471,
+    "utcDate": 1449158400000
+  },
+  {
+    "amount": 1140,
+    "category": "subscriptions",
+    "currency": "AUD",
+    "id": 472,
+    "utcDate": 1449072000000
+  },
+  {
+    "amount": 540,
+    "category": "subway",
+    "currency": "AUD",
+    "id": 469,
+    "utcDate": 1449072000000
+  },
+  {
+    "amount": 2000,
+    "category": "climbing",
+    "currency": "AUD",
+    "id": 499,
+    "utcDate": 1449039546197
+  },
+  {
+    "amount": 1800,
+    "category": "burgers",
+    "currency": "AUD",
+    "id": 467,
+    "utcDate": 1448985600000
+  },
+  {
+    "amount": 760,
+    "category": "subway",
+    "currency": "AUD",
+    "id": 466,
+    "utcDate": 1448985600000
+  },
+  {
+    "amount": 300,
+    "category": "parking tickets",
+    "currency": "AUD",
+    "id": 470,
+    "utcDate": 1448899200000
+  },
+  {
+    "amount": 2350,
+    "category": "beer",
+    "currency": "AUD",
+    "id": 463,
+    "utcDate": 1448899200000
+  },
+  {
+    "amount": 800,
+    "category": "churos",
+    "currency": "AUD",
+    "id": 465,
+    "utcDate": 1448812800000
+  },
+  {
+    "amount": 1400,
+    "category": "dinner",
+    "currency": "AUD",
+    "id": 464,
+    "utcDate": 1448812800000
+  },
+  {
+    "amount": 2000,
+    "category": "sim cards",
+    "currency": "AUD",
+    "id": 462,
+    "utcDate": 1448812800000
+  },
+  {
+    "amount": 900,
+    "category": "ice cream",
+    "currency": "AUD",
+    "id": 461,
+    "utcDate": 1448812800000
+  },
+  {
+    "amount": 1800,
+    "category": "parking tickets",
+    "currency": "AUD",
+    "id": 460,
+    "utcDate": 1448812800000
+  },
+  {
+    "amount": 2800,
+    "category": "cocktails",
+    "currency": "AUD",
+    "id": 459,
+    "utcDate": 1448812800000
+  },
+  {
+    "amount": 1295,
+    "category": "travel adapters",
+    "currency": "EUR",
+    "id": 525,
+    "utcDate": 1448702507834
+  },
+  {
+    "amount": 320,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 450,
+    "utcDate": 1448640000000
+  },
+  {
+    "amount": 500,
+    "category": "train tickets",
+    "currency": "EUR",
+    "id": 448,
+    "utcDate": 1448640000000
+  },
+  {
+    "amount": 400,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 447,
+    "utcDate": 1448553600000
+  },
+  {
+    "amount": 595,
+    "category": "burgers",
+    "currency": "EUR",
+    "id": 446,
+    "utcDate": 1448553600000
+  },
+  {
+    "amount": 350,
+    "category": "train tickets",
+    "currency": "EUR",
+    "id": 445,
+    "utcDate": 1448553600000
+  },
+  {
+    "amount": 319,
+    "category": "sandwiches",
+    "currency": "EUR",
+    "id": 530,
+    "utcDate": 1448529876605
+  },
+  {
+    "amount": 319,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 529,
+    "utcDate": 1448529876605
+  },
+  {
+    "amount": 390,
+    "category": "bank fees",
+    "currency": "EUR",
+    "id": 449,
+    "utcDate": 1448467200000
+  },
+  {
+    "amount": 100,
+    "category": "donuts",
+    "currency": "EUR",
+    "id": 444,
+    "utcDate": 1448467200000
+  },
+  {
+    "amount": 100,
+    "category": "donuts",
+    "currency": "EUR",
+    "id": 443,
+    "utcDate": 1448467200000
+  },
+  {
+    "amount": 1000,
+    "category": "dinner",
+    "currency": "EUR",
+    "id": 442,
+    "utcDate": 1448467200000
+  },
+  {
+    "amount": 1000,
+    "category": "groceries",
+    "currency": "EUR",
+    "id": 441,
+    "utcDate": 1448467200000
+  },
+  {
+    "amount": 50,
+    "category": "public toilets",
+    "currency": "EUR",
+    "id": 440,
+    "utcDate": 1448467200000
+  },
+  {
+    "amount": 1000,
+    "category": "condoms",
+    "currency": "EUR",
+    "id": 439,
+    "utcDate": 1448380800000
+  },
+  {
+    "amount": 390,
+    "category": "sandwiches",
+    "currency": "EUR",
+    "id": 438,
+    "utcDate": 1448380800000
+  },
+  {
+    "amount": 150,
+    "category": "mango ayran",
+    "currency": "EUR",
+    "id": 437,
+    "utcDate": 1448294400000
+  },
+  {
+    "amount": 330,
+    "category": "schwarma",
+    "currency": "EUR",
+    "id": 436,
+    "utcDate": 1448294400000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 435,
+    "utcDate": 1448294400000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 431,
+    "utcDate": 1448208000000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 430,
+    "utcDate": 1448208000000
+  },
+  {
+    "amount": 120,
+    "category": "mango ayran",
+    "currency": "EUR",
+    "id": 434,
+    "utcDate": 1448121600000
+  },
+  {
+    "amount": 330,
+    "category": "falafel",
+    "currency": "EUR",
+    "id": 433,
+    "utcDate": 1448121600000
+  },
+  {
+    "amount": 460,
+    "category": "ice cream",
+    "currency": "EUR",
+    "id": 432,
+    "utcDate": 1448121600000
+  },
+  {
+    "amount": 350,
+    "category": "pizza",
+    "currency": "EUR",
+    "id": 429,
+    "utcDate": 1448121600000
+  },
+  {
+    "amount": 100,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 420,
+    "utcDate": 1448121600000
+  },
+  {
+    "amount": 250,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 428,
+    "utcDate": 1448035200000
+  },
+  {
+    "amount": 140,
+    "category": "croissants",
+    "currency": "EUR",
+    "id": 427,
+    "utcDate": 1448035200000
+  },
+  {
+    "amount": 350,
+    "category": "pizza",
+    "currency": "EUR",
+    "id": 426,
+    "utcDate": 1448035200000
+  },
+  {
+    "amount": 390,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 425,
+    "utcDate": 1448035200000
+  },
+  {
+    "amount": 200,
+    "category": "cookies",
+    "currency": "EUR",
+    "id": 424,
+    "utcDate": 1448035200000
+  },
+  {
+    "amount": 1500,
+    "category": "movies",
+    "currency": "EUR",
+    "id": 423,
+    "utcDate": 1448035200000
+  },
+  {
+    "amount": 1500,
+    "category": "indian",
+    "currency": "EUR",
+    "id": 422,
+    "utcDate": 1448035200000
+  },
+  {
+    "amount": 279,
+    "category": "tee filters",
+    "currency": "EUR",
+    "id": 528,
+    "utcDate": 1448011407485
+  },
+  {
+    "amount": 99,
+    "category": "chocolate",
+    "currency": "EUR",
+    "id": 527,
+    "utcDate": 1448011353672
+  },
+  {
+    "amount": 349,
+    "category": "smoothie",
+    "currency": "EUR",
+    "id": 526,
+    "utcDate": 1448011353672
+  },
+  {
+    "amount": 2990,
+    "category": "train tickets",
+    "currency": "EUR",
+    "id": 418,
+    "utcDate": 1447948800000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 417,
+    "utcDate": 1447948800000
+  },
+  {
+    "amount": 390,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 416,
+    "utcDate": 1447948800000
+  },
+  {
+    "amount": 250,
+    "category": "movies",
+    "currency": "EUR",
+    "id": 415,
+    "utcDate": 1447862400000
+  },
+  {
+    "amount": 500,
+    "category": "pizza",
+    "currency": "EUR",
+    "id": 414,
+    "utcDate": 1447862400000
+  },
+  {
+    "amount": 690,
+    "category": "burgers",
+    "currency": "EUR",
+    "id": 413,
+    "utcDate": 1447862400000
+  },
+  {
+    "amount": 900,
+    "category": "train tickets",
+    "currency": "EUR",
+    "id": 419,
+    "utcDate": 1447776000000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 410,
+    "utcDate": 1447776000000
+  },
+  {
+    "amount": 250,
+    "category": "cake",
+    "currency": "EUR",
+    "id": 412,
+    "utcDate": 1447689600000
+  },
+  {
+    "amount": 100,
+    "category": "juice",
+    "currency": "EUR",
+    "id": 411,
+    "utcDate": 1447689600000
+  },
+  {
+    "amount": 1200,
+    "category": "pizza",
+    "currency": "EUR",
+    "id": 409,
+    "utcDate": 1447689600000
+  },
+  {
+    "amount": 179,
+    "category": "crackers",
+    "currency": "EUR",
+    "id": 408,
+    "utcDate": 1447689600000
+  },
+  {
+    "amount": 69,
+    "category": "gummy bears",
+    "currency": "EUR",
+    "id": 407,
+    "utcDate": 1447689600000
+  },
+  {
+    "amount": 30,
+    "category": "plastic bags",
+    "currency": "EUR",
+    "id": 405,
+    "utcDate": 1447603200000
+  },
+  {
+    "amount": 125,
+    "category": "bananas",
+    "currency": "EUR",
+    "id": 404,
+    "utcDate": 1447603200000
+  },
+  {
+    "amount": 229,
+    "category": "juice",
+    "currency": "EUR",
+    "id": 403,
+    "utcDate": 1447603200000
+  },
+  {
+    "amount": 177,
+    "category": "bread",
+    "currency": "EUR",
+    "id": 402,
+    "utcDate": 1447603200000
+  },
+  {
+    "amount": 99,
+    "category": "soup",
+    "currency": "EUR",
+    "id": 401,
+    "utcDate": 1447603200000
+  },
+  {
+    "amount": 350,
+    "category": "schwarma",
+    "currency": "EUR",
+    "id": 400,
+    "utcDate": 1447516800000
+  },
+  {
+    "amount": 235,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 399,
+    "utcDate": 1447516800000
+  },
+  {
+    "amount": 1500,
+    "category": "dinner",
+    "currency": "EUR",
+    "id": 398,
+    "utcDate": 1447516800000
+  },
+  {
+    "amount": 350,
+    "category": "chinese",
+    "currency": "EUR",
+    "id": 397,
+    "utcDate": 1447430400000
+  },
+  {
+    "amount": 1598,
+    "category": "socks",
+    "currency": "EUR",
+    "id": 396,
+    "utcDate": 1447430400000
+  },
+  {
+    "amount": 425,
+    "category": "bagels",
+    "currency": "EUR",
+    "id": 395,
+    "utcDate": 1447430400000
+  },
+  {
+    "amount": 235,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 394,
+    "utcDate": 1447430400000
+  },
+  {
+    "amount": 2000,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 393,
+    "utcDate": 1447430400000
+  },
+  {
+    "amount": 200,
+    "category": "smoothie",
+    "currency": "EUR",
+    "id": 392,
+    "utcDate": 1447344000000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 391,
+    "utcDate": 1447344000000
+  },
+  {
+    "amount": 1250,
+    "category": "climbing",
+    "currency": "EUR",
+    "id": 390,
+    "utcDate": 1447344000000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 389,
+    "utcDate": 1447344000000
+  },
+  {
+    "amount": 220,
+    "category": "chocolate",
+    "currency": "EUR",
+    "id": 386,
+    "utcDate": 1447257600000
+  },
+  {
+    "amount": 60,
+    "category": "mango ayran",
+    "currency": "EUR",
+    "id": 385,
+    "utcDate": 1447257600000
+  },
+  {
+    "amount": 350,
+    "category": "schwarma",
+    "currency": "EUR",
+    "id": 384,
+    "utcDate": 1447257600000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 383,
+    "utcDate": 1447257600000
+  },
+  {
+    "amount": 350,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 382,
+    "utcDate": 1447257600000
+  },
+  {
+    "amount": 350,
+    "category": "schwarma",
+    "currency": "EUR",
+    "id": 381,
+    "utcDate": 1447171200000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 380,
+    "utcDate": 1447171200000
+  },
+  {
+    "amount": 390,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 379,
+    "utcDate": 1447084800000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 378,
+    "utcDate": 1447084800000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 387,
+    "utcDate": 1446998400000
+  },
+  {
+    "amount": 1800,
+    "category": "pizza",
+    "currency": "EUR",
+    "id": 374,
+    "utcDate": 1446912000000
+  },
+  {
+    "amount": 290,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 373,
+    "utcDate": 1446912000000
+  },
+  {
+    "amount": 1200,
+    "category": "dinner",
+    "currency": "EUR",
+    "id": 372,
+    "utcDate": 1446825600000
+  },
+  {
+    "amount": 300,
+    "category": "chocolate",
+    "currency": "EUR",
+    "id": 371,
+    "utcDate": 1446825600000
+  },
+  {
+    "amount": 350,
+    "category": "ice cream",
+    "currency": "EUR",
+    "id": 370,
+    "utcDate": 1446825600000
+  },
+  {
+    "amount": 395,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 369,
+    "utcDate": 1446825600000
+  },
+  {
+    "amount": 425,
+    "category": "bagels",
+    "currency": "EUR",
+    "id": 368,
+    "utcDate": 1446825600000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 366,
+    "utcDate": 1446652800000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 365,
+    "utcDate": 1446652800000
+  },
+  {
+    "amount": 250,
+    "category": "soft drink",
+    "currency": "EUR",
+    "id": 363,
+    "utcDate": 1446566400000
+  },
+  {
+    "amount": 1090,
+    "category": "schwarma",
+    "currency": "EUR",
+    "id": 362,
+    "utcDate": 1446566400000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 361,
+    "utcDate": 1446566400000
+  },
+  {
+    "amount": 700,
+    "category": "shirts",
+    "currency": "EUR",
+    "id": 364,
+    "utcDate": 1446480000000
+  },
+  {
+    "amount": 330,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 360,
+    "utcDate": 1446480000000
+  },
+  {
+    "amount": 350,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 359,
+    "utcDate": 1446480000000
+  },
+  {
+    "amount": 430,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 358,
+    "utcDate": 1446393600000
+  },
+  {
+    "amount": 1000,
+    "category": "underwear",
+    "currency": "EUR",
+    "id": 357,
+    "utcDate": 1446393600000
+  },
+  {
+    "amount": 200,
+    "category": "chocolate",
+    "currency": "EUR",
+    "id": 356,
+    "utcDate": 1446393600000
+  },
+  {
+    "amount": 270,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 355,
+    "utcDate": 1446393600000
+  },
+  {
+    "amount": 270,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 354,
+    "utcDate": 1446307200000
+  },
+  {
+    "amount": 120,
+    "category": "mango ayran",
+    "currency": "EUR",
+    "id": 353,
+    "utcDate": 1446307200000
+  },
+  {
+    "amount": 1200,
+    "category": "climbing",
+    "currency": "EUR",
+    "id": 352,
+    "utcDate": 1446307200000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 351,
+    "utcDate": 1446307200000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 350,
+    "utcDate": 1446220800000
+  },
+  {
+    "amount": 1500,
+    "category": "whiskey",
+    "currency": "EUR",
+    "id": 349,
+    "utcDate": 1446220800000
+  },
+  {
+    "amount": 350,
+    "category": "schwarma",
+    "currency": "EUR",
+    "id": 348,
+    "utcDate": 1446220800000
+  },
+  {
+    "amount": 250,
+    "category": "cake",
+    "currency": "EUR",
+    "id": 347,
+    "utcDate": 1446220800000
+  },
+  {
+    "amount": 200,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 346,
+    "utcDate": 1446220800000
+  },
+  {
+    "amount": 350,
+    "category": "chinese",
+    "currency": "EUR",
+    "id": 345,
+    "utcDate": 1446220800000
+  },
+  {
+    "amount": 200,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 344,
+    "utcDate": 1446220800000
+  },
+  {
+    "amount": 100,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 343,
+    "utcDate": 1446134400000
+  },
+  {
+    "amount": 42500,
+    "category": "rent",
+    "currency": "EUR",
+    "id": 342,
+    "utcDate": 1446134400000
+  },
+  {
+    "amount": 300,
+    "category": "pizza",
+    "currency": "EUR",
+    "id": 340,
+    "utcDate": 1446134400000
+  },
+  {
+    "amount": 200,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 341,
+    "utcDate": 1446048000000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 339,
+    "utcDate": 1446048000000
+  },
+  {
+    "amount": 350,
+    "category": "schwarma",
+    "currency": "EUR",
+    "id": 338,
+    "utcDate": 1445961600000
+  },
+  {
+    "amount": 300,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 337,
+    "utcDate": 1445961600000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 336,
+    "utcDate": 1445875200000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 335,
+    "utcDate": 1445875200000
+  },
+  {
+    "amount": 395,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 334,
+    "utcDate": 1445875200000
+  },
+  {
+    "amount": 200,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 333,
+    "utcDate": 1445788800000
+  },
+  {
+    "amount": 538,
+    "category": "subway",
+    "currency": "EUR",
+    "id": 331,
+    "utcDate": 1445702400000
+  },
+  {
+    "amount": 350,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 330,
+    "utcDate": 1445702400000
+  },
+  {
+    "amount": 1250,
+    "category": "climbing",
+    "currency": "EUR",
+    "id": 329,
+    "utcDate": 1445702400000
+  },
+  {
+    "amount": 450,
+    "category": "bagels",
+    "currency": "EUR",
+    "id": 328,
+    "utcDate": 1445702400000
+  },
+  {
+    "amount": 100,
+    "category": "snickers",
+    "currency": "EUR",
+    "id": 327,
+    "utcDate": 1445702400000
+  },
+  {
+    "amount": 400,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 322,
+    "utcDate": 1445702400000
+  },
+  {
+    "amount": 3180,
+    "category": "costumes",
+    "currency": "EUR",
+    "id": 332,
+    "utcDate": 1445616000000
+  },
+  {
+    "amount": 350,
+    "category": "chinese",
+    "currency": "EUR",
+    "id": 321,
+    "utcDate": 1445616000000
+  },
+  {
+    "amount": 380,
+    "category": "pens",
+    "currency": "EUR",
+    "id": 320,
+    "utcDate": 1445616000000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 319,
+    "utcDate": 1445616000000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 317,
+    "utcDate": 1445443200000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 316,
+    "utcDate": 1445443200000
+  },
+  {
+    "amount": 100,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 315,
+    "utcDate": 1445443200000
+  },
+  {
+    "amount": 3500,
+    "category": "indian",
+    "currency": "EUR",
+    "id": 318,
+    "utcDate": 1445356800000
+  },
+  {
+    "amount": 60,
+    "category": "mango ayran",
+    "currency": "EUR",
+    "id": 314,
+    "utcDate": 1445356800000
+  },
+  {
+    "amount": 500,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 312,
+    "utcDate": 1445270400000
+  },
+  {
+    "amount": 2000,
+    "category": "dinner",
+    "currency": "EUR",
+    "id": 311,
+    "utcDate": 1445270400000
+  },
+  {
+    "amount": 1300,
+    "category": "presents",
+    "currency": "EUR",
+    "id": 310,
+    "utcDate": 1445270400000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 309,
+    "utcDate": 1445184000000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 308,
+    "utcDate": 1445184000000
+  },
+  {
+    "amount": 400,
+    "category": "schwarma",
+    "currency": "EUR",
+    "id": 307,
+    "utcDate": 1445097600000
+  },
+  {
+    "amount": 350,
+    "category": "crepes",
+    "currency": "EUR",
+    "id": 306,
+    "utcDate": 1445097600000
+  },
+  {
+    "amount": 200,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 305,
+    "utcDate": 1445097600000
+  },
+  {
+    "amount": 250,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 304,
+    "utcDate": 1445097600000
+  },
+  {
+    "amount": 1250,
+    "category": "climbing",
+    "currency": "EUR",
+    "id": 303,
+    "utcDate": 1445097600000
+  },
+  {
+    "amount": 259,
+    "category": "bagels",
+    "currency": "EUR",
+    "id": 302,
+    "utcDate": 1445097600000
+  },
+  {
+    "amount": 259,
+    "category": "ciabatta",
+    "currency": "EUR",
+    "id": 301,
+    "utcDate": 1445097600000
+  },
+  {
+    "amount": 120,
+    "category": "mango ayran",
+    "currency": "EUR",
+    "id": 300,
+    "utcDate": 1445097600000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 299,
+    "utcDate": 1445097600000
+  },
+  {
+    "amount": 7995,
+    "category": "train tickets",
+    "currency": "EUR",
+    "id": 313,
+    "utcDate": 1445011200000
+  },
+  {
+    "amount": 1600,
+    "category": "lunch",
+    "currency": "EUR",
+    "id": 296,
+    "utcDate": 1445011200000
+  },
+  {
+    "amount": 100,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 295,
+    "utcDate": 1444924800000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 291,
+    "utcDate": 1444924800000
+  },
+  {
+    "amount": 650,
+    "category": "turkish",
+    "currency": "EUR",
+    "id": 293,
+    "utcDate": 1444838400000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 292,
+    "utcDate": 1444838400000
+  },
+  {
+    "amount": 70,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 289,
+    "utcDate": 1444838400000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 290,
+    "utcDate": 1444752000000
+  },
+  {
+    "amount": 100,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 288,
+    "utcDate": 1444752000000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 282,
+    "utcDate": 1444752000000
+  },
+  {
+    "amount": 1000,
+    "category": "burgers",
+    "currency": "EUR",
+    "id": 281,
+    "utcDate": 1444752000000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 284,
+    "utcDate": 1444665600000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 283,
+    "utcDate": 1444665600000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 287,
+    "utcDate": 1444579200000
+  },
+  {
+    "amount": 350,
+    "category": "chinese",
+    "currency": "EUR",
+    "id": 286,
+    "utcDate": 1444579200000
+  },
+  {
+    "amount": 150,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 285,
+    "utcDate": 1444579200000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 277,
+    "utcDate": 1444492800000
+  },
+  {
+    "amount": 1100,
+    "category": "burgers",
+    "currency": "EUR",
+    "id": 276,
+    "utcDate": 1444492800000
+  },
+  {
+    "amount": 2298,
+    "category": "guitar strings",
+    "currency": "EUR",
+    "id": 280,
+    "utcDate": 1444406400000
+  },
+  {
+    "amount": 650,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 275,
+    "utcDate": 1444406400000
+  },
+  {
+    "amount": 1400,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 274,
+    "utcDate": 1444406400000
+  },
+  {
+    "amount": 1500,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 273,
+    "utcDate": 1444406400000
+  },
+  {
+    "amount": 179,
+    "category": "candles",
+    "currency": "EUR",
+    "id": 272,
+    "utcDate": 1444406400000
+  },
+  {
+    "amount": 75,
+    "category": "toilet cleaner",
+    "currency": "EUR",
+    "id": 271,
+    "utcDate": 1444406400000
+  },
+  {
+    "amount": 115,
+    "category": "toilet freshener",
+    "currency": "EUR",
+    "id": 270,
+    "utcDate": 1444406400000
+  },
+  {
+    "amount": 95,
+    "category": "shower gel",
+    "currency": "EUR",
+    "id": 269,
+    "utcDate": 1444406400000
+  },
+  {
+    "amount": 325,
+    "category": "toilet paper",
+    "currency": "EUR",
+    "id": 268,
+    "utcDate": 1444406400000
+  },
+  {
+    "amount": 99,
+    "category": "chocolate",
+    "currency": "EUR",
+    "id": 267,
+    "utcDate": 1444406400000
+  },
+  {
+    "amount": 59,
+    "category": "milk",
+    "currency": "EUR",
+    "id": 266,
+    "utcDate": 1444406400000
+  },
+  {
+    "amount": 50,
+    "category": "bananas",
+    "currency": "EUR",
+    "id": 265,
+    "utcDate": 1444406400000
+  },
+  {
+    "amount": 60,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 264,
+    "utcDate": 1444320000000
+  },
+  {
+    "amount": 350,
+    "category": "schwarma",
+    "currency": "EUR",
+    "id": 263,
+    "utcDate": 1444320000000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 262,
+    "utcDate": 1444320000000
+  },
+  {
+    "amount": 70,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 261,
+    "utcDate": 1444320000000
+  },
+  {
+    "amount": 350,
+    "category": "gozleme",
+    "currency": "EUR",
+    "id": 258,
+    "utcDate": 1444233600000
+  },
+  {
+    "amount": 650,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 257,
+    "utcDate": 1444233600000
+  },
+  {
+    "amount": 100,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 256,
+    "utcDate": 1444233600000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 260,
+    "utcDate": 1444147200000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 259,
+    "utcDate": 1444147200000
+  },
+  {
+    "amount": 1000,
+    "category": "presents",
+    "currency": "EUR",
+    "id": 255,
+    "utcDate": 1444147200000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 254,
+    "utcDate": 1444147200000
+  },
+  {
+    "amount": 50,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 249,
+    "utcDate": 1444147200000
+  },
+  {
+    "amount": 359,
+    "category": "smoothie",
+    "currency": "EUR",
+    "id": 253,
+    "utcDate": 1444060800000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 252,
+    "utcDate": 1444060800000
+  },
+  {
+    "amount": 50,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 248,
+    "utcDate": 1443974400000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 247,
+    "utcDate": 1443974400000
+  },
+  {
+    "amount": 490,
+    "category": "smoxey\u0027s",
+    "currency": "EUR",
+    "id": 246,
+    "utcDate": 1443974400000
+  },
+  {
+    "amount": 389,
+    "category": "burgers",
+    "currency": "EUR",
+    "id": 245,
+    "utcDate": 1443888000000
+  },
+  {
+    "amount": 50,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 244,
+    "utcDate": 1443888000000
+  },
+  {
+    "amount": 140,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 243,
+    "utcDate": 1443888000000
+  },
+  {
+    "amount": 350,
+    "category": "crepes",
+    "currency": "EUR",
+    "id": 242,
+    "utcDate": 1443888000000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 241,
+    "utcDate": 1443888000000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 240,
+    "utcDate": 1443888000000
+  },
+  {
+    "amount": 50,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 239,
+    "utcDate": 1443888000000
+  },
+  {
+    "amount": 230,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 238,
+    "utcDate": 1443801600000
+  },
+  {
+    "amount": 260,
+    "category": "ice cream",
+    "currency": "EUR",
+    "id": 237,
+    "utcDate": 1443801600000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 236,
+    "utcDate": 1443801600000
+  },
+  {
+    "amount": 710,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 235,
+    "utcDate": 1443801600000
+  },
+  {
+    "amount": 690,
+    "category": "pizza",
+    "currency": "EUR",
+    "id": 234,
+    "utcDate": 1443801600000
+  },
+  {
+    "amount": 900,
+    "category": "climbing",
+    "currency": "EUR",
+    "id": 233,
+    "utcDate": 1443801600000
+  },
+  {
+    "amount": 50,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 232,
+    "utcDate": 1443801600000
+  },
+  {
+    "amount": 50,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 230,
+    "utcDate": 1443801600000
+  },
+  {
+    "amount": 50,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 229,
+    "utcDate": 1443801600000
+  },
+  {
+    "amount": 1200,
+    "category": "cocktails",
+    "currency": "EUR",
+    "id": 225,
+    "utcDate": 1443801600000
+  },
+  {
+    "amount": 350,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 231,
+    "utcDate": 1443715200000
+  },
+  {
+    "amount": 300,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 228,
+    "utcDate": 1443715200000
+  },
+  {
+    "amount": 250,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 227,
+    "utcDate": 1443715200000
+  },
+  {
+    "amount": 300,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 226,
+    "utcDate": 1443715200000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 224,
+    "utcDate": 1443628800000
+  },
+  {
+    "amount": 70,
+    "category": "bread",
+    "currency": "EUR",
+    "id": 223,
+    "utcDate": 1443628800000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 222,
+    "utcDate": 1443628800000
+  },
+  {
+    "amount": 42500,
+    "category": "rent",
+    "currency": "EUR",
+    "id": 221,
+    "utcDate": 1443542400000
+  },
+  {
+    "amount": 59,
+    "category": "mango ayran",
+    "currency": "EUR",
+    "id": 220,
+    "utcDate": 1443542400000
+  },
+  {
+    "amount": 199,
+    "category": "avacado",
+    "currency": "EUR",
+    "id": 219,
+    "utcDate": 1443542400000
+  },
+  {
+    "amount": 329,
+    "category": "salmon",
+    "currency": "EUR",
+    "id": 218,
+    "utcDate": 1443542400000
+  },
+  {
+    "amount": 70,
+    "category": "bread",
+    "currency": "EUR",
+    "id": 217,
+    "utcDate": 1443542400000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 210,
+    "utcDate": 1443456000000
+  },
+  {
+    "amount": 540,
+    "category": "börek",
+    "currency": "EUR",
+    "id": 209,
+    "utcDate": 1443369600000
+  },
+  {
+    "amount": 10,
+    "category": "plastic bags",
+    "currency": "EUR",
+    "id": 216,
+    "utcDate": 1443196800000
+  },
+  {
+    "amount": 175,
+    "category": "cereal",
+    "currency": "EUR",
+    "id": 215,
+    "utcDate": 1443196800000
+  },
+  {
+    "amount": 149,
+    "category": "peanuts",
+    "currency": "EUR",
+    "id": 214,
+    "utcDate": 1443196800000
+  },
+  {
+    "amount": 205,
+    "category": "bread",
+    "currency": "EUR",
+    "id": 213,
+    "utcDate": 1443196800000
+  },
+  {
+    "amount": 110,
+    "category": "milk",
+    "currency": "EUR",
+    "id": 212,
+    "utcDate": 1443196800000
+  },
+  {
+    "amount": 67,
+    "category": "bananas",
+    "currency": "EUR",
+    "id": 211,
+    "utcDate": 1443196800000
+  },
+  {
+    "amount": 280,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 208,
+    "utcDate": 1443196800000
+  },
+  {
+    "amount": 800,
+    "category": "club entry",
+    "currency": "EUR",
+    "id": 207,
+    "utcDate": 1443196800000
+  },
+  {
+    "amount": 800,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 206,
+    "utcDate": 1443196800000
+  },
+  {
+    "amount": 290,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 205,
+    "utcDate": 1443196800000
+  },
+  {
+    "amount": 450,
+    "category": "chinese",
+    "currency": "EUR",
+    "id": 204,
+    "utcDate": 1443024000000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 203,
+    "utcDate": 1443024000000
+  },
+  {
+    "amount": 1050,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 202,
+    "utcDate": 1443024000000
+  },
+  {
+    "amount": 50,
+    "category": "donations",
+    "currency": "EUR",
+    "id": 201,
+    "utcDate": 1443024000000
+  },
+  {
+    "amount": 289,
+    "category": "cereal",
+    "currency": "EUR",
+    "id": 200,
+    "utcDate": 1442851200000
+  },
+  {
+    "amount": 70,
+    "category": "bread",
+    "currency": "EUR",
+    "id": 199,
+    "utcDate": 1442851200000
+  },
+  {
+    "amount": 690,
+    "category": "wine",
+    "currency": "EUR",
+    "id": 198,
+    "utcDate": 1442851200000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 197,
+    "utcDate": 1442851200000
+  },
+  {
+    "amount": 150,
+    "category": "mango ayran",
+    "currency": "EUR",
+    "id": 196,
+    "utcDate": 1442851200000
+  },
+  {
+    "amount": 350,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 195,
+    "utcDate": 1442851200000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 194,
+    "utcDate": 1442764800000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 193,
+    "utcDate": 1442764800000
+  },
+  {
+    "amount": 120,
+    "category": "mango ayran",
+    "currency": "EUR",
+    "id": 188,
+    "utcDate": 1442678400000
+  },
+  {
+    "amount": 350,
+    "category": "schwarma",
+    "currency": "EUR",
+    "id": 187,
+    "utcDate": 1442678400000
+  },
+  {
+    "amount": 220,
+    "category": "sketch books",
+    "currency": "EUR",
+    "id": 192,
+    "utcDate": 1442592000000
+  },
+  {
+    "amount": 140,
+    "category": "erasers",
+    "currency": "EUR",
+    "id": 191,
+    "utcDate": 1442592000000
+  },
+  {
+    "amount": 260,
+    "category": "pencils",
+    "currency": "EUR",
+    "id": 190,
+    "utcDate": 1442592000000
+  },
+  {
+    "amount": 300,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 186,
+    "utcDate": 1442592000000
+  },
+  {
+    "amount": 490,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 185,
+    "utcDate": 1442592000000
+  },
+  {
+    "amount": 300,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 184,
+    "utcDate": 1442592000000
+  },
+  {
+    "amount": 340,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 183,
+    "utcDate": 1442592000000
+  },
+  {
+    "amount": 300,
+    "category": "dinner",
+    "currency": "EUR",
+    "id": 182,
+    "utcDate": 1442592000000
+  },
+  {
+    "amount": 320,
+    "category": "wine",
+    "currency": "EUR",
+    "id": 181,
+    "utcDate": 1442592000000
+  },
+  {
+    "amount": 350,
+    "category": "crepes",
+    "currency": "EUR",
+    "id": 178,
+    "utcDate": 1442592000000
+  },
+  {
+    "amount": 400,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 177,
+    "utcDate": 1442592000000
+  },
+  {
+    "amount": 1000,
+    "category": "jump ropes",
+    "currency": "EUR",
+    "id": 176,
+    "utcDate": 1442592000000
+  },
+  {
+    "amount": 1900,
+    "category": "shoes",
+    "currency": "EUR",
+    "id": 175,
+    "utcDate": 1442592000000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 179,
+    "utcDate": 1442505600000
+  },
+  {
+    "amount": 350,
+    "category": "chinese",
+    "currency": "EUR",
+    "id": 180,
+    "utcDate": 1442419200000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 173,
+    "utcDate": 1442332800000
+  },
+  {
+    "amount": 900,
+    "category": "lunch",
+    "currency": "EUR",
+    "id": 172,
+    "utcDate": 1442332800000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 171,
+    "utcDate": 1442332800000
+  },
+  {
+    "amount": 140,
+    "category": "public toilets",
+    "currency": "EUR",
+    "id": 170,
+    "utcDate": 1442246400000
+  },
+  {
+    "amount": 495,
+    "category": "smoothies",
+    "currency": "EUR",
+    "id": 169,
+    "utcDate": 1442246400000
+  },
+  {
+    "amount": 2500,
+    "category": "pants",
+    "currency": "EUR",
+    "id": 168,
+    "utcDate": 1442246400000
+  },
+  {
+    "amount": 560,
+    "category": "train tickets",
+    "currency": "EUR",
+    "id": 174,
+    "utcDate": 1442160000000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 167,
+    "utcDate": 1442160000000
+  },
+  {
+    "amount": 538,
+    "category": "subway",
+    "currency": "EUR",
+    "id": 166,
+    "utcDate": 1442073600000
+  },
+  {
+    "amount": 1150,
+    "category": "climbing",
+    "currency": "EUR",
+    "id": 165,
+    "utcDate": 1442073600000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 164,
+    "utcDate": 1441987200000
+  },
+  {
+    "amount": 250,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 163,
+    "utcDate": 1441987200000
+  },
+  {
+    "amount": 300,
+    "category": "soft drink",
+    "currency": "EUR",
+    "id": 162,
+    "utcDate": 1441987200000
+  },
+  {
+    "amount": 10,
+    "category": "plastic bags",
+    "currency": "EUR",
+    "id": 161,
+    "utcDate": 1441987200000
+  },
+  {
+    "amount": 279,
+    "category": "apples",
+    "currency": "EUR",
+    "id": 160,
+    "utcDate": 1441987200000
+  },
+  {
+    "amount": 259,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 159,
+    "utcDate": 1441987200000
+  },
+  {
+    "amount": 219,
+    "category": "peanut butter",
+    "currency": "EUR",
+    "id": 158,
+    "utcDate": 1441987200000
+  },
+  {
+    "amount": 55,
+    "category": "milk",
+    "currency": "EUR",
+    "id": 157,
+    "utcDate": 1441987200000
+  },
+  {
+    "amount": 215,
+    "category": "bread",
+    "currency": "EUR",
+    "id": 156,
+    "utcDate": 1441987200000
+  },
+  {
+    "amount": 59,
+    "category": "mango ayran",
+    "currency": "EUR",
+    "id": 153,
+    "utcDate": 1441900800000
+  },
+  {
+    "amount": 289,
+    "category": "cereal",
+    "currency": "EUR",
+    "id": 152,
+    "utcDate": 1441900800000
+  },
+  {
+    "amount": 350,
+    "category": "schwarma",
+    "currency": "EUR",
+    "id": 151,
+    "utcDate": 1441728000000
+  },
+  {
+    "amount": 59,
+    "category": "mango ayran",
+    "currency": "EUR",
+    "id": 155,
+    "utcDate": 1441641600000
+  },
+  {
+    "amount": 70,
+    "category": "bread",
+    "currency": "EUR",
+    "id": 154,
+    "utcDate": 1441641600000
+  },
+  {
+    "amount": 200,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 150,
+    "utcDate": 1441641600000
+  },
+  {
+    "amount": 600,
+    "category": "wine",
+    "currency": "EUR",
+    "id": 149,
+    "utcDate": 1441641600000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 148,
+    "utcDate": 1441641600000
+  },
+  {
+    "amount": 550,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 147,
+    "utcDate": 1441641600000
+  },
+  {
+    "amount": 850,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 146,
+    "utcDate": 1441641600000
+  },
+  {
+    "amount": 119,
+    "category": "cream cheese",
+    "currency": "EUR",
+    "id": 145,
+    "utcDate": 1441555200000
+  },
+  {
+    "amount": 329,
+    "category": "salmon",
+    "currency": "EUR",
+    "id": 144,
+    "utcDate": 1441555200000
+  },
+  {
+    "amount": 70,
+    "category": "bread",
+    "currency": "EUR",
+    "id": 143,
+    "utcDate": 1441555200000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 142,
+    "utcDate": 1441555200000
+  },
+  {
+    "amount": 300,
+    "category": "chinese",
+    "currency": "EUR",
+    "id": 141,
+    "utcDate": 1441468800000
+  },
+  {
+    "amount": 500,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 140,
+    "utcDate": 1441468800000
+  },
+  {
+    "amount": 499,
+    "category": "socks",
+    "currency": "EUR",
+    "id": 139,
+    "utcDate": 1441382400000
+  },
+  {
+    "amount": 280,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 138,
+    "utcDate": 1441382400000
+  },
+  {
+    "amount": 1000,
+    "category": "dinner",
+    "currency": "EUR",
+    "id": 137,
+    "utcDate": 1441382400000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 135,
+    "utcDate": 1441382400000
+  },
+  {
+    "amount": 60,
+    "category": "mango ayran",
+    "currency": "EUR",
+    "id": 134,
+    "utcDate": 1441382400000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 133,
+    "utcDate": 1441382400000
+  },
+  {
+    "amount": 1100,
+    "category": "climbing",
+    "currency": "EUR",
+    "id": 132,
+    "utcDate": 1441382400000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 131,
+    "utcDate": 1441296000000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 130,
+    "utcDate": 1441123200000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 126,
+    "utcDate": 1441123200000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 129,
+    "utcDate": 1441036800000
+  },
+  {
+    "amount": 600,
+    "category": "dinner",
+    "currency": "EUR",
+    "id": 128,
+    "utcDate": 1441036800000
+  },
+  {
+    "amount": 1600,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 127,
+    "utcDate": 1441036800000
+  },
+  {
+    "amount": 42500,
+    "category": "rent",
+    "currency": "EUR",
+    "id": 125,
+    "utcDate": 1440950400000
+  },
+  {
+    "amount": 500,
+    "category": "wire cutters",
+    "currency": "EUR",
+    "id": 124,
+    "utcDate": 1440950400000
+  },
+  {
+    "amount": 350,
+    "category": "chinese",
+    "currency": "EUR",
+    "id": 123,
+    "utcDate": 1440950400000
+  },
+  {
+    "amount": 130,
+    "category": "pencils",
+    "currency": "EUR",
+    "id": 122,
+    "utcDate": 1440950400000
+  },
+  {
+    "amount": 399,
+    "category": "cashews",
+    "currency": "EUR",
+    "id": 121,
+    "utcDate": 1440864000000
+  },
+  {
+    "amount": 150,
+    "category": "soft drinks",
+    "currency": "EUR",
+    "id": 120,
+    "utcDate": 1440864000000
+  },
+  {
+    "amount": 1150,
+    "category": "climbing",
+    "currency": "EUR",
+    "id": 119,
+    "utcDate": 1440864000000
+  },
+  {
+    "amount": 350,
+    "category": "schwarma",
+    "currency": "EUR",
+    "id": 118,
+    "utcDate": 1440864000000
+  },
+  {
+    "amount": 165,
+    "category": "tea",
+    "currency": "EUR",
+    "id": 117,
+    "utcDate": 1440777600000
+  },
+  {
+    "amount": 89,
+    "category": "chicken",
+    "currency": "EUR",
+    "id": 116,
+    "utcDate": 1440777600000
+  },
+  {
+    "amount": 59,
+    "category": "mango ayran",
+    "currency": "EUR",
+    "id": 115,
+    "utcDate": 1440777600000
+  },
+  {
+    "amount": 70,
+    "category": "bread",
+    "currency": "EUR",
+    "id": 114,
+    "utcDate": 1440777600000
+  },
+  {
+    "amount": 115,
+    "category": "cream cheese",
+    "currency": "EUR",
+    "id": 113,
+    "utcDate": 1440777600000
+  },
+  {
+    "amount": 380,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 112,
+    "utcDate": 1440777600000
+  },
+  {
+    "amount": 2290,
+    "category": "guitar strings",
+    "currency": "EUR",
+    "id": 111,
+    "utcDate": 1440777600000
+  },
+  {
+    "amount": 1795,
+    "category": "books",
+    "currency": "EUR",
+    "id": 110,
+    "utcDate": 1440777600000
+  },
+  {
+    "amount": 350,
+    "category": "schwarma",
+    "currency": "EUR",
+    "id": 109,
+    "utcDate": 1440604800000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 107,
+    "utcDate": 1440518400000
+  },
+  {
+    "amount": 350,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 106,
+    "utcDate": 1440518400000
+  },
+  {
+    "amount": 350,
+    "category": "chinese",
+    "currency": "EUR",
+    "id": 105,
+    "utcDate": 1440518400000
+  },
+  {
+    "amount": 380,
+    "category": "pens",
+    "currency": "EUR",
+    "id": 104,
+    "utcDate": 1440518400000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 103,
+    "utcDate": 1440432000000
+  },
+  {
+    "amount": 350,
+    "category": "schwarma",
+    "currency": "EUR",
+    "id": 102,
+    "utcDate": 1440345600000
+  },
+  {
+    "amount": 279,
+    "category": "washing detergent",
+    "currency": "EUR",
+    "id": 101,
+    "utcDate": 1440345600000
+  },
+  {
+    "amount": 249,
+    "category": "avacado",
+    "currency": "EUR",
+    "id": 100,
+    "utcDate": 1440345600000
+  },
+  {
+    "amount": 70,
+    "category": "bread",
+    "currency": "EUR",
+    "id": 99,
+    "utcDate": 1440345600000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 92,
+    "utcDate": 1440259200000
+  },
+  {
+    "amount": 7,
+    "category": "plastic bags",
+    "currency": "EUR",
+    "id": 98,
+    "utcDate": 1440172800000
+  },
+  {
+    "amount": 140,
+    "category": "bread",
+    "currency": "EUR",
+    "id": 97,
+    "utcDate": 1440172800000
+  },
+  {
+    "amount": 55,
+    "category": "milk",
+    "currency": "EUR",
+    "id": 96,
+    "utcDate": 1440172800000
+  },
+  {
+    "amount": 99,
+    "category": "chicken",
+    "currency": "EUR",
+    "id": 95,
+    "utcDate": 1440172800000
+  },
+  {
+    "amount": 79,
+    "category": "cream cheese",
+    "currency": "EUR",
+    "id": 94,
+    "utcDate": 1440172800000
+  },
+  {
+    "amount": 100,
+    "category": "public toilets",
+    "currency": "EUR",
+    "id": 93,
+    "utcDate": 1440172800000
+  },
+  {
+    "amount": 500,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 91,
+    "utcDate": 1440172800000
+  },
+  {
+    "amount": 320,
+    "category": "crepes",
+    "currency": "EUR",
+    "id": 89,
+    "utcDate": 1440172800000
+  },
+  {
+    "amount": 1600,
+    "category": "taxis",
+    "currency": "EUR",
+    "id": 88,
+    "utcDate": 1440172800000
+  },
+  {
+    "amount": 710,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 87,
+    "utcDate": 1440172800000
+  },
+  {
+    "amount": 2000,
+    "category": "spirits",
+    "currency": "EUR",
+    "id": 90,
+    "utcDate": 1440086400000
+  },
+  {
+    "amount": 283,
+    "category": "avacado",
+    "currency": "EUR",
+    "id": 86,
+    "utcDate": 1440086400000
+  },
+  {
+    "amount": 118,
+    "category": "mango ayran",
+    "currency": "EUR",
+    "id": 85,
+    "utcDate": 1440086400000
+  },
+  {
+    "amount": 179,
+    "category": "chicken",
+    "currency": "EUR",
+    "id": 84,
+    "utcDate": 1440086400000
+  },
+  {
+    "amount": 329,
+    "category": "salmon",
+    "currency": "EUR",
+    "id": 83,
+    "utcDate": 1440086400000
+  },
+  {
+    "amount": 88,
+    "category": "cream cheese",
+    "currency": "EUR",
+    "id": 82,
+    "utcDate": 1440086400000
+  },
+  {
+    "amount": 140,
+    "category": "bread",
+    "currency": "EUR",
+    "id": 81,
+    "utcDate": 1440086400000
+  },
+  {
+    "amount": 350,
+    "category": "schwarma",
+    "currency": "EUR",
+    "id": 80,
+    "utcDate": 1440000000000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 79,
+    "utcDate": 1440000000000
+  },
+  {
+    "amount": 189,
+    "category": "juice",
+    "currency": "EUR",
+    "id": 78,
+    "utcDate": 1439913600000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 77,
+    "utcDate": 1439913600000
+  },
+  {
+    "amount": 2500,
+    "category": "lunch",
+    "currency": "EUR",
+    "id": 76,
+    "utcDate": 1439913600000
+  },
+  {
+    "amount": 149,
+    "category": "deodorant",
+    "currency": "EUR",
+    "id": 73,
+    "utcDate": 1439827200000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 72,
+    "utcDate": 1439827200000
+  },
+  {
+    "amount": 60,
+    "category": "mango ayran",
+    "currency": "EUR",
+    "id": 71,
+    "utcDate": 1439827200000
+  },
+  {
+    "amount": 329,
+    "category": "salmon",
+    "currency": "EUR",
+    "id": 70,
+    "utcDate": 1439740800000
+  },
+  {
+    "amount": 88,
+    "category": "cream cheese",
+    "currency": "EUR",
+    "id": 69,
+    "utcDate": 1439740800000
+  },
+  {
+    "amount": 180,
+    "category": "bread",
+    "currency": "EUR",
+    "id": 68,
+    "utcDate": 1439740800000
+  },
+  {
+    "amount": 249,
+    "category": "avacado",
+    "currency": "EUR",
+    "id": 67,
+    "utcDate": 1439740800000
+  },
+  {
+    "amount": 560,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 66,
+    "utcDate": 1439654400000
+  },
+  {
+    "amount": 550,
+    "category": "indian",
+    "currency": "EUR",
+    "id": 65,
+    "utcDate": 1439654400000
+  },
+  {
+    "amount": 195,
+    "category": "milk",
+    "currency": "EUR",
+    "id": 64,
+    "utcDate": 1439654400000
+  },
+  {
+    "amount": 205,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 62,
+    "utcDate": 1439654400000
+  },
+  {
+    "amount": 205,
+    "category": "sandwiches",
+    "currency": "EUR",
+    "id": 61,
+    "utcDate": 1439654400000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 63,
+    "utcDate": 1439568000000
+  },
+  {
+    "amount": 1800,
+    "category": "taxis",
+    "currency": "EUR",
+    "id": 56,
+    "utcDate": 1439481600000
+  },
+  {
+    "amount": 329,
+    "category": "salmon",
+    "currency": "EUR",
+    "id": 55,
+    "utcDate": 1439481600000
+  },
+  {
+    "amount": 140,
+    "category": "bread",
+    "currency": "EUR",
+    "id": 54,
+    "utcDate": 1439481600000
+  },
+  {
+    "amount": 340,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 53,
+    "utcDate": 1439395200000
+  },
+  {
+    "amount": 350,
+    "category": "chinese",
+    "currency": "EUR",
+    "id": 52,
+    "utcDate": 1439395200000
+  },
+  {
+    "amount": 400,
+    "category": "schwarma",
+    "currency": "EUR",
+    "id": 51,
+    "utcDate": 1439308800000
+  },
+  {
+    "amount": 700,
+    "category": "water",
+    "currency": "EUR",
+    "id": 50,
+    "utcDate": 1439222400000
+  },
+  {
+    "amount": 2000,
+    "category": "wine",
+    "currency": "EUR",
+    "id": 49,
+    "utcDate": 1439222400000
+  },
+  {
+    "amount": 580,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 48,
+    "utcDate": 1439136000000
+  },
+  {
+    "amount": 3700,
+    "category": "spirits",
+    "currency": "EUR",
+    "id": 47,
+    "utcDate": 1439136000000
+  },
+  {
+    "amount": 350,
+    "category": "schwarma",
+    "currency": "EUR",
+    "id": 46,
+    "utcDate": 1439136000000
+  },
+  {
+    "amount": 115,
+    "category": "chicken",
+    "currency": "EUR",
+    "id": 45,
+    "utcDate": 1439136000000
+  },
+  {
+    "amount": 299,
+    "category": "nut mix",
+    "currency": "EUR",
+    "id": 44,
+    "utcDate": 1439136000000
+  },
+  {
+    "amount": 135,
+    "category": "bread",
+    "currency": "EUR",
+    "id": 43,
+    "utcDate": 1439136000000
+  },
+  {
+    "amount": 320,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 42,
+    "utcDate": 1439049600000
+  },
+  {
+    "amount": 520,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 41,
+    "utcDate": 1439049600000
+  },
+  {
+    "amount": 1150,
+    "category": "climbing",
+    "currency": "EUR",
+    "id": 40,
+    "utcDate": 1439049600000
+  },
+  {
+    "amount": 538,
+    "category": "subway",
+    "currency": "EUR",
+    "id": 39,
+    "utcDate": 1439049600000
+  },
+  {
+    "amount": 500,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 38,
+    "utcDate": 1438876800000
+  },
+  {
+    "amount": 200,
+    "category": "miscellaneous",
+    "currency": "EUR",
+    "id": 37,
+    "utcDate": 1438876800000
+  },
+  {
+    "amount": 1200,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 36,
+    "utcDate": 1438876800000
+  },
+  {
+    "amount": 4300,
+    "category": "club entry",
+    "currency": "EUR",
+    "id": 35,
+    "utcDate": 1438876800000
+  },
+  {
+    "amount": 350,
+    "category": "schwarma",
+    "currency": "EUR",
+    "id": 34,
+    "utcDate": 1438790400000
+  },
+  {
+    "amount": 750,
+    "category": "breakfast",
+    "currency": "EUR",
+    "id": 32,
+    "utcDate": 1438790400000
+  },
+  {
+    "amount": 2870,
+    "category": "taxis",
+    "currency": "EUR",
+    "id": 33,
+    "utcDate": 1438704000000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 30,
+    "utcDate": 1438704000000
+  },
+  {
+    "amount": 120,
+    "category": "mango ayran",
+    "currency": "EUR",
+    "id": 28,
+    "utcDate": 1438704000000
+  },
+  {
+    "amount": 720,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 27,
+    "utcDate": 1438617600000
+  },
+  {
+    "amount": 200,
+    "category": "soft drink",
+    "currency": "EUR",
+    "id": 26,
+    "utcDate": 1438617600000
+  },
+  {
+    "amount": 118,
+    "category": "mango ayran",
+    "currency": "EUR",
+    "id": 25,
+    "utcDate": 1438617600000
+  },
+  {
+    "amount": 1200,
+    "category": "climbing",
+    "currency": "EUR",
+    "id": 24,
+    "utcDate": 1438617600000
+  },
+  {
+    "amount": 135,
+    "category": "bread",
+    "currency": "EUR",
+    "id": 22,
+    "utcDate": 1438531200000
+  },
+  {
+    "amount": 330,
+    "category": "döner",
+    "currency": "EUR",
+    "id": 21,
+    "utcDate": 1438531200000
+  },
+  {
+    "amount": 1200,
+    "category": "climbing",
+    "currency": "EUR",
+    "id": 4,
+    "utcDate": 1438444800000
+  },
+  {
+    "amount": 250,
+    "category": "coffee",
+    "currency": "EUR",
+    "id": 3,
+    "utcDate": 1438444800000
+  },
+  {
+    "amount": 350,
+    "category": "chinese",
+    "currency": "EUR",
+    "id": 2,
+    "utcDate": 1438444800000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 1,
+    "utcDate": 1438444800000
+  },
+  {
+    "amount": 2200,
+    "category": "breakfast",
+    "currency": "EUR",
+    "id": 10,
+    "utcDate": 1438358400000
+  },
+  {
+    "amount": 118,
+    "category": "mango ayran",
+    "currency": "EUR",
+    "id": 9,
+    "utcDate": 1438358400000
+  },
+  {
+    "amount": 99,
+    "category": "salami",
+    "currency": "EUR",
+    "id": 8,
+    "utcDate": 1438358400000
+  },
+  {
+    "amount": 329,
+    "category": "salmon",
+    "currency": "EUR",
+    "id": 6,
+    "utcDate": 1438358400000
+  },
+  {
+    "amount": 180,
+    "category": "bread",
+    "currency": "EUR",
+    "id": 5,
+    "utcDate": 1438358400000
+  },
+  {
+    "amount": 119,
+    "category": "cream cheese",
+    "currency": "EUR",
+    "id": 19,
+    "utcDate": 1438272000000
+  },
+  {
+    "amount": 329,
+    "category": "salmon",
+    "currency": "EUR",
+    "id": 13,
+    "utcDate": 1438272000000
+  },
+  {
+    "amount": 140,
+    "category": "bread",
+    "currency": "EUR",
+    "id": 12,
+    "utcDate": 1438272000000
+  },
+  {
+    "amount": 299,
+    "category": "mouthwash",
+    "currency": "EUR",
+    "id": 11,
+    "utcDate": 1438272000000
+  },
+  {
+    "amount": 360,
+    "category": "burritos",
+    "currency": "EUR",
+    "id": 18,
+    "utcDate": 1438099200000
+  },
+  {
+    "amount": 350,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 17,
+    "utcDate": 1438099200000
+  },
+  {
+    "amount": 640,
+    "category": "beer",
+    "currency": "EUR",
+    "id": 16,
+    "utcDate": 1438099200000
+  },
+  {
+    "amount": 1000,
+    "category": "frank\u0027s",
+    "currency": "EUR",
+    "id": 15,
+    "utcDate": 1438012800000
   }
 ]
