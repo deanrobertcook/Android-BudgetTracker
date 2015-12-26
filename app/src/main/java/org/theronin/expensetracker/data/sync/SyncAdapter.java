@@ -7,11 +7,13 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
 
+import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.SaveCallback;
 
 import org.theronin.expensetracker.CustomApplication;
+import org.theronin.expensetracker.data.Contract.EntryView;
 import org.theronin.expensetracker.model.Entry;
 
 import java.util.List;
@@ -50,9 +52,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 //TODO separate new from update operation
                 case SYNC_STATUS_NEW:
                 case SYNC_STATUS_UPDATE:
-                    syncEntry(entry);
+                    saveEntryOnBackend(entry);
                     break;
                 case SYNC_STATUS_DELETE:
+                    deleteEntryOnBackend(entry);
                     break;
                 case SYNC_STATUS_SYNCED:
                     //do nothing
@@ -61,39 +64,49 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
-    private void syncEntry(final Entry entry) {
+    private void saveEntryOnBackend(final Entry entry) {
         Timber.d("Syncing entry: " + entry);
-        final ParseObject parseEntry = new ParseObject("entry");
-        parseEntry.put("amount", entry.amount);
-        parseEntry.put("category", entry.category.name);
-        parseEntry.put("currency", entry.currency.code);
-        parseEntry.put("date", entry.utcDate);
-        parseEntry.saveInBackground(new SaveCallback() {
+        final ParseObject parseObject = new ParseObject(EntryView.VIEW_NAME);
+        parseObject.put("amount", entry.amount);
+        parseObject.put("category", entry.category.name);
+        parseObject.put("currency", entry.currency.code);
+        parseObject.put("date", entry.utcDate);
+        parseObject.saveEventually(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
-                    syncSuccess(parseEntry, entry);
+                    Entry updatedEntry = new Entry(
+                            entry.id,
+                            parseObject.getObjectId(),
+                            SYNC_STATUS_SYNCED,
+                            entry.utcDate,
+                            entry.amount,
+                            entry.category,
+                            entry.currency
+                    );
+                    app.getDataSourceEntry().update(updatedEntry);
                 } else {
-                    syncFail(parseEntry, entry);
+                    Timber.d("Saving entry failed: ");
+                    e.printStackTrace();
                 }
             }
         });
     }
 
-    private void syncSuccess(ParseObject object, Entry entry) {
-        Entry updatedEntry = new Entry(
-                entry.id,
-                object.getObjectId(),
-                SYNC_STATUS_SYNCED,
-                entry.utcDate,
-                entry.amount,
-                entry.category,
-                entry.currency
-        );
-        app.getDataSourceEntry().update(updatedEntry);
-    }
-
-    private void syncFail(ParseObject object, Entry entry) {
-        Timber.d("Sync failed for: " + entry);
+    private void deleteEntryOnBackend(final Entry entry) {
+        if (entry.globalId == null || entry.globalId.length() == 0) {
+            throw new IllegalStateException("The global ID must exist for it to be deleted");
+        }
+        ParseObject.createWithoutData(EntryView.VIEW_NAME, entry.globalId).deleteEventually(new DeleteCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    app.getDataSourceEntry().delete(entry);
+                } else {
+                    Timber.d("Deleting entry failed: ");
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

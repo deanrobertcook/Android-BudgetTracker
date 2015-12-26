@@ -14,6 +14,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static org.theronin.expensetracker.data.Contract.EntryTable.SYNC_STATUS_DELETE;
 import static org.theronin.expensetracker.data.loader.ExchangeRateDownloadService.UTC_DATE_KEY;
 
 public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.Listener {
@@ -36,7 +37,8 @@ public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.L
     @Override
     public List<Entry> loadInBackground() {
         Timber.d("loadInBackground");
-        List<Entry> entries = app.getDataSourceEntry().query(null, null,
+        List<Entry> entries = app.getDataSourceEntry().query(
+                EntryView.COL_SYNC_STATUS + " != ?", new String[] {SYNC_STATUS_DELETE},
                 EntryView.COL_DATE + " DESC, " + EntryView._ID + " DESC");
         List<ExchangeRate> allExchangeRates = app.getDataSourceExchangeRate().query();
 

@@ -12,6 +12,8 @@ import org.theronin.expensetracker.model.Entry;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.theronin.expensetracker.data.Contract.EntryTable.SYNC_STATUS_DELETE;
+
 public class DataSourceEntry extends AbsDataSource<Entry> {
 
     public DataSourceEntry(CustomApplication application) {
@@ -19,9 +21,9 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
     }
 
     @Override
-    public long insert(Entry entity) {
+    public long insert(Entry entry) {
         //TODO consider moving the toValues method to this class now
-        ContentValues values = entity.toValues();
+        ContentValues values = entry.toValues();
         checkEntryValues(values);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         long entryId = db.insert(EntryTable.TABLE_NAME, null, values);
@@ -30,24 +32,25 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
     }
 
     @Override
-    public boolean update(Entry entity) {
-        ContentValues values = entity.toValues();
+    public boolean update(Entry entry) {
+        ContentValues values = entry.toValues();
         checkEntryValues(values);
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         int affected = db.update(EntryTable.TABLE_NAME, values,
                 EntryTable._ID + " = ?",
-                new String[]{Long.toString(entity.id)});
+                new String[]{Long.toString(entry.id)});
 
+        setDataInValid();
         return affected != 0;
     }
 
     @Override
-    public int bulkInsert(List<Entry> entities) {
+    public int bulkInsert(List<Entry> entries) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
-            for (Entry entry : entities) {
+            for (Entry entry : entries) {
                 ContentValues values = entry.toValues();
                 checkEntryValues(values);
                 db.insert(
@@ -61,7 +64,7 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
         } finally {
             db.endTransaction();
         }
-        return entities.size();
+        return entries.size();
     }
 
     private void checkEntryValues(ContentValues values) {
@@ -91,12 +94,23 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
         values.remove(EntryView.COL_CURRENCY_CODE);
     }
 
+    public boolean markAsDeleted(Entry entry) {
+        Entry updatedEntry = new Entry(
+                entry.id, entry.globalId, SYNC_STATUS_DELETE,
+                entry.utcDate, entry.amount, entry.category, entry.currency
+        );
+        return update(updatedEntry);
+    }
+
     @Override
-    public boolean delete(Entry entity) {
+    public boolean delete(Entry entry) {
+        if (!entry.syncStatus.equals(SYNC_STATUS_DELETE)) {
+            throw new IllegalStateException("To delete an entry, it needs to be marked as deleted first");
+        }
         int numDeleted = dbHelper.getWritableDatabase().delete(
                 EntryTable.TABLE_NAME,
                 EntryTable._ID + " = ?",
-                new String[]{Long.toString(entity.id)}
+                new String[]{Long.toString(entry.id)}
         );
         setDataInValid();
         return numDeleted == 1;
