@@ -76,4 +76,8 @@
 
 
     <string name="pref_welcome_screen_has_been_shown">pref_welcome_screen_has_been_shown</string>
+
+
+    <string name="content_authority">com.theronin.expensetracker.provider</string>
+    <string name="sync_account_type">org.theronin</string>
 </resources>

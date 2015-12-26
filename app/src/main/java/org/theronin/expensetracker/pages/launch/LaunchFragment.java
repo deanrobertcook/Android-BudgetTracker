@@ -5,7 +5,9 @@ import android.app.Fragment;
 public abstract class LaunchFragment extends Fragment {
 
     protected void setPage(LaunchPage page) {
-        ((LaunchActivity) getActivity()).setPage(page);
+        if (getActivity() != null) {
+            ((LaunchActivity) getActivity()).setPage(page);
+        }
     }
 
     public abstract String getPositiveButtonText();

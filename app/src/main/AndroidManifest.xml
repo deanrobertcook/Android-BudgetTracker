@@ -3,10 +3,17 @@
     package="org.theronin.expensetracker"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_SYNC_STATS"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+
 
     <application
         android:name=".CustomApplication"
@@ -22,7 +29,32 @@
             android:name="com.parse.CLIENT_KEY"
             android:value="@string/parse_client_key" />
 
-        <service android:name="org.theronin.expensetracker.data.loader.ExchangeRateDownloadService"/>
+        <service android:name=".data.loader.ExchangeRateDownloadService"/>
+
+        <service android:name=".data.sync.AuthenticatorService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+
+        <service
+            android:name=".data.sync.SyncService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter"/>
+            </intent-filter>
+            <meta-data android:name="android.content.SyncAdapter"
+                       android:resource="@xml/syncadapter"/>
+        </service>
+
+        <provider
+            android:name=".data.sync.StubProvider"
+            android:authorities="@string/content_authority"
+            android:exported="false"
+            android:syncable="true"/>
 
         <activity
             android:name=".pages.launch.LaunchActivity"
