@@ -5,10 +5,9 @@ import android.database.Cursor;
 
 import org.theronin.expensetracker.data.Contract.EntryTable;
 import org.theronin.expensetracker.data.Contract.EntryView;
+import org.theronin.expensetracker.data.sync.SyncState;
 import org.theronin.expensetracker.utils.DateUtils;
 
-import static org.theronin.expensetracker.data.Contract.EntryTable.SYNC_STATUS_NEW;
-import static org.theronin.expensetracker.data.Contract.EntryTable.SYNC_STATUS_UPDATE;
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_AMOUNT;
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_CATEGORY_ID;
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_CATEGORY_NAME;
@@ -23,7 +22,7 @@ import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_SYNC_STA
 public class Entry {
     public final long id;
     public final String globalId;
-    public final String syncStatus;
+    public final SyncState syncState;
     public final long utcDate;
     public final long amount;
     public final Category category;
@@ -36,7 +35,7 @@ public class Entry {
             long amount,
             Category category,
             Currency currency) {
-        this(-1, null, SYNC_STATUS_NEW, utcDate, amount, category, currency);
+        this(-1, null, SyncState.NEW, utcDate, amount, category, currency);
     }
 
     public Entry(
@@ -48,20 +47,20 @@ public class Entry {
         //TODO This is used when reading files from backup agent - they may already exist
         //TODO on the backend, so this could be a tricky corner case. Consider deleting
         //TODO file backup agent
-        this(-1, globalId, SYNC_STATUS_UPDATE, utcDate, amount, category, currency);
+        this(-1, globalId, SyncState.UPDATED, utcDate, amount, category, currency);
     }
 
     public Entry(
             long id,
             String globalId,
-            String syncStatus,
+            SyncState syncState,
             long utcDate,
             long amount,
             Category category,
             Currency currency) {
         this.id = id;
         this.globalId = globalId;
-        this.syncStatus = syncStatus;
+        this.syncState = syncState;
         this.utcDate = utcDate;
         this.amount = amount;
         this.category = category;
@@ -71,7 +70,7 @@ public class Entry {
     public static Entry fromCursor(Cursor cursor) {
         long id = cursor.getLong(INDEX_ID);
         String globalId = cursor.getString(INDEX_GLOBAL_ID);
-        String syncStatus = cursor.getString(INDEX_SYNC_STATUS);
+        SyncState syncStatus = SyncState.valueOf(cursor.getString(INDEX_SYNC_STATUS));
         long utcDateEntered = cursor.getLong(INDEX_DATE);
         long amount = cursor.getLong(INDEX_AMOUNT);
 
@@ -97,7 +96,7 @@ public class Entry {
         }
 
         values.put(EntryTable.COL_GLOBAL_ID, globalId);
-        values.put(EntryTable.COL_SYNC_STATUS, syncStatus);
+        values.put(EntryTable.COL_SYNC_STATUS, syncState.name());
 
         values.put(EntryTable.COL_DATE, utcDate);
         values.put(EntryTable.COL_AMOUNT, amount);

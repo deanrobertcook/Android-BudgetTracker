@@ -2,6 +2,8 @@ package org.theronin.expensetracker.data;
 
 import android.provider.BaseColumns;
 
+import org.theronin.expensetracker.data.sync.SyncState;
+
 public class Contract {
     
     public static final class CategoryTable implements BaseColumns {
@@ -26,18 +28,13 @@ public class Contract {
         public static final String COL_CURRENCY_ID = "currency_id";
         public static final String COL_SYNC_STATUS = "sync_status";
 
-        public static final String SYNC_STATUS_NEW = "NEW";
-        public static final String SYNC_STATUS_UPDATE = "UPDATE";
-        public static final String SYNC_STATUS_DELETE = "DELETE";
-        public static final String SYNC_STATUS_SYNCED = "SYNCED";
-
         public static final String SQL_CREATE_ENTRIES_TABLE = "CREATE TABLE " + EntryTable
                 .TABLE_NAME + " (" +
 
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
                 COL_GLOBAL_ID + " TEXT DEFAULT NULL, " +
-                COL_SYNC_STATUS + " TEXT NOT NULL DEFAULT '" + SYNC_STATUS_NEW + "', " +
+                COL_SYNC_STATUS + " TEXT NOT NULL DEFAULT '" + SyncState.NEW + "', " +
 
                 COL_DATE + " INTEGER NOT NULL, " +
                 COL_CATEGORY_ID + " INTEGER NOT NULL, " +

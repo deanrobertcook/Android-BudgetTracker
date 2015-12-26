@@ -7,12 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.data.Contract.EntryTable;
 import org.theronin.expensetracker.data.Contract.EntryView;
+import org.theronin.expensetracker.data.sync.SyncState;
 import org.theronin.expensetracker.model.Entry;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.theronin.expensetracker.data.Contract.EntryTable.SYNC_STATUS_DELETE;
 
 public class DataSourceEntry extends AbsDataSource<Entry> {
 
@@ -96,7 +95,7 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
 
     public boolean markAsDeleted(Entry entry) {
         Entry updatedEntry = new Entry(
-                entry.id, entry.globalId, SYNC_STATUS_DELETE,
+                entry.id, entry.globalId, SyncState.DELETED,
                 entry.utcDate, entry.amount, entry.category, entry.currency
         );
         return update(updatedEntry);
@@ -104,7 +103,7 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
 
     @Override
     public boolean delete(Entry entry) {
-        if (!entry.syncStatus.equals(SYNC_STATUS_DELETE)) {
+        if (entry.syncState != SyncState.DELETED) {
             throw new IllegalStateException("To delete an entry, it needs to be marked as deleted first");
         }
         int numDeleted = dbHelper.getWritableDatabase().delete(

@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.data.Contract.EntryView;
+import org.theronin.expensetracker.data.sync.SyncState;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.ExchangeRate;
@@ -14,7 +15,6 @@ import java.util.List;
 
 import timber.log.Timber;
 
-import static org.theronin.expensetracker.data.Contract.EntryTable.SYNC_STATUS_DELETE;
 import static org.theronin.expensetracker.data.loader.ExchangeRateDownloadService.UTC_DATE_KEY;
 
 public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.Listener {
@@ -38,7 +38,7 @@ public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.L
     public List<Entry> loadInBackground() {
         Timber.d("loadInBackground");
         List<Entry> entries = app.getDataSourceEntry().query(
-                EntryView.COL_SYNC_STATUS + " != ?", new String[] {SYNC_STATUS_DELETE},
+                EntryView.COL_SYNC_STATUS + " != ?", new String[] {SyncState.DELETED.name()},
                 EntryView.COL_DATE + " DESC, " + EntryView._ID + " DESC");
         List<ExchangeRate> allExchangeRates = app.getDataSourceExchangeRate().query();
 
