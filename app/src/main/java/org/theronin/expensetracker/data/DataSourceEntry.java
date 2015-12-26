@@ -20,6 +20,11 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
     }
 
     @Override
+    protected String getTableName() {
+        return EntryView.VIEW_NAME;
+    }
+
+    @Override
     public long insert(Entry entry) {
         //TODO consider moving the toValues method to this class now
         ContentValues values = entry.toValues();

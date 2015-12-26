@@ -15,6 +15,11 @@ public class DataSourceCurrency extends AbsDataSource<Currency> {
         super(application);
     }
 
+    @Override
+    protected String getTableName() {
+        return CurrencyTable.TABLE_NAME;
+    }
+
     public long getId(String currencyCode) {
         List<Currency> currencies = query(
                 CurrencyTable.COL_CODE + " = ?",

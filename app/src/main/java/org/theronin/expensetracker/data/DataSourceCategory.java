@@ -17,6 +17,11 @@ public class DataSourceCategory extends AbsDataSource<Category> {
         super(application);
     }
 
+    @Override
+    protected String getTableName() {
+        return CategoryView.VIEW_NAME;
+    }
+
     public long getId(String categoryName) {
         List<Category> categories = query(
                 Contract.CategoryTable.COL_NAME + " = ?",

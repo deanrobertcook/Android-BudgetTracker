@@ -3,6 +3,7 @@ package org.theronin.expensetracker.data;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentResolver;
+import android.database.DatabaseUtils;
 import android.os.Bundle;
 
 import org.theronin.expensetracker.CustomApplication;
@@ -55,10 +56,8 @@ public abstract class AbsDataSource<T> {
         Timber.d(this.getClass().toString() + " data set as invalid");
     }
 
-    private void requestSync() {
+    public void requestSync() {
         Bundle extras = new Bundle();
-        extras.putString("TEST", "TEST");
-
         ContentResolver.requestSync(createSyncAccount(), getContentAuthority(), extras);
     }
 
@@ -81,6 +80,16 @@ public abstract class AbsDataSource<T> {
     public boolean update(T entity) {
         return false;
     }
+
+    public long count() {
+        return count(null, null);
+    }
+
+    public long count(String selection, String[] selectionArgs) {
+        return DatabaseUtils.queryNumEntries(dbHelper.getReadableDatabase(), getTableName(), selection, selectionArgs);
+    }
+
+    protected abstract String getTableName();
 
     public List<T> query() {
         return query(null, null, null);
