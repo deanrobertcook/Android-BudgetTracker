@@ -91,6 +91,9 @@ public class Entry {
             values.put(EntryTable._ID, id);
         }
 
+        values.put(EntryTable.COL_GLOBAL_ID, globalId);
+        values.put(EntryTable.COL_TO_SYNC, toSync ? 1 : 0);
+
         values.put(EntryTable.COL_DATE, utcDate);
         values.put(EntryTable.COL_AMOUNT, amount);
 
@@ -105,8 +108,8 @@ public class Entry {
     @Override
     public String toString() {
         return String.format(
-                "Entry: %d,  date: %s, category: %s, amount: %d, currency: %s",
-                id,
+                "Entry: %s,  date: %s, category: %s, amount: %d, currency: %s",
+                globalId,
                 DateUtils.getStorageFormattedDate(utcDate),
                 category.name,
                 amount,

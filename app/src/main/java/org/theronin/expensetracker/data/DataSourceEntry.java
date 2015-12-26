@@ -30,6 +30,19 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
     }
 
     @Override
+    public boolean update(Entry entity) {
+        ContentValues values = entity.toValues();
+        checkEntryValues(values);
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int affected = db.update(EntryTable.TABLE_NAME, values,
+                EntryTable._ID + " = ?",
+                new String[]{Long.toString(entity.id)});
+
+        return affected != 0;
+    }
+
+    @Override
     public int bulkInsert(List<Entry> entities) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
@@ -52,11 +65,11 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
     }
 
     private void checkEntryValues(ContentValues values) {
-        sanitiseEntryCategoryValues(values);
-        sanitiseEntryCurrencyValues(values);
+        changeCategoryObjectToId(values);
+        changeCurrencyObejctToId(values);
     }
 
-    private void sanitiseEntryCategoryValues(ContentValues values) {
+    private void changeCategoryObjectToId(ContentValues values) {
         long categoryId = values.getAsLong(EntryView.COL_CATEGORY_ID);
         if (categoryId == -1) {
             String categoryName = values.getAsString(EntryView.COL_CATEGORY_NAME);
@@ -67,7 +80,7 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
         values.remove(EntryView.COL_CATEGORY_NAME);
     }
 
-    private void sanitiseEntryCurrencyValues(ContentValues values) {
+    private void changeCurrencyObejctToId(ContentValues values) {
         long currencyId = values.getAsLong(EntryView.COL_CURRENCY_ID);
         if (currencyId == -1) {
             String currencyCode = values.getAsString(EntryView.COL_CURRENCY_CODE);

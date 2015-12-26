@@ -48,6 +48,9 @@ public class FileBackupAgent  {
         @Override
         protected final Void doInBackground(List<Entry>... params) {
             List<Entry> entries = params[0];
+            for (Entry entry : entries) {
+                Timber.d(entry.toString());
+            }
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String entriesJson = gson.toJson(entries);
             entriesJson = simplifyJson(gson, entriesJson);

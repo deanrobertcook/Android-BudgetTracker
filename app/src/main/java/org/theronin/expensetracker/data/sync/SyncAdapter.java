@@ -7,8 +7,9 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
 
+import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.model.Entry;
@@ -37,24 +38,47 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                               String authority,
                               ContentProviderClient provider,
                               SyncResult syncResult) {
-
-        Timber.d("Syncing data with server!!! Extras?: " + extras.getString("TEST", "Nothing there..."));
         List<Entry> entryList = app.getDataSourceEntry().query();
-
-        for (Entry entry : entryList) {
-            ParseObject parseEntry = new ParseObject("entry");
-            parseEntry.put("amount", entry.amount);
-            parseEntry.put("category", entry.category.name);
-            parseEntry.put("currency", entry.currency.code);
-            parseEntry.put("date", entry.utcDate);
-            parseEntry.saveInBackground();
+        for (final Entry entry : entryList) {
+            if (entry.globalId == null || entry.toSync) {
+                syncEntry(entry);
+            }
         }
+    }
 
-        ParseUser user = ParseUser.getCurrentUser();
-        if (user != null) {
-            Timber.d("Syncing data for user: " + user.getEmail());
-        } else {
-            Timber.d("No user logged in");
-        }
+    private void syncEntry(final Entry entry) {
+        Timber.d("Syncing entry: " + entry);
+        final ParseObject parseEntry = new ParseObject("entry");
+        parseEntry.put("amount", entry.amount);
+        parseEntry.put("category", entry.category.name);
+        parseEntry.put("currency", entry.currency.code);
+        parseEntry.put("date", entry.utcDate);
+        parseEntry.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    syncSuccess(parseEntry, entry);
+                } else {
+                    syncFail(parseEntry, entry);
+                }
+            }
+        });
+    }
+
+    private void syncSuccess(ParseObject object, Entry entry) {
+        Entry updatedEntry = new Entry(
+                entry.id,
+                object.getObjectId(),
+                false,
+                entry.utcDate,
+                entry.amount,
+                entry.category,
+                entry.currency
+        );
+        app.getDataSourceEntry().update(updatedEntry);
+    }
+
+    private void syncFail(ParseObject object, Entry entry) {
+
     }
 }

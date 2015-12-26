@@ -270,6 +270,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<List<Entry>> loader, List<Entry> data) {
+        //TODO this happens on each call to the data being invalidated!
         new FileBackupAgent().backupEntries(data);
     }
 
