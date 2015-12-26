@@ -7,6 +7,8 @@ import org.theronin.expensetracker.data.Contract.EntryTable;
 import org.theronin.expensetracker.data.Contract.EntryView;
 import org.theronin.expensetracker.utils.DateUtils;
 
+import static org.theronin.expensetracker.data.Contract.EntryTable.SYNC_STATUS_NEW;
+import static org.theronin.expensetracker.data.Contract.EntryTable.SYNC_STATUS_UPDATE;
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_AMOUNT;
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_CATEGORY_ID;
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_CATEGORY_NAME;
@@ -16,12 +18,12 @@ import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_CURRENCY
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_DATE;
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_GLOBAL_ID;
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_ID;
-import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_TO_SYNC;
+import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_SYNC_STATUS;
 
 public class Entry {
     public final long id;
     public final String globalId;
-    public final boolean toSync;
+    public final String syncStatus;
     public final long utcDate;
     public final long amount;
     public final Category category;
@@ -34,7 +36,7 @@ public class Entry {
             long amount,
             Category category,
             Currency currency) {
-        this(-1, null, false, utcDate, amount, category, currency);
+        this(-1, null, SYNC_STATUS_NEW, utcDate, amount, category, currency);
     }
 
     public Entry(
@@ -43,20 +45,23 @@ public class Entry {
             long amount,
             Category category,
             Currency currency) {
-        this(-1, globalId, false, utcDate, amount, category, currency);
+        //TODO This is used when reading files from backup agent - they may already exist
+        //TODO on the backend, so this could be a tricky corner case. Consider deleting
+        //TODO file backup agent
+        this(-1, globalId, SYNC_STATUS_UPDATE, utcDate, amount, category, currency);
     }
 
     public Entry(
             long id,
             String globalId,
-            boolean toSync,
+            String syncStatus,
             long utcDate,
             long amount,
             Category category,
             Currency currency) {
         this.id = id;
         this.globalId = globalId;
-        this.toSync = toSync;
+        this.syncStatus = syncStatus;
         this.utcDate = utcDate;
         this.amount = amount;
         this.category = category;
@@ -66,7 +71,7 @@ public class Entry {
     public static Entry fromCursor(Cursor cursor) {
         long id = cursor.getLong(INDEX_ID);
         String globalId = cursor.getString(INDEX_GLOBAL_ID);
-        boolean toSync = cursor.getInt(INDEX_TO_SYNC) == 1;
+        String syncStatus = cursor.getString(INDEX_SYNC_STATUS);
         long utcDateEntered = cursor.getLong(INDEX_DATE);
         long amount = cursor.getLong(INDEX_AMOUNT);
 
@@ -81,7 +86,7 @@ public class Entry {
                 cursor.getString(INDEX_CURRENCY_SYMBOL)
         );
 
-        return new Entry(id, globalId, toSync, utcDateEntered, amount, category, currency);
+        return new Entry(id, globalId, syncStatus, utcDateEntered, amount, category, currency);
     }
 
     public ContentValues toValues() {
@@ -92,7 +97,7 @@ public class Entry {
         }
 
         values.put(EntryTable.COL_GLOBAL_ID, globalId);
-        values.put(EntryTable.COL_TO_SYNC, toSync ? 1 : 0);
+        values.put(EntryTable.COL_SYNC_STATUS, syncStatus);
 
         values.put(EntryTable.COL_DATE, utcDate);
         values.put(EntryTable.COL_AMOUNT, amount);

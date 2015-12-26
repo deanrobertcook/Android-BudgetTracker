@@ -18,6 +18,11 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static org.theronin.expensetracker.data.Contract.EntryTable.SYNC_STATUS_DELETE;
+import static org.theronin.expensetracker.data.Contract.EntryTable.SYNC_STATUS_NEW;
+import static org.theronin.expensetracker.data.Contract.EntryTable.SYNC_STATUS_SYNCED;
+import static org.theronin.expensetracker.data.Contract.EntryTable.SYNC_STATUS_UPDATE;
+
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     private CustomApplication app;
@@ -40,8 +45,18 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                               SyncResult syncResult) {
         List<Entry> entryList = app.getDataSourceEntry().query();
         for (final Entry entry : entryList) {
-            if (entry.globalId == null || entry.toSync) {
-                syncEntry(entry);
+
+            switch (entry.syncStatus) {
+                //TODO separate new from update operation
+                case SYNC_STATUS_NEW:
+                case SYNC_STATUS_UPDATE:
+                    syncEntry(entry);
+                    break;
+                case SYNC_STATUS_DELETE:
+                    break;
+                case SYNC_STATUS_SYNCED:
+                    //do nothing
+                    break;
             }
         }
     }
@@ -69,7 +84,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         Entry updatedEntry = new Entry(
                 entry.id,
                 object.getObjectId(),
-                false,
+                SYNC_STATUS_SYNCED,
                 entry.utcDate,
                 entry.amount,
                 entry.category,
@@ -79,6 +94,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private void syncFail(ParseObject object, Entry entry) {
-
+        Timber.d("Sync failed for: " + entry);
     }
 }

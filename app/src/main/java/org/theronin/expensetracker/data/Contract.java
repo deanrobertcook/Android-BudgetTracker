@@ -24,7 +24,12 @@ public class Contract {
         public static final String COL_CATEGORY_ID = "category_id";
         public static final String COL_AMOUNT = "amount";
         public static final String COL_CURRENCY_ID = "currency_id";
-        public static final String COL_TO_SYNC = "to_sync";
+        public static final String COL_SYNC_STATUS = "sync_status";
+
+        public static final String SYNC_STATUS_NEW = "NEW";
+        public static final String SYNC_STATUS_UPDATE = "UPDATE";
+        public static final String SYNC_STATUS_DELETE = "DELETE";
+        public static final String SYNC_STATUS_SYNCED = "SYNCED";
 
         public static final String SQL_CREATE_ENTRIES_TABLE = "CREATE TABLE " + EntryTable
                 .TABLE_NAME + " (" +
@@ -32,8 +37,7 @@ public class Contract {
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
                 COL_GLOBAL_ID + " TEXT DEFAULT NULL, " +
-                //1 is true (needs to sync) 0 is false (does not need to sync)
-                COL_TO_SYNC + " INTEGER NOT NULL DEFAULT 1, " +
+                COL_SYNC_STATUS + " TEXT NOT NULL DEFAULT '" + SYNC_STATUS_NEW + "', " +
 
                 COL_DATE + " INTEGER NOT NULL, " +
                 COL_CATEGORY_ID + " INTEGER NOT NULL, " +
@@ -152,7 +156,7 @@ public class Contract {
         public static final String VIEW_NAME = "entry";
 
         public static final String COL_GLOBAL_ID = EntryTable.COL_GLOBAL_ID;
-        public static final String COL_TO_SYNC = EntryTable.COL_TO_SYNC;
+        public static final String COL_SYNC_STATUS = EntryTable.COL_SYNC_STATUS;
 
         public static final String COL_DATE = EntryTable.COL_DATE;
         public static final String COL_AMOUNT = EntryTable.COL_AMOUNT;
@@ -171,7 +175,7 @@ public class Contract {
                         EntryTable.TABLE_NAME + "." + EntryTable._ID + " AS " + _ID + ", " +
 
                         EntryTable.TABLE_NAME + "." + EntryTable.COL_GLOBAL_ID + " AS " + COL_GLOBAL_ID + ", " +
-                        EntryTable.TABLE_NAME + "." + EntryTable.COL_TO_SYNC + " AS " + COL_TO_SYNC + ", " +
+                        EntryTable.TABLE_NAME + "." + EntryTable.COL_SYNC_STATUS + " AS " + COL_SYNC_STATUS + ", " +
 
                         EntryTable.TABLE_NAME + "." + EntryTable.COL_DATE + " AS " + COL_DATE + ", " +
                         EntryTable.TABLE_NAME + "." + EntryTable.COL_AMOUNT + " AS " + COL_AMOUNT + ", " +
@@ -194,7 +198,7 @@ public class Contract {
                 _ID,
 
                 COL_GLOBAL_ID,
-                COL_TO_SYNC,
+                COL_SYNC_STATUS,
 
                 COL_DATE,
                 COL_AMOUNT,
@@ -210,7 +214,7 @@ public class Contract {
         public static final int INDEX_ID = 0;
 
         public static final int INDEX_GLOBAL_ID = 1;
-        public static final int INDEX_TO_SYNC = 2;
+        public static final int INDEX_SYNC_STATUS = 2;
 
         public static final int INDEX_DATE = 3;
         public static final int INDEX_AMOUNT = 4;
