@@ -5,7 +5,6 @@ import android.provider.BaseColumns;
 public class Contract {
     
     public static final class CategoryTable implements BaseColumns {
-
         public static final String TABLE_NAME = "category_base";
 
         public static final String COL_NAME = "name";
@@ -18,23 +17,30 @@ public class Contract {
     }
 
     public static final class EntryTable implements BaseColumns {
-
         public static final String TABLE_NAME = "entry_base";
 
+        public static final String COL_GLOBAL_ID = "global_id";
         public static final String COL_DATE = "date";
         public static final String COL_CATEGORY_ID = "category_id";
         public static final String COL_AMOUNT = "amount";
         public static final String COL_CURRENCY_ID = "currency_id";
+        public static final String COL_TO_SYNC = "to_sync";
 
         public static final String SQL_CREATE_ENTRIES_TABLE = "CREATE TABLE " + EntryTable
                 .TABLE_NAME + " (" +
 
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
+                COL_GLOBAL_ID + " TEXT DEFAULT NULL, " +
+                //1 is true (needs to sync) 0 is false (does not need to sync)
+                COL_TO_SYNC + " INTEGER NOT NULL DEFAULT 1, " +
+
                 COL_DATE + " INTEGER NOT NULL, " +
                 COL_CATEGORY_ID + " INTEGER NOT NULL, " +
                 COL_AMOUNT + " INTEGER NOT NULL, " +
                 COL_CURRENCY_ID + " INTEGER NOT NULL, " +
+
+                "UNIQUE (" + COL_GLOBAL_ID + ") ON CONFLICT ABORT, " +
 
                 "FOREIGN KEY (" + COL_CATEGORY_ID + ") REFERENCES " +
                 CategoryView.VIEW_NAME + " (" + CategoryView._ID + "), " +
@@ -44,9 +50,6 @@ public class Contract {
     }
 
     public static final class CurrencyTable implements BaseColumns {
-        /**
-         * SQLite constants
-         */
         public static final String TABLE_NAME = "currency";
 
         public static final String COL_CODE = "code";
@@ -60,9 +63,6 @@ public class Contract {
                 COL_SYMBOL + " TEXT NOT NULL, " +
                 "UNIQUE (" + COL_CODE + ") ON CONFLICT IGNORE)";
 
-        /**
-         * Helper projections for faster query write-ups
-         */
         public static final String[] PROJECTION = {
                 _ID,
                 COL_CODE,
@@ -75,9 +75,6 @@ public class Contract {
     }
 
     public static final class ExchangeRateTable implements BaseColumns {
-        /**
-         * SQLite constants
-         */
         public static final String TABLE_NAME = "exchange_rate";
 
         public static final String COL_CURRENCY_CODE = "currency_code";
@@ -96,9 +93,6 @@ public class Contract {
                 "FOREIGN KEY (" + COL_CURRENCY_CODE + ") REFERENCES " + CurrencyTable.TABLE_NAME + " (" + CurrencyTable.COL_CODE + "), " +
                 "UNIQUE (" + COL_CURRENCY_CODE + ", " + COL_DATE + ") ON CONFLICT IGNORE)";
 
-        /**
-         * Helper projections for faster query write-ups
-         */
         public static final String[] PROJECTION = {
                 _ID,
                 COL_CURRENCY_CODE,
@@ -115,16 +109,12 @@ public class Contract {
     }
 
     public static final class CategoryView implements BaseColumns {
-        /**
-         * SQLite constants
-         */
         public static final String VIEW_NAME = "category";
 
         public static final String COL_CATEGORY_NAME = CategoryTable.COL_NAME;
         public static final String COL_FIRST_ENTRY_DATE = "first_entry_date";
         public static final String COL_ENTRY_FREQUENCY = "entry_frequency";
 
-    //@formatter:off
         public static final String SQL_CREATE_CATEGORIES_VIEW =
                 "CREATE VIEW " + VIEW_NAME + " AS " +
 
@@ -145,11 +135,6 @@ public class Contract {
                         CategoryTable.TABLE_NAME + "." + CategoryTable._ID + ", " +
                         CategoryTable.TABLE_NAME + "." + CategoryTable.COL_NAME;
 
-    //@formatter:on
-
-        /**
-         * Helper projections for faster query write-ups
-         */
         public static final String[] PROJECTION = {
                 _ID,
                 COL_CATEGORY_NAME,
@@ -164,10 +149,10 @@ public class Contract {
     }
 
     public static final class EntryView implements BaseColumns {
-        /**
-         * SQLite constants
-         */
         public static final String VIEW_NAME = "entry";
+
+        public static final String COL_GLOBAL_ID = EntryTable.COL_GLOBAL_ID;
+        public static final String COL_TO_SYNC = EntryTable.COL_TO_SYNC;
 
         public static final String COL_DATE = EntryTable.COL_DATE;
         public static final String COL_AMOUNT = EntryTable.COL_AMOUNT;
@@ -179,12 +164,14 @@ public class Contract {
         public static final String COL_CURRENCY_CODE = "currency_code";
         public static final String COL_CURRENCY_SYMBOL = "currency_symbol";
 
-        //@formatter:off
         public static final String SQL_CREATE_CATEGORIES_VIEW =
                 "CREATE VIEW " + VIEW_NAME + " AS " +
 
                 "SELECT " +
                         EntryTable.TABLE_NAME + "." + EntryTable._ID + " AS " + _ID + ", " +
+
+                        EntryTable.TABLE_NAME + "." + EntryTable.COL_GLOBAL_ID + " AS " + COL_GLOBAL_ID + ", " +
+                        EntryTable.TABLE_NAME + "." + EntryTable.COL_TO_SYNC + " AS " + COL_TO_SYNC + ", " +
 
                         EntryTable.TABLE_NAME + "." + EntryTable.COL_DATE + " AS " + COL_DATE + ", " +
                         EntryTable.TABLE_NAME + "." + EntryTable.COL_AMOUNT + " AS " + COL_AMOUNT + ", " +
@@ -203,13 +190,12 @@ public class Contract {
                         " JOIN " + CurrencyTable.TABLE_NAME +
                             " ON " + EntryTable.TABLE_NAME + "." + EntryTable.COL_CURRENCY_ID + " = " + CurrencyTable.TABLE_NAME + "." + CurrencyTable._ID;
 
-    //@formatter:on
-
-        /**
-         * Helper projections for faster query write-ups
-         */
         public static final String[] PROJECTION = {
                 _ID,
+
+                COL_GLOBAL_ID,
+                COL_TO_SYNC,
+
                 COL_DATE,
                 COL_AMOUNT,
 
@@ -222,14 +208,18 @@ public class Contract {
         };
 
         public static final int INDEX_ID = 0;
-        public static final int INDEX_DATE = 1;
-        public static final int INDEX_AMOUNT = 2;
 
-        public static final int INDEX_CATEGORY_ID = 3;
-        public static final int INDEX_CATEGORY_NAME = 4;
+        public static final int INDEX_GLOBAL_ID = 1;
+        public static final int INDEX_TO_SYNC = 2;
 
-        public static final int INDEX_CURRENCY_ID = 5;
-        public static final int INDEX_CURRENCY_CODE = 6;
-        public static final int INDEX_CURRENCY_SYMBOL = 7;
+        public static final int INDEX_DATE = 3;
+        public static final int INDEX_AMOUNT = 4;
+
+        public static final int INDEX_CATEGORY_ID = 5;
+        public static final int INDEX_CATEGORY_NAME = 6;
+
+        public static final int INDEX_CURRENCY_ID = 7;
+        public static final int INDEX_CURRENCY_CODE = 8;
+        public static final int INDEX_CURRENCY_SYMBOL = 9;
     }
 }
