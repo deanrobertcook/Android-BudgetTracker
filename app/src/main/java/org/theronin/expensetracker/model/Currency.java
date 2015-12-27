@@ -1,12 +1,13 @@
 package org.theronin.expensetracker.model;
 
-import android.database.Cursor;
+import android.content.ContentValues;
 
-import org.theronin.expensetracker.data.Contract.CurrencyTable;
+import com.parse.ParseObject;
 
-public class Currency {
+import org.apache.commons.lang.NotImplementedException;
 
-    public final long id;
+public class Currency extends Entity {
+
     public final String code;
     public final String symbol;
 
@@ -27,10 +28,13 @@ public class Currency {
         this.symbol = symbol;
     }
 
-    public static Currency fromCursor(Cursor cursor) {
-        return new Currency(
-                cursor.getLong(CurrencyTable.INDEX_ID),
-                cursor.getString(CurrencyTable.INDEX_CODE),
-                cursor.getString(CurrencyTable.INDEX_SYMBOL));
+    @Override
+    public ContentValues toValues() {
+        throw new NotImplementedException("Currently no need to convert Currency into ContentValues");
+    }
+
+    @Override
+    public ParseObject toParseObject() {
+        throw new NotImplementedException();
     }
 }

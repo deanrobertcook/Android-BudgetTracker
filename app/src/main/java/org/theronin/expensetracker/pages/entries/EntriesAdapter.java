@@ -64,7 +64,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         final Entry boundEntry = entries.get(position);
 
-        viewHolder.contentLayout.setTag(R.id.entry_id, boundEntry.id);
+        viewHolder.contentLayout.setTag(R.id.entry_id, boundEntry.getId());
 
         String formattedDate = DateUtils.getDisplayFormattedDate(boundEntry.utcDate);
         String formattedDayTotal = getFormattedDayTotal(boundEntry.utcDate);
@@ -279,7 +279,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         private Entry findEntryFromTag(View view) {
             long entryId = (long) view.getTag(R.id.entry_id);
             for (Entry entry : entries) {
-                if (entry.id == entryId) {
+                if (entry.getId() == entryId) {
                     return entry;
                 }
             }

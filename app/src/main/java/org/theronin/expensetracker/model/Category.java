@@ -1,20 +1,15 @@
 package org.theronin.expensetracker.model;
 
 import android.content.ContentValues;
-import android.database.Cursor;
 
+import com.parse.ParseObject;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.theronin.expensetracker.utils.DateUtils;
 
 import static org.theronin.expensetracker.data.Contract.CategoryView.COL_CATEGORY_NAME;
-import static org.theronin.expensetracker.data.Contract.CategoryView.INDEX_CATEGORY_NAME;
-import static org.theronin.expensetracker.data.Contract.CategoryView.INDEX_ENTRY_FREQUENCY;
-import static org.theronin.expensetracker.data.Contract.CategoryView.INDEX_FIRST_ENTRY_DATE;
-import static org.theronin.expensetracker.data.Contract.CategoryView.INDEX_ID;
-import static org.theronin.expensetracker.data.Contract.CategoryView.PROJECTION;
 
-public class Category {
-    private static final String TAG = Category.class.getName();
-    public final long id;
+public class Category extends Entity {
     public final String name;
     public final long utcFirstEntryDate;
     public final long frequency;
@@ -46,22 +41,11 @@ public class Category {
         this.frequency = frequency;
     }
 
+    @Override
     public ContentValues toValues() {
         ContentValues values = new ContentValues();
         values.put(COL_CATEGORY_NAME, name);
         return values;
-    }
-
-    public static Category fromCursor(Cursor cursor) {
-        if (cursor.getColumnCount() != PROJECTION.length) {
-            throw new IllegalArgumentException("The cursor supplied does not have all of the columns necessary");
-        }
-        long id = cursor.getLong(INDEX_ID);
-        String categoryName = cursor.getString(INDEX_CATEGORY_NAME);
-        long utcDateFirstEntered = cursor.getLong(INDEX_FIRST_ENTRY_DATE);
-        long entryFrequency = cursor.getLong(INDEX_ENTRY_FREQUENCY);
-
-        return new Category(id, categoryName, utcDateFirstEntered, entryFrequency);
     }
 
     @Override
@@ -103,5 +87,10 @@ public class Category {
 
     public void setMissingEntries(int missingEntries) {
         this.missingEntries = missingEntries;
+    }
+
+    @Override
+    public ParseObject toParseObject() {
+        throw new NotImplementedException();
     }
 }

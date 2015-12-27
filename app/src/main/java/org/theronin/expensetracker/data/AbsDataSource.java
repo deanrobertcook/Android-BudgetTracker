@@ -3,13 +3,17 @@ package org.theronin.expensetracker.data;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentResolver;
+import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.R;
+import org.theronin.expensetracker.data.sync.SyncState;
+import org.theronin.expensetracker.model.Entity;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +21,7 @@ import java.util.Set;
 
 import timber.log.Timber;
 
-public abstract class AbsDataSource<T> {
+public abstract class AbsDataSource<T extends Entity> {
 
     public static final String ACCOUNT = "dummyaccount";
 
@@ -30,6 +34,10 @@ public abstract class AbsDataSource<T> {
         this.application = application;
         dbHelper = DbHelper.getInstance(application);
         this.observers = new HashSet<>();
+    }
+
+    public interface Observer {
+        void onDataSourceChanged();
     }
 
     public void registerObserver(Observer observer) {
@@ -63,59 +71,7 @@ public abstract class AbsDataSource<T> {
         ContentResolver.requestSync(createSyncAccount(), getContentAuthority(), extras);
     }
 
-    private String getContentAuthority() {
-        return application.getString(R.string.content_authority);
-    }
-
-    public long insert(T entity) {
-        throw new NotImplementedException();
-    }
-
-    public int bulkInsert(Collection<T> entities) {
-        throw new NotImplementedException();
-    }
-
-    public boolean delete(T entity) {
-        throw new NotImplementedException();
-    }
-
-    public int bulkDelete(Collection<T> entities) {
-        throw new NotImplementedException();
-    }
-
-    public boolean update(T entity) {
-        throw new NotImplementedException();
-    }
-
-    public int bulkUpdate(Collection<T> entities) {
-        throw new NotImplementedException();
-    }
-
-    public long count() {
-        return count(null, null);
-    }
-
-    public long count(String selection, String[] selectionArgs) {
-        return DatabaseUtils.queryNumEntries(dbHelper.getReadableDatabase(), getTableName(), selection, selectionArgs);
-    }
-
-    protected abstract String getTableName();
-
-    public List<T> query() {
-        return query(null, null, null);
-    }
-
-    public List<T> query(String selection,
-                                  String[] selectionArgs,
-                                  String orderBy) {
-        throw new NotImplementedException();
-    }
-
-    public interface Observer {
-        void onDataSourceChanged();
-    }
-
-    public Account createSyncAccount() {
+    private Account createSyncAccount() {
         Account account = new Account(ACCOUNT, getAccountType());
         AccountManager accountManager = AccountManager.get(application);
 
@@ -128,4 +84,139 @@ public abstract class AbsDataSource<T> {
     private String getAccountType() {
         return application.getString(R.string.sync_account_type);
     }
+
+    private String getContentAuthority() {
+        return application.getString(R.string.content_authority);
+    }
+
+    public long insert(T entity) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        long entityId = insertOperation(db, entity);
+        setDataInValid();
+        return entityId;
+    }
+
+    protected abstract long insertOperation(SQLiteDatabase db, T entity);
+
+    public int bulkInsert(Collection<T> entities) {
+        if (entities.size() == 0) {
+            return 0;
+        }
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            for (T entry : entities) {
+                insertOperation(db, entry);
+            }
+            db.setTransactionSuccessful();
+            setDataInValid();
+        } finally {
+            db.endTransaction();
+        }
+        return entities.size();
+    }
+
+    public boolean delete(T entity) {
+        List<T> entities = new ArrayList<>();
+        entities.add(entity);
+        int numDeleted = bulkDelete(entities);
+        return numDeleted == 1;
+    }
+
+    public int bulkDelete(Collection<T> entities) {
+        Timber.d("Bulk deleting " + entities.size() + " entries");
+        if (entities.size() == 0) {
+            return 0;
+        }
+        int numDeleted = deleteOperation(dbHelper.getWritableDatabase(), entities);
+        setDataInValid();
+        return numDeleted;
+    }
+
+    protected abstract int deleteOperation(SQLiteDatabase sb, Collection<T> entities);
+
+    protected String createEntityIdsArgument(Collection<T> entities) {
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        for (T entity : entities) {
+            checkEntityDeleted(entity);
+            sb.append(entity.getId());
+            if (i != entities.size() - 1) {
+                sb.append(", ");
+            }
+            i++;
+        }
+        return sb.toString();
+    }
+
+    public void checkEntityDeleted(T entity) {
+        if (entity.getSyncState() != SyncState.DELETE_SYNCED) {
+            throw new IllegalStateException("An entity needs to be deleted on the backend (DELETE_SYNCED) before it can" +
+                    " be removed from the local database");
+        }
+    }
+
+    public boolean update(T entity) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int affected = updateOperation(db, entity);
+        setDataInValid();
+        return affected != 0;
+    }
+
+    protected abstract int updateOperation(SQLiteDatabase db, T entity);
+
+    public int bulkUpdate(Collection<T> entities) {
+        Timber.d("Bulk updating " + entities.size() + " entries");
+        if (entities.size() == 0) {
+            return 0;
+        }
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            for (T entity : entities) {
+                updateOperation(db, entity);
+            }
+            db.setTransactionSuccessful();
+            setDataInValid();
+        } finally {
+            db.endTransaction();
+        }
+        return entities.size();
+    }
+
+    public long count() {
+        return count(null, null);
+    }
+
+    public long count(String selection, String[] selectionArgs) {
+        return DatabaseUtils.queryNumEntries(dbHelper.getReadableDatabase(), getTableName(), selection, selectionArgs);
+    }
+
+    protected abstract String getTableName();
+
+    protected abstract String[] getQueryProjection();
+
+    public List<T> query() {
+        return query(null, null, null);
+    }
+
+    public List<T> query(String selection, String[] selectionArgs, String orderBy) {
+        Cursor cursor = dbHelper.getReadableDatabase().query(
+                getTableName(),
+                getQueryProjection(),
+                selection,
+                selectionArgs,
+                null, null, orderBy
+        );
+
+        List<T> entities = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            entities.add(fromCursor(cursor));
+        }
+        cursor.close();
+        return entities;
+    }
+
+    protected abstract T fromCursor(Cursor cursor);
 }

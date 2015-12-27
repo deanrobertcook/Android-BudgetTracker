@@ -1,7 +1,6 @@
 package org.theronin.expensetracker.model;
 
 import android.content.ContentValues;
-import android.database.Cursor;
 
 import com.parse.ParseObject;
 
@@ -10,26 +9,12 @@ import org.theronin.expensetracker.data.Contract.EntryView;
 import org.theronin.expensetracker.data.sync.SyncState;
 import org.theronin.expensetracker.utils.DateUtils;
 
-import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_AMOUNT;
-import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_CATEGORY_ID;
-import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_CATEGORY_NAME;
-import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_CURRENCY_CODE;
-import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_CURRENCY_ID;
-import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_CURRENCY_SYMBOL;
-import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_DATE;
-import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_GLOBAL_ID;
-import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_ID;
-import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_SYNC_STATUS;
-
-public class Entry {
-    public final long id;
-    public final String globalId;
+public class Entry extends Entity{
     public final long utcDate;
     public final long amount;
     public final Category category;
     public final Currency currency;
 
-    private SyncState syncState;
     private double directExchangeRate = -1;
 
     public Entry(
@@ -80,27 +65,6 @@ public class Entry {
         this.currency = currency;
     }
 
-    public static Entry fromCursor(Cursor cursor) {
-        long id = cursor.getLong(INDEX_ID);
-        String globalId = cursor.getString(INDEX_GLOBAL_ID);
-        SyncState syncState = SyncState.valueOf(cursor.getString(INDEX_SYNC_STATUS));
-        long utcDateEntered = cursor.getLong(INDEX_DATE);
-        long amount = cursor.getLong(INDEX_AMOUNT);
-
-        Category category = new Category(
-                cursor.getLong(INDEX_CATEGORY_ID),
-                cursor.getString(INDEX_CATEGORY_NAME)
-        );
-
-        Currency currency = new Currency(
-                cursor.getLong(INDEX_CURRENCY_ID),
-                cursor.getString(INDEX_CURRENCY_CODE),
-                cursor.getString(INDEX_CURRENCY_SYMBOL)
-        );
-
-        return new Entry(id, globalId, syncState, utcDateEntered, amount, category, currency);
-    }
-
     public static Entry fromParseObject(ParseObject object) {
         String globalId = object.getObjectId();
         SyncState syncState = SyncState.SYNCED;
@@ -118,9 +82,10 @@ public class Entry {
         return new Entry(globalId, syncState, utcDate, amount, category, currency);
     }
 
+    @Override
     public ParseObject toParseObject() {
         ParseObject object;
-        if (hasObjectId()) {
+        if (hasGlobalId()) {
             object = ParseObject.createWithoutData(EntryView.VIEW_NAME, globalId);
         } else {
             object = new ParseObject(EntryView.VIEW_NAME);
@@ -132,6 +97,7 @@ public class Entry {
         return object;
     }
 
+    @Override
     public ContentValues toValues() {
         ContentValues values = new ContentValues();
 
@@ -163,18 +129,6 @@ public class Entry {
                 amount,
                 currency.code
         );
-    }
-
-    public boolean hasObjectId() {
-        return globalId != null && globalId.length() > 0;
-    }
-
-    public SyncState getSyncState() {
-        return syncState;
-    }
-
-    public void setSyncState(SyncState syncState) {
-        this.syncState = syncState;
     }
 
     public double getDirectExchangeRate() {

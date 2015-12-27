@@ -86,44 +86,34 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private void saveEntriesOnBackend(final List<Entry> entries) {
-        Timber.d("Saving " + entries.size() + " entries");
+        Timber.d("Remote saving " + entries.size() + " entries");
         final Map<Long, ParseObject> objects = new HashMap<>();
         for (Entry entry : entries) {
             ParseObject object = entry.toParseObject();
-            objects.put(entry.id, object);
+            objects.put(entry.getId(), object);
         }
 
         try {
             ParseObject.saveAll(new ArrayList<>(objects.values()));
-            Timber.d("Saving entry succeeded");
-            List<Entry> updatedEntries = new ArrayList<>();
+            Timber.d("Remote saving entries succeeded");
             for (Entry entry : entries) {
-                Entry updatedEntry = new Entry(
-                        entry.id,
-                        //TODO should the global id be mutable?
-                        objects.get(entry.id).getObjectId(),
-                        SyncState.SYNCED,
-                        entry.utcDate,
-                        entry.amount,
-                        entry.category,
-                        entry.currency
-                );
-                updatedEntries.add(updatedEntry);
+                entry.setGlobalId(objects.get(entry.getId()).getObjectId());
+                entry.setSyncState(SyncState.SYNCED);
             }
-            app.getDataSourceEntry().bulkUpdate(updatedEntries);
+            app.getDataSourceEntry().bulkUpdate(entries);
         } catch (ParseException e) {
-            Timber.d("Saving entry failed: ");
+            Timber.d("Remote saving entries failed: ");
             e.printStackTrace();
         }
     }
 
     private void deleteEntriesOnBackend(final List<Entry> entries) {
-        Timber.d("Deleting: " + entries.size() + " entries");
+        Timber.d("Remote deleting: " + entries.size() + " entries");
         List<Entry> notYetSynced = new ArrayList<>();
         final Map<Entry, ParseObject> toRemoveFromBackend = new HashMap<>();
 
         for (Entry entry : entries) {
-            if (!entry.hasObjectId()) {
+            if (!entry.hasGlobalId()) {
                 entry.setSyncState(SyncState.DELETE_SYNCED);
                 notYetSynced.add(entry);
             } else {
@@ -134,13 +124,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         try {
             ParseObject.deleteAll(new ArrayList<>(toRemoveFromBackend.values()));
-            Timber.d("Bulk remote delete successful");
+            Timber.d("Remote deleting entries successful");
             for (Entry entry : toRemoveFromBackend.keySet()) {
                 entry.setSyncState(SyncState.DELETE_SYNCED);
             }
             app.getDataSourceEntry().bulkUpdate(toRemoveFromBackend.keySet());
         } catch (ParseException e) {
-            Timber.d("Deleting entries failed: ");
+            Timber.d("Remote deleting entries failed: ");
             e.printStackTrace();
         }
     }

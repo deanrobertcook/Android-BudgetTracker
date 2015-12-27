@@ -1,15 +1,16 @@
 package org.theronin.expensetracker.model;
 
 import android.content.ContentValues;
-import android.database.Cursor;
 
+import com.parse.ParseObject;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.theronin.expensetracker.data.Contract.ExchangeRateTable;
 import org.theronin.expensetracker.utils.DateUtils;
 
 import static android.provider.BaseColumns._ID;
 
-public class ExchangeRate {
-    public final long id;
+public class ExchangeRate extends Entity {
     public final String currencyCode;
     public final long utcDate;
     public final double usdRate;
@@ -39,6 +40,7 @@ public class ExchangeRate {
         );
     }
 
+    @Override
     public ContentValues toValues() {
         ContentValues values = new ContentValues();
         if (id > -1) {
@@ -51,13 +53,8 @@ public class ExchangeRate {
         return values;
     }
 
-    public static ExchangeRate fromCursor(Cursor cursor) {
-        return new ExchangeRate(
-                cursor.getLong(ExchangeRateTable.INDEX_ID),
-                cursor.getString(ExchangeRateTable.INDEX_CURRENCY_CODE),
-                cursor.getLong(ExchangeRateTable.INDEX_DATE),
-                cursor.getDouble(ExchangeRateTable.INDEX_USD_RATE),
-                cursor.getLong(ExchangeRateTable.INDEX_LAST_DOWNLOAD_ATTEMPT)
-        );
+    @Override
+    public ParseObject toParseObject() {
+        throw new NotImplementedException();
     }
 }
