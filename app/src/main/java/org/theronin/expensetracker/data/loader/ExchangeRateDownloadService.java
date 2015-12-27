@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.DataSourceExchangeRate;
+import org.theronin.expensetracker.data.SupportedCurrencies;
 import org.theronin.expensetracker.model.ExchangeRate;
 import org.theronin.expensetracker.utils.DateUtils;
 
@@ -207,16 +208,16 @@ public class ExchangeRateDownloadService extends IntentService {
 
         List<ExchangeRate> exchangeRates = new ArrayList<>();
 
-        String[] supportedCurrencies = getResources()
-                .getStringArray(R.array.currency_codes);
-        for (String currencyCode : supportedCurrencies) {
+        CharSequence[] supportedCurrencies = new SupportedCurrencies().getCodes();
+        for (CharSequence currencyCode : supportedCurrencies) {
+            String code = currencyCode.toString();
             double usdRate = -1.0;
-            if (ratesObject != null && ratesObject.has(currencyCode)) {
-                usdRate = ratesObject.get(currencyCode).getAsDouble();
+            if (ratesObject != null && ratesObject.has(code)) {
+                usdRate = ratesObject.get(code).getAsDouble();
             }
 
             exchangeRates.add(new ExchangeRate(
-                            currencyCode,
+                            code,
                             utcDate,
                             usdRate,
                             System.currentTimeMillis())

@@ -15,6 +15,9 @@ import org.theronin.expensetracker.data.Contract.CurrencyTable;
 import org.theronin.expensetracker.data.Contract.EntryTable;
 import org.theronin.expensetracker.data.Contract.EntryView;
 import org.theronin.expensetracker.data.Contract.ExchangeRateTable;
+import org.theronin.expensetracker.model.Currency;
+
+import java.util.List;
 
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -88,8 +91,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private String buildDefaultCurrenciesQuery() {
-        String[] codes = context.getResources().getStringArray(R.array.currency_codes);
-        String[] symbols = context.getResources().getStringArray(R.array.currency_symbols);
+        List<Currency> currencyList = new SupportedCurrencies().getList();
 
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("INSERT INTO %s (%s, %s) VALUES ",
@@ -97,13 +99,15 @@ public class DbHelper extends SQLiteOpenHelper {
                 CurrencyTable.COL_CODE,
                 CurrencyTable.COL_SYMBOL));
 
-        for (int i = 0; i < codes.length; i++) {
+        int i = 0;
+        for (Currency currency : currencyList) {
             sb.append(
-                    String.format("('%s', '%s')", codes[i], symbols[i])
+                    String.format("('%s', '%s')", currency.code, currency.symbol)
             );
-            if (i < codes.length - 1) {
+            if (i < currencyList.size() - 1) {
                 sb.append(", ");
             }
+            i++;
         }
         return sb.toString();
     }

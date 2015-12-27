@@ -7,6 +7,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 
 import org.theronin.expensetracker.R;
+import org.theronin.expensetracker.data.SupportedCurrencies;
 
 public class SettingsFragment extends PreferenceFragment
         implements OnPreferenceChangeListener {
@@ -21,11 +22,19 @@ public class SettingsFragment extends PreferenceFragment
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
+        SupportedCurrencies supportedCurrencies = new SupportedCurrencies();
+        CharSequence[] codes = supportedCurrencies.getCodes();
+        CharSequence[] names = supportedCurrencies.getNames();
+
         homeCurrencyPreference = (ListPreference) findPreference(getString(R.string.pref_home_currency_key));
+        homeCurrencyPreference.setEntries(names);
+        homeCurrencyPreference.setEntryValues(codes);
         updateHomeCurrencyPreferenceSummary(homeCurrencyPreference.getValue());
         homeCurrencyPreference.setOnPreferenceChangeListener(this);
 
         currentCurrencyPreference = (ListPreference) findPreference(getString(R.string.pref_current_currency_key));
+        currentCurrencyPreference.setEntries(names);
+        currentCurrencyPreference.setEntryValues(codes);
         updateCurrentCurrencyPreferenceSummary(currentCurrencyPreference.getValue());
         currentCurrencyPreference.setOnPreferenceChangeListener(this);
     }

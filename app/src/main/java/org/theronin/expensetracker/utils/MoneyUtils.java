@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import org.theronin.expensetracker.R;
+import org.theronin.expensetracker.data.SupportedCurrencies;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -32,14 +32,9 @@ public class MoneyUtils {
         String defaultCurrency = context.getString(R.string.pref_currency_default);
         String currentCurrencyKey = context.getString(currencyKeyResourceId);
 
-        String[] currencyCodes = context.getResources().getStringArray(R.array.currency_codes);
-        String[] currencySymbols = context.getResources().getStringArray(R.array.currency_symbols);
-
         String currencyCode = defaultPreferences.getString(currentCurrencyKey, defaultCurrency);
-        int index = Arrays.asList(currencyCodes).indexOf(currencyCode);
 
-        String currencySymbol = currencySymbols[index];
-        return new Currency(currencyCode, currencySymbol);
+        return new SupportedCurrencies().findCurrency(currencyCode);
     }
 
     public static String getDisplay(Context context, long cents) {

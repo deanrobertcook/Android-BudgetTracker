@@ -6,15 +6,11 @@
             android:key="@string/pref_home_currency_key"
             android:title="@string/pref_home_currency_title"
             android:summary="@string/pref_home_currency_summary"
-            android:defaultValue="@string/pref_currency_default"
-            android:entries="@array/currency_names"
-            android:entryValues="@array/currency_codes"/>
+            android:defaultValue="@string/pref_currency_default"/>
         <ListPreference
             android:key="@string/pref_current_currency_key"
             android:title="@string/pref_current_currency_title"
             android:summary="@string/pref_current_currency_summary"
-            android:defaultValue="@string/pref_currency_default"
-            android:entries="@array/currency_names"
-            android:entryValues="@array/currency_codes"/>
+            android:defaultValue="@string/pref_currency_default"/>
     </PreferenceCategory>
 </PreferenceScreen>
