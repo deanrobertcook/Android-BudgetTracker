@@ -41,7 +41,7 @@ public class Contract {
                 COL_AMOUNT + " INTEGER NOT NULL, " +
                 COL_CURRENCY_ID + " INTEGER NOT NULL, " +
 
-                "UNIQUE (" + COL_GLOBAL_ID + ") ON CONFLICT ABORT, " +
+                "UNIQUE (" + COL_GLOBAL_ID + ") ON CONFLICT IGNORE, " +
 
                 "FOREIGN KEY (" + COL_CATEGORY_ID + ") REFERENCES " +
                 CategoryView.VIEW_NAME + " (" + CategoryView._ID + "), " +
