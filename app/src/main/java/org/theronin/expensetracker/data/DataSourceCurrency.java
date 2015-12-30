@@ -1,20 +1,19 @@
 package org.theronin.expensetracker.data;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.data.Contract.CurrencyTable;
 import org.theronin.expensetracker.model.Currency;
 
 import java.util.Collection;
-import java.util.List;
 
 public class DataSourceCurrency extends AbsDataSource<Currency> {
 
-    public DataSourceCurrency(CustomApplication application) {
-        super(application);
+    public DataSourceCurrency(Context context, DbHelper dbHelper) {
+        super(context, dbHelper);
     }
 
     @Override
@@ -50,18 +49,14 @@ public class DataSourceCurrency extends AbsDataSource<Currency> {
         throw new NotImplementedException("Cannot delete from Currencies table");
     }
 
-    public long getId(String currencyCode) {
-        List<Currency> currencies = query(
-                CurrencyTable.COL_CODE + " = ?",
-                new String[]{currencyCode},
-                null
-        );
-
-        if (currencies.isEmpty()) {
+    @Override
+    public long searchForEntityIdBy(String columnName, String searchValue) {
+        long id = super.searchForEntityIdBy(columnName, searchValue);
+        if (id == -1) {
             throw new IllegalArgumentException(
-                    String.format("The currency %s is not supported", currencyCode)
+                    String.format("The currency %s is not supported", searchValue)
             );
         }
-        return currencies.get(0).getId();
+        return id;
     }
 }

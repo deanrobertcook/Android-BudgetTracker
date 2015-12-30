@@ -3,12 +3,12 @@ package org.theronin.expensetracker.data;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
-import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.sync.SyncState;
 import org.theronin.expensetracker.model.Entity;
@@ -25,14 +25,14 @@ public abstract class AbsDataSource<T extends Entity> {
 
     public static final String ACCOUNT = "dummyaccount";
 
-    protected CustomApplication application;
+    protected Context context;
     protected DbHelper dbHelper;
 
     private Set<Observer> observers;
 
-    public AbsDataSource(CustomApplication application) {
-        this.application = application;
-        dbHelper = DbHelper.getInstance(application);
+    public AbsDataSource(Context context, DbHelper dbHelper) {
+        this.context = context;
+        this.dbHelper = dbHelper;
         this.observers = new HashSet<>();
     }
 
@@ -73,7 +73,7 @@ public abstract class AbsDataSource<T extends Entity> {
 
     private Account createSyncAccount() {
         Account account = new Account(ACCOUNT, getAccountType());
-        AccountManager accountManager = AccountManager.get(application);
+        AccountManager accountManager = AccountManager.get(context);
 
         ContentResolver.setSyncAutomatically(account, getContentAuthority(), true);
         accountManager.addAccountExplicitly(account, null, null);
@@ -82,11 +82,11 @@ public abstract class AbsDataSource<T extends Entity> {
     }
 
     private String getAccountType() {
-        return application.getString(R.string.sync_account_type);
+        return context.getString(R.string.sync_account_type);
     }
 
     private String getContentAuthority() {
-        return application.getString(R.string.content_authority);
+        return context.getString(R.string.content_authority);
     }
 
     public long insert(T entity) {
@@ -196,6 +196,18 @@ public abstract class AbsDataSource<T extends Entity> {
     protected abstract String getTableName();
 
     protected abstract String[] getQueryProjection();
+
+    public long searchForEntityIdBy(String columnName, String searchValue) {
+        List<T> entities = query(
+                columnName + " = ?",
+                new String[]{searchValue},
+                null
+        );
+        if (entities.size() > 1) {
+            throw new IllegalArgumentException("The arguments provided returned more than one matching result");
+        }
+        return entities.size() == 1 ? entities.get(0).getId() : -1;
+    }
 
     public List<T> query() {
         return query(null, null, null);

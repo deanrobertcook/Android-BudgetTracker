@@ -1,10 +1,10 @@
 package org.theronin.expensetracker.data;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.data.Contract.EntryTable;
 import org.theronin.expensetracker.data.Contract.EntryView;
 import org.theronin.expensetracker.data.sync.SyncState;
@@ -14,6 +14,9 @@ import org.theronin.expensetracker.model.Entry;
 
 import java.util.Collection;
 
+import static org.theronin.expensetracker.data.Contract.EntryView.COL_CATEGORY_NAME;
+import static org.theronin.expensetracker.data.Contract.EntryView.COL_CURRENCY_CODE;
+import static org.theronin.expensetracker.data.Contract.EntryView.COL_CURRENCY_ID;
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_AMOUNT;
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_CATEGORY_ID;
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_CATEGORY_NAME;
@@ -27,8 +30,16 @@ import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_SYNC_STA
 
 public class DataSourceEntry extends AbsDataSource<Entry> {
 
-    public DataSourceEntry(CustomApplication application) {
-        super(application);
+    AbsDataSource<Category> categoryAbsDataSource;
+    AbsDataSource<Currency> currencyAbsDataSource;
+
+    public DataSourceEntry(Context context,
+                           DbHelper dbHelper,
+                           AbsDataSource<Category> categoryAbsDataSource,
+                           AbsDataSource<Currency> currencyAbsDataSource) {
+        super(context, dbHelper);
+        this.categoryAbsDataSource = categoryAbsDataSource;
+        this.currencyAbsDataSource = currencyAbsDataSource;
     }
 
     @Override
@@ -95,21 +106,21 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
         if (categoryId == -1) {
             String categoryName = values.getAsString(EntryView.COL_CATEGORY_NAME);
 
-            categoryId = application.getDataSourceCategory().getId(categoryName);
+            categoryId = categoryAbsDataSource.searchForEntityIdBy(COL_CATEGORY_NAME, categoryName);
             values.put(EntryTable.COL_CATEGORY_ID, categoryId);
         }
         values.remove(EntryView.COL_CATEGORY_NAME);
     }
 
     private void changeCurrencyObjectToId(ContentValues values) {
-        long currencyId = values.getAsLong(EntryView.COL_CURRENCY_ID);
+        long currencyId = values.getAsLong(COL_CURRENCY_ID);
         if (currencyId == -1) {
-            String currencyCode = values.getAsString(EntryView.COL_CURRENCY_CODE);
+            String currencyCode = values.getAsString(COL_CURRENCY_CODE);
 
-            currencyId = application.getDataSourceCurrency().getId(currencyCode);
+            currencyId = currencyAbsDataSource.searchForEntityIdBy(COL_CURRENCY_CODE, currencyCode);
             values.put(EntryTable.COL_CURRENCY_ID, currencyId);
         }
-        values.remove(EntryView.COL_CURRENCY_CODE);
+        values.remove(COL_CURRENCY_CODE);
     }
 
     public int bulkMarkAsDeleted(Collection<Entry> entries) {

@@ -1,16 +1,15 @@
 package org.theronin.expensetracker.data;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.data.Contract.CategoryView;
 import org.theronin.expensetracker.model.Category;
 
 import java.util.Collection;
-import java.util.List;
 
 import static org.theronin.expensetracker.data.Contract.CategoryView.INDEX_CATEGORY_NAME;
 import static org.theronin.expensetracker.data.Contract.CategoryView.INDEX_ENTRY_FREQUENCY;
@@ -19,8 +18,8 @@ import static org.theronin.expensetracker.data.Contract.CategoryView.INDEX_ID;
 
 public class DataSourceCategory extends AbsDataSource<Category> {
 
-    public DataSourceCategory(CustomApplication application) {
-        super(application);
+    public DataSourceCategory(Context context, DbHelper dbHelper) {
+        super(context, dbHelper);
     }
 
     @Override
@@ -43,16 +42,14 @@ public class DataSourceCategory extends AbsDataSource<Category> {
         return new Category(id, categoryName, utcDateFirstEntered, entryFrequency);
     }
 
-    public long getId(String categoryName) {
-        List<Category> categories = query(
-                Contract.CategoryTable.COL_NAME + " = ?",
-                new String[]{categoryName},
-                null
-        );
-        if (categories.isEmpty()) {
-            return insert(new Category(categoryName));
+    @Override
+    public long searchForEntityIdBy(String columnName, String searchValue) {
+        long id = super.searchForEntityIdBy(columnName, searchValue);
+
+        if (id == -1) {
+            return insert(new Category(searchValue));
         }
-        return categories.get(0).getId();
+        return id;
     }
 
     @Override

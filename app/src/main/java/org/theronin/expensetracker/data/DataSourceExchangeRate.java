@@ -1,11 +1,11 @@
 package org.theronin.expensetracker.data;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.data.Contract.ExchangeRateTable;
 import org.theronin.expensetracker.model.ExchangeRate;
 
@@ -13,8 +13,8 @@ import java.util.Collection;
 
 public class DataSourceExchangeRate extends AbsDataSource<ExchangeRate> {
 
-    public DataSourceExchangeRate(CustomApplication application) {
-        super(application);
+    public DataSourceExchangeRate(Context context, DbHelper dbHelper) {
+        super(context, dbHelper);
     }
 
     @Override
