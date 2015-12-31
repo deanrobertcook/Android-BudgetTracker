@@ -74,6 +74,7 @@ dependencies {
     compile 'com.parse:parse-android:1.11.0'
 
     //Espresso
+    androidTestApt "com.squareup.dagger:dagger-compiler:$daggerVersion"
     androidTestCompile 'com.android.support.test:runner:0.3'
     androidTestCompile 'com.android.support.test:rules:0.3'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2'

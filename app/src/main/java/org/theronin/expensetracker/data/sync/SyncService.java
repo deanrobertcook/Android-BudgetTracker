@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import org.theronin.expensetracker.dagger.InjectedComponent;
+
 import timber.log.Timber;
 
 public class SyncService extends Service {
@@ -18,7 +20,7 @@ public class SyncService extends Service {
         Timber.d("onCreate()");
         synchronized (syncAdapterLock) {
             if (syncAdapter == null) {
-                syncAdapter = new SyncAdapter(getApplication(), true);
+                syncAdapter = new SyncAdapter(getApplication(), (InjectedComponent) getApplication(), true);
             }
         }
     }

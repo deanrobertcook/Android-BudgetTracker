@@ -33,9 +33,17 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Inject AbsDataSource<Entry> entryDataSource;
 
+    private boolean execute;
+
     public SyncAdapter(Context context, InjectedComponent injectedComponent, boolean autoInitialize) {
         this(context, autoInitialize, false);
-        injectedComponent.inject(this);
+        try {
+            injectedComponent.inject(this);
+            execute = true;
+        } catch (IllegalStateException e) {
+            execute = false;
+        }
+
     }
 
     public SyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
@@ -49,6 +57,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                               String authority,
                               ContentProviderClient provider,
                               SyncResult syncResult) {
+        if (!execute) {
+            return;
+        }
 
         pushChanges();
 
