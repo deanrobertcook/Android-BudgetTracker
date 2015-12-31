@@ -14,16 +14,14 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.R;
+import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.data.Contract.EntryView;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Entry;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -32,6 +30,7 @@ import timber.log.Timber;
 public class SyncAdapter extends AbstractThreadedSyncAdapter implements EntityPushCoordinator.EntitySaver<Entry> {
 
     @Inject AbsDataSource<Entry> entryDataSource;
+    @Inject RemoteSync remoteSync;
 
     //TODO fix this ugly hack to prevent the SyncAdapter from running in tests
     private boolean execute;
@@ -77,26 +76,24 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements EntityPu
     }
 
     @Override
-    public void addEntriesToRemote(List<Entry> entries) {
-        Timber.d("Remote saving " + entries.size() + " entries");
-        final Map<Long, ParseObject> objects = new HashMap<>();
-        for (Entry entry : entries) {
-            ParseObject object = entry.toParseObject();
-            objects.put(entry.getId(), object);
+    public void addEntriesToRemote(final List<Entry> entries) {
+        if (entries.isEmpty()) {
+            return;
         }
-
-        try {
-            ParseObject.saveAll(new ArrayList<>(objects.values()));
-            Timber.d("Remote saving entries succeeded");
-            for (Entry entry : entries) {
-                entry.setGlobalId(objects.get(entry.getId()).getObjectId());
-                entry.setSyncState(SyncState.SYNCED);
+        RemoteSync.Callback callback = new RemoteSync.Callback() {
+            @Override
+            public void onSuccess() {
+                Timber.i("addEntriesToRemote() successful, " + entries.size() + " entities synced");
+                entryDataSource.bulkUpdate(entries);
             }
-            entryDataSource.bulkUpdate(entries);
-        } catch (ParseException e) {
-            Timber.d("Remote saving entries failed: ");
-            e.printStackTrace();
-        }
+
+            @Override
+            public void onFail(Exception e) {
+                Timber.i("addEntriesToRemote() failed:");
+                e.printStackTrace();
+            }
+        };
+        remoteSync.addEntitiesToRemote(entries, callback);
     }
 
     @Override
@@ -105,32 +102,23 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements EntityPu
     }
 
     @Override
-    public void deleteEntriesFromRemote(List<Entry> entries) {
-        Timber.d("Remote deleting: " + entries.size() + " entries");
-        List<Entry> notYetSynced = new ArrayList<>();
-        final Map<Entry, ParseObject> toRemoveFromBackend = new HashMap<>();
-
-        for (Entry entry : entries) {
-            if (!entry.hasGlobalId()) {
-                entry.setSyncState(SyncState.DELETE_SYNCED);
-                notYetSynced.add(entry);
-            } else {
-                toRemoveFromBackend.put(entry, entry.toParseObject());
-            }
+    public void deleteEntriesFromRemote(final List<Entry> entries) {
+        if (entries.isEmpty()) {
+            return;
         }
-        entryDataSource.bulkUpdate(notYetSynced);
-
-        try {
-            ParseObject.deleteAll(new ArrayList<>(toRemoveFromBackend.values()));
-            Timber.d("Remote deleting entries successful");
-            for (Entry entry : toRemoveFromBackend.keySet()) {
-                entry.setSyncState(SyncState.DELETE_SYNCED);
+        RemoteSync.Callback callback = new RemoteSync.Callback() {
+            @Override
+            public void onSuccess() {
+                Timber.i("deleteEntriesFromRemote successful. " + entries.size() + " objects deleted");
+                entryDataSource.bulkDelete(entries);
             }
-            entryDataSource.bulkUpdate(toRemoveFromBackend.keySet());
-        } catch (ParseException e) {
-            Timber.d("Remote deleting entries failed: ");
-            e.printStackTrace();
-        }
+
+            @Override
+            public void onFail(Exception e) {
+                Timber.i("deleteEntriesFromRemote failed");
+            }
+        };
+        remoteSync.deleteEntitiesFromRemote(entries, callback);
     }
 
     @Override

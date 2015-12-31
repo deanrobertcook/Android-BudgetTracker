@@ -4,7 +4,7 @@ import android.app.Instrumentation;
 import android.support.test.InstrumentationRegistry;
 
 import org.theronin.expensetracker.dagger.InjectedComponent;
-import org.theronin.expensetracker.data.source.DataSourceModule;
+import org.theronin.expensetracker.AppModule;
 import org.theronin.expensetracker.data.source.DbHelper;
 
 import dagger.ObjectGraph;
@@ -21,7 +21,7 @@ public class TestApplication implements InjectedComponent {
 
         graph = ObjectGraph.create(
                 new TestDataSourceModule(),
-                new DataSourceModule(instrumentation.getTargetContext(), this, testDbHelper));
+                new AppModule(instrumentation.getTargetContext(), this, testDbHelper));
     }
 
     @Override

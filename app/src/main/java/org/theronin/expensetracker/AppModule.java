@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.data.source;
+package org.theronin.expensetracker;
 
 import android.content.Context;
 
@@ -6,6 +6,14 @@ import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.data.loader.CategoryLoader;
 import org.theronin.expensetracker.data.loader.EntryLoader;
 import org.theronin.expensetracker.data.loader.ExchangeRateDownloadService;
+import org.theronin.expensetracker.data.source.AbsDataSource;
+import org.theronin.expensetracker.data.source.DataSourceCategory;
+import org.theronin.expensetracker.data.source.DataSourceCurrency;
+import org.theronin.expensetracker.data.source.DataSourceEntry;
+import org.theronin.expensetracker.data.source.DataSourceExchangeRate;
+import org.theronin.expensetracker.data.source.DbHelper;
+import org.theronin.expensetracker.data.sync.ParseRemoteSync;
+import org.theronin.expensetracker.data.sync.RemoteSync;
 import org.theronin.expensetracker.data.sync.SyncAdapter;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
@@ -30,13 +38,13 @@ import dagger.Provides;
         EntryLoader.class,
         CategoryLoader.class
 })
-public class DataSourceModule {
+public class AppModule {
 
     private InjectedComponent component;
     private Context context;
     private DbHelper dbHelper;
 
-    public DataSourceModule(Context context, InjectedComponent component, DbHelper dbHelper) {
+    public AppModule(Context context, InjectedComponent component, DbHelper dbHelper) {
         this.component = component;
         this.context = context.getApplicationContext();
         this.dbHelper = dbHelper;
@@ -64,5 +72,10 @@ public class DataSourceModule {
     @Singleton
     AbsDataSource<Entry> provideEntryDataSource() {
         return new DataSourceEntry(context, component, dbHelper);
+    }
+
+    @Provides
+    RemoteSync provideRemoteSync() {
+        return new ParseRemoteSync();
     }
 }

@@ -51,6 +51,7 @@ public class EntityPushCoordinator<T extends Entity> {
             }
         }
 
+        //TODO rename...
         entitySaver.addEntriesToRemote(toAdd);
         entitySaver.updateEntriesOnRemote(toUpdate);
         entitySaver.deleteEntriesFromRemote(toDeleteRemote);

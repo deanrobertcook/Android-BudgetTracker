@@ -8,7 +8,6 @@ import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 import org.theronin.expensetracker.dagger.InjectedComponent;
-import org.theronin.expensetracker.data.source.DataSourceModule;
 import org.theronin.expensetracker.data.source.DbHelper;
 
 import dagger.ObjectGraph;
@@ -47,7 +46,7 @@ public class CustomApplication extends Application implements InjectedComponent 
 
     public void setDatabase() {
         dbHelper = DbHelper.getInstance(getApplicationContext(), getDatabaseName());
-        graph = ObjectGraph.create(getModules());
+        graph = ObjectGraph.create(new AppModule(this, this, dbHelper));
     }
 
     @Override
@@ -65,14 +64,5 @@ public class CustomApplication extends Application implements InjectedComponent 
                     "that can be created or retrieved");
         }
         return ParseUser.getCurrentUser().getObjectId();
-    }
-
-    private Object[] getModules() {
-        if (dbHelper == null) {
-            throw new IllegalStateException("Database has not yet been set up");
-        }
-        return new Object[]{
-                new DataSourceModule(this, this, dbHelper)
-        };
     }
 }
