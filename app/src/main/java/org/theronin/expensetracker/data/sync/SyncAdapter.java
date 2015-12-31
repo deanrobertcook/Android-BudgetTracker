@@ -29,10 +29,11 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
-public class SyncAdapter extends AbstractThreadedSyncAdapter {
+public class SyncAdapter extends AbstractThreadedSyncAdapter implements EntityPushCoordinator.EntitySaver<Entry> {
 
     @Inject AbsDataSource<Entry> entryDataSource;
 
+    //TODO fix this ugly hack to prevent the SyncAdapter from running in tests
     private boolean execute;
 
     public SyncAdapter(Context context, InjectedComponent injectedComponent, boolean autoInitialize) {
@@ -71,35 +72,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private void pushChanges() {
         Timber.d("pushChanges");
         List<Entry> allEntries = entryDataSource.query();
-        List<Entry> entriesToAdd = new ArrayList<>();
-        List<Entry> entriesToDeleteRemote = new ArrayList<>();
-        List<Entry> entriesToDeleteLocal = new ArrayList<>();
-        for (final Entry entry : allEntries) {
-            switch (entry.getSyncState()) {
-                //TODO separate new from update operation
-                case NEW:
-                case UPDATED:
-                    entriesToAdd.add(entry);
-                    break;
-                case MARKED_AS_DELETED:
-                    entriesToDeleteRemote.add(entry);
-                    break;
-                case DELETE_SYNCED:
-                    entriesToDeleteLocal.add(entry);
-                    break;
-                case SYNCED:
-                    //do nothing
-                    break;
-            }
-        }
-
-        saveEntriesOnBackend(entriesToAdd);
-        deleteEntriesOnBackend(entriesToDeleteRemote);
-
-        entryDataSource.bulkDelete(entriesToDeleteLocal);
+        EntityPushCoordinator<Entry> pushCoordinator = new EntityPushCoordinator<>(this);
+        pushCoordinator.syncEntries(allEntries);
     }
 
-    private void saveEntriesOnBackend(final List<Entry> entries) {
+    @Override
+    public void addEntriesToRemote(List<Entry> entries) {
         Timber.d("Remote saving " + entries.size() + " entries");
         final Map<Long, ParseObject> objects = new HashMap<>();
         for (Entry entry : entries) {
@@ -121,7 +99,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
-    private void deleteEntriesOnBackend(final List<Entry> entries) {
+    @Override
+    public void updateEntriesOnRemote(List<Entry> entries) {
+        addEntriesToRemote(entries);
+    }
+
+    @Override
+    public void deleteEntriesFromRemote(List<Entry> entries) {
         Timber.d("Remote deleting: " + entries.size() + " entries");
         List<Entry> notYetSynced = new ArrayList<>();
         final Map<Entry, ParseObject> toRemoveFromBackend = new HashMap<>();
@@ -147,6 +131,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             Timber.d("Remote deleting entries failed: ");
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void deleteEntriesLocally(List<Entry> entries) {
+        entryDataSource.bulkDelete(entries);
     }
 
     private boolean shouldFullSyncWithBackend() {

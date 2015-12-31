@@ -31,7 +31,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public static synchronized DbHelper getInstance(Context context, String databaseName) {
         //TODO check to see if there's anything I need to do when the database changes
-        if (instance == null || !databaseName.equals(instance.currentDatabaseName)) {
+        if (instance == null ||
+                databaseName == null || //for testing purposes, where we use an in-memory DB
+                !databaseName.equals(instance.currentDatabaseName)) {
             if (instance != null) {
                 instance.close();
             }
