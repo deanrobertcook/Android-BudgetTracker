@@ -38,7 +38,12 @@ public class EntityPushCoordinator<T extends Entity> {
                     toUpdate.add(entity);
                     break;
                 case MARKED_AS_DELETED:
-                    toDeleteRemote.add(entity);
+                    if (entity.getGlobalId() == null) {
+                        entity.setSyncState(SyncState.DELETE_SYNCED);
+                        toDeleteLocal.add(entity);
+                    } else {
+                        toDeleteRemote.add(entity);
+                    }
                     break;
                 case DELETE_SYNCED:
                     toDeleteLocal.add(entity);

@@ -73,6 +73,48 @@ public class EntityPushCoordinatorTest {
         assertEquals("Not all callbacks were triggered", 0, lock.getCount());
     }
 
+    @Test
+    public void entitiesMarkedDeleted_AndWithoutGlobalId_ShouldBeSentToDeleteLocally() throws InterruptedException {
+        Entry locallyCreatedAndDeletedEntry = new Entry(
+                null, SyncState.MARKED_AS_DELETED, System.currentTimeMillis(), 100L, new Category("Test"), new Currency("AUD"));
+
+        final CountDownLatch lock = new CountDownLatch(1);
+
+        EntitySaver<Entry> fakeEntitySaver = new EntitySaver<Entry>() {
+            @Override
+            public void addEntriesToRemote(List<Entry> entries) {
+
+            }
+
+            @Override
+            public void updateEntriesOnRemote(List<Entry> entries) {
+
+            }
+
+            @Override
+            public void deleteEntriesFromRemote(List<Entry> entries) {
+                assertEquals("The entity should not be deleted remotely", 0, entries.size());
+            }
+
+            @Override
+            public void deleteEntriesLocally(List<Entry> entries) {
+                assertEquals("The entry was not sent to be deleted locally", 1, entries.size());
+
+                assertEquals("The entry was not marked as DELETE_SYNCED",
+                        SyncState.DELETE_SYNCED, entries.get(0).getSyncState());
+
+                lock.countDown();
+            }
+        };
+
+        EntityPushCoordinator<Entry> pushCoordinator = new EntityPushCoordinator<>(fakeEntitySaver);
+        pushCoordinator.syncEntries(Arrays.asList(locallyCreatedAndDeletedEntry));
+
+        lock.await(DEFAULT_LATCH_WAIT, TimeUnit.MILLISECONDS);
+        assertEquals("The callback was not triggered", 0, lock.getCount());
+
+    }
+
     @Test(expected = IllegalStateException.class)
     public void entriesMarkedWithNew_andThatHaveGlobalId_shouldThrowException() {
         Entry erroneousEntry = new Entry(
