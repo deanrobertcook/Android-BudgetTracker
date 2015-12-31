@@ -9,13 +9,6 @@ public class EntityPushCoordinator<T extends Entity> {
 
     private EntitySaver<T> entitySaver;
 
-    interface EntitySaver<U extends Entity> {
-        void addEntitiesToRemote(List<U> entries);
-        void updateEntitiesOnRemote(List<U> entries);
-        void deleteEntitiesFromRemote(List<U> entries);
-        void deleteEntitiesLocally(List<U> entries);
-    }
-
     public EntityPushCoordinator(EntitySaver<T> entitySaver) {
         this.entitySaver = entitySaver;
     }

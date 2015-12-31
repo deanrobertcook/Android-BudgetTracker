@@ -27,7 +27,7 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
-public class SyncAdapter extends AbstractThreadedSyncAdapter implements EntityPushCoordinator.EntitySaver<Entry> {
+public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Inject AbsDataSource<Entry> entryDataSource;
     @Inject RemoteSync remoteSync;
@@ -61,69 +61,20 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements EntityPu
             return;
         }
 
-        pushChanges();
+        pushEntries();
 
         if (shouldFullSyncWithBackend()) {
             fetchAllFromBackend();
         }
     }
 
-    private void pushChanges() {
-        Timber.d("pushChanges");
+    private void pushEntries() {
+        Timber.d("pushEntries");
         List<Entry> allEntries = entryDataSource.query();
-        EntityPushCoordinator<Entry> pushCoordinator = new EntityPushCoordinator<>(this);
+
+        EntrySaver entrySaver = new EntrySaver(entryDataSource, remoteSync);
+        EntityPushCoordinator<Entry> pushCoordinator = new EntityPushCoordinator<>(entrySaver);
         pushCoordinator.syncEntries(allEntries);
-    }
-
-    @Override
-    public void addEntitiesToRemote(final List<Entry> entries) {
-        if (entries.isEmpty()) {
-            return;
-        }
-        RemoteSync.Callback callback = new RemoteSync.Callback() {
-            @Override
-            public void onSuccess() {
-                Timber.i("addEntitiesToRemote() successful, " + entries.size() + " entities synced");
-                entryDataSource.bulkUpdate(entries);
-            }
-
-            @Override
-            public void onFail(Exception e) {
-                Timber.i("addEntitiesToRemote() failed:");
-                e.printStackTrace();
-            }
-        };
-        remoteSync.addEntitiesToRemote(entries, callback);
-    }
-
-    @Override
-    public void updateEntitiesOnRemote(List<Entry> entries) {
-        addEntitiesToRemote(entries);
-    }
-
-    @Override
-    public void deleteEntitiesFromRemote(final List<Entry> entries) {
-        if (entries.isEmpty()) {
-            return;
-        }
-        RemoteSync.Callback callback = new RemoteSync.Callback() {
-            @Override
-            public void onSuccess() {
-                Timber.i("deleteEntitiesFromRemote successful. " + entries.size() + " objects deleted");
-                entryDataSource.bulkDelete(entries);
-            }
-
-            @Override
-            public void onFail(Exception e) {
-                Timber.i("deleteEntitiesFromRemote failed");
-            }
-        };
-        remoteSync.deleteEntitiesFromRemote(entries, callback);
-    }
-
-    @Override
-    public void deleteEntitiesLocally(List<Entry> entries) {
-        entryDataSource.bulkDelete(entries);
     }
 
     private boolean shouldFullSyncWithBackend() {
