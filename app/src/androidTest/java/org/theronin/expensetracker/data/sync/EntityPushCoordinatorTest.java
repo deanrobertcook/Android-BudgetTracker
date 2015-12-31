@@ -42,25 +42,25 @@ public class EntityPushCoordinatorTest {
 
         EntitySaver<Entry> fakeEntitySaver = new EntitySaver<Entry>() {
             @Override
-            public void addEntriesToRemote(List<Entry> entries) {
+            public void addEntitiesToRemote(List<Entry> entries) {
                 assertEquals("Count of entries passed for adding was wrong", 2, entries.size());
                 lock.countDown();
             }
 
             @Override
-            public void updateEntriesOnRemote(List<Entry> entries) {
+            public void updateEntitiesOnRemote(List<Entry> entries) {
                 assertEquals("Count of entries passed for updating was wrong", 3, entries.size());
                 lock.countDown();
             }
 
             @Override
-            public void deleteEntriesFromRemote(List<Entry> entries) {
+            public void deleteEntitiesFromRemote(List<Entry> entries) {
                 assertEquals("Count of entries passed for remote deletion was wrong", 1, entries.size());
                 lock.countDown();
             }
 
             @Override
-            public void deleteEntriesLocally(List<Entry> entries) {
+            public void deleteEntitiesLocally(List<Entry> entries) {
                 assertEquals("Count of entries passed for local deletion was wrong", 2, entries.size());
                 lock.countDown();
             }
@@ -82,22 +82,22 @@ public class EntityPushCoordinatorTest {
 
         EntitySaver<Entry> fakeEntitySaver = new EntitySaver<Entry>() {
             @Override
-            public void addEntriesToRemote(List<Entry> entries) {
+            public void addEntitiesToRemote(List<Entry> entries) {
 
             }
 
             @Override
-            public void updateEntriesOnRemote(List<Entry> entries) {
+            public void updateEntitiesOnRemote(List<Entry> entries) {
 
             }
 
             @Override
-            public void deleteEntriesFromRemote(List<Entry> entries) {
+            public void deleteEntitiesFromRemote(List<Entry> entries) {
                 assertEquals("The entity should not be deleted remotely", 0, entries.size());
             }
 
             @Override
-            public void deleteEntriesLocally(List<Entry> entries) {
+            public void deleteEntitiesLocally(List<Entry> entries) {
                 assertEquals("The entry was not sent to be deleted locally", 1, entries.size());
 
                 assertEquals("The entry was not marked as DELETE_SYNCED",
@@ -122,22 +122,22 @@ public class EntityPushCoordinatorTest {
 
         EntitySaver<Entry> fakeEntitySaver = new EntitySaver<Entry>() {
             @Override
-            public void addEntriesToRemote(List<Entry> entries) {
+            public void addEntitiesToRemote(List<Entry> entries) {
 
             }
 
             @Override
-            public void updateEntriesOnRemote(List<Entry> entries) {
+            public void updateEntitiesOnRemote(List<Entry> entries) {
 
             }
 
             @Override
-            public void deleteEntriesFromRemote(List<Entry> entries) {
+            public void deleteEntitiesFromRemote(List<Entry> entries) {
 
             }
 
             @Override
-            public void deleteEntriesLocally(List<Entry> entries) {
+            public void deleteEntitiesLocally(List<Entry> entries) {
 
             }
         };

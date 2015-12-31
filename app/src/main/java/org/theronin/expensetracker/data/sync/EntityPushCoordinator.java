@@ -10,10 +10,10 @@ public class EntityPushCoordinator<T extends Entity> {
     private EntitySaver<T> entitySaver;
 
     interface EntitySaver<U extends Entity> {
-        void addEntriesToRemote(List<U> entries);
-        void updateEntriesOnRemote(List<U> entries);
-        void deleteEntriesFromRemote(List<U> entries);
-        void deleteEntriesLocally(List<U> entries);
+        void addEntitiesToRemote(List<U> entries);
+        void updateEntitiesOnRemote(List<U> entries);
+        void deleteEntitiesFromRemote(List<U> entries);
+        void deleteEntitiesLocally(List<U> entries);
     }
 
     public EntityPushCoordinator(EntitySaver<T> entitySaver) {
@@ -51,10 +51,9 @@ public class EntityPushCoordinator<T extends Entity> {
             }
         }
 
-        //TODO rename...
-        entitySaver.addEntriesToRemote(toAdd);
-        entitySaver.updateEntriesOnRemote(toUpdate);
-        entitySaver.deleteEntriesFromRemote(toDeleteRemote);
-        entitySaver.deleteEntriesLocally(toDeleteLocal);
+        entitySaver.addEntitiesToRemote(toAdd);
+        entitySaver.updateEntitiesOnRemote(toUpdate);
+        entitySaver.deleteEntitiesFromRemote(toDeleteRemote);
+        entitySaver.deleteEntitiesLocally(toDeleteLocal);
     }
 }
