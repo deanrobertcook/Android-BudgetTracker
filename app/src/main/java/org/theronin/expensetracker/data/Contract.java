@@ -159,7 +159,7 @@ public class Contract {
         public static final String COL_AMOUNT = EntryTable.COL_AMOUNT;
 
         public static final String COL_CATEGORY_ID = EntryTable.COL_CATEGORY_ID;
-        public static final String COL_CATEGORY_NAME = "currency_name";
+        public static final String COL_CATEGORY_NAME = "category_name";
 
         public static final String COL_CURRENCY_ID = EntryTable.COL_CURRENCY_ID;
         public static final String COL_CURRENCY_CODE = "currency_code";
