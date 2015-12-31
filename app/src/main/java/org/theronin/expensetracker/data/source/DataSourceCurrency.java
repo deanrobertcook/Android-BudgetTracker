@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.data;
+package org.theronin.expensetracker.data.source;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,6 +9,7 @@ import org.theronin.expensetracker.data.Contract.CurrencyTable;
 import org.theronin.expensetracker.model.Currency;
 
 import java.util.Collection;
+import java.util.List;
 
 public class DataSourceCurrency extends AbsDataSource<Currency> {
 
@@ -50,13 +51,22 @@ public class DataSourceCurrency extends AbsDataSource<Currency> {
     }
 
     @Override
-    public long searchForEntityIdBy(String columnName, String searchValue) {
-        long id = super.searchForEntityIdBy(columnName, searchValue);
+    public long getId(Currency currency) {
+        long id = super.getId(currency);
         if (id == -1) {
             throw new IllegalArgumentException(
-                    String.format("The currency %s is not supported", searchValue)
+                    String.format("The currency %s is not supported", currency.code)
             );
         }
         return id;
+    }
+
+    @Override
+    protected List<Currency> searchForIdFromEntity(Currency currency) {
+        return query(
+                CurrencyTable.COL_CODE + " = ?",
+                new String[]{currency.code},
+                null
+        );
     }
 }

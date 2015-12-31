@@ -11,7 +11,7 @@ import com.google.gson.JsonObject;
 
 import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.R;
-import org.theronin.expensetracker.data.DataSourceExchangeRate;
+import org.theronin.expensetracker.data.source.DataSourceExchangeRate;
 import org.theronin.expensetracker.data.SupportedCurrencies;
 import org.theronin.expensetracker.model.ExchangeRate;
 import org.theronin.expensetracker.utils.DateUtils;

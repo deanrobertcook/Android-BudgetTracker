@@ -1,10 +1,11 @@
-package org.theronin.expensetracker.data;
+package org.theronin.expensetracker.data.source;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.theronin.expensetracker.data.Contract.EntryTable;
 import org.theronin.expensetracker.data.Contract.EntryView;
 import org.theronin.expensetracker.data.sync.SyncState;
@@ -13,8 +14,8 @@ import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 
 import java.util.Collection;
+import java.util.List;
 
-import static org.theronin.expensetracker.data.Contract.EntryView.COL_CATEGORY_NAME;
 import static org.theronin.expensetracker.data.Contract.EntryView.COL_CURRENCY_CODE;
 import static org.theronin.expensetracker.data.Contract.EntryView.COL_CURRENCY_ID;
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_AMOUNT;
@@ -50,6 +51,11 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
     @Override
     protected String[] getQueryProjection() {
         return EntryView.PROJECTION;
+    }
+
+    @Override
+    protected List<Entry> searchForIdFromEntity(Entry entity) {
+        throw new NotImplementedException("Entries can't be searched by any value other than ID");
     }
 
     @Override
@@ -106,7 +112,7 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
         if (categoryId == -1) {
             String categoryName = values.getAsString(EntryView.COL_CATEGORY_NAME);
 
-            categoryId = categoryAbsDataSource.searchForEntityIdBy(COL_CATEGORY_NAME, categoryName);
+            categoryId = categoryAbsDataSource.getId(new Category(categoryName));
             values.put(EntryTable.COL_CATEGORY_ID, categoryId);
         }
         values.remove(EntryView.COL_CATEGORY_NAME);
@@ -117,7 +123,7 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
         if (currencyId == -1) {
             String currencyCode = values.getAsString(COL_CURRENCY_CODE);
 
-            currencyId = currencyAbsDataSource.searchForEntityIdBy(COL_CURRENCY_CODE, currencyCode);
+            currencyId = currencyAbsDataSource.getId(new Currency(currencyCode));
             values.put(EntryTable.COL_CURRENCY_ID, currencyId);
         }
         values.remove(COL_CURRENCY_CODE);

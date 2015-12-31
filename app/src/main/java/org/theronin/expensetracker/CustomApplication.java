@@ -5,11 +5,13 @@ import android.app.Application;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseInstallation;
+import com.parse.ParseUser;
 
-import org.theronin.expensetracker.data.DataSourceCategory;
-import org.theronin.expensetracker.data.DataSourceCurrency;
-import org.theronin.expensetracker.data.DataSourceEntry;
-import org.theronin.expensetracker.data.DataSourceExchangeRate;
+import org.theronin.expensetracker.data.source.DataSourceCategory;
+import org.theronin.expensetracker.data.source.DataSourceCurrency;
+import org.theronin.expensetracker.data.source.DataSourceEntry;
+import org.theronin.expensetracker.data.source.DataSourceExchangeRate;
+import org.theronin.expensetracker.data.source.DbHelper;
 
 import timber.log.Timber;
 
@@ -40,11 +42,21 @@ public class CustomApplication extends Application {
         ParseInstallation.getCurrentInstallation().saveInBackground();
     }
 
+    public String getDatabaseName() {
+        if (ParseUser.getCurrentUser() == null) {
+            throw new IllegalStateException("The current user is null, there is no database " +
+                    "that can be created or retrieved");
+        }
+        return ParseUser.getCurrentUser().getObjectId();
+    }
+
     public void setDatabase() {
-        dataSourceEntry = new DataSourceEntry(this);
-        dataSourceCategory = new DataSourceCategory(this);
-        dataSourceCurrency = new DataSourceCurrency(this);
-        dataSourceExchangeRate = new DataSourceExchangeRate(this);
+        DbHelper dbHelper = DbHelper.getInstance(getApplicationContext(), getDatabaseName());
+
+        dataSourceCurrency = new DataSourceCurrency(this, dbHelper);
+        dataSourceExchangeRate = new DataSourceExchangeRate(this, dbHelper);
+        dataSourceCategory = new DataSourceCategory(this, dbHelper);
+        dataSourceEntry = new DataSourceEntry(this, dbHelper, dataSourceCategory, dataSourceCurrency);
     }
 
     public DataSourceEntry getDataSourceEntry() {

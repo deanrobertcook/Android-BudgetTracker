@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.data;
+package org.theronin.expensetracker.data.source;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,7 +10,10 @@ import org.theronin.expensetracker.data.Contract.CategoryView;
 import org.theronin.expensetracker.model.Category;
 
 import java.util.Collection;
+import java.util.List;
 
+import static org.theronin.expensetracker.data.Contract.CategoryTable.COL_NAME;
+import static org.theronin.expensetracker.data.Contract.CategoryTable.TABLE_NAME;
 import static org.theronin.expensetracker.data.Contract.CategoryView.INDEX_CATEGORY_NAME;
 import static org.theronin.expensetracker.data.Contract.CategoryView.INDEX_ENTRY_FREQUENCY;
 import static org.theronin.expensetracker.data.Contract.CategoryView.INDEX_FIRST_ENTRY_DATE;
@@ -43,19 +46,28 @@ public class DataSourceCategory extends AbsDataSource<Category> {
     }
 
     @Override
-    public long searchForEntityIdBy(String columnName, String searchValue) {
-        long id = super.searchForEntityIdBy(columnName, searchValue);
+    public long getId(Category category) {
+        long id = super.getId(category);
 
         if (id == -1) {
-            return insert(new Category(searchValue));
+            return insert(category);
         }
         return id;
     }
 
     @Override
+    protected List<Category> searchForIdFromEntity(Category entity) {
+        return query(
+                COL_NAME + " = ?",
+                new String[]{entity.name},
+                null
+        );
+    }
+
+    @Override
     protected long insertOperation(SQLiteDatabase db, Category category) {
         ContentValues values = category.toValues();
-        return db.insert(Contract.CategoryTable.TABLE_NAME, null, values);
+        return db.insert(TABLE_NAME, null, values);
     }
 
     @Override

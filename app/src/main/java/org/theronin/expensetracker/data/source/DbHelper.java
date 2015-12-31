@@ -1,12 +1,10 @@
-package org.theronin.expensetracker.data;
+package org.theronin.expensetracker.data.source;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.PreferenceManager;
-
-import com.parse.ParseUser;
 
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.Contract.CategoryTable;
@@ -15,6 +13,7 @@ import org.theronin.expensetracker.data.Contract.CurrencyTable;
 import org.theronin.expensetracker.data.Contract.EntryTable;
 import org.theronin.expensetracker.data.Contract.EntryView;
 import org.theronin.expensetracker.data.Contract.ExchangeRateTable;
+import org.theronin.expensetracker.data.SupportedCurrencies;
 import org.theronin.expensetracker.model.Currency;
 
 import java.util.List;
@@ -28,28 +27,22 @@ public class DbHelper extends SQLiteOpenHelper {
     private static DbHelper instance;
 
     private Context context;
-    private ParseUser currentUser;
+    private String currentDatabaseName;
 
-    public static synchronized DbHelper getInstance(Context context) {
+    public static synchronized DbHelper getInstance(Context context, String databaseName) {
         //TODO check to see if there's anything I need to do when the database changes
-        if (instance == null || ParseUser.getCurrentUser() != instance.currentUser) {
-            if (ParseUser.getCurrentUser() == null) {
-                throw new IllegalStateException("The current user is null, there is no database " +
-                        "that can be created or retrieved");
-            }
-
+        if (instance == null || !databaseName.equals(instance.currentDatabaseName)) {
             if (instance != null) {
                 instance.close();
             }
-
-            instance = new DbHelper(context.getApplicationContext());
+            instance = new DbHelper(context.getApplicationContext(), databaseName);
         }
         return instance;
     }
 
-    private DbHelper(Context context) {
-        super(context, ParseUser.getCurrentUser().getObjectId(), null, DATABASE_VERSION);
-        this.currentUser = ParseUser.getCurrentUser();
+    private DbHelper(Context context, String databaseName) {
+        super(context, databaseName, null, DATABASE_VERSION);
+        this.currentDatabaseName = databaseName;
         this.context = context;
     }
 

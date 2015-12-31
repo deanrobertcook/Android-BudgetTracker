@@ -16,7 +16,7 @@ import android.widget.Toast;
 import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.Contract.EntryView;
-import org.theronin.expensetracker.data.DataSourceEntry;
+import org.theronin.expensetracker.data.source.DataSourceEntry;
 import org.theronin.expensetracker.data.loader.EntryLoader;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.pages.main.MainActivity;

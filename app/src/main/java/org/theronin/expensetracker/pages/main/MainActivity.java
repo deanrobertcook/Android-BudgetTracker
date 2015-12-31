@@ -21,7 +21,7 @@ import com.parse.ParseUser;
 import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.Contract;
-import org.theronin.expensetracker.data.DataSourceCategory;
+import org.theronin.expensetracker.data.source.DataSourceCategory;
 import org.theronin.expensetracker.data.sync.SyncState;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Entry;

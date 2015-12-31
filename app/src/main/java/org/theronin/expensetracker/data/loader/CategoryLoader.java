@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import org.theronin.expensetracker.CustomApplication;
-import org.theronin.expensetracker.data.AbsDataSource;
+import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;

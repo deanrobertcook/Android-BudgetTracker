@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.data;
+package org.theronin.expensetracker.data.source;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -197,17 +197,15 @@ public abstract class AbsDataSource<T extends Entity> {
 
     protected abstract String[] getQueryProjection();
 
-    public long searchForEntityIdBy(String columnName, String searchValue) {
-        List<T> entities = query(
-                columnName + " = ?",
-                new String[]{searchValue},
-                null
-        );
+    public long getId(T entity) {
+        List<T> entities = searchForIdFromEntity(entity);
         if (entities.size() > 1) {
             throw new IllegalArgumentException("The arguments provided returned more than one matching result");
         }
         return entities.size() == 1 ? entities.get(0).getId() : -1;
     }
+
+    protected abstract List<T> searchForIdFromEntity(T entity);
 
     public List<T> query() {
         return query(null, null, null);

@@ -3,7 +3,7 @@ package org.theronin.expensetracker.data.loader;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 
-import org.theronin.expensetracker.data.AbsDataSource;
+import org.theronin.expensetracker.data.source.AbsDataSource;
 
 import java.util.List;
 

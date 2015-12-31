@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.data;
+package org.theronin.expensetracker.data.source;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,6 +10,7 @@ import org.theronin.expensetracker.data.Contract.ExchangeRateTable;
 import org.theronin.expensetracker.model.ExchangeRate;
 
 import java.util.Collection;
+import java.util.List;
 
 public class DataSourceExchangeRate extends AbsDataSource<ExchangeRate> {
 
@@ -25,6 +26,11 @@ public class DataSourceExchangeRate extends AbsDataSource<ExchangeRate> {
     @Override
     protected String[] getQueryProjection() {
         return ExchangeRateTable.PROJECTION;
+    }
+
+    @Override
+    protected List<ExchangeRate> searchForIdFromEntity(ExchangeRate entity) {
+        throw new NotImplementedException("No need to lookup exchange rate IDs");
     }
 
     @Override
