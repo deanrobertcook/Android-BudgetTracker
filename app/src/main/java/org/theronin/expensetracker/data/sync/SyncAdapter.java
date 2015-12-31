@@ -14,9 +14,10 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import org.theronin.expensetracker.CustomApplication;
+import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.Contract.EntryView;
+import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Entry;
 
 import java.util.ArrayList;
@@ -24,20 +25,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import timber.log.Timber;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
-    private CustomApplication app;
+    @Inject AbsDataSource<Entry> entryDataSource;
 
-    public SyncAdapter(Context context, boolean autoInitialize) {
+    public SyncAdapter(Context context, InjectedComponent injectedComponent, boolean autoInitialize) {
         this(context, autoInitialize, false);
+        injectedComponent.inject(this);
     }
 
     public SyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
         super(context, autoInitialize, allowParallelSyncs);
         Timber.d("SyncAdapter created");
-        this.app = (CustomApplication) context;
     }
 
     @Override
@@ -56,7 +59,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     private void pushChanges() {
         Timber.d("pushChanges");
-        List<Entry> allEntries = app.getDataSourceEntry().query();
+        List<Entry> allEntries = entryDataSource.query();
         List<Entry> entriesToAdd = new ArrayList<>();
         List<Entry> entriesToDeleteRemote = new ArrayList<>();
         List<Entry> entriesToDeleteLocal = new ArrayList<>();
@@ -82,7 +85,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         saveEntriesOnBackend(entriesToAdd);
         deleteEntriesOnBackend(entriesToDeleteRemote);
 
-        app.getDataSourceEntry().bulkDelete(entriesToDeleteLocal);
+        entryDataSource.bulkDelete(entriesToDeleteLocal);
     }
 
     private void saveEntriesOnBackend(final List<Entry> entries) {
@@ -100,7 +103,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 entry.setGlobalId(objects.get(entry.getId()).getObjectId());
                 entry.setSyncState(SyncState.SYNCED);
             }
-            app.getDataSourceEntry().bulkUpdate(entries);
+            entryDataSource.bulkUpdate(entries);
         } catch (ParseException e) {
             Timber.d("Remote saving entries failed: ");
             e.printStackTrace();
@@ -120,7 +123,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 toRemoveFromBackend.put(entry, entry.toParseObject());
             }
         }
-        app.getDataSourceEntry().bulkUpdate(notYetSynced);
+        entryDataSource.bulkUpdate(notYetSynced);
 
         try {
             ParseObject.deleteAll(new ArrayList<>(toRemoveFromBackend.values()));
@@ -128,7 +131,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             for (Entry entry : toRemoveFromBackend.keySet()) {
                 entry.setSyncState(SyncState.DELETE_SYNCED);
             }
-            app.getDataSourceEntry().bulkUpdate(toRemoveFromBackend.keySet());
+            entryDataSource.bulkUpdate(toRemoveFromBackend.keySet());
         } catch (ParseException e) {
             Timber.d("Remote deleting entries failed: ");
             e.printStackTrace();
@@ -158,7 +161,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                                 entries.add(entry);
                                 Timber.d("Adding " + entry);
                             }
-                            app.getDataSourceEntry().bulkInsert(entries);
+                            entryDataSource.bulkInsert(entries);
                         }
                     }).start();
 

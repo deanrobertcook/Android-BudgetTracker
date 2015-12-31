@@ -2,7 +2,6 @@ package org.theronin.expensetracker.pages.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,10 +17,10 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.parse.ParseUser;
 
-import org.theronin.expensetracker.CustomApplication;
+import org.theronin.expensetracker.dagger.InjectedActivity;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.Contract;
-import org.theronin.expensetracker.data.source.DataSourceCategory;
+import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.data.sync.SyncState;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Entry;
@@ -35,17 +34,21 @@ import org.theronin.expensetracker.task.FileBackupAgent;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import timber.log.Timber;
 
 
-public class MainActivity extends AppCompatActivity implements
+public class MainActivity extends InjectedActivity implements
         FileBackupAgent.Listener,
         Drawer.OnDrawerItemClickListener,
         CategoryDialogFragment.Container {
 
     private static final String TAG = MainActivity.class.getName();
 
-    private static final int ENTRY_LOADER_ID = 0;
+    @Inject AbsDataSource<Entry> entryDataSource;
+    @Inject AbsDataSource<Category> categoryDataSource;
+
     private Toolbar toolbar;
 
     private Drawer navDrawer;
@@ -60,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         Timber.d("onCreate");
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity__basic);
 
         toolbar = (Toolbar) findViewById(R.id.tb__toolbar);
@@ -77,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements
             finish();
             return;
         }
-        ((CustomApplication) getApplication()).getDataSourceEntry().requestSync();
+        entryDataSource.requestSync();
 
     }
 
@@ -260,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements
         new Thread(new Runnable() {
             @Override
             public void run() {
-                new FileBackupAgent().backupEntries(((CustomApplication) getApplication()).getDataSourceEntry()
+                new FileBackupAgent().backupEntries(entryDataSource
                         .query(Contract.EntryView.COL_SYNC_STATUS + " NOT IN (?)", new String[]{SyncState.deleteStateSelection()}, null));
             }
         }).start();
@@ -288,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onEntriesRestored(List<Entry> entries) {
-        ((CustomApplication) getApplication()).getDataSourceEntry().bulkInsert(entries);
+        entryDataSource.bulkInsert(entries);
     }
 
     @Override
@@ -301,8 +303,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onCategoryCreated(String categoryName) {
         if (categoryName != null && categoryName.length() > 0) {
-            DataSourceCategory dataSource = ((CustomApplication) getApplication()).getDataSourceCategory();
-            long id = dataSource.insert(new Category(sanitiseCategoryName(categoryName)));
+            long id = categoryDataSource.insert(new Category(sanitiseCategoryName(categoryName)));
             if (id == -1) {
                 Toast.makeText(this, R.string.duplicate_category_error, Toast.LENGTH_SHORT).show();
             } else {

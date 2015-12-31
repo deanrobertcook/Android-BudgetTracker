@@ -1,9 +1,9 @@
 package org.theronin.expensetracker.data.loader;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
-import org.theronin.expensetracker.CustomApplication;
+import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
@@ -14,6 +14,8 @@ import org.theronin.expensetracker.utils.CurrencySettings;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import static org.theronin.expensetracker.data.loader.ExchangeRateDownloadService.UTC_DATE_KEY;
 
 public class CategoryLoader extends DataLoader<Category>
@@ -23,29 +25,25 @@ public class CategoryLoader extends DataLoader<Category>
 
     private boolean calculateTotals;
 
-    private CustomApplication app;
+    @Inject AbsDataSource<Category> categoryDataSource;
+    @Inject AbsDataSource<ExchangeRate> exchangeRateDataSource;
+    @Inject AbsDataSource<Entry> entryDataSource;
 
-    public CategoryLoader(Activity activity, boolean calculateTotals) {
-        super(activity);
-        app = (CustomApplication) activity.getApplication();
-        setObservedDataSources(
-                app.getDataSourceCategory(),
-                app.getDataSourceEntry(),
-                app.getDataSourceExchangeRate());
-
-        currencySettings = new CurrencySettings(activity, this);
-
+    public CategoryLoader(Context context, InjectedComponent component, boolean calculateTotals) {
+        super(context, component);
+        setObservedDataSources(categoryDataSource, exchangeRateDataSource, entryDataSource);
+        currencySettings = new CurrencySettings(context, this);
         this.calculateTotals = calculateTotals;
     }
 
     @Override
     public List<Category> loadInBackground() {
-        List<Category> categories = app.getDataSourceCategory().query();
+        List<Category> categories = categoryDataSource.query();
         if (!calculateTotals) {
             return categories;
         } else {
-            List<Entry> allEntries = app.getDataSourceEntry().query();
-            List<ExchangeRate> allExchangeRates = app.getDataSourceExchangeRate().query();
+            List<Entry> allEntries = entryDataSource.query();
+            List<ExchangeRate> allExchangeRates = exchangeRateDataSource.query();
 
             CurrencyConverter converter = new CurrencyConverter(currencySettings
                     .getHomeCurrency(), allExchangeRates);

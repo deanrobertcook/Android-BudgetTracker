@@ -7,20 +7,18 @@ import com.parse.ParseACL;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
-import org.theronin.expensetracker.data.source.DataSourceCategory;
-import org.theronin.expensetracker.data.source.DataSourceCurrency;
-import org.theronin.expensetracker.data.source.DataSourceEntry;
-import org.theronin.expensetracker.data.source.DataSourceExchangeRate;
+import org.theronin.expensetracker.dagger.InjectedComponent;
+import org.theronin.expensetracker.data.source.DataSourceModule;
 import org.theronin.expensetracker.data.source.DbHelper;
 
+import dagger.ObjectGraph;
 import timber.log.Timber;
 
-public class CustomApplication extends Application {
+public class CustomApplication extends Application implements InjectedComponent {
 
-    private DataSourceEntry dataSourceEntry;
-    private DataSourceCategory dataSourceCategory;
-    private DataSourceCurrency dataSourceCurrency;
-    private DataSourceExchangeRate dataSourceExchangeRate;
+    private ObjectGraph graph;
+
+    private DbHelper dbHelper;
 
     @Override
     public void onCreate() {
@@ -28,6 +26,11 @@ public class CustomApplication extends Application {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
+
+        setupParse();
+    }
+
+    private void setupParse() {
         // Enable Local Datastore.
         Parse.enableLocalDatastore(this);
 
@@ -42,7 +45,21 @@ public class CustomApplication extends Application {
         ParseInstallation.getCurrentInstallation().saveInBackground();
     }
 
-    public String getDatabaseName() {
+    public void setDatabase() {
+        dbHelper = DbHelper.getInstance(getApplicationContext(), getDatabaseName());
+        graph = ObjectGraph.create(getModules());
+    }
+
+    @Override
+    public void inject(Object object) {
+        if (graph == null) {
+            throw new IllegalStateException("The Object graph has not been established yet. This" +
+                    " means the database is also not ready");
+        }
+        graph.inject(object);
+    }
+
+    private String getDatabaseName() {
         if (ParseUser.getCurrentUser() == null) {
             throw new IllegalStateException("The current user is null, there is no database " +
                     "that can be created or retrieved");
@@ -50,28 +67,12 @@ public class CustomApplication extends Application {
         return ParseUser.getCurrentUser().getObjectId();
     }
 
-    public void setDatabase() {
-        DbHelper dbHelper = DbHelper.getInstance(getApplicationContext(), getDatabaseName());
-
-        dataSourceCurrency = new DataSourceCurrency(this, dbHelper);
-        dataSourceExchangeRate = new DataSourceExchangeRate(this, dbHelper);
-        dataSourceCategory = new DataSourceCategory(this, dbHelper);
-        dataSourceEntry = new DataSourceEntry(this, dbHelper, dataSourceCategory, dataSourceCurrency);
-    }
-
-    public DataSourceEntry getDataSourceEntry() {
-        return dataSourceEntry;
-    }
-
-    public DataSourceCategory getDataSourceCategory() {
-        return dataSourceCategory;
-    }
-
-    public DataSourceCurrency getDataSourceCurrency() {
-        return dataSourceCurrency;
-    }
-
-    public DataSourceExchangeRate getDataSourceExchangeRate() {
-        return dataSourceExchangeRate;
+    private Object[] getModules() {
+        if (dbHelper == null) {
+            throw new IllegalStateException("Database has not yet been set up");
+        }
+        return new Object[]{
+                new DataSourceModule(this, this, dbHelper)
+        };
     }
 }

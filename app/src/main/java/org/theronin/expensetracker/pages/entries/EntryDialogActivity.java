@@ -4,7 +4,6 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Loader;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,9 +18,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.theronin.expensetracker.CustomApplication;
+import org.theronin.expensetracker.dagger.InjectedActivity;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.loader.CategoryLoader;
+import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
@@ -34,7 +34,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class EntryDialogActivity extends AppCompatActivity
+import javax.inject.Inject;
+
+public class EntryDialogActivity extends InjectedActivity
         implements View.OnClickListener,
         CurrencySettings.Listener,
         TextWatcher,
@@ -44,6 +46,8 @@ public class EntryDialogActivity extends AppCompatActivity
 
     private static final String TAG = EntryDialogActivity.class.getName();
     private static final int CATEGORY_LOADER_ID = 0;
+
+    @Inject AbsDataSource<Entry> entryDataSource;
 
     private CurrencySettings currencySettings;
     private TextView currencySymbolTextView;
@@ -227,8 +231,7 @@ public class EntryDialogActivity extends AppCompatActivity
                 new Currency(currencyCodeTextView.getText().toString())
         );
 
-        long id = ((CustomApplication) getApplication())
-                .getDataSourceEntry().insert(entry);
+        long id = entryDataSource.insert(entry);
 
         if (id == -1) {
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
@@ -254,7 +257,7 @@ public class EntryDialogActivity extends AppCompatActivity
 
     @Override
     public Loader<List<Category>> onCreateLoader(int id, Bundle args) {
-        return new CategoryLoader(this, false);
+        return new CategoryLoader(this, this, false);
     }
 
     @Override

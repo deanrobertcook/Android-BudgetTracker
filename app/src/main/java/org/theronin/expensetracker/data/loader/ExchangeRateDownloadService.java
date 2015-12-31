@@ -1,6 +1,5 @@
 package org.theronin.expensetracker.data.loader;
 
-import android.app.IntentService;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -9,10 +8,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import org.theronin.expensetracker.CustomApplication;
+import org.theronin.expensetracker.dagger.InjectedService;
 import org.theronin.expensetracker.R;
-import org.theronin.expensetracker.data.source.DataSourceExchangeRate;
 import org.theronin.expensetracker.data.SupportedCurrencies;
+import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.ExchangeRate;
 import org.theronin.expensetracker.utils.DateUtils;
 
@@ -27,13 +26,15 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import timber.log.Timber;
 
-public class ExchangeRateDownloadService extends IntentService {
+public class ExchangeRateDownloadService extends InjectedService {
 
     public static String UTC_DATE_KEY = ExchangeRateDownloadService.class.getName() + ":UTC_DATE_KEY";
 
-    private DataSourceExchangeRate dataSourceExchangeRate;
+    @Inject AbsDataSource<ExchangeRate> exchangeRateAbsDataSource;
 
     private List<Long> utcDatesQueuedToDownload;
 
@@ -50,8 +51,6 @@ public class ExchangeRateDownloadService extends IntentService {
     public void onCreate() {
         Timber.d("onCreate()");
         this.utcDatesQueuedToDownload = new ArrayList<>();
-        this.dataSourceExchangeRate = ((CustomApplication) getApplication())
-                .getDataSourceExchangeRate();
         super.onCreate();
     }
 
@@ -90,7 +89,7 @@ public class ExchangeRateDownloadService extends IntentService {
                 List<ExchangeRate> downloadedRates = downloadExchangeRatesOnDay(utcDate);
                 if (!downloadedRates.isEmpty()) {
                     Timber.d("Inserting entries into the database");
-                    dataSourceExchangeRate.bulkInsert(downloadedRates);
+                    exchangeRateAbsDataSource.bulkInsert(downloadedRates);
                 }
                 utcDatesQueuedToDownload.remove(utcDate);
             } catch (Exception e) {

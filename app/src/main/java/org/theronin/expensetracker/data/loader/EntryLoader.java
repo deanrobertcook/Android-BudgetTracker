@@ -1,9 +1,10 @@
 package org.theronin.expensetracker.data.loader;
 
-import android.app.Activity;
+import android.content.Context;
 
-import org.theronin.expensetracker.CustomApplication;
+import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.data.Contract.EntryView;
+import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.data.sync.SyncState;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
@@ -12,32 +13,31 @@ import org.theronin.expensetracker.utils.CurrencySettings;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import timber.log.Timber;
 
 public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.Listener {
 
-    private CustomApplication app;
+    @Inject AbsDataSource<Entry> entryDataSource;
+    @Inject AbsDataSource<ExchangeRate> exchangeRateDataSource;
 
     private final CurrencySettings currencySettings;
 
-    public EntryLoader(Activity activity) {
-        super(activity);
-        app = ((CustomApplication) activity.getApplication());
+    public EntryLoader(Context context, InjectedComponent component) {
+        super(context, component);
+        setObservedDataSources(entryDataSource, exchangeRateDataSource);
 
-        setObservedDataSources(
-                app.getDataSourceEntry(),
-                app.getDataSourceExchangeRate());
-
-        currencySettings = new CurrencySettings(activity, this);
+        currencySettings = new CurrencySettings(context, this);
     }
 
     @Override
     public List<Entry> loadInBackground() {
         Timber.d("loadInBackground");
-        List<Entry> entries = app.getDataSourceEntry().query(
+        List<Entry> entries = entryDataSource.query(
                 EntryView.COL_SYNC_STATUS + " NOT IN (" + SyncState.deleteStateSelection() + ")", null,
                 EntryView.COL_DATE + " DESC, " + EntryView._ID + " DESC");
-        List<ExchangeRate> allExchangeRates = app.getDataSourceExchangeRate().query();
+        List<ExchangeRate> allExchangeRates = exchangeRateDataSource.query();
 
         final CurrencyConverter converter = new CurrencyConverter(currencySettings
                 .getHomeCurrency(), allExchangeRates);

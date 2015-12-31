@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.data.Contract.EntryTable;
 import org.theronin.expensetracker.data.Contract.EntryView;
 import org.theronin.expensetracker.data.sync.SyncState;
@@ -15,6 +16,8 @@ import org.theronin.expensetracker.model.Entry;
 
 import java.util.Collection;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import static org.theronin.expensetracker.data.Contract.EntryView.COL_CURRENCY_CODE;
 import static org.theronin.expensetracker.data.Contract.EntryView.COL_CURRENCY_ID;
@@ -31,16 +34,12 @@ import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_SYNC_STA
 
 public class DataSourceEntry extends AbsDataSource<Entry> {
 
-    AbsDataSource<Category> categoryAbsDataSource;
-    AbsDataSource<Currency> currencyAbsDataSource;
+    @Inject AbsDataSource<Category> categoryAbsDataSource;
+    @Inject AbsDataSource<Currency> currencyAbsDataSource;
 
-    public DataSourceEntry(Context context,
-                           DbHelper dbHelper,
-                           AbsDataSource<Category> categoryAbsDataSource,
-                           AbsDataSource<Currency> currencyAbsDataSource) {
+    public DataSourceEntry(Context context, InjectedComponent component, DbHelper dbHelper) {
         super(context, dbHelper);
-        this.categoryAbsDataSource = categoryAbsDataSource;
-        this.currencyAbsDataSource = currencyAbsDataSource;
+        component.inject(this);
     }
 
     @Override

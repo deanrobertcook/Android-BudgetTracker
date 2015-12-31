@@ -1,6 +1,5 @@
 package org.theronin.expensetracker.pages.entries;
 
-import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
@@ -13,11 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import org.theronin.expensetracker.CustomApplication;
+import org.theronin.expensetracker.dagger.InjectedFragment;
 import org.theronin.expensetracker.R;
-import org.theronin.expensetracker.data.Contract.EntryView;
-import org.theronin.expensetracker.data.source.DataSourceEntry;
 import org.theronin.expensetracker.data.loader.EntryLoader;
+import org.theronin.expensetracker.data.source.AbsDataSource;
+import org.theronin.expensetracker.data.source.DataSourceEntry;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.pages.main.MainActivity;
 
@@ -25,9 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import timber.log.Timber;
 
-public class EntryListFragment extends Fragment implements
+public class EntryListFragment extends InjectedFragment implements
         View.OnClickListener,
         EntriesAdapter.SelectionListener,
         LoaderManager.LoaderCallbacks<List<Entry>>,
@@ -37,11 +38,9 @@ public class EntryListFragment extends Fragment implements
 
     private static final int ENTRY_LOADER_ID = 0;
 
-    private static final String SORT_ORDER =
-            EntryView.COL_DATE + " DESC, " + EntryView._ID + " DESC";
+    @Inject AbsDataSource<Entry> entryDataSource;
 
     private EntriesAdapter adapter;
-    private Entry entrySelected;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,7 +82,7 @@ public class EntryListFragment extends Fragment implements
 
     @Override
     public Loader<List<Entry>> onCreateLoader(int id, Bundle args) {
-        return new EntryLoader(getActivity());
+        return new EntryLoader(getActivity(), this);
     }
 
     @Override
@@ -136,9 +135,8 @@ public class EntryListFragment extends Fragment implements
         Timber.d("onDeleteSelectionConfirmed");
         Set<Entry> selectedEntries = adapter.getSelection();
 
-        DataSourceEntry dataSource = ((CustomApplication) getActivity().getApplication()).getDataSourceEntry();
-
-        dataSource.bulkMarkAsDeleted(selectedEntries);
+        //TODO abstract away the mark as deleted functionality
+        ((DataSourceEntry) entryDataSource).bulkMarkAsDeleted(selectedEntries);
 
         Toast.makeText(getActivity(), selectedEntries.size() + " entries deleted.", Toast.LENGTH_SHORT).show();
         adapter.exitSelectMode();
