@@ -1,11 +1,7 @@
 package org.theronin.expensetracker.model;
 
-import android.content.ContentValues;
-
 import com.parse.ParseObject;
 
-import org.theronin.expensetracker.data.Contract.EntryTable;
-import org.theronin.expensetracker.data.Contract.EntryView;
 import org.theronin.expensetracker.data.sync.SyncState;
 import org.theronin.expensetracker.utils.DateUtils;
 
@@ -80,28 +76,6 @@ public class Entry extends Entity{
         );
 
         return new Entry(globalId, syncState, utcDate, amount, category, currency);
-    }
-
-    @Override
-    public ContentValues toValues() {
-        ContentValues values = new ContentValues();
-
-        if (id > -1) {
-            values.put(EntryTable._ID, id);
-        }
-
-        values.put(EntryTable.COL_GLOBAL_ID, globalId);
-        values.put(EntryTable.COL_SYNC_STATUS, syncState.name());
-
-        values.put(EntryTable.COL_DATE, utcDate);
-        values.put(EntryTable.COL_AMOUNT, amount);
-
-        values.put(EntryTable.COL_CATEGORY_ID, category.id);
-        values.put(EntryView.COL_CATEGORY_NAME, category.name);
-
-        values.put(EntryTable.COL_CURRENCY_ID, currency.id);
-        values.put(EntryView.COL_CURRENCY_CODE, currency.code);
-        return values;
     }
 
     @Override

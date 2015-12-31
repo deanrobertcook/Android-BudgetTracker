@@ -3,6 +3,7 @@ package org.theronin.expensetracker.data.source;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
@@ -192,6 +193,8 @@ public abstract class AbsDataSource<T extends Entity> {
     public long count(String selection, String[] selectionArgs) {
         return DatabaseUtils.queryNumEntries(dbHelper.getReadableDatabase(), getTableName(), selection, selectionArgs);
     }
+
+    protected abstract ContentValues getContentValues(T entity);
 
     protected abstract String getTableName();
 

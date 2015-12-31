@@ -12,6 +12,8 @@ import org.theronin.expensetracker.model.ExchangeRate;
 import java.util.Collection;
 import java.util.List;
 
+import static android.provider.BaseColumns._ID;
+
 public class DataSourceExchangeRate extends AbsDataSource<ExchangeRate> {
 
     public DataSourceExchangeRate(Context context, DbHelper dbHelper) {
@@ -47,12 +49,25 @@ public class DataSourceExchangeRate extends AbsDataSource<ExchangeRate> {
     @Override
     protected long insertOperation(SQLiteDatabase db, ExchangeRate exchangeRate) {
         //TODO check that the rates for the given days are not already in the database
-        ContentValues values = exchangeRate.toValues();
+        ContentValues values = getContentValues(exchangeRate);
         return db.insert(
                 ExchangeRateTable.TABLE_NAME,
                 null,
                 values
         );
+    }
+
+    @Override
+    public ContentValues getContentValues(ExchangeRate exchangeRate) {
+        ContentValues values = new ContentValues();
+        if (exchangeRate.getId() > -1) {
+            values.put(_ID, exchangeRate.getId());
+        }
+        values.put(ExchangeRateTable.COL_CURRENCY_CODE, exchangeRate.currencyCode);
+        values.put(ExchangeRateTable.COL_DATE, exchangeRate.utcDate);
+        values.put(ExchangeRateTable.COL_USD_RATE, exchangeRate.usdRate);
+        values.put(ExchangeRateTable.COL_LAST_DOWNLOAD_ATTEMPT, exchangeRate.utcLastUpdated);
+        return values;
     }
 
     @Override

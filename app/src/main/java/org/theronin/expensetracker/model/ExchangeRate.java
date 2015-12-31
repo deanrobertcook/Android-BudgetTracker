@@ -1,11 +1,6 @@
 package org.theronin.expensetracker.model;
 
-import android.content.ContentValues;
-
-import org.theronin.expensetracker.data.Contract.ExchangeRateTable;
 import org.theronin.expensetracker.utils.DateUtils;
-
-import static android.provider.BaseColumns._ID;
 
 public class ExchangeRate extends Entity {
     public final String currencyCode;
@@ -35,18 +30,5 @@ public class ExchangeRate extends Entity {
                 "ExchangeRate %s: %f on %s",
                 currencyCode, usdRate, DateUtils.getStorageFormattedDate(utcDate)
         );
-    }
-
-    @Override
-    public ContentValues toValues() {
-        ContentValues values = new ContentValues();
-        if (id > -1) {
-            values.put(_ID, id);
-        }
-        values.put(ExchangeRateTable.COL_CURRENCY_CODE, currencyCode);
-        values.put(ExchangeRateTable.COL_DATE, utcDate);
-        values.put(ExchangeRateTable.COL_USD_RATE, usdRate);
-        values.put(ExchangeRateTable.COL_LAST_DOWNLOAD_ATTEMPT, utcLastUpdated);
-        return values;
     }
 }

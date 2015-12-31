@@ -81,15 +81,14 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
 
     @Override
     protected long insertOperation(SQLiteDatabase db, Entry entry) {
-        //TODO consider moving the toValues method to this class now
-        ContentValues values = entry.toValues();
+        ContentValues values = getContentValues(entry);
         checkEntryValues(values);
         return db.insert(EntryTable.TABLE_NAME, null, values);
     }
 
     @Override
     protected int updateOperation(SQLiteDatabase db, Entry entry) {
-        ContentValues values = entry.toValues();
+        ContentValues values = getContentValues(entry);
         checkEntryValues(values);
         return db.update(EntryTable.TABLE_NAME, values,
                 EntryTable._ID + " = ?",
@@ -133,5 +132,27 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
             entry.setSyncState(SyncState.MARKED_AS_DELETED);
         }
         return bulkUpdate(entries);
+    }
+
+    @Override
+    protected ContentValues getContentValues(Entry entry) {
+        ContentValues values = new ContentValues();
+
+        if (entry.getId() > -1) {
+            values.put(EntryTable._ID, entry.getId());
+        }
+
+        values.put(EntryTable.COL_GLOBAL_ID, entry.getGlobalId());
+        values.put(EntryTable.COL_SYNC_STATUS, entry.getSyncState().name());
+
+        values.put(EntryTable.COL_DATE, entry.utcDate);
+        values.put(EntryTable.COL_AMOUNT, entry.amount);
+
+        values.put(EntryTable.COL_CATEGORY_ID, entry.category.getId());
+        values.put(EntryView.COL_CATEGORY_NAME, entry.category.name);
+
+        values.put(EntryTable.COL_CURRENCY_ID, entry.currency.getId());
+        values.put(EntryView.COL_CURRENCY_CODE, entry.currency.code);
+        return values;
     }
 }

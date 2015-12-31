@@ -14,6 +14,7 @@ import java.util.List;
 
 import static org.theronin.expensetracker.data.Contract.CategoryTable.COL_NAME;
 import static org.theronin.expensetracker.data.Contract.CategoryTable.TABLE_NAME;
+import static org.theronin.expensetracker.data.Contract.CategoryView.COL_CATEGORY_NAME;
 import static org.theronin.expensetracker.data.Contract.CategoryView.INDEX_CATEGORY_NAME;
 import static org.theronin.expensetracker.data.Contract.CategoryView.INDEX_ENTRY_FREQUENCY;
 import static org.theronin.expensetracker.data.Contract.CategoryView.INDEX_FIRST_ENTRY_DATE;
@@ -66,8 +67,15 @@ public class DataSourceCategory extends AbsDataSource<Category> {
 
     @Override
     protected long insertOperation(SQLiteDatabase db, Category category) {
-        ContentValues values = category.toValues();
+        ContentValues values = getContentValues(category);
         return db.insert(TABLE_NAME, null, values);
+    }
+
+    @Override
+    protected ContentValues getContentValues(Category category) {
+        ContentValues values = new ContentValues();
+        values.put(COL_CATEGORY_NAME, category.name);
+        return values;
     }
 
     @Override

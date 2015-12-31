@@ -1,5 +1,6 @@
 package org.theronin.expensetracker.data.source;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -43,6 +44,11 @@ public class DataSourceCurrency extends AbsDataSource<Currency> {
     @Override
     protected int updateOperation(SQLiteDatabase db, Currency entity) {
         throw new NotImplementedException("Cannot update Currencies table");
+    }
+
+    @Override
+    protected ContentValues getContentValues(Currency entity) {
+        throw new NotImplementedException("Currency objects are never saved");
     }
 
     @Override

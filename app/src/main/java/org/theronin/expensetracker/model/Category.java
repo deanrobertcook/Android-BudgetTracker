@@ -1,10 +1,6 @@
 package org.theronin.expensetracker.model;
 
-import android.content.ContentValues;
-
 import org.theronin.expensetracker.utils.DateUtils;
-
-import static org.theronin.expensetracker.data.Contract.CategoryView.COL_CATEGORY_NAME;
 
 public class Category extends Entity {
     public final String name;
@@ -36,13 +32,6 @@ public class Category extends Entity {
         this.name = name;
         this.utcFirstEntryDate = utcFirstEntryDate;
         this.frequency = frequency;
-    }
-
-    @Override
-    public ContentValues toValues() {
-        ContentValues values = new ContentValues();
-        values.put(COL_CATEGORY_NAME, name);
-        return values;
     }
 
     @Override

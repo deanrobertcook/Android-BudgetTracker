@@ -1,9 +1,5 @@
 package org.theronin.expensetracker.model;
 
-import android.content.ContentValues;
-
-import org.apache.commons.lang.NotImplementedException;
-
 public class Currency extends Entity {
 
     public final String code;
@@ -34,10 +30,5 @@ public class Currency extends Entity {
         this.code = code;
         this.symbol = symbol;
         this.name = name;
-    }
-
-    @Override
-    public ContentValues toValues() {
-        throw new NotImplementedException("Currently no need to convert Currency into ContentValues");
     }
 }
