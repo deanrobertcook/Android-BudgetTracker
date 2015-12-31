@@ -2,9 +2,6 @@ package org.theronin.expensetracker.model;
 
 import android.content.ContentValues;
 
-import com.parse.ParseObject;
-
-import org.apache.commons.lang.NotImplementedException;
 import org.theronin.expensetracker.data.Contract.ExchangeRateTable;
 import org.theronin.expensetracker.utils.DateUtils;
 
@@ -51,10 +48,5 @@ public class ExchangeRate extends Entity {
         values.put(ExchangeRateTable.COL_USD_RATE, usdRate);
         values.put(ExchangeRateTable.COL_LAST_DOWNLOAD_ATTEMPT, utcLastUpdated);
         return values;
-    }
-
-    @Override
-    public ParseObject toParseObject() {
-        throw new NotImplementedException();
     }
 }

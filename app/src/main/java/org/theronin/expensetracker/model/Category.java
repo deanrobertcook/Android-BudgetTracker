@@ -2,9 +2,6 @@ package org.theronin.expensetracker.model;
 
 import android.content.ContentValues;
 
-import com.parse.ParseObject;
-
-import org.apache.commons.lang.NotImplementedException;
 import org.theronin.expensetracker.utils.DateUtils;
 
 import static org.theronin.expensetracker.data.Contract.CategoryView.COL_CATEGORY_NAME;
@@ -87,10 +84,5 @@ public class Category extends Entity {
 
     public void setMissingEntries(int missingEntries) {
         this.missingEntries = missingEntries;
-    }
-
-    @Override
-    public ParseObject toParseObject() {
-        throw new NotImplementedException();
     }
 }

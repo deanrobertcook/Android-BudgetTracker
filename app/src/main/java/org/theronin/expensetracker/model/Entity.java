@@ -2,8 +2,6 @@ package org.theronin.expensetracker.model;
 
 import android.content.ContentValues;
 
-import com.parse.ParseObject;
-
 import org.theronin.expensetracker.data.sync.SyncState;
 
 public abstract class Entity {
@@ -42,6 +40,4 @@ public abstract class Entity {
     }
 
     public abstract ContentValues toValues();
-
-    public abstract ParseObject toParseObject();
 }

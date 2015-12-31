@@ -83,21 +83,6 @@ public class Entry extends Entity{
     }
 
     @Override
-    public ParseObject toParseObject() {
-        ParseObject object;
-        if (hasGlobalId()) {
-            object = ParseObject.createWithoutData(EntryView.VIEW_NAME, globalId);
-        } else {
-            object = new ParseObject(EntryView.VIEW_NAME);
-        }
-        object.put("amount", this.amount);
-        object.put("category", this.category.name);
-        object.put("currency", this.currency.code);
-        object.put("date", this.utcDate);
-        return object;
-    }
-
-    @Override
     public ContentValues toValues() {
         ContentValues values = new ContentValues();
 
