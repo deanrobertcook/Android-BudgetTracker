@@ -6,6 +6,26 @@ Parse.Cloud.beforeSave("Entry", function(request, response) {
   response.success();
 });
 
+Parse.Cloud.define("sendChangePush", function(request, response) {
+    console.log(request);
+    Parse.Push.send({
+      channels: [ request.user.id ],
+      data: {
+        alert: "deviceShouldUpdate",
+        installationId: request.params.installationId
+      }
+    }, {
+      success: function() {
+        response.success();
+        // Push was successful
+      },
+      error: function(error) {
+        response.error();
+        // Handle error
+      }
+    });
+});
+
 //Request expects a currency code and a comma separated list of dates of the form YYYY-MM-DD
 Parse.Cloud.define("exchangeRate", function(request, response) {
     var ExchangeRate = Parse.Object.extend("ExchangeRate");

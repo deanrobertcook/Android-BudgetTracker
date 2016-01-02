@@ -1,19 +1,15 @@
 package org.theronin.expensetracker.data.source;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
 
-import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.sync.SyncState;
 import org.theronin.expensetracker.model.Entity;
+import org.theronin.expensetracker.utils.SyncUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,8 +20,6 @@ import java.util.Set;
 import timber.log.Timber;
 
 public abstract class AbsDataSource<T extends Entity> {
-
-    public static final String ACCOUNT = "dummyaccount";
 
     protected Context context;
     private DbHelper dbHelper;
@@ -64,31 +58,8 @@ public abstract class AbsDataSource<T extends Entity> {
         for (Observer observer : observers) {
             observer.onDataSourceChanged();
         }
-        requestSync();
+        SyncUtils.requestSync(context);
         Timber.d(this.getClass().toString() + " data set as invalid");
-    }
-
-    public void requestSync() {
-        Bundle extras = new Bundle();
-        ContentResolver.requestSync(createSyncAccount(), getContentAuthority(), extras);
-    }
-
-    private Account createSyncAccount() {
-        Account account = new Account(ACCOUNT, getAccountType());
-        AccountManager accountManager = AccountManager.get(context);
-
-        ContentResolver.setSyncAutomatically(account, getContentAuthority(), true);
-        accountManager.addAccountExplicitly(account, null, null);
-
-        return account;
-    }
-
-    private String getAccountType() {
-        return context.getString(R.string.sync_account_type);
-    }
-
-    private String getContentAuthority() {
-        return context.getString(R.string.content_authority);
     }
 
     /**

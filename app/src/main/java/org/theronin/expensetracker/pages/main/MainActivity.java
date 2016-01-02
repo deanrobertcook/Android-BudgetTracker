@@ -31,6 +31,7 @@ import org.theronin.expensetracker.pages.entries.EntryListFragment;
 import org.theronin.expensetracker.pages.launch.LaunchActivity;
 import org.theronin.expensetracker.pages.settings.SettingsActivity;
 import org.theronin.expensetracker.task.FileBackupAgent;
+import org.theronin.expensetracker.utils.SyncUtils;
 
 import java.util.List;
 
@@ -79,7 +80,7 @@ public class MainActivity extends InjectedActivity implements
             finish();
             return;
         }
-        entryDataSource.requestSync();
+        SyncUtils.requestSync(this);
     }
 
     private MainPage findCurrentPage(Bundle savedInstanceState) {

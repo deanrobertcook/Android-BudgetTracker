@@ -61,6 +61,11 @@ public abstract class RemoteSync {
     protected abstract void bulkDeleteOperation(List<? extends Entity> entities) throws Exception;
 
     public void findEntries(long lastSync, PullResult callback) {
+
+        if (lastSync == -1) {
+            registerForPush();
+        }
+
         try {
             List<Entry> entries = findOperation(lastSync);
             List<Entry> toAdd = new ArrayList<>();
@@ -80,6 +85,7 @@ public abstract class RemoteSync {
         }
     }
 
+    protected abstract void registerForPush();
     protected abstract List<Entry> findOperation(long lastSync) throws Exception;
 
 }

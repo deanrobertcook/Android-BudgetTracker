@@ -1,7 +1,12 @@
 package org.theronin.expensetracker.data.sync;
 
+import com.parse.ParseCloud;
+import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
@@ -14,6 +19,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import timber.log.Timber;
 
 public class ParseRemoteSync extends RemoteSync {
 
@@ -28,18 +35,35 @@ public class ParseRemoteSync extends RemoteSync {
     private static final String ENTRY_CLASS_COL_DATE = "date";
     private static final String ENTRY_CLASS_COL_IS_DELETED = "isDeleted";
 
-
+    /**
+     * These constants correspond to the function name and keys for triggering push notifications
+     */
+    public static final String FUNCTION_SEND_CHANGE_PUSH = "sendChangePush";
+    public static final String PARSE_DATA_INSTALLATION_ID_KEY = "installationId";
 
     /**
      * Used to map Entities to their created parse objects so we can later retrieve the globalId
      * for each recently uploaded Entity in getObjectId()
      */
-    Map<Entity, ParseObject> currentSyncMap;
+    private Map<Entity, ParseObject> currentSyncMap;;
 
     @Override
     protected void bulkAddOperation(List<? extends Entity> entities) throws Exception {
+        Timber.v("bulkAddOperation");
         currentSyncMap = createEntityToParseObjectMap(entities);
-        ParseObject.saveAll(new ArrayList<>(currentSyncMap.values()));
+        try {
+            ParseObject.saveAll(new ArrayList<>(currentSyncMap.values()));
+            callPushToOtherDevices();
+        } catch (ParseException e) {
+            throw e;
+        }
+    }
+
+    private void callPushToOtherDevices() {
+        Timber.v("callPushToOTheDevices");
+        Map<String, Object> params = new HashMap<>();
+        params.put(PARSE_DATA_INSTALLATION_ID_KEY, ParseInstallation.getCurrentInstallation().getInstallationId());
+        ParseCloud.callFunctionInBackground(FUNCTION_SEND_CHANGE_PUSH, params);
     }
 
     @Override
@@ -49,8 +73,14 @@ public class ParseRemoteSync extends RemoteSync {
 
     @Override
     protected void bulkDeleteOperation(List<? extends Entity> entities) throws Exception {
-        //Since I am using a soft-delete, I actually just want to update the objects
-        ParseObject.saveAll(createParseObjectsFromEntities(entities));
+        Timber.v("bulkDeleteOperation");
+        try {
+            //Since I am using a soft-delete, I actually just want to update the objects
+            ParseObject.saveAll(createParseObjectsFromEntities(entities));
+            callPushToOtherDevices();
+        } catch (ParseException e) {
+            throw e;
+        }
     }
 
     private List<ParseObject> createParseObjectsFromEntities(List<? extends Entity> entities) {
@@ -93,6 +123,11 @@ public class ParseRemoteSync extends RemoteSync {
             object.put(ENTRY_CLASS_COL_IS_DELETED, true);
         }
         return object;
+    }
+
+    @Override
+    protected void registerForPush() {
+        ParsePush.subscribeInBackground(ParseUser.getCurrentUser().getObjectId());
     }
 
     @Override
