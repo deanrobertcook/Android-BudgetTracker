@@ -80,13 +80,9 @@ public class Entry extends Entity{
 
     @Override
     public String toString() {
-        return String.format(
-                "Entry: %s,  date: %s, category: %s, amount: %d, currency: %s",
-                globalId,
-                DateUtils.getStorageFormattedDate(utcDate),
-                category.name,
-                amount,
-                currency.code
+        return super.toString() + String.format(
+                "date: %s, category: %s, amount: %d, currency: %s",
+                DateUtils.getStorageFormattedDate(utcDate), category.name, amount, currency.code
         );
     }
 

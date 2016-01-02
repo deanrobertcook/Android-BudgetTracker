@@ -31,4 +31,12 @@ public class Currency extends Entity {
         this.symbol = symbol;
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + String.format(
+                "code: %s, symbol: %s, name: %s",
+                code, symbol, name
+        );
+    }
 }

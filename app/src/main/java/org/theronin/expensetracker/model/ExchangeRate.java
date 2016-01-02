@@ -26,8 +26,8 @@ public class ExchangeRate extends Entity {
 
     @Override
     public String toString() {
-        return String.format(
-                "ExchangeRate %s: %f on %s",
+        return super.toString() + String.format(
+                "currency: %s, usdRate: %f, date: %s",
                 currencyCode, usdRate, DateUtils.getStorageFormattedDate(utcDate)
         );
     }

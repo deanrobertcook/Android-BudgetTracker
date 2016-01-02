@@ -36,4 +36,10 @@ public abstract class Entity {
     public void setSyncState(SyncState syncState) {
         this.syncState = syncState;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s: id: %d, globalId: %s, syncState: %s, ",
+                getClass().getSimpleName(), id, globalId, syncState);
+    }
 }

@@ -36,12 +36,9 @@ public class Category extends Entity {
 
     @Override
     public String toString() {
-        return String.format(
-                "Category %s\n" +
-                        "\t id: %d\n" +
-                        "\t first entered: %s\n" +
-                        "\t entry frequency: %d\n",
-                name, id, utcFirstEntryDate, frequency
+        return super.toString() + String.format(
+                "name: %s, first entered: %s, entry frequency: %d",
+                name, utcFirstEntryDate, frequency
         );
     }
 
