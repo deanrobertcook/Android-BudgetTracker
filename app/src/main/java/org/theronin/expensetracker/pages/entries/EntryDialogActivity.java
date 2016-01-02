@@ -231,7 +231,7 @@ public class EntryDialogActivity extends InjectedActivity
                 new Currency(currencyCodeTextView.getText().toString())
         );
 
-        long id = entryDataSource.insert(entry);
+        long id = entryDataSource.insert(entry).getId();
 
         if (id == -1) {
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();

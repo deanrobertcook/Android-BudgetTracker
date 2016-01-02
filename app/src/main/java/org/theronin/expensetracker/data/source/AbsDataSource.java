@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
@@ -27,7 +28,7 @@ public abstract class AbsDataSource<T extends Entity> {
     public static final String ACCOUNT = "dummyaccount";
 
     protected Context context;
-    protected DbHelper dbHelper;
+    private DbHelper dbHelper;
 
     private Set<Observer> observers;
 
@@ -90,31 +91,53 @@ public abstract class AbsDataSource<T extends Entity> {
         return context.getString(R.string.content_authority);
     }
 
-    public long insert(T entity) {
+    /**
+     * Insert a single Entity into the local database. If the insertion is successful, then the newly
+     * created ID is assigned to the entity and that same entity is returned, and also any observers
+     * on this DataSource are notified. If the transaction is not successful, then nothing happens
+     * (including not observing notification)
+     * @param entity the newly created entity to insert into the database.
+     * @return the same entity with it's new local DB ID if it was inserted successfully.
+     */
+    public T insert(T entity) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        long entityId = insertOperation(db, entity);
-        setDataInValid();
-        return entityId;
+        try {
+            entity.setId(insertOperation(db, entity));
+            setDataInValid();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return entity;
     }
 
     protected abstract long insertOperation(SQLiteDatabase db, T entity);
 
-    public int bulkInsert(Collection<T> entities) {
+    /**
+     * Insert a collection of entities into the local database. For every entity that is successfully
+     * inserted, the newly created id is assigned to that entity and any observers to this DataSource
+     * are notified. If one insertion fails, the entire transaction is rolled back and nothing happens
+     * (including observer notification).
+     * @param entities The collection of entities to insert into the database
+     * @return the same collection of entities, but with local IDs set if all entities were inserted
+     * successfully
+     */
+    public Collection<T> bulkInsert(Collection<T> entities) {
         if (entities.size() == 0) {
-            return 0;
+            return new ArrayList<>();
         }
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
-            for (T entry : entities) {
-                insertOperation(db, entry);
+            for (T entity : entities) {
+                entity.setId(insertOperation(db, entity));
             }
             db.setTransactionSuccessful();
             setDataInValid();
         } finally {
             db.endTransaction();
         }
-        return entities.size();
+
+        return entities;
     }
 
     public boolean delete(T entity) {

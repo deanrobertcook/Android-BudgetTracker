@@ -51,7 +51,7 @@ public class DataSourceCategory extends AbsDataSource<Category> {
         long id = super.getId(category);
 
         if (id == -1) {
-            return insert(category);
+            return insert(category).getId();
         }
         return id;
     }
@@ -68,7 +68,7 @@ public class DataSourceCategory extends AbsDataSource<Category> {
     @Override
     protected long insertOperation(SQLiteDatabase db, Category category) {
         ContentValues values = getContentValues(category);
-        return db.insert(TABLE_NAME, null, values);
+        return db.insertOrThrow(TABLE_NAME, null, values);
     }
 
     @Override

@@ -303,7 +303,7 @@ public class MainActivity extends InjectedActivity implements
     @Override
     public void onCategoryCreated(String categoryName) {
         if (categoryName != null && categoryName.length() > 0) {
-            long id = categoryDataSource.insert(new Category(sanitiseCategoryName(categoryName)));
+            long id = categoryDataSource.insert(new Category(sanitiseCategoryName(categoryName))).getId();
             if (id == -1) {
                 Toast.makeText(this, R.string.duplicate_category_error, Toast.LENGTH_SHORT).show();
             } else {

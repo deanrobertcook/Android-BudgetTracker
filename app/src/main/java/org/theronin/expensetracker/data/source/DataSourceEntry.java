@@ -83,7 +83,7 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
     protected long insertOperation(SQLiteDatabase db, Entry entry) {
         ContentValues values = getContentValues(entry);
         checkEntryValues(values);
-        return db.insert(EntryTable.TABLE_NAME, null, values);
+        return db.insertOrThrow(EntryTable.TABLE_NAME, null, values);
     }
 
     @Override
