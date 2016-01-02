@@ -1,13 +1,17 @@
 package org.theronin.expensetracker.data.sync;
 
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import org.theronin.expensetracker.data.Contract;
+import org.theronin.expensetracker.model.Category;
+import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entity;
 import org.theronin.expensetracker.model.Entry;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,5 +81,40 @@ public class ParseRemoteSync extends RemoteSync {
             object.put("isDeleted", true);
         }
         return object;
+    }
+
+    @Override
+    protected List<Entry> findOperation(long lastSync) throws Exception {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("entry");
+        query.setLimit(1000);
+        if (lastSync == -1) { //first sync for device
+            query.whereEqualTo("isDeleted", false);
+        } else {
+            Date date = new Date(lastSync);
+            query.whereGreaterThan("updatedAt", date);
+        }
+        List<ParseObject> objects = query.find();
+        List<Entry> entries = new ArrayList<>();
+        for (ParseObject object : objects) {
+            entries.add(createEntryFromParseObject(object));
+        }
+        return entries;
+    }
+
+    public Entry createEntryFromParseObject(ParseObject object) {
+        String globalId = object.getObjectId();
+        SyncState syncState = object.getBoolean("isDeleted") ? SyncState.DELETE_SYNCED : SyncState.SYNCED;
+        long utcDate = object.getLong("date");
+        long amount = object.getLong("amount");
+
+        Category category = new Category(
+                object.getString("category")
+        );
+
+        Currency currency = new Currency(
+                object.getString("currency")
+        );
+
+        return new Entry(globalId, syncState, utcDate, amount, category, currency);
     }
 }

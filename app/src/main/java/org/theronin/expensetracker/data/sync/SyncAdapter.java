@@ -9,17 +9,10 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-
 import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Entry;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -75,49 +68,31 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private void pullEntries() {
         final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-        boolean firstSync = pref.getBoolean("FIRST_SYNC", true);
-        long lastChecked = pref.getLong("SYNC_CHECK", -1);
+        long lastSync = pref.getLong("SYNC_CHECK", -1);
+        final long syncTime = System.currentTimeMillis();
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("entry");
-        query.setLimit(1000);
-
-        if (firstSync) {
-            query.whereEqualTo("isDeleted", false);
-        }
-
-        if (lastChecked > -1) {
-            Date date = new Date(lastChecked);
-            query.whereGreaterThan("updatedAt", date);
-        }
-        final long requestTime = System.currentTimeMillis();
-        query.findInBackground(new FindCallback<ParseObject>() {
+        RemoteSync.PullResult callback = new RemoteSync.PullResult() {
             @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                if (e == null) {
-                    List<Entry> toInsert = new ArrayList<>();
-                    List<Entry> toDelete = new ArrayList<>();
-                    for (ParseObject object : objects) {
-                        Entry entry = Entry.fromParseObject(object);
-                        if (entry.getSyncState() == SyncState.DELETE_SYNCED) {
-                            Timber.i("Deleting " + entry);
-                            toDelete.add(entry);
-                        } else {
-                            toInsert.add(entry);
-                            Timber.i("Adding " + entry);
-                        }
-                    }
-                    entryDataSource.bulkInsert(toInsert);
-                    entryDataSource.bulkDelete(toDelete);
-
-                    pref.edit()
-                            .putLong("SYNC_CHECK", requestTime)
-                            .putBoolean("FIRST_SYNC", false)
-                            .apply();
-                } else {
-                    Timber.d("Something went wrong fetching entries");
-                    e.printStackTrace();
-                }
+            public void addEntries(List<Entry> entries) {
+                entryDataSource.bulkInsert(entries);
             }
-        });
+
+            @Override
+            public void deleteEntries(List<Entry> entries) {
+                entryDataSource.bulkDelete(entries);
+            }
+
+            @Override
+            public void onComplete() {
+                pref.edit().putLong("SYNC_CHECK", syncTime).apply();
+            }
+
+            @Override
+            public void onFail(Exception e) {
+                Timber.i("Pull failed");
+                e.printStackTrace();
+            }
+        };
+        remoteSync.findEntries(lastSync, callback);
     }
 }

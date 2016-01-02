@@ -1,7 +1,9 @@
 package org.theronin.expensetracker.data.sync;
 
 import org.theronin.expensetracker.model.Entity;
+import org.theronin.expensetracker.model.Entry;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,12 +15,19 @@ import java.util.List;
  */
 public abstract class RemoteSync {
 
-    interface Callback {
+    interface PushResult {
         void onSuccess();
         void onFail(Exception e);
     }
 
-    public void saveEntities(List<? extends Entity> entities, Callback callback) {
+    interface PullResult {
+        void addEntries(List<Entry> entries);
+        void deleteEntries(List<Entry> entries);
+        void onComplete();
+        void onFail(Exception e);
+    }
+
+    public void saveEntities(List<? extends Entity> entities, PushResult callback) {
         try {
             bulkAddOperation(entities);
             for (Entity entity : entities) {
@@ -37,7 +46,7 @@ public abstract class RemoteSync {
 
     protected abstract String getObjectId(Entity entity);
 
-    public void deleteEntities(List<? extends Entity> entities, Callback callback) {
+    public void deleteEntities(List<? extends Entity> entities, PushResult callback) {
         try {
             bulkDeleteOperation(entities);
             for (Entity entity : entities) {
@@ -50,4 +59,27 @@ public abstract class RemoteSync {
     }
 
     protected abstract void bulkDeleteOperation(List<? extends Entity> entities) throws Exception;
+
+    public void findEntries(long lastSync, PullResult callback) {
+        try {
+            List<Entry> entries = findOperation(lastSync);
+            List<Entry> toAdd = new ArrayList<>();
+            List<Entry> toDelete = new ArrayList<>();
+            for (Entry entry : entries) {
+                if (entry.getSyncState() == SyncState.SYNCED) {
+                    toAdd.add(entry);
+                } else if (entry.getSyncState() == SyncState.DELETE_SYNCED) {
+                    toDelete.add(entry);
+                }
+            }
+            callback.addEntries(toAdd);
+            callback.deleteEntries(toDelete);
+            callback.onComplete();
+        } catch (Exception e) {
+            callback.onFail(e);
+        }
+    }
+
+    protected abstract List<Entry> findOperation(long lastSync) throws Exception;
+
 }

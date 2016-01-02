@@ -1,7 +1,5 @@
 package org.theronin.expensetracker.model;
 
-import com.parse.ParseObject;
-
 import org.theronin.expensetracker.data.sync.SyncState;
 import org.theronin.expensetracker.utils.DateUtils;
 
@@ -59,23 +57,6 @@ public class Entry extends Entity{
         this.amount = amount;
         this.category = category;
         this.currency = currency;
-    }
-
-    public static Entry fromParseObject(ParseObject object) {
-        String globalId = object.getObjectId();
-        SyncState syncState = object.getBoolean("isDeleted") ? SyncState.DELETE_SYNCED : SyncState.SYNCED;
-        long utcDate = object.getLong("date");
-        long amount = object.getLong("amount");
-
-        Category category = new Category(
-                object.getString("category")
-        );
-
-        Currency currency = new Currency(
-                object.getString("currency")
-        );
-
-        return new Entry(globalId, syncState, utcDate, amount, category, currency);
     }
 
     @Override

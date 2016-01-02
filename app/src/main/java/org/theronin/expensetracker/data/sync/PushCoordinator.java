@@ -57,7 +57,7 @@ public class PushCoordinator<T extends Entity> {
         if (entities.isEmpty()) {
             return;
         }
-        RemoteSync.Callback callback = new RemoteSync.Callback() {
+        RemoteSync.PushResult callback = new RemoteSync.PushResult() {
             @Override
             public void onSuccess() {
                 Timber.i("saveEntities() successful, " + entities.size() + " entities synced");
@@ -78,7 +78,7 @@ public class PushCoordinator<T extends Entity> {
         if (entities.isEmpty()) {
             return;
         }
-        RemoteSync.Callback callback = new RemoteSync.Callback() {
+        RemoteSync.PushResult callback = new RemoteSync.PushResult() {
             @Override
             public void onSuccess() {
                 Timber.i("deleteEntities successful. " + entities.size() + " objects deleted");
