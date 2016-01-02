@@ -24,11 +24,9 @@ public class EntrySaverTest {
 
     @Inject AbsDataSource<Entry> entryAbsDataSource;
 
-    protected TestApplication testApplication;
-
     @Before
     public void setup() {
-        testApplication = new TestApplication();
+        TestApplication testApplication = new TestApplication();
         testApplication.inject(this);
 
         long count = DatabaseUtils.queryNumEntries(testApplication.getDatabase(), EntryView.VIEW_NAME);
@@ -41,7 +39,7 @@ public class EntrySaverTest {
         List<Entry> entriesToAdd = Util.createEntries(numEntries, false, SyncState.NEW);
         entryAbsDataSource.bulkInsert(entriesToAdd);
 
-        RemoteSync alwaysPassSync = new TestRemoteSync(true);
+        RemoteSync alwaysPassSync = new FakeRemoteSync(true);
         EntrySaver entrySaver = new EntrySaver(entryAbsDataSource, alwaysPassSync);
         entrySaver.addEntitiesToRemote(entriesToAdd);
 
@@ -53,12 +51,12 @@ public class EntrySaverTest {
     }
 
     @Test
-    public void addEntriesDoesNothingWhenRemoteSyncPasses() {
-        final int numEntries = 10;
+    public void addEntriesDoesNothingWhenRemoteSyncFails() {
+        int numEntries = 10;
         List<Entry> entriesToAdd = Util.createEntries(numEntries, false, SyncState.NEW);
         entryAbsDataSource.bulkInsert(entriesToAdd);
 
-        RemoteSync alwaysFailSync = new TestRemoteSync(false);
+        RemoteSync alwaysFailSync = new FakeRemoteSync(false);
         EntrySaver entrySaver = new EntrySaver(entryAbsDataSource, alwaysFailSync);
         entrySaver.addEntitiesToRemote(entriesToAdd);
 

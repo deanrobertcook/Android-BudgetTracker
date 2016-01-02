@@ -26,17 +26,17 @@ public class EntrySaver implements EntitySaver<Entry> {
         RemoteSync.Callback callback = new RemoteSync.Callback() {
             @Override
             public void onSuccess() {
-                Timber.i("addEntitiesToRemote() successful, " + entries.size() + " entities synced");
+                Timber.i("saveEntities() successful, " + entries.size() + " entities synced");
                 entryAbsDataSource.bulkUpdate(entries);
             }
 
             @Override
             public void onFail(Exception e) {
-                Timber.i("addEntitiesToRemote() failed:");
+                Timber.i("saveEntities() failed:");
                 e.printStackTrace();
             }
         };
-        remoteSync.addEntitiesToRemote(entries, callback);
+        remoteSync.saveEntities(entries, callback);
     }
 
     @Override
@@ -52,16 +52,16 @@ public class EntrySaver implements EntitySaver<Entry> {
         RemoteSync.Callback callback = new RemoteSync.Callback() {
             @Override
             public void onSuccess() {
-                Timber.i("deleteEntitiesFromRemote successful. " + entries.size() + " objects deleted");
+                Timber.i("deleteEntities successful. " + entries.size() + " objects deleted");
                 entryAbsDataSource.bulkDelete(entries);
             }
 
             @Override
             public void onFail(Exception e) {
-                Timber.i("deleteEntitiesFromRemote failed");
+                Timber.i("deleteEntities failed");
             }
         };
-        remoteSync.deleteEntitiesFromRemote(entries, callback);
+        remoteSync.deleteEntities(entries, callback);
     }
 
     @Override

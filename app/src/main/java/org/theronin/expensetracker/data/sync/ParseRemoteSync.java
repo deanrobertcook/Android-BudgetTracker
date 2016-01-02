@@ -1,6 +1,5 @@
 package org.theronin.expensetracker.data.sync;
 
-import com.parse.ParseException;
 import com.parse.ParseObject;
 
 import org.theronin.expensetracker.data.Contract;
@@ -10,44 +9,42 @@ import org.theronin.expensetracker.model.Entry;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class ParseRemoteSync implements RemoteSync {
+public class ParseRemoteSync extends RemoteSync {
+
+    /**
+     * Used to map Entities to their created parse objects so we can later retrieve the globalId
+     * for each recently uploaded Entity in getObjectId()
+     */
+    Map<Entity, ParseObject> currentSyncMap;
+
     @Override
-    public void addEntitiesToRemote(Collection<? extends Entity> entities, Callback callback) {
-        Map<Entity, ParseObject> toSync = createObjectMap(entities);
-        try {
-            ParseObject.saveAll(new ArrayList<>(toSync.values()));
-            for (Entity entity : entities) {
-                entity.setGlobalId(toSync.get(entity).getObjectId());
-                entity.setSyncState(SyncState.SYNCED);
-            }
-            callback.onSuccess();
-        } catch (ParseException e) {
-            callback.onFail(e);
+    protected void bulkAddOperation(List<? extends Entity> entities) throws Exception {
+        currentSyncMap = createEntityToParseObjectMap(entities);
+        ParseObject.saveAll(new ArrayList<>(currentSyncMap.values()));
+    }
+
+    @Override
+    protected String getObjectId(Entity entity) {
+        return currentSyncMap.get(entity).getObjectId();
+    }
+
+    @Override
+    protected void bulkDeleteOperation(List<? extends Entity> entities) throws Exception {
+        ParseObject.deleteAll(createParseObjectsFromEntities(entities));
+    }
+
+    private List<ParseObject> createParseObjectsFromEntities(List<? extends Entity> entities) {
+        List<ParseObject> objects = new ArrayList<>();
+        for (Entity entity : entities) {
+            objects.add(getParseObjectFrom(entity));
         }
+        return objects;
     }
 
-    @Override
-    public void updateEntitiesOnRemote(Collection<? extends Entity> entities, Callback callback) {
-        addEntitiesToRemote(entities, callback);
-    }
-
-    @Override
-    public void deleteEntitiesFromRemote(Collection<? extends Entity> entities, Callback callback) {
-        Map<Entity, ParseObject> toSync = createObjectMap(entities);
-        try {
-            ParseObject.deleteAll(new ArrayList<>(toSync.values()));
-            for (Entity entity : entities) {
-                entity.setSyncState(SyncState.DELETE_SYNCED);
-            }
-            callback.onSuccess();
-        } catch (ParseException e) {
-            callback.onFail(e);
-        }
-    }
-
-    private Map<Entity, ParseObject> createObjectMap(Collection<? extends Entity> entities) {
+    private Map<Entity, ParseObject> createEntityToParseObjectMap(Collection<? extends Entity> entities) {
         Map<Entity, ParseObject> toSync = new HashMap<>();
         for (Entity entity : entities) {
             toSync.put(entity, getParseObjectFrom(entity));
