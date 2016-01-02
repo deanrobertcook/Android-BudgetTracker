@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.theronin.expensetracker.data.TestApplication;
+import org.theronin.expensetracker.data.Util;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
@@ -23,7 +24,7 @@ import static junit.framework.Assert.assertEquals;
 @RunWith(AndroidJUnit4.class)
 public class EntityPushCoordinatorTest {
 
-    private static final long DEFAULT_LATCH_WAIT = 2000;
+
     @Inject AbsDataSource<Entry> entryAbsDataSource;
 
     @Before
@@ -68,7 +69,7 @@ public class EntityPushCoordinatorTest {
         EntityPushCoordinator entityPushCoordinator = new EntityPushCoordinator(fakeEntitySaver);
         entityPushCoordinator.syncEntries(allEntries);
         
-        lock.await(DEFAULT_LATCH_WAIT, TimeUnit.MILLISECONDS);
+        lock.await(Util.DEFAULT_LATCH_WAIT, TimeUnit.MILLISECONDS);
         assertEquals("Not all callbacks were triggered", 0, lock.getCount());
     }
 
@@ -109,7 +110,7 @@ public class EntityPushCoordinatorTest {
         EntityPushCoordinator<Entry> pushCoordinator = new EntityPushCoordinator<>(fakeEntitySaver);
         pushCoordinator.syncEntries(Arrays.asList(locallyCreatedAndDeletedEntry));
 
-        lock.await(DEFAULT_LATCH_WAIT, TimeUnit.MILLISECONDS);
+        lock.await(Util.DEFAULT_LATCH_WAIT, TimeUnit.MILLISECONDS);
         assertEquals("The callback was not triggered", 0, lock.getCount());
 
     }

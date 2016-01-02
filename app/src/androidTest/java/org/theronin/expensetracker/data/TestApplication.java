@@ -1,6 +1,7 @@
 package org.theronin.expensetracker.data;
 
 import android.app.Instrumentation;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.test.InstrumentationRegistry;
 
 import org.theronin.expensetracker.dagger.InjectedComponent;
@@ -22,6 +23,10 @@ public class TestApplication implements InjectedComponent {
         graph = ObjectGraph.create(
                 new TestDataSourceModule(),
                 new AppModule(instrumentation.getTargetContext(), this, testDbHelper));
+    }
+
+    public SQLiteDatabase getDatabase() {
+        return testDbHelper.getWritableDatabase();
     }
 
     @Override
