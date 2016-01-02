@@ -1,4 +1,4 @@
-Parse.Cloud.beforeSave("entry", function(request, response) {
+Parse.Cloud.beforeSave("Entry", function(request, response) {
   if (!request.object.get("isDeleted")) {
     request.object.set("isDeleted", false);
   }

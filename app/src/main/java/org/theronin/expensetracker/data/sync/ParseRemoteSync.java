@@ -3,7 +3,6 @@ package org.theronin.expensetracker.data.sync;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import org.theronin.expensetracker.data.Contract;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entity;
@@ -17,6 +16,19 @@ import java.util.List;
 import java.util.Map;
 
 public class ParseRemoteSync extends RemoteSync {
+
+    /**
+     * These constants correspond the the names of classes and their columns in the Parse.com storage
+     */
+    private static final String PARSE_OBJECT_UPDATED_AT = "updatedAt";
+    private static final String ENTRY_CLASS_NAME = "Entry";
+    private static final String ENTRY_CLASS_COL_AMOUNT = "amount";
+    private static final String ENTRY_CLASS_COL_CATEGORY = "category";
+    private static final String ENTRY_CLASS_COL_CURRENCY = "currency";
+    private static final String ENTRY_CLASS_COL_DATE = "date";
+    private static final String ENTRY_CLASS_COL_IS_DELETED = "isDeleted";
+
+
 
     /**
      * Used to map Entities to their created parse objects so we can later retrieve the globalId
@@ -68,30 +80,30 @@ public class ParseRemoteSync extends RemoteSync {
     private ParseObject fromEntry(Entry entry) {
         ParseObject object;
         if (entry.hasGlobalId()) {
-            object = ParseObject.createWithoutData(Contract.EntryView.VIEW_NAME, entry.getGlobalId());
+            object = ParseObject.createWithoutData(ENTRY_CLASS_NAME, entry.getGlobalId());
         } else {
-            object = new ParseObject(Contract.EntryView.VIEW_NAME);
+            object = new ParseObject(ENTRY_CLASS_NAME);
         }
-        object.put("amount", entry.amount);
-        object.put("category", entry.category.name);
-        object.put("currency", entry.currency.code);
-        object.put("date", entry.utcDate);
+        object.put(ENTRY_CLASS_COL_AMOUNT, entry.amount);
+        object.put(ENTRY_CLASS_COL_CATEGORY, entry.category.name);
+        object.put(ENTRY_CLASS_COL_CURRENCY, entry.currency.code);
+        object.put(ENTRY_CLASS_COL_DATE, entry.utcDate);
 
         if (entry.getSyncState() == SyncState.MARKED_AS_DELETED) {
-            object.put("isDeleted", true);
+            object.put(ENTRY_CLASS_COL_IS_DELETED, true);
         }
         return object;
     }
 
     @Override
     protected List<Entry> findOperation(long lastSync) throws Exception {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("entry");
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(ENTRY_CLASS_NAME);
         query.setLimit(1000);
         if (lastSync == -1) { //first sync for device
-            query.whereEqualTo("isDeleted", false);
+            query.whereEqualTo(ENTRY_CLASS_COL_IS_DELETED, false);
         } else {
             Date date = new Date(lastSync);
-            query.whereGreaterThan("updatedAt", date);
+            query.whereGreaterThan(PARSE_OBJECT_UPDATED_AT, date);
         }
         List<ParseObject> objects = query.find();
         List<Entry> entries = new ArrayList<>();
@@ -103,16 +115,16 @@ public class ParseRemoteSync extends RemoteSync {
 
     public Entry createEntryFromParseObject(ParseObject object) {
         String globalId = object.getObjectId();
-        SyncState syncState = object.getBoolean("isDeleted") ? SyncState.DELETE_SYNCED : SyncState.SYNCED;
-        long utcDate = object.getLong("date");
-        long amount = object.getLong("amount");
+        SyncState syncState = object.getBoolean(ENTRY_CLASS_COL_IS_DELETED) ? SyncState.DELETE_SYNCED : SyncState.SYNCED;
+        long utcDate = object.getLong(ENTRY_CLASS_COL_DATE);
+        long amount = object.getLong(ENTRY_CLASS_COL_AMOUNT);
 
         Category category = new Category(
-                object.getString("category")
+                object.getString(ENTRY_CLASS_COL_CATEGORY)
         );
 
         Currency currency = new Currency(
-                object.getString("currency")
+                object.getString(ENTRY_CLASS_COL_CURRENCY)
         );
 
         return new Entry(globalId, syncState, utcDate, amount, category, currency);
