@@ -121,7 +121,7 @@ public abstract class AbsDataSource<T extends Entity> {
      * @return the same collection of entities, but with local IDs set if all entities were inserted
      * successfully
      */
-    public Collection<T> bulkInsert(Collection<T> entities) {
+    public List<T> bulkInsert(List<T> entities) {
         if (entities.size() == 0) {
             return new ArrayList<>();
         }
