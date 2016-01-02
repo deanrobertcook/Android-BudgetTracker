@@ -11,6 +11,7 @@ import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -56,9 +57,7 @@ public class AbsDataSourceTest {
     public void observersAreNotifiedOnDataDeletion() throws InterruptedException {
         final CountDownLatch callbackLatch = new CountDownLatch(1);
 
-        long insertedId = entryAbsDataSource.insert(new Entry(100L, 100L, new Category("Test"), new Currency("AUD")));
-        Entry insertedEntry = new Entry(insertedId, "xyz", SyncState.DELETE_SYNCED, 100L, 100L, new Category("Test"), new Currency("AUD"));
-
+        Entry insertedEntry = entryAbsDataSource.insert(new Entry(null, SyncState.DELETE_SYNCED, 100L, 100L, new Category("Test"), new Currency("AUD")));
         AbsDataSource.Observer observer = new AbsDataSource.Observer() {
             @Override
             public void onDataSourceChanged() {
@@ -71,5 +70,22 @@ public class AbsDataSourceTest {
 
         callbackLatch.await(DEFAULT_LATCH_WAIT, TimeUnit.MILLISECONDS);
         assertEquals("Observer was not notified", 0, callbackLatch.getCount());
+    }
+
+    @Test
+    public void testBulkUpdatesArePerformed() throws InterruptedException {
+        List<Entry> entries = Util.createEntries(10, true, SyncState.SYNCED);
+        entryAbsDataSource.bulkInsert(entries);
+
+        //perform some change on the entries
+        for (Entry entry : entries) {
+            entry.setSyncState(SyncState.UPDATED);
+        }
+        entryAbsDataSource.bulkUpdate(entries);
+
+        List<Entry> updatedEntries = entryAbsDataSource.query();
+        for (Entry entry : updatedEntries) {
+            assertEquals("The sync state should have been changed", SyncState.UPDATED, entry.getSyncState());
+        }
     }
 }
