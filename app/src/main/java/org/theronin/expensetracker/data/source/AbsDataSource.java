@@ -159,12 +159,26 @@ public abstract class AbsDataSource<T extends Entity> {
 
     protected abstract int deleteOperation(SQLiteDatabase sb, Collection<T> entities);
 
-    protected String createEntityIdsArgument(Collection<T> entities) {
+    protected String createEntityIdsInClause(Collection<T> entities) {
         StringBuilder sb = new StringBuilder();
         int i = 0;
         for (T entity : entities) {
             checkEntityDeleted(entity);
             sb.append(entity.getId());
+            if (i != entities.size() - 1) {
+                sb.append(", ");
+            }
+            i++;
+        }
+        return sb.toString();
+    }
+
+    protected String createEntityGlobalIdsInClause(Collection<T> entities) {
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        for (T entity : entities) {
+            checkEntityDeleted(entity);
+            sb.append(String.format("'%s'", entity.getGlobalId()));
             if (i != entities.size() - 1) {
                 sb.append(", ");
             }

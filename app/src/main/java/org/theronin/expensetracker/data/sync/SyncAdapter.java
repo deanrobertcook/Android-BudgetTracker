@@ -14,13 +14,12 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.dagger.InjectedComponent;
-import org.theronin.expensetracker.data.Contract.EntryView;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Entry;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -62,10 +61,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
 
         pushEntries();
+        pullEntries();
 
-        if (shouldFullSyncWithBackend()) {
-            fetchAllFromBackend();
-        }
     }
 
     private void pushEntries() {
@@ -75,44 +72,52 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         pushCoordinator.syncEntries(allEntries);
     }
 
-    private boolean shouldFullSyncWithBackend() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        return sharedPreferences.getBoolean(getContext().getString(R.string.pref_newly_created_database), false);
-    }
+    private void pullEntries() {
+        final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-    private void fetchAllFromBackend() {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(EntryView.VIEW_NAME);
+        boolean firstSync = pref.getBoolean("FIRST_SYNC", true);
+        long lastChecked = pref.getLong("SYNC_CHECK", -1);
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("entry");
         query.setLimit(1000);
+
+        if (firstSync) {
+            query.whereEqualTo("isDeleted", false);
+        }
+
+        if (lastChecked > -1) {
+            Date date = new Date(lastChecked);
+            query.whereGreaterThan("updatedAt", date);
+        }
+        final long requestTime = System.currentTimeMillis();
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(final List<ParseObject> objects, ParseException e) {
+            public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null) {
-                    Timber.d(objects.size() + " objects pulled down, saving now");
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Timber.d("On the thread");
-                            List<Entry> entries = new ArrayList<>();
-                            for (ParseObject object : objects) {
-                                Entry entry = Entry.fromParseObject(object);
-                                entries.add(entry);
-                                Timber.d("Adding " + entry);
-                            }
-                            entryDataSource.bulkInsert(entries);
+                    List<Entry> toInsert = new ArrayList<>();
+                    List<Entry> toDelete = new ArrayList<>();
+                    for (ParseObject object : objects) {
+                        Entry entry = Entry.fromParseObject(object);
+                        if (entry.getSyncState() == SyncState.DELETE_SYNCED) {
+                            Timber.i("Deleting " + entry);
+                            toDelete.add(entry);
+                        } else {
+                            toInsert.add(entry);
+                            Timber.i("Adding " + entry);
                         }
-                    }).start();
+                    }
+                    entryDataSource.bulkInsert(toInsert);
+                    entryDataSource.bulkDelete(toDelete);
 
+                    pref.edit()
+                            .putLong("SYNC_CHECK", requestTime)
+                            .putBoolean("FIRST_SYNC", false)
+                            .apply();
                 } else {
                     Timber.d("Something went wrong fetching entries");
                     e.printStackTrace();
                 }
             }
         });
-        setShouldNotFullSyncWithBackend();
-    }
-
-    private void setShouldNotFullSyncWithBackend() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        sharedPreferences.edit().putBoolean(getContext().getString(R.string.pref_newly_created_database), false).apply();
     }
 }

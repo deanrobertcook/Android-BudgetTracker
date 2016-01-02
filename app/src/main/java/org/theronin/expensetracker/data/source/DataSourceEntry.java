@@ -97,7 +97,20 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
 
     @Override
     protected int deleteOperation(SQLiteDatabase sb, Collection<Entry> entities) {
-        return sb.delete(EntryTable.TABLE_NAME, "_ID IN (" + createEntityIdsArgument(entities) + ")", null);
+        int count = sb.delete(
+                EntryTable.TABLE_NAME,
+                EntryTable._ID + " IN (" + createEntityIdsInClause(entities) + ")",
+                null);
+
+        if (count == 0) {
+        //delete failed because the entities have no assigned local ids, use globalIds instead
+            count = sb.delete(
+                    EntryTable.TABLE_NAME,
+                    EntryTable.COL_GLOBAL_ID + " IN (" + createEntityGlobalIdsInClause(entities) + ")",
+                    null);
+        }
+
+        return count;
     }
 
     private void checkEntryValues(ContentValues values) {

@@ -17,8 +17,8 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.parse.ParseUser;
 
-import org.theronin.expensetracker.dagger.InjectedActivity;
 import org.theronin.expensetracker.R;
+import org.theronin.expensetracker.dagger.InjectedActivity;
 import org.theronin.expensetracker.data.Contract;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.data.sync.SyncState;
@@ -80,7 +80,6 @@ public class MainActivity extends InjectedActivity implements
             return;
         }
         entryDataSource.requestSync();
-
     }
 
     private MainPage findCurrentPage(Bundle savedInstanceState) {

@@ -33,7 +33,8 @@ public class ParseRemoteSync extends RemoteSync {
 
     @Override
     protected void bulkDeleteOperation(List<? extends Entity> entities) throws Exception {
-        ParseObject.deleteAll(createParseObjectsFromEntities(entities));
+        //Since I am using a soft-delete, I actually just want to update the objects
+        ParseObject.saveAll(createParseObjectsFromEntities(entities));
     }
 
     private List<ParseObject> createParseObjectsFromEntities(List<? extends Entity> entities) {
@@ -71,6 +72,10 @@ public class ParseRemoteSync extends RemoteSync {
         object.put("category", entry.category.name);
         object.put("currency", entry.currency.code);
         object.put("date", entry.utcDate);
+
+        if (entry.getSyncState() == SyncState.MARKED_AS_DELETED) {
+            object.put("isDeleted", true);
+        }
         return object;
     }
 }

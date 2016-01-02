@@ -1,3 +1,11 @@
+Parse.Cloud.beforeSave("entry", function(request, response) {
+  if (!request.object.get("isDeleted")) {
+    request.object.set("isDeleted", false);
+  }
+
+  response.success();
+});
+
 //Request expects a currency code and a comma separated list of dates of the form YYYY-MM-DD
 Parse.Cloud.define("exchangeRate", function(request, response) {
     var ExchangeRate = Parse.Object.extend("ExchangeRate");

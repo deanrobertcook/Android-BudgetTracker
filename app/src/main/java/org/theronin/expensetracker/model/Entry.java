@@ -63,7 +63,7 @@ public class Entry extends Entity{
 
     public static Entry fromParseObject(ParseObject object) {
         String globalId = object.getObjectId();
-        SyncState syncState = SyncState.SYNCED;
+        SyncState syncState = object.getBoolean("isDeleted") ? SyncState.DELETE_SYNCED : SyncState.SYNCED;
         long utcDate = object.getLong("date");
         long amount = object.getLong("amount");
 
