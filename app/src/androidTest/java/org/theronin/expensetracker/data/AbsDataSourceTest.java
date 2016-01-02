@@ -77,7 +77,6 @@ public class AbsDataSourceTest {
         List<Entry> entries = Util.createEntries(10, true, SyncState.SYNCED);
         entryAbsDataSource.bulkInsert(entries);
 
-        //perform some change on the entries
         for (Entry entry : entries) {
             entry.setSyncState(SyncState.UPDATED);
         }

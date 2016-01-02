@@ -11,12 +11,24 @@ public class FakeRemoteSync extends RemoteSync {
 
     private boolean alwaysPass;
 
+    private boolean calledRemoteSave;
+    private boolean calledRemoteDelete;
+
     public FakeRemoteSync(boolean alwaysPass) {
         this.alwaysPass = alwaysPass;
     }
 
+    public boolean calledRemoteSave() {
+        return calledRemoteSave;
+    }
+
+    public boolean calledRemoteDelete() {
+        return calledRemoteDelete;
+    }
+
     @Override
     protected void bulkAddOperation(List<? extends Entity> entities) throws Exception {
+        calledRemoteSave = true;
         syncOp(entities);
     }
 
@@ -35,6 +47,7 @@ public class FakeRemoteSync extends RemoteSync {
 
     @Override
     protected void bulkDeleteOperation(List<? extends Entity> entities) throws Exception {
-       syncOp(entities);
+        calledRemoteDelete = true;
+        syncOp(entities);
     }
 }

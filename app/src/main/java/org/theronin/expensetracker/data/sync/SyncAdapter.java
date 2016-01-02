@@ -71,9 +71,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private void pushEntries() {
         Timber.d("pushEntries");
         List<Entry> allEntries = entryDataSource.query();
-
-        EntrySaver entrySaver = new EntrySaver(entryDataSource, remoteSync);
-        EntityPushCoordinator<Entry> pushCoordinator = new EntityPushCoordinator<>(entrySaver);
+        PushCoordinator<Entry> pushCoordinator = new PushCoordinator<>(entryDataSource, remoteSync);
         pushCoordinator.syncEntries(allEntries);
     }
 
