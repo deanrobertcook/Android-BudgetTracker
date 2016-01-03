@@ -14,7 +14,7 @@ import org.theronin.expensetracker.utils.SyncUtils;
 import timber.log.Timber;
 
 public class CustomParsePushReceiver extends ParsePushBroadcastReceiver {
-    
+
     public static final String UPDATE_NOTIFICATION_FLAG = "deviceShouldUpdate";
     public static final String PARSE_DATA_INTENT_KEY = "com.parse.Data";
     public static final String PARSE_CHANNEL_INTENT_KEY = "com.parse.Channel";

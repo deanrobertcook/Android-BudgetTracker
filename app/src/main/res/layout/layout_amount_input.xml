@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/currency__symbol"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center_vertical"
+        android:fontFamily="sans-serif-thin"
+        android:includeFontPadding="false"
+        />
+
+    <TextView
+        android:id="@+id/currency__code"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:includeFontPadding="false"/>
+
+    <org.theronin.expensetracker.view.MoneyEditText
+        android:id="@+id/entry_amount"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-light"
+        android:imeOptions="actionDone"
+        android:includeFontPadding="false"
+        android:inputType="number"
+        android:maxLength="13"
+        android:maxLines="1"/>
+
+</merge>

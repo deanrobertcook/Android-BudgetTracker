@@ -5,21 +5,20 @@ import android.content.Context;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.theronin.expensetracker.dagger.InjectedActivity;
 import org.theronin.expensetracker.R;
+import org.theronin.expensetracker.dagger.InjectedActivity;
 import org.theronin.expensetracker.data.loader.CategoryLoader;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Category;
@@ -28,7 +27,7 @@ import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.pages.reusable.DatePickerFragment;
 import org.theronin.expensetracker.utils.CurrencySettings;
 import org.theronin.expensetracker.utils.DateUtils;
-import org.theronin.expensetracker.utils.MoneyUtils;
+import org.theronin.expensetracker.view.MoneyEditText;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,8 +38,6 @@ import javax.inject.Inject;
 public class EntryDialogActivity extends InjectedActivity
         implements View.OnClickListener,
         CurrencySettings.Listener,
-        TextWatcher,
-        TextView.OnEditorActionListener,
         DatePickerFragment.Container,
         LoaderManager.LoaderCallbacks<List<Category>> {
 
@@ -50,18 +47,14 @@ public class EntryDialogActivity extends InjectedActivity
     @Inject AbsDataSource<Entry> entryDataSource;
 
     private CurrencySettings currencySettings;
-    private TextView currencySymbolTextView;
-    private TextView currencyCodeTextView;
-
-    private EditText amountEditText;
-    private long currentAmount;
-
-    private Spinner categorySpinner;
-    private CategorySpinnerAdapter categorySpinnerAdapter;
-    private Category lastSelectedCategory;
 
     private TextView dateTextView;
     private long currentSelectedUtcTime;
+
+    private LinearLayout inputRowsLayout;
+    private List<ViewHolder> inputRows;
+
+    private CategorySpinnerAdapter categorySpinnerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,20 +70,6 @@ public class EntryDialogActivity extends InjectedActivity
 
         getLoaderManager().initLoader(CATEGORY_LOADER_ID, null, this);
 
-        currencySettings = new CurrencySettings(this, this);
-        currencySymbolTextView = (TextView) findViewById(R.id.tv__add_entry_currency__symbol);
-        currencyCodeTextView = (TextView) findViewById(R.id.tv__add_entry_currency__code);
-        setCurrencyInformation();
-
-        amountEditText = (EditText) findViewById(R.id.et__add_entry_amount);
-        setAmountEditText(0);
-        amountEditText.setOnEditorActionListener(this);
-        amountEditText.addTextChangedListener(this);
-
-        categorySpinner = (Spinner) findViewById(R.id.spn__add_entry_category);
-        categorySpinnerAdapter = new CategorySpinnerAdapter(this);
-        categorySpinner.setAdapter(categorySpinnerAdapter);
-
         dateTextView = (TextView) findViewById(R.id.tv__add_entry_date);
         setDateTextView(new Date().getTime());
         dateTextView.setOnClickListener(new View.OnClickListener() {
@@ -100,11 +79,67 @@ public class EntryDialogActivity extends InjectedActivity
             }
         });
 
+        categorySpinnerAdapter = new CategorySpinnerAdapter(this);
+        currencySettings = new CurrencySettings(this, this);
+        inputRowsLayout = (LinearLayout) findViewById(R.id.lv__input_rows);
+        inputRows = new ArrayList<>();
+        addInputRow();
     }
 
-    private void setCurrencyInformation() {
-        currencySymbolTextView.setText(currencySettings.getCurrentCurrency().symbol);
-        currencyCodeTextView.setText(currencySettings.getCurrentCurrency().code);
+    private void addInputRow() {
+        ViewHolder viewHolder = createInputRow(inputRowsLayout);
+        inputRows.add(viewHolder);
+        inputRowsLayout.addView(viewHolder.inputView);
+        viewHolder.inputView.requestFocus();
+    }
+
+    private ViewHolder createInputRow(ViewGroup parent) {
+        View inputView = getLayoutInflater().inflate(R.layout.list_item__insert_entry_row, parent, false);
+        ViewHolder viewHolder = new ViewHolder(inputView);
+
+        viewHolder.moneyEditText.setAmount(0);
+        viewHolder.moneyEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    addInputRow();
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+
+        return viewHolder;
+    }
+
+    private class ViewHolder implements View.OnClickListener {
+        public final View inputView;
+        public final View clearButton;
+        public final MoneyEditText moneyEditText;
+
+        public final Spinner categorySpinner;
+        public Category lastSelectedCategory;
+
+        public ViewHolder(View inputView) {
+            this.inputView = inputView;
+            clearButton = inputView.findViewById(R.id.clear_row);
+            clearButton.setOnClickListener(this);
+            moneyEditText = (MoneyEditText) inputView.findViewById(R.id.amount_edit_layout);
+            categorySpinner = (Spinner) inputView.findViewById(R.id.spn__add_entry_category);
+            categorySpinner.setAdapter(categorySpinnerAdapter);
+        }
+
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.clear_row:
+                    inputRows.remove(this);
+                    inputRowsLayout.removeView(inputView);
+            }
+        }
     }
 
     @Override
@@ -143,27 +178,8 @@ public class EntryDialogActivity extends InjectedActivity
 
     @Override
     public void onCurrentCurrencyChanged(Currency currentCurrency) {
-        setCurrencyInformation();
-    }
-
-    private void setAmountEditText(long amount) {
-        amountEditText.removeTextChangedListener(this);
-
-        currentAmount = amount;
-
-        amountEditText.setText(currentAmountText());
-        amountEditText.setSelection(currentAmountText().length());
-
-        amountEditText.addTextChangedListener(this);
-    }
-
-    private String currentAmountText() {
-        return MoneyUtils.getDisplay(this, currentAmount);
-    }
-
-    private long getAmountEditText() {
-        String displayAmount = amountEditText.getText().toString();
-        return MoneyUtils.getCents(displayAmount);
+        for (ViewHolder viewHolder : inputRows) {
+        }
     }
 
     private void setDateTextView(long utcTime) {
@@ -177,77 +193,44 @@ public class EntryDialogActivity extends InjectedActivity
         datePickerFragment.show(getFragmentManager(), TAG);
     }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence input, int start, int before, int count) {
-        if (!input.toString().equals(currentAmountText()) && input.length() != 0) {
-            String cleanString = input.toString().replaceAll("[,.]", "");
-            long cents = Long.parseLong(cleanString);
-            setAmountEditText(cents);
-        }
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
-    }
-
-    @Override
-    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        boolean handled = false;
-
-        if (actionId == EditorInfo.IME_ACTION_DONE) {
-            passInputToStore();
-            handled = true;
-        }
-        return handled;
-    }
-
     private void passInputToStore() {
-        long amount = getAmountEditText();
-        if (amount == 0) {
-            Toast.makeText(this, "Please provide an amount for the entry", Toast
-                    .LENGTH_SHORT).show();
-            return;
-        }
 
-        if (categorySpinner.getSelectedItem() == null) {
-            Toast.makeText(this, "Please create a category first", Toast
-                    .LENGTH_SHORT).show();
-            return;
-        }
+        List<Entry> entriesToInsert = new ArrayList<>();
 
-        lastSelectedCategory = categorySpinnerAdapter.getCategory(categorySpinner
-                .getSelectedItemPosition());
-
-        Entry entry = new Entry(
-                currentSelectedUtcTime,
-                amount,
-                lastSelectedCategory,
-                new Currency(currencyCodeTextView.getText().toString())
-        );
-
-        long id = entryDataSource.insert(entry).getId();
-
-        if (id == -1) {
-            Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "All G", Toast.LENGTH_SHORT).show();
-            setAmountEditText(0);
-
-            View view = getCurrentFocus();
-            if (view != null) {
-                InputMethodManager imm = (InputMethodManager) getSystemService
-                        (Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        for (ViewHolder viewHolder : inputRows) {
+            long amount = viewHolder.moneyEditText.getAmount();
+            if (amount == 0) {
+                break;
             }
-            finish();
+
+            if (viewHolder.categorySpinner.getSelectedItem() == null) {
+                Toast.makeText(this, "Please create a category first", Toast
+                        .LENGTH_SHORT).show();
+                return;
+            }
+
+            viewHolder.lastSelectedCategory = categorySpinnerAdapter.getCategory(
+                    viewHolder.categorySpinner.getSelectedItemPosition());
+
+            Entry entry = new Entry(
+                    currentSelectedUtcTime,
+                    amount,
+                    viewHolder.lastSelectedCategory,
+                    new Currency(currencySettings.getCurrentCurrency().code)
+            );
+
+            entriesToInsert.add(entry);
         }
 
+        entryDataSource.bulkInsert(entriesToInsert);
+        Toast.makeText(this, "All G", Toast.LENGTH_SHORT).show();
+        View view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService
+                    (Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+        finish();
     }
 
     @Override
@@ -266,15 +249,17 @@ public class EntryDialogActivity extends InjectedActivity
     }
 
     private void updateCategories(List<Category> categories) {
-        categorySpinnerAdapter.addAll(categories);
+        for (ViewHolder viewHolder : inputRows) {
+            categorySpinnerAdapter.addAll(categories);
 
-        if (lastSelectedCategory != null) {
-            int lastSelectedCategoryNewPosition =
-                    categorySpinnerAdapter.getPosition(lastSelectedCategory);
-            categorySpinner.setSelection(lastSelectedCategoryNewPosition);
-            //If you don't set this back to null, then there are cases where the
-            //lastSelectedCategory gets out of date.
-            lastSelectedCategory = null;
+            if (viewHolder.lastSelectedCategory != null) {
+                int lastSelectedCategoryNewPosition =
+                        categorySpinnerAdapter.getPosition(viewHolder.lastSelectedCategory);
+                viewHolder.categorySpinner.setSelection(lastSelectedCategoryNewPosition);
+                //If you don't set this back to null, then there are cases where the
+                //lastSelectedCategory gets out of date.
+                viewHolder.lastSelectedCategory = null;
+            }
         }
     }
 
