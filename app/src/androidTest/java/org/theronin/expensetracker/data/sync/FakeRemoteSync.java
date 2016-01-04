@@ -2,6 +2,7 @@ package org.theronin.expensetracker.data.sync;
 
 import org.theronin.expensetracker.data.Util;
 import org.theronin.expensetracker.model.Entity;
+import org.theronin.expensetracker.model.Entry;
 
 import java.util.List;
 
@@ -49,5 +50,15 @@ public class FakeRemoteSync extends RemoteSync {
     protected void bulkDeleteOperation(List<? extends Entity> entities) throws Exception {
         calledRemoteDelete = true;
         syncOp(entities);
+    }
+
+    @Override
+    protected void registerForPush() {
+
+    }
+
+    @Override
+    protected List<Entry> findOperation(long lastSync) throws Exception {
+        return null;
     }
 }
