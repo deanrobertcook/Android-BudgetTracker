@@ -17,6 +17,8 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.parse.ParseUser;
 
+import org.theronin.expensetracker.BuildConfig;
+import org.theronin.expensetracker.PlayGroundActivity;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.dagger.InjectedActivity;
 import org.theronin.expensetracker.data.Contract;
@@ -169,7 +171,22 @@ public class MainActivity extends InjectedActivity implements
 
     private PrimaryDrawerItem[] buildPrimaryDrawerItems() {
         PrimaryDrawerItem[] drawerItems = new PrimaryDrawerItem[MainPage.values().length];
-        for (int i = 0; i < drawerItems.length; i++) {
+
+        if (BuildConfig.DEBUG) {
+            drawerItems = new PrimaryDrawerItem[MainPage.values().length + 1];
+            drawerItems[drawerItems.length - 1] = new PrimaryDrawerItem()
+                    .withName("PlayGround")
+                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                        @Override
+                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                            Intent intent = new Intent(MainActivity.this, PlayGroundActivity.class);
+                            startActivity(intent);
+                            return true;
+                        }
+                    });
+        }
+
+        for (int i = 0; i < MainPage.values().length; i++) {
             MainPage page = MainPage.values()[i];
             drawerItems[i] = new PrimaryDrawerItem()
                     .withName(page.title)
@@ -178,6 +195,7 @@ public class MainActivity extends InjectedActivity implements
                     .withSelectedIcon(page.selectedIconResId)
                     .withOnDrawerItemClickListener(this);
         }
+
         return drawerItems;
     }
 
