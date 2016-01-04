@@ -6,6 +6,11 @@ public abstract class InjectedService extends IntentService implements InjectedC
 
     public InjectedService(String name) {
         super(name);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
         inject(this);
     }
 
