@@ -3,25 +3,24 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <TextView
+    <org.theronin.expensetracker.view.VerticalResizeTextView
         android:id="@+id/currency__symbol"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:fontFamily="sans-serif-thin"
         android:includeFontPadding="false"
         />
 
-    <TextView
+    <org.theronin.expensetracker.view.VerticalResizeTextView
         android:id="@+id/currency__code"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:includeFontPadding="false"/>
 
     <org.theronin.expensetracker.view.MoneyEditText
         android:id="@+id/entry_amount"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:ellipsize="end"
         android:fontFamily="sans-serif-light"
         android:imeOptions="actionDone"
