@@ -4,9 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import org.theronin.expensetracker.model.Currency;
-import org.theronin.expensetracker.view.CurrencyView;
-
 public class PlayGroundActivity extends AppCompatActivity {
 
     @Override
@@ -18,7 +15,7 @@ public class PlayGroundActivity extends AppCompatActivity {
         toolbar.setTitle("PlayGround Activity");
         setSupportActionBar(toolbar);
 
-        CurrencyView view = (CurrencyView) findViewById(R.id.test_view);
-        view.setCurrency(new Currency("AUD", "$", "Australian Dollar"));
+//        AutoResizeEditText view = (AutoResizeEditText) findViewById(R.id.test_view);
+//        view.setCurrency(new Currency("AUD", "$", "Australian Dollar"));
     }
 }
