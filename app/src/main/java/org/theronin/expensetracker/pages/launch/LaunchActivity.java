@@ -87,6 +87,8 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void wireUpButtons() {
+        //TODO hunt for NPEs around here
+        //TODO https://github.com/deanrobertcook/Android-ExpenseTracker/issues/33
         positiveButton.setText(currentFragment.getPositiveButtonText());
 
         String negativeButtonText = currentFragment.getNegativeButtonText();
