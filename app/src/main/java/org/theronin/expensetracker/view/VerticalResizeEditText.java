@@ -8,16 +8,16 @@ import android.text.method.ArrowKeyMovementMethod;
 import android.text.method.MovementMethod;
 import android.util.AttributeSet;
 
-public class AutoResizeEditText extends AutoResizeTextView {
-    public AutoResizeEditText(Context context) {
+public class VerticalResizeEditText extends VerticalResizeTextView {
+    public VerticalResizeEditText(Context context) {
         this(context, null);
     }
 
-    public AutoResizeEditText(Context context, AttributeSet attrs) {
+    public VerticalResizeEditText(Context context, AttributeSet attrs) {
         this(context, attrs, android.R.attr.editTextStyle);
     }
 
-    public AutoResizeEditText(Context context, AttributeSet attrs, int defStyleAttr) {
+    public VerticalResizeEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
