@@ -59,6 +59,8 @@ public class EntryDialogActivity extends InjectedActivity
 
     private CategorySpinnerAdapter categorySpinnerAdapter;
 
+    private View addEntryRowButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +93,10 @@ public class EntryDialogActivity extends InjectedActivity
         inputRowsLayout = (LinearLayout) findViewById(R.id.lv__input_rows);
         inputRows = new ArrayList<>();
         addInputRow();
+
+        addEntryRowButton = findViewById(R.id.add_entry_row_button);
+        addEntryRowButton.setClickable(true);
+        addEntryRowButton.setOnClickListener(this);
     }
 
     private void setCurrentCurrency(Currency currency) {
@@ -147,7 +153,6 @@ public class EntryDialogActivity extends InjectedActivity
             categorySpinner.setAdapter(categorySpinnerAdapter);
         }
 
-
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
@@ -174,6 +179,10 @@ public class EntryDialogActivity extends InjectedActivity
             case R.id.action_save:
                 passInputToStore();
                 break;
+            case R.id.add_entry_row_button:
+                addInputRow();
+                break;
+
         }
     }
 
@@ -209,12 +218,13 @@ public class EntryDialogActivity extends InjectedActivity
     }
 
     private void passInputToStore() {
-
+        boolean error = false;
         List<Entry> entriesToInsert = new ArrayList<>();
 
         for (ViewHolder viewHolder : inputRows) {
             long amount = viewHolder.moneyEditText.getAmount();
             if (amount == 0) {
+                error = true;
                 break;
             }
 
@@ -237,15 +247,19 @@ public class EntryDialogActivity extends InjectedActivity
             entriesToInsert.add(entry);
         }
 
-        entryDataSource.bulkInsert(entriesToInsert);
-        Toast.makeText(this, "All G", Toast.LENGTH_SHORT).show();
-        View view = getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService
-                    (Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        if (error) {
+            Toast.makeText(this, "Make sure all rows have an amount greater than 0", Toast.LENGTH_SHORT).show();
+        } else {
+            entryDataSource.bulkInsert(entriesToInsert);
+            Toast.makeText(this, "All G", Toast.LENGTH_SHORT).show();
+            View view = getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager) getSystemService
+                        (Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+            finish();
         }
-        finish();
     }
 
     @Override
