@@ -17,6 +17,7 @@ import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.utils.DateUtils;
 import org.theronin.expensetracker.utils.MoneyUtils;
+import org.theronin.expensetracker.view.AmountDisplayLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,8 +45,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
     public void setCategories(List<Category> categories) {
         if (categories == null) {
-            throw new IllegalArgumentException("Categories cannot be null, specify an empty list " +
-                    "instead");
+            throw new IllegalArgumentException("Categories cannot be null, specify an empty list instead");
         }
         this.categories = categories;
         Collections.sort(this.categories, new CategoryTotalComparator());
@@ -61,29 +61,14 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(ViewHolder vH, int position) {
         Category category = categories.get(position);
 
-        viewHolder.nameTextView.setText(WordUtils.capitalize(category.name));
+        vH.totalDisplay.setCurrency(homeCurrency);
+        vH.totalDisplay.setAmount(category.getTotal());
+        vH.nameTextView.setText(WordUtils.capitalize(category.name));
 
-        viewHolder.currencySymbolTotalView.setText(homeCurrency.symbol);
-        viewHolder.currencyCodeTotalView.setText(homeCurrency.code);
-
-        viewHolder.totalTextView.setText(createAmountDisplay(category.getMissingEntries(),
-                category.getTotal()));
-
-        viewHolder.dateSinceTextView.setText(
-                String.format(context.getString(R.string.date_since),
-                        DateUtils.getDisplayFormattedDate(category.utcFirstEntryDate)));
-    }
-
-    private String createAmountDisplay(int missingEntries, long amount) {
-        StringBuilder sb = new StringBuilder();
-        if (missingEntries > 0) {
-            sb.append("~");
-        }
-        sb.append(MoneyUtils.getDisplayCompact(context, amount));
-        return sb.toString();
+        vH.dateSinceTextView.setText(String.format(context.getString(R.string.date_since), DateUtils.getDisplayFormattedDate(category.utcFirstEntryDate)));
     }
 
     @Override
@@ -99,24 +84,14 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView currencySymbolTotalView;
-        public TextView currencyCodeTotalView;
+        public AmountDisplayLayout totalDisplay;
         public TextView nameTextView;
-        public TextView totalTextView;
         public TextView dateSinceTextView;
 
         public ViewHolder(View listItemView) {
             super(listItemView);
+            totalDisplay = (AmountDisplayLayout) listItemView.findViewById(R.id.amount_display_total);
             nameTextView = (TextView) listItemView.findViewById(R.id.tv__name_column);
-
-            View currencyTotalView = listItemView.findViewById(R.id.amount_display_total);
-            currencySymbolTotalView = (TextView) currencyTotalView.findViewById(R.id
-                    .tv__widget_amount_display__current_currency__symbol);
-            currencyCodeTotalView = (TextView) currencyTotalView.findViewById(R.id
-                    .tv__widget_amount_display__current_currency__code);
-            totalTextView = (TextView) currencyTotalView.findViewById(R.id
-                    .tv__widget_amount_display__current_currency__amount);
-
             dateSinceTextView = (TextView) listItemView.findViewById(R.id.tv__date_since);
 
         }

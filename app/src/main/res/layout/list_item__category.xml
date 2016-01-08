@@ -6,12 +6,11 @@
               android:paddingEnd="@dimen/material_default_margin"
               android:paddingStart="@dimen/material_default_margin">
 
-    <include
+    <org.theronin.expensetracker.view.AmountDisplayLayout
         android:id="@+id/amount_display_total"
-        layout="@layout/widget__amount_display"
         android:layout_width="0dp"
+        android:layout_height="26dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
         android:layout_gravity="center"/>
 
     <LinearLayout
