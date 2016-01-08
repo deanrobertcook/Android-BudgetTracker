@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
+              android:layout_height="56dp"
               android:orientation="horizontal">
 
     <ImageView
@@ -10,22 +10,30 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"/>
 
-    <org.theronin.expensetracker.view.MoneyEditText
-        android:id="@+id/amount_edit_layout"
-        android:layout_width="0dp"
-        android:layout_weight="2"
-        android:layout_gravity="center_vertical"
-        android:maxLength="13"
-        android:textSize="24sp"
-        android:inputType="number"
-        android:layout_height="match_parent"/>
 
-    <Spinner
-        android:id="@+id/spn__add_entry_category"
-        style="@style/Widget.AppCompat.Spinner.Underlined"
-        android:layout_width="0dp"
-        android:layout_weight="1"
+    <!-- To help keep the edit texts on the same line -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:spinnerMode="dialog"/>
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <org.theronin.expensetracker.view.MoneyEditText
+            android:id="@+id/amount_edit_layout"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:maxLength="13"
+            android:textSize="24sp"
+            android:inputType="number"/>
+
+        <Spinner
+            android:id="@+id/spn__add_entry_category"
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:spinnerMode="dialog"/>
+    </LinearLayout>
 
 </LinearLayout>
