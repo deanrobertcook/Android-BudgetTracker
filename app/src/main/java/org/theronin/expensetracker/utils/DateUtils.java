@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class DateUtils {
@@ -18,13 +17,12 @@ public class DateUtils {
     public static final int DAYS_IN_YEAR = 365;
 
     public static String getDisplayFormattedDate(long utcTime) {
-        Locale locale = new Locale("en", "DE");
         SimpleDateFormat sdf;
 
         if (daysSince(utcTime) < DAYS_IN_YEAR) {
-            sdf = new SimpleDateFormat("dd MMM", locale);
+            sdf = new SimpleDateFormat("E dd MMM");
         } else {
-            sdf = new SimpleDateFormat("dd.MM.yy", locale);
+            sdf = new SimpleDateFormat("dd.MM.yy");
         }
         return sdf.format(new Date(utcTime));
     }

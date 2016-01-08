@@ -38,6 +38,7 @@
     <string name="action_save">SAVE</string>
 
     <string name="select_category">Category</string>
+    <string name="enter_amount">Amount</string>
     <string name="select_date">Date</string>
 
     <string name="date_since">Since %s</string>

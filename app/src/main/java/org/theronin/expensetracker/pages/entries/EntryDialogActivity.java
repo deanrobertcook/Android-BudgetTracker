@@ -48,6 +48,9 @@ public class EntryDialogActivity extends InjectedActivity
 
     private CurrencySettings currencySettings;
 
+    private TextView currencySymbolTextView;
+    private TextView currencyCodeTextView;
+
     private TextView dateTextView;
     private long currentSelectedUtcTime;
 
@@ -62,13 +65,18 @@ public class EntryDialogActivity extends InjectedActivity
         setContentView(R.layout.activity__entry_dialog);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tb__toolbar);
-        toolbar.setTitle("Add Entry");
+        toolbar.setTitle("Add Entries");
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getLoaderManager().initLoader(CATEGORY_LOADER_ID, null, this);
+
+        currencySettings = new CurrencySettings(this, this);
+        currencySymbolTextView = (TextView) findViewById(R.id.currency__symbol);
+        currencyCodeTextView = (TextView) findViewById(R.id.currency__code);
+        setCurrentCurrency(currencySettings.getCurrentCurrency());
 
         dateTextView = (TextView) findViewById(R.id.tv__add_entry_date);
         setDateTextView(new Date().getTime());
@@ -80,10 +88,14 @@ public class EntryDialogActivity extends InjectedActivity
         });
 
         categorySpinnerAdapter = new CategorySpinnerAdapter(this);
-        currencySettings = new CurrencySettings(this, this);
         inputRowsLayout = (LinearLayout) findViewById(R.id.lv__input_rows);
         inputRows = new ArrayList<>();
         addInputRow();
+    }
+
+    private void setCurrentCurrency(Currency currency) {
+        currencySymbolTextView.setText(currency.symbol);
+        currencyCodeTextView.setText(currency.code);
     }
 
     private void addInputRow() {
@@ -125,7 +137,11 @@ public class EntryDialogActivity extends InjectedActivity
         public ViewHolder(View inputView) {
             this.inputView = inputView;
             clearButton = inputView.findViewById(R.id.clear_row);
-            clearButton.setOnClickListener(this);
+            if (inputRows.isEmpty()) { //the first one
+                clearButton.setVisibility(View.INVISIBLE);
+            } else {
+                clearButton.setOnClickListener(this);
+            }
             moneyEditText = (MoneyEditText) inputView.findViewById(R.id.amount_edit_layout);
             categorySpinner = (Spinner) inputView.findViewById(R.id.spn__add_entry_category);
             categorySpinner.setAdapter(categorySpinnerAdapter);
@@ -178,8 +194,7 @@ public class EntryDialogActivity extends InjectedActivity
 
     @Override
     public void onCurrentCurrencyChanged(Currency currentCurrency) {
-        for (ViewHolder viewHolder : inputRows) {
-        }
+        setCurrentCurrency(currentCurrency);
     }
 
     private void setDateTextView(long utcTime) {

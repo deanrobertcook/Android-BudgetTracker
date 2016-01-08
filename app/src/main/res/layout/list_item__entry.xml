@@ -27,7 +27,7 @@
                 android:layout_alignParentLeft="true"
                 android:text="12 December 2015"
                 android:textColor="@color/primary"
-                android:textSize="14sp"/>
+                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/tv__boundary_total"
@@ -37,7 +37,7 @@
                 android:layout_alignParentBottom="true"
                 android:text="€100.50"
                 android:textColor="@color/primary"
-                android:textSize="14sp"/>
+                android:textSize="16sp"/>
         </RelativeLayout>
 
         <View
