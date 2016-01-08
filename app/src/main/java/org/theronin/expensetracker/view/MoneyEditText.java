@@ -4,10 +4,11 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.widget.EditText;
 
 import org.theronin.expensetracker.utils.MoneyUtils;
 
-public class MoneyEditText extends VerticalResizeEditText {
+public class MoneyEditText extends EditText {
 
     private String currentAmountDisplay;
     private CustomTextWatcher textWatcher;

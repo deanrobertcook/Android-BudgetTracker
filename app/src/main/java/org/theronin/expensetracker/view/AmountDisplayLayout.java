@@ -9,9 +9,10 @@ import android.widget.TextView;
 
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.model.Currency;
+import org.theronin.expensetracker.utils.MoneyUtils;
 import org.theronin.expensetracker.utils.ViewUtils;
 
-public class AmountEditLayout extends ViewGroup {
+public class AmountDisplayLayout extends ViewGroup {
 
     /**
      * Code to Amount (the proportion of the total height that the amount field takes up compared
@@ -24,30 +25,32 @@ public class AmountEditLayout extends ViewGroup {
 
     private TextView currencySymbol;
     private TextView currencyCode;
+    private TextView amountView;
 
-    private MoneyEditText amountView;
+    private String currentAmountDisplay;
 
-    public AmountEditLayout(Context context) {
+    public AmountDisplayLayout(Context context) {
         this(context, null);
     }
 
-    public AmountEditLayout(Context context, AttributeSet attrs) {
+    public AmountDisplayLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public AmountEditLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public AmountDisplayLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         this(context, attrs, defStyleAttr, 0);
     }
 
-    public AmountEditLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public AmountDisplayLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
 
-        LayoutInflater.from(context).inflate(R.layout.layout_amount_input, this, true);
+        LayoutInflater.from(context).inflate(R.layout.layout_amount_display, this, true);
 
         currencySymbol = (TextView) findViewById(R.id.currency__symbol);
         currencyCode = (TextView) findViewById(R.id.currency__code);
-        amountView = (MoneyEditText) findViewById(R.id.entry_amount);
+        amountView = (TextView) findViewById(R.id.entry_amount);
         setAmount(0);
+        setCurrency(new Currency("AUD", "$", "AUD"));
     }
 
     public void setCurrency(Currency currency) {
@@ -61,11 +64,12 @@ public class AmountEditLayout extends ViewGroup {
     }
 
     public void setAmount(long amount) {
-        amountView.setAmount(amount);
+        currentAmountDisplay = MoneyUtils.getDisplay(getContext(), amount);
+        amountView.setText(currentAmountDisplay);
     }
 
     public long getAmount() {
-        return amountView.getAmount();
+        return MoneyUtils.getCents(currentAmountDisplay);
     }
 
     @Override
@@ -98,9 +102,8 @@ public class AmountEditLayout extends ViewGroup {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         ViewUtils.layoutDebug("onLayout: ", left, top, right, bottom);
-        //Ignore any padding
-        int iLeft = 0;
-        int iTop = 0;
+        int iLeft = getPaddingLeft();
+        int iTop = getPaddingTop();
 
         int cSL = iLeft;
         int cST = iTop;
@@ -114,7 +117,6 @@ public class AmountEditLayout extends ViewGroup {
         int cCB = cCT + currencyCode.getMeasuredHeight();
         currencyCode.layout(cCL, cCT, cCR, cCB);
 
-
         int aL = currencySymbol.getMeasuredWidth();
         int aT = iTop;
         int aR = aL + amountView.getMeasuredWidth();
@@ -125,6 +127,4 @@ public class AmountEditLayout extends ViewGroup {
     public void setOnEditorActionListener(TextView.OnEditorActionListener actionListener) {
         amountView.setOnEditorActionListener(actionListener);
     }
-
-    
 }
