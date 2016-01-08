@@ -16,6 +16,7 @@ import org.theronin.expensetracker.utils.DateUtils;
 import org.theronin.expensetracker.utils.MoneyUtils;
 import org.theronin.expensetracker.utils.MoneyUtils.EntryCondition;
 import org.theronin.expensetracker.utils.MoneyUtils.EntrySum;
+import org.theronin.expensetracker.view.AmountDisplayLayout;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,8 +45,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
     public void setEntries(List<Entry> entries) {
         if (entries == null) {
-            throw new IllegalArgumentException("Entries cannot be set to null, use an empty list " +
-                    "instead");
+            throw new IllegalArgumentException("Entries cannot be set to null, use an empty list instead");
         }
         this.entries = entries;
         notifyDataSetChanged();
@@ -53,40 +53,36 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
-        View listItemView = LayoutInflater.from(parent.getContext()).inflate(R.layout
-                .list_item__entry, parent, false);
+        View listItemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item__entry, parent, false);
         ViewHolder viewHolder = new ViewHolder(listItemView);
 
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        final Entry boundEntry = entries.get(position);
+    public void onBindViewHolder(ViewHolder vH, int position) {
+        final Entry entry = entries.get(position);
 
-        viewHolder.contentLayout.setTag(R.id.entry_id, boundEntry.getId());
+        vH.contentLayout.setTag(R.id.entry_id, entry.getId());
 
-        String formattedDate = DateUtils.getDisplayFormattedDate(boundEntry.utcDate);
-        String formattedDayTotal = getFormattedDayTotal(boundEntry.utcDate);
-        displayDateBorder(viewHolder, position, formattedDate, formattedDayTotal);
+        String formattedDate = DateUtils.getDisplayFormattedDate(entry.utcDate);
+        String formattedDayTotal = getFormattedDayTotal(entry.utcDate);
+        displayDateBorder(vH, position, formattedDate, formattedDayTotal);
 
-        viewHolder.currentCurrencySymbolTextView.setText(boundEntry.currency.symbol);
-        viewHolder.currentCurrencyCodeTextView.setText(boundEntry.currency.code);
-        viewHolder.currentCurrencyAmount.setText(MoneyUtils.getDisplayCompact(context, boundEntry.amount));
+        vH.currentDisplay.setCurrency(entry.currency);
+        vH.currentDisplay.setAmount(entry.amount);
 
-        viewHolder.categoryTextView.setText(WordUtils.capitalize(boundEntry.category.name));
+        vH.categoryTextView.setText(WordUtils.capitalize(entry.category.name));
 
-        if (!boundEntry.currency.code.equals(currencySettings.getHomeCurrency().code)) {
-            viewHolder.homeCurrencyDisplay.setVisibility(View.VISIBLE);
-
-            viewHolder.homeCurrencySymbolTextView.setText(currencySettings.getHomeCurrency().symbol);
-            viewHolder.homeCurrencyCodeTextView.setText(currencySettings.getHomeCurrency().code);
-            viewHolder.homeCurrencyAmount.setText(getHomeCurrencyAmount(boundEntry));
+        if (!entry.currency.code.equals(currencySettings.getHomeCurrency().code)) {
+            vH.homeDisplay.setVisibility(View.VISIBLE);
+            vH.homeDisplay.setCurrency(currencySettings.getHomeCurrency());
+            vH.homeDisplay.setAmount(Math.round((double) entry.amount * entry.getDirectExchangeRate()));
         } else {
-            viewHolder.homeCurrencyDisplay.setVisibility(View.INVISIBLE);
+            vH.homeDisplay.setVisibility(View.INVISIBLE);
         }
 
-        selectionManager.listenToItemView(viewHolder.contentLayout);
+        selectionManager.listenToItemView(vH.contentLayout);
     }
 
     private String getFormattedDayTotal(final long utcDate) {
@@ -123,11 +119,6 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         return !sameDay(currentEntry.utcDate, lastEntry.utcDate);
     }
 
-    private String getHomeCurrencyAmount(Entry entry) {
-        long homeAmount = Math.round((double) entry.amount * entry.getDirectExchangeRate());
-        return MoneyUtils.getDisplayCompact(context, homeAmount);
-    }
-
     @Override
     public int getItemCount() {
         return entries.size();
@@ -140,17 +131,9 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         private final TextView borderTotalTextView;
 
         public final View contentLayout;
-
-        public final TextView currentCurrencySymbolTextView;
-        public final TextView currentCurrencyCodeTextView;
-        public final TextView currentCurrencyAmount;
-
+        public final AmountDisplayLayout currentDisplay;
         public final TextView categoryTextView;
-
-        private final View homeCurrencyDisplay;
-        private final TextView homeCurrencySymbolTextView;
-        private final TextView homeCurrencyCodeTextView;
-        private final TextView homeCurrencyAmount;
+        public final AmountDisplayLayout homeDisplay;
 
         public ViewHolder(View view) {
             super(view);
@@ -160,18 +143,9 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
             borderTotalTextView = (TextView) itemView.findViewById(R.id.tv__boundary_total);
 
             contentLayout = itemView.findViewById(R.id.ll__list_item__content_layout);
-
-            View currentCurrencyDisplay = contentLayout.findViewById(R.id.widget__amount_display__current);
-            currentCurrencySymbolTextView = (TextView) currentCurrencyDisplay.findViewById(R.id.tv__widget_amount_display__current_currency__symbol);
-            currentCurrencyCodeTextView = (TextView) currentCurrencyDisplay.findViewById(R.id.tv__widget_amount_display__current_currency__code);
-            currentCurrencyAmount = (TextView) currentCurrencyDisplay.findViewById(R.id.tv__widget_amount_display__current_currency__amount);
-
+            currentDisplay = (AmountDisplayLayout) contentLayout.findViewById(R.id.amount_display_current);
             categoryTextView = (TextView) contentLayout.findViewById(R.id.tv__list_item__entry__category);
-
-            homeCurrencyDisplay = contentLayout.findViewById(R.id.widget__amount_display__home);
-            homeCurrencySymbolTextView = (TextView) homeCurrencyDisplay.findViewById(R.id.tv__widget_amount_display__current_currency__symbol);
-            homeCurrencyCodeTextView = (TextView) homeCurrencyDisplay.findViewById(R.id.tv__widget_amount_display__current_currency__code);
-            homeCurrencyAmount = (TextView) homeCurrencyDisplay.findViewById(R.id.tv__widget_amount_display__current_currency__amount);
+            homeDisplay = (AmountDisplayLayout) contentLayout.findViewById(R.id.amount_display_home);
         }
     }
 

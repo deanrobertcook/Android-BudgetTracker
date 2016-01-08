@@ -24,7 +24,7 @@
         android:includeFontPadding="false"
         android:maxLines="1"
         android:ellipsize="end"
-        android:fontFamily="sans-serif-light"
+        android:fontFamily="sans-serif-thin"
         />
 
 </merge>

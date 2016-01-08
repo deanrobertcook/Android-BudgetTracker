@@ -5,6 +5,8 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.TextView;
 
+import timber.log.Timber;
+
 public class VerticalResizeTextView extends TextView {
 
     public VerticalResizeTextView(Context context) {
@@ -41,14 +43,19 @@ public class VerticalResizeTextView extends TextView {
     public void setLineSpacing(float add, float mult) {
     }
 
-    /**
-     * Resize text after measuring
-     */
     @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        int heightLimit = (bottom - top) - getCompoundPaddingBottom() - getCompoundPaddingTop();
-        resizeText(heightLimit);
-        super.onLayout(changed, left, top, right, bottom);
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int height = MeasureSpec.getSize(heightMeasureSpec);
+        resizeText(height);
+
+        int textWidth = (int) getPaint().measureText(getText().toString());
+        Timber.v("Text width: " + textWidth);
+
+        if (textWidth > MeasureSpec.getSize(widthMeasureSpec)) {
+            widthMeasureSpec = MeasureSpec.makeMeasureSpec(textWidth, MeasureSpec.EXACTLY);
+        }
+
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     /**
@@ -61,5 +68,10 @@ public class VerticalResizeTextView extends TextView {
             return;
         }
         super.setTextSize(TypedValue.COMPLEX_UNIT_PX, height);
+    }
+
+    @Override
+    public boolean onPreDraw() {
+        return super.onPreDraw();
     }
 }

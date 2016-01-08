@@ -64,12 +64,16 @@ public class AmountDisplayLayout extends ViewGroup {
     }
 
     public void setAmount(long amount) {
-        currentAmountDisplay = MoneyUtils.getDisplay(getContext(), amount);
-        amountView.setText(currentAmountDisplay);
+        setAmount(amount, true);
     }
 
-    public long getAmount() {
-        return MoneyUtils.getCents(currentAmountDisplay);
+    public void setAmount(long amount, boolean compact) {
+        if (compact) {
+            currentAmountDisplay = MoneyUtils.getDisplayCompact(getContext(), amount);
+        } else {
+            currentAmountDisplay = MoneyUtils.getDisplay(getContext(), amount);
+        }
+        amountView.setText(currentAmountDisplay);
     }
 
     @Override
@@ -78,16 +82,19 @@ public class AmountDisplayLayout extends ViewGroup {
         int measuredWidth = MeasureSpec.getSize(widthMeasureSpec) - getPaddingLeft() - getPaddingRight();
         int measuredHeight = MeasureSpec.getSize(heightMeasureSpec) - getPaddingTop() - getPaddingBottom();
 
-        int cSW = measuredWidth;
         int cSH = measuredHeight;
+        int cSW = measuredWidth;
+        ViewUtils.measureDebug("cS", cSW, cSH);
         measureView(currencySymbol, cSW, MeasureSpec.UNSPECIFIED, cSH, MeasureSpec.EXACTLY);
 
         int cCW = measuredWidth - currencySymbol.getMeasuredWidth();
         int cCH = measuredHeight / CTA;
+        ViewUtils.measureDebug("cC", cCW, cCH);
         measureView(currencyCode, cCW, MeasureSpec.EXACTLY, cCH, MeasureSpec.EXACTLY);
 
         int aW = measuredWidth - currencySymbol.getMeasuredWidth();
         int aH = (CTA - 1) * (measuredHeight / (CTA));
+        ViewUtils.measureDebug("a", aW, aH);
         measureView(amountView, aW, MeasureSpec.EXACTLY, aH, MeasureSpec.EXACTLY);
 
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
@@ -109,18 +116,21 @@ public class AmountDisplayLayout extends ViewGroup {
         int cST = iTop;
         int cSR = cSL + currencySymbol.getMeasuredWidth();
         int cSB = cST + currencySymbol.getMeasuredHeight();
+        ViewUtils.layoutDebug("cS", cSL, cST, cSR, cSB);
         currencySymbol.layout(cSL, cST, cSR, cSB);
 
         int cCL = currencySymbol.getMeasuredWidth();
         int cCT = getMeasuredHeight() - currencyCode.getMeasuredHeight();
         int cCR = cCL + currencyCode.getMeasuredWidth();
         int cCB = cCT + currencyCode.getMeasuredHeight();
+        ViewUtils.layoutDebug("cC", cCL, cCT, cCR, cCB);
         currencyCode.layout(cCL, cCT, cCR, cCB);
 
         int aL = currencySymbol.getMeasuredWidth();
         int aT = iTop;
         int aR = aL + amountView.getMeasuredWidth();
         int aB = aT + amountView.getMeasuredHeight();
+        ViewUtils.layoutDebug("a", aL, aT, aR, aB);
         amountView.layout(aL, aT, aR, aB);
     }
 
