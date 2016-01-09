@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.model.Category;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(
-                android.R.layout.simple_spinner_item, parent, false);
+                R.layout.list_item__category_select, parent, false);
 
         return new ViewHolder(itemView);
     }

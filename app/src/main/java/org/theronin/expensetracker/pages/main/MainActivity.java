@@ -6,7 +6,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -24,9 +23,7 @@ import org.theronin.expensetracker.dagger.InjectedActivity;
 import org.theronin.expensetracker.data.Contract;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.data.sync.SyncState;
-import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Entry;
-import org.theronin.expensetracker.pages.categories.CategoryDialogFragment;
 import org.theronin.expensetracker.pages.categories.CategoryListFragment;
 import org.theronin.expensetracker.pages.entries.list.EntriesAdapter.SelectionListener;
 import org.theronin.expensetracker.pages.entries.list.EntryListFragment;
@@ -44,13 +41,11 @@ import timber.log.Timber;
 
 public class MainActivity extends InjectedActivity implements
         FileBackupAgent.Listener,
-        Drawer.OnDrawerItemClickListener,
-        CategoryDialogFragment.Container {
+        Drawer.OnDrawerItemClickListener {
 
     private static final String TAG = MainActivity.class.getName();
 
     @Inject AbsDataSource<Entry> entryDataSource;
-    @Inject AbsDataSource<Category> categoryDataSource;
 
     private Toolbar toolbar;
 
@@ -316,26 +311,6 @@ public class MainActivity extends InjectedActivity implements
         //The AccountHeader in the navigation view also has a position
         MainPage page = MainPage.valueOf(position - 1);
         return setPage(page);
-    }
-
-    @Override
-    public void onCategoryCreated(String categoryName) {
-        if (categoryName != null && categoryName.length() > 0) {
-            long id = categoryDataSource.insert(new Category(sanitiseCategoryName(categoryName))).getId();
-            if (id == -1) {
-                Toast.makeText(this, R.string.duplicate_category_error, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, R.string.category_creation_success, Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(this, R.string.empty_category_name_error, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private String sanitiseCategoryName(String categoryName) {
-        categoryName = categoryName.toLowerCase();
-        categoryName = categoryName.trim();
-        return categoryName;
     }
 
     @Override

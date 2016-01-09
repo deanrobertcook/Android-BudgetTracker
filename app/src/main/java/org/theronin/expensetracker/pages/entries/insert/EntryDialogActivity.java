@@ -127,6 +127,11 @@ public class EntryDialogActivity extends InjectedActivity
         inputRows.remove(holder);
         inputRowsLayout.removeView(holder.rowView);
 
+        if (inputRows.isEmpty()) {
+            addInputRow();
+            return;
+        }
+
         for (int i = 0; i < inputRows.size(); i++) {
             holder = inputRows.get(i);
             holder.resetRowIndex(i);
