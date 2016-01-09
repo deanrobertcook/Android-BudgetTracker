@@ -1,6 +1,8 @@
 package org.theronin.expensetracker.pages.entries.insert;
 
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.apache.commons.lang.WordUtils;
@@ -16,11 +18,11 @@ public class InsertRowViewHolder implements View.OnClickListener {
     public final View clearButton;
     public final MoneyEditText moneyEditText;
 
-    private final TextView categorySelectorTextView;
+    public final TextView categorySelectorTextView;
     private Category category;
 
-    public InsertRowViewHolder(View rowView, RowClickListener listener, int rowIndex) {
-        this.rowView = rowView;
+    public InsertRowViewHolder(ViewGroup parent, RowClickListener listener, int rowIndex) {
+        this.rowView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item__insert_entry_row, parent, false);
         this.listener = listener;
         this.rowIndex = rowIndex;
 
@@ -31,6 +33,7 @@ public class InsertRowViewHolder implements View.OnClickListener {
         //TODO move to string resource
         categorySelectorTextView.setText("----");
         categorySelectorTextView.setOnClickListener(this);
+        moneyEditText.setAmount(0);
     }
 
     public void resetRowIndex(int rowIndex) {

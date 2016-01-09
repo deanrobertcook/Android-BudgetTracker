@@ -4,12 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -94,31 +91,10 @@ public class EntryDialogActivity extends InjectedActivity
     }
 
     private void addInputRow() {
-        InsertRowViewHolder viewHolder = createInputRow(inputRowsLayout);
+        InsertRowViewHolder viewHolder = new InsertRowViewHolder(inputRowsLayout, this, inputRows.size());
         inputRows.add(viewHolder);
         inputRowsLayout.addView(viewHolder.rowView);
         viewHolder.rowView.requestFocus();
-    }
-
-    private InsertRowViewHolder createInputRow(ViewGroup parent) {
-        View inputView = getLayoutInflater().inflate(R.layout.list_item__insert_entry_row, parent, false);
-        InsertRowViewHolder viewHolder = new InsertRowViewHolder(inputView, this, inputRows.size());
-
-        viewHolder.moneyEditText.setAmount(0);
-        viewHolder.moneyEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    addInputRow();
-                    handled = true;
-                }
-                return handled;
-            }
-        });
-
-        return viewHolder;
     }
 
     @Override
@@ -172,7 +148,6 @@ public class EntryDialogActivity extends InjectedActivity
             case R.id.add_entry_row_button:
                 addInputRow();
                 break;
-
         }
     }
 
