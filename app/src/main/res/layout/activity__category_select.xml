@@ -17,8 +17,6 @@
             android:id="@+id/recycler_view__category_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
             android:paddingTop="4dp"/>
 
         <android.support.design.widget.FloatingActionButton

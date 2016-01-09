@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.apache.commons.lang.WordUtils;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.model.Category;
 
@@ -41,7 +42,7 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Category category = categories.get(position);
-        ((TextView) holder.itemView).setText(category.name);
+        ((TextView) holder.itemView).setText(WordUtils.capitalize(category.name));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
