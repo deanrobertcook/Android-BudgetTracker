@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.data.sync;
+package org.theronin.expensetracker.data.backend;
 
 import org.theronin.expensetracker.model.Entity;
 import org.theronin.expensetracker.model.Entry;
@@ -15,12 +15,12 @@ import java.util.List;
  */
 public abstract class RemoteSync {
 
-    interface PushResult {
+    public interface PushResult {
         void onSuccess();
         void onFail(Exception e);
     }
 
-    interface PullResult {
+    public interface PullResult {
         void addEntries(List<Entry> entries);
         void deleteEntries(List<Entry> entries);
         void onComplete();

@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.data.sync;
+package org.theronin.expensetracker.data.backend;
 
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Entity;

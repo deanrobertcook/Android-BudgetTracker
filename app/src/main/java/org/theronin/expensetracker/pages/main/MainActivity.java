@@ -23,7 +23,7 @@ import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.dagger.InjectedActivity;
 import org.theronin.expensetracker.data.Contract;
 import org.theronin.expensetracker.data.source.AbsDataSource;
-import org.theronin.expensetracker.data.sync.SyncState;
+import org.theronin.expensetracker.data.backend.SyncState;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.pages.categories.CategoryListFragment;
 import org.theronin.expensetracker.pages.entries.list.EntriesAdapter.SelectionListener;

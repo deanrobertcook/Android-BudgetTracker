@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.data.sync;
+package org.theronin.expensetracker.data.backend;
 
 public enum SyncState {
     NEW,

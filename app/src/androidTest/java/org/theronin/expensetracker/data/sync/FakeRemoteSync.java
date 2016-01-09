@@ -1,6 +1,7 @@
 package org.theronin.expensetracker.data.sync;
 
 import org.theronin.expensetracker.data.Util;
+import org.theronin.expensetracker.data.backend.RemoteSync;
 import org.theronin.expensetracker.model.Entity;
 import org.theronin.expensetracker.model.Entry;
 

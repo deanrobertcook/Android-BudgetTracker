@@ -9,6 +9,8 @@ import org.junit.runner.RunWith;
 import org.theronin.expensetracker.data.Contract.EntryView;
 import org.theronin.expensetracker.data.TestApplication;
 import org.theronin.expensetracker.data.Util;
+import org.theronin.expensetracker.data.backend.PushCoordinator;
+import org.theronin.expensetracker.data.backend.SyncState;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Entry;
 

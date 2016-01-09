@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import org.theronin.expensetracker.dagger.InjectedComponent;
+import org.theronin.expensetracker.data.backend.PushCoordinator;
+import org.theronin.expensetracker.data.backend.RemoteSync;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Entry;
 
@@ -65,6 +67,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         pushCoordinator.syncEntries(allEntries);
     }
 
+    //TODO this should be moved into a class in the backend package
+    //TODO The issue was making this available for all entity types
     private void pullEntries() {
         final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
 

@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.data.sync;
+package org.theronin.expensetracker.data.backend;
 
 import com.parse.ParseCloud;
 import com.parse.ParseException;

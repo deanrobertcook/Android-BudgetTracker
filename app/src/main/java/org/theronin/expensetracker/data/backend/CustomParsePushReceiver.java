@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.data.sync;
+package org.theronin.expensetracker.data.backend;
 
 import android.content.Context;
 import android.content.Intent;

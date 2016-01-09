@@ -1,6 +1,6 @@
 package org.theronin.expensetracker.model;
 
-import org.theronin.expensetracker.data.sync.SyncState;
+import org.theronin.expensetracker.data.backend.SyncState;
 import org.theronin.expensetracker.utils.DateUtils;
 
 public class Entry extends Entity{

@@ -7,7 +7,7 @@ import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-import org.theronin.expensetracker.data.sync.SyncState;
+import org.theronin.expensetracker.data.backend.SyncState;
 import org.theronin.expensetracker.model.Entity;
 import org.theronin.expensetracker.utils.SyncUtils;
 
