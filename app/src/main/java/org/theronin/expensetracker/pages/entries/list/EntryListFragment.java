@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.pages.entries;
+package org.theronin.expensetracker.pages.entries.list;
 
 import android.app.LoaderManager;
 import android.content.Intent;
@@ -18,6 +18,7 @@ import org.theronin.expensetracker.data.loader.EntryLoader;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.data.source.DataSourceEntry;
 import org.theronin.expensetracker.model.Entry;
+import org.theronin.expensetracker.pages.entries.insert.EntryDialogActivity;
 import org.theronin.expensetracker.pages.main.MainActivity;
 
 import java.util.ArrayList;

@@ -27,13 +27,16 @@
             android:textSize="24sp"
             android:inputType="number"/>
 
-        <Spinner
-            android:id="@+id/spn__add_entry_category"
+        <TextView
+            android:id="@+id/tv__add_entry_category"
             style="@style/Widget.AppCompat.Spinner.Underlined"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="bottom"
-            android:spinnerMode="dialog"/>
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="18sp"
+            android:layout_gravity="bottom"/>
+
     </LinearLayout>
 
 </LinearLayout>

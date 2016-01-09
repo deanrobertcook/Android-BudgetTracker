@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.pages.entries;
+package org.theronin.expensetracker.pages.entries.insert;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.pages.entries;
+package org.theronin.expensetracker.pages.entries.insert;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,9 +14,11 @@ import java.util.List;
 public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAdapter.ViewHolder> {
 
     private List<Category> categories;
+    private CategorySelectedListener listener;
 
-    public CategorySelectAdapter() {
+    public CategorySelectAdapter(CategorySelectedListener listener) {
         categories = new ArrayList<>();
+        this.listener = listener;
     }
 
     public void setCategories(List<Category> categories) {
@@ -31,13 +33,21 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(
                 android.R.layout.simple_spinner_item, parent, false);
+
         return new ViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Category category = categories.get(position);
+        final Category category = categories.get(position);
         ((TextView) holder.itemView).setText(category.name);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onCategorySelected(category.name);
+            }
+        });
     }
 
     @Override
@@ -50,5 +60,9 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
         public ViewHolder(View itemView) {
             super(itemView);
         }
+    }
+
+    public interface CategorySelectedListener {
+        void onCategorySelected(String categoryName);
     }
 }

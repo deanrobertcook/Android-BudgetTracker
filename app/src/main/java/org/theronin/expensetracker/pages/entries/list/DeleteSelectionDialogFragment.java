@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.pages.entries;
+package org.theronin.expensetracker.pages.entries.list;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

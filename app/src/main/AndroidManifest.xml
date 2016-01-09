@@ -101,13 +101,22 @@
         </activity>
 
         <activity
-            android:name="org.theronin.expensetracker.pages.entries.EntryDialogActivity"
+            android:name=".pages.entries.insert.EntryDialogActivity"
             android:parentActivityName="org.theronin.expensetracker.pages.main.MainActivity"
             android:windowSoftInputMode="stateAlwaysVisible"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.theronin.expensetracker.pages.main.MainActivity"/>
+        </activity>
+
+        <activity
+            android:name=".pages.entries.insert.CategorySelectActivity"
+            android:parentActivityName=".pages.entries.insert.EntryDialogActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".pages.entries.insert.EntryDialogActivity"/>
         </activity>
 
         <activity

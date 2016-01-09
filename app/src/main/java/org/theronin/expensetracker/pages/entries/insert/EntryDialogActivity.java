@@ -1,8 +1,7 @@
-package org.theronin.expensetracker.pages.entries;
+package org.theronin.expensetracker.pages.entries.insert;
 
-import android.app.LoaderManager;
 import android.content.Context;
-import android.content.Loader;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -13,13 +12,11 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.dagger.InjectedActivity;
-import org.theronin.expensetracker.data.loader.CategoryLoader;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
@@ -27,7 +24,6 @@ import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.pages.reusable.DatePickerFragment;
 import org.theronin.expensetracker.utils.CurrencySettings;
 import org.theronin.expensetracker.utils.DateUtils;
-import org.theronin.expensetracker.view.MoneyEditText;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,11 +34,9 @@ import javax.inject.Inject;
 public class EntryDialogActivity extends InjectedActivity
         implements View.OnClickListener,
         CurrencySettings.Listener,
-        DatePickerFragment.Container,
-        LoaderManager.LoaderCallbacks<List<Category>> {
+        DatePickerFragment.Container, InsertRowViewHolder.RowClickListener {
 
     private static final String TAG = EntryDialogActivity.class.getName();
-    private static final int CATEGORY_LOADER_ID = 0;
 
     @Inject AbsDataSource<Entry> entryDataSource;
 
@@ -55,9 +49,7 @@ public class EntryDialogActivity extends InjectedActivity
     private long currentSelectedUtcTime;
 
     private LinearLayout inputRowsLayout;
-    private List<ViewHolder> inputRows;
-
-    private CategorySpinnerAdapter categorySpinnerAdapter;
+    private List<InsertRowViewHolder> inputRows;
 
     private View addEntryRowButton;
 
@@ -73,8 +65,6 @@ public class EntryDialogActivity extends InjectedActivity
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        getLoaderManager().initLoader(CATEGORY_LOADER_ID, null, this);
-
         currencySettings = new CurrencySettings(this, this);
         currencySymbolTextView = (TextView) findViewById(R.id.currency__symbol);
         currencyCodeTextView = (TextView) findViewById(R.id.currency__code);
@@ -89,7 +79,6 @@ public class EntryDialogActivity extends InjectedActivity
             }
         });
 
-        categorySpinnerAdapter = new CategorySpinnerAdapter(this);
         inputRowsLayout = (LinearLayout) findViewById(R.id.lv__input_rows);
         inputRows = new ArrayList<>();
         addInputRow();
@@ -105,15 +94,15 @@ public class EntryDialogActivity extends InjectedActivity
     }
 
     private void addInputRow() {
-        ViewHolder viewHolder = createInputRow(inputRowsLayout);
+        InsertRowViewHolder viewHolder = createInputRow(inputRowsLayout);
         inputRows.add(viewHolder);
-        inputRowsLayout.addView(viewHolder.inputView);
-        viewHolder.inputView.requestFocus();
+        inputRowsLayout.addView(viewHolder.rowView);
+        viewHolder.rowView.requestFocus();
     }
 
-    private ViewHolder createInputRow(ViewGroup parent) {
+    private InsertRowViewHolder createInputRow(ViewGroup parent) {
         View inputView = getLayoutInflater().inflate(R.layout.list_item__insert_entry_row, parent, false);
-        ViewHolder viewHolder = new ViewHolder(inputView);
+        InsertRowViewHolder viewHolder = new InsertRowViewHolder(inputView, this, inputRows.size());
 
         viewHolder.moneyEditText.setAmount(0);
         viewHolder.moneyEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -132,34 +121,30 @@ public class EntryDialogActivity extends InjectedActivity
         return viewHolder;
     }
 
-    private class ViewHolder implements View.OnClickListener {
-        public final View inputView;
-        public final View clearButton;
-        public final MoneyEditText moneyEditText;
+    @Override
+    public void onRowClearButtonClicked(int rowIndex) {
+        InsertRowViewHolder holder = inputRows.get(rowIndex);
+        inputRows.remove(holder);
+        inputRowsLayout.removeView(holder.rowView);
 
-        public final Spinner categorySpinner;
-        public Category lastSelectedCategory;
-
-        public ViewHolder(View inputView) {
-            this.inputView = inputView;
-            clearButton = inputView.findViewById(R.id.clear_row);
-            if (inputRows.isEmpty()) { //the first one
-                clearButton.setVisibility(View.INVISIBLE);
-            } else {
-                clearButton.setOnClickListener(this);
-            }
-            moneyEditText = (MoneyEditText) inputView.findViewById(R.id.amount_edit_layout);
-            categorySpinner = (Spinner) inputView.findViewById(R.id.spn__add_entry_category);
-            categorySpinner.setAdapter(categorySpinnerAdapter);
+        for (int i = 0; i < inputRows.size(); i++) {
+            holder = inputRows.get(i);
+            holder.resetRowIndex(i);
         }
+    }
 
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.clear_row:
-                    inputRows.remove(this);
-                    inputRowsLayout.removeView(inputView);
-            }
+    @Override
+    public void onRowSelectCategoryFieldClicked(int rowIndex) {
+        Intent intent = new Intent(EntryDialogActivity.this, CategorySelectActivity.class);
+        startActivityForResult(intent, rowIndex);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            String categorySelectedName = data.getExtras().getString(CategorySelectActivity.CATEGORY_NAME_KEY);
+            inputRows.get(requestCode).setCategory(new Category(categorySelectedName));
         }
     }
 
@@ -219,27 +204,25 @@ public class EntryDialogActivity extends InjectedActivity
 
     private void passInputToStore() {
         boolean anEntryHasNoAmount = false;
+        boolean anEntryHasNoCategory = false;
         List<Entry> entriesToInsert = new ArrayList<>();
 
-        for (ViewHolder viewHolder : inputRows) {
+        for (InsertRowViewHolder viewHolder : inputRows) {
             long amount = viewHolder.moneyEditText.getAmount();
             if (amount == 0) {
                 anEntryHasNoAmount = true;
                 break;
             }
 
-            if (viewHolder.categorySpinner.getSelectedItem() == null) {
-                Toast.makeText(this, "Please create a category first", Toast.LENGTH_SHORT).show();
-                return;
+            if (viewHolder.getCategory() == null) {
+                anEntryHasNoCategory = true;
+                break;
             }
-
-            viewHolder.lastSelectedCategory =
-                    categorySpinnerAdapter.getCategory(viewHolder.categorySpinner.getSelectedItemPosition());
 
             Entry entry = new Entry(
                     currentSelectedUtcTime,
                     amount,
-                    viewHolder.lastSelectedCategory,
+                    viewHolder.getCategory(),
                     new Currency(currencySettings.getCurrentCurrency().code)
             );
 
@@ -248,6 +231,8 @@ public class EntryDialogActivity extends InjectedActivity
 
         if (anEntryHasNoAmount) {
             Toast.makeText(this, "Make sure all rows have an amount greater than 0", Toast.LENGTH_SHORT).show();
+        } else if (anEntryHasNoCategory) {
+            Toast.makeText(this, "Make sure all rows have a selected category", Toast.LENGTH_SHORT).show();
         } else {
             entryDataSource.bulkInsert(entriesToInsert);
             Toast.makeText(this, "All G", Toast.LENGTH_SHORT).show();
@@ -263,35 +248,5 @@ public class EntryDialogActivity extends InjectedActivity
     @Override
     public void onDateSelected(long utcTime) {
         setDateTextView(utcTime);
-    }
-
-    @Override
-    public Loader<List<Category>> onCreateLoader(int id, Bundle args) {
-        return new CategoryLoader(this, this, false);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<Category>> loader, List<Category> data) {
-        updateCategories(data);
-    }
-
-    private void updateCategories(List<Category> categories) {
-        for (ViewHolder viewHolder : inputRows) {
-            categorySpinnerAdapter.addAll(categories);
-
-            if (viewHolder.lastSelectedCategory != null) {
-                int lastSelectedCategoryNewPosition =
-                        categorySpinnerAdapter.getPosition(viewHolder.lastSelectedCategory);
-                viewHolder.categorySpinner.setSelection(lastSelectedCategoryNewPosition);
-                //If you don't set this back to null, then there are cases where the
-                //lastSelectedCategory gets out of date.
-                viewHolder.lastSelectedCategory = null;
-            }
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<Category>> loader) {
-        updateCategories(new ArrayList<Category>());
     }
 }
