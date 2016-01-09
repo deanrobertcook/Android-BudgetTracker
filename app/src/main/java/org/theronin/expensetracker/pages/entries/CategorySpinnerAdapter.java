@@ -25,7 +25,7 @@ class CategorySpinnerAdapter extends ArrayAdapter<String> {
     private List<Comparator<Category>> comparators;
     private int[] sortSizes;
 
-    private final int FREQUENCY_SORT_SIZE = 10;
+    private final int MIN_CATEGORIES_FOR_FREQUENCY_SORT = 20;
 
     private final int VIEW_TYPE_NORMAL = 0;
     private final int VIEW_TYPE_WITH_BORDER = 1;
@@ -47,12 +47,12 @@ class CategorySpinnerAdapter extends ArrayAdapter<String> {
 
     private void initialiseSortingBlocks() {
         comparators = new ArrayList<>();
-        if (categories.size() > FREQUENCY_SORT_SIZE * 2) {
+        if (categories.size() > MIN_CATEGORIES_FOR_FREQUENCY_SORT) {
             comparators.add(new CategoryFrequencyComparator());
             comparators.add(new CategoryAlphabeticalComparator());
 
             sortSizes = new int[]{
-                    FREQUENCY_SORT_SIZE,
+                    (int) (categories.size() * 0.2),
                     categories.size()};
         } else {
             comparators.add(new CategoryAlphabeticalComparator());
@@ -76,8 +76,8 @@ class CategorySpinnerAdapter extends ArrayAdapter<String> {
     @Override
     public int getItemViewType(int position) {
         int borderIndex = 0;
-        for (int i = 0; i < sortSizes.length; i++) {
-            borderIndex += sortSizes[i];
+        for (int sortSize : sortSizes) {
+            borderIndex += sortSize;
             if (position == borderIndex - 1
                     && position != categories.size() - 1) {
                 return VIEW_TYPE_WITH_BORDER;
