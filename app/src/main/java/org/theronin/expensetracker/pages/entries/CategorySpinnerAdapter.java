@@ -133,14 +133,11 @@ class CategorySpinnerAdapter extends ArrayAdapter<String> {
      */
     private void sortCategories(List<Comparator<Category>> comparators, int[] sizes) {
         if (comparators.size() != sizes.length) {
-            throw new RuntimeException("The number of comparators and sizes of sublists must " +
-                    "match");
+            throw new RuntimeException("The number of comparators and sizes of sublists must match");
         }
-
         if (categories.size() == 0) {
             return;
         }
-
         List<Category> finalSortedList = new ArrayList<>();
 
         for (int i = 0; i < comparators.size(); i++) {

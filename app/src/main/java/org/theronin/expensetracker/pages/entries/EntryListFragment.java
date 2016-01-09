@@ -50,16 +50,13 @@ public class EntryListFragment extends InjectedFragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
-            savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment__entry_list, container, false);
 
-        FloatingActionButton floatingActionButton =
-                (FloatingActionButton) rootView.findViewById(R.id.fab__add_entry_button);
+        FloatingActionButton floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fab__add_entry_button);
         floatingActionButton.setOnClickListener(this);
 
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id
-                .recycler_view__entry_list);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view__entry_list);
         recyclerView.setHasFixedSize(true);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());

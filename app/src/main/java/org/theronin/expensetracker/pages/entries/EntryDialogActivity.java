@@ -218,24 +218,23 @@ public class EntryDialogActivity extends InjectedActivity
     }
 
     private void passInputToStore() {
-        boolean error = false;
+        boolean anEntryHasNoAmount = false;
         List<Entry> entriesToInsert = new ArrayList<>();
 
         for (ViewHolder viewHolder : inputRows) {
             long amount = viewHolder.moneyEditText.getAmount();
             if (amount == 0) {
-                error = true;
+                anEntryHasNoAmount = true;
                 break;
             }
 
             if (viewHolder.categorySpinner.getSelectedItem() == null) {
-                Toast.makeText(this, "Please create a category first", Toast
-                        .LENGTH_SHORT).show();
+                Toast.makeText(this, "Please create a category first", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            viewHolder.lastSelectedCategory = categorySpinnerAdapter.getCategory(
-                    viewHolder.categorySpinner.getSelectedItemPosition());
+            viewHolder.lastSelectedCategory =
+                    categorySpinnerAdapter.getCategory(viewHolder.categorySpinner.getSelectedItemPosition());
 
             Entry entry = new Entry(
                     currentSelectedUtcTime,
@@ -247,15 +246,14 @@ public class EntryDialogActivity extends InjectedActivity
             entriesToInsert.add(entry);
         }
 
-        if (error) {
+        if (anEntryHasNoAmount) {
             Toast.makeText(this, "Make sure all rows have an amount greater than 0", Toast.LENGTH_SHORT).show();
         } else {
             entryDataSource.bulkInsert(entriesToInsert);
             Toast.makeText(this, "All G", Toast.LENGTH_SHORT).show();
             View view = getCurrentFocus();
             if (view != null) {
-                InputMethodManager imm = (InputMethodManager) getSystemService
-                        (Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
             finish();
