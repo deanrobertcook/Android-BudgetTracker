@@ -10,7 +10,6 @@ import android.widget.TextView;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.utils.MoneyUtils;
-import org.theronin.expensetracker.utils.ViewUtils;
 
 public class AmountDisplayLayout extends ViewGroup {
 
@@ -84,17 +83,14 @@ public class AmountDisplayLayout extends ViewGroup {
 
         int cSH = measuredHeight;
         int cSW = measuredWidth;
-        ViewUtils.measureDebug("cS", cSW, cSH);
         measureView(currencySymbol, cSW, MeasureSpec.UNSPECIFIED, cSH, MeasureSpec.EXACTLY);
 
         int cCW = measuredWidth - currencySymbol.getMeasuredWidth();
         int cCH = measuredHeight / CTA;
-        ViewUtils.measureDebug("cC", cCW, cCH);
         measureView(currencyCode, cCW, MeasureSpec.EXACTLY, cCH, MeasureSpec.EXACTLY);
 
         int aW = measuredWidth - currencySymbol.getMeasuredWidth();
         int aH = (CTA - 1) * (measuredHeight / (CTA));
-        ViewUtils.measureDebug("a", aW, aH);
         measureView(amountView, aW, MeasureSpec.EXACTLY, aH, MeasureSpec.EXACTLY);
 
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
@@ -108,7 +104,6 @@ public class AmountDisplayLayout extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        ViewUtils.layoutDebug("onLayout: ", left, top, right, bottom);
         int iLeft = getPaddingLeft();
         int iTop = getPaddingTop();
 
@@ -116,21 +111,18 @@ public class AmountDisplayLayout extends ViewGroup {
         int cST = iTop;
         int cSR = cSL + currencySymbol.getMeasuredWidth();
         int cSB = cST + currencySymbol.getMeasuredHeight();
-        ViewUtils.layoutDebug("cS", cSL, cST, cSR, cSB);
         currencySymbol.layout(cSL, cST, cSR, cSB);
 
         int cCL = currencySymbol.getMeasuredWidth();
         int cCT = getMeasuredHeight() - currencyCode.getMeasuredHeight();
         int cCR = cCL + currencyCode.getMeasuredWidth();
         int cCB = cCT + currencyCode.getMeasuredHeight();
-        ViewUtils.layoutDebug("cC", cCL, cCT, cCR, cCB);
         currencyCode.layout(cCL, cCT, cCR, cCB);
 
         int aL = currencySymbol.getMeasuredWidth();
         int aT = iTop;
         int aR = aL + amountView.getMeasuredWidth();
         int aB = aT + amountView.getMeasuredHeight();
-        ViewUtils.layoutDebug("a", aL, aT, aR, aB);
         amountView.layout(aL, aT, aR, aB);
     }
 

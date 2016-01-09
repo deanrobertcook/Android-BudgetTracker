@@ -5,8 +5,6 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.TextView;
 
-import timber.log.Timber;
-
 public class VerticalResizeTextView extends TextView {
 
     public VerticalResizeTextView(Context context) {
@@ -47,14 +45,10 @@ public class VerticalResizeTextView extends TextView {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int height = MeasureSpec.getSize(heightMeasureSpec);
         resizeText(height);
-
         int textWidth = (int) getPaint().measureText(getText().toString());
-        Timber.v("Text width: " + textWidth);
-
         if (textWidth > MeasureSpec.getSize(widthMeasureSpec)) {
             widthMeasureSpec = MeasureSpec.makeMeasureSpec(textWidth, MeasureSpec.EXACTLY);
         }
-
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
