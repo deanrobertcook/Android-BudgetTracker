@@ -158,7 +158,7 @@ public class FileBackupAgent  {
                     }
                 }
             }
-            return null;
+            return new ArrayList<>();
         }
 
         private boolean isExternalStorageReadable() {

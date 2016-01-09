@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -303,6 +304,9 @@ public class MainActivity extends InjectedActivity implements
 
     @Override
     public void onEntriesRestored(List<Entry> entries) {
+        if (entries.isEmpty()) {
+            Toast.makeText(this, "There were no entries to back up. Make sure permissions are set", Toast.LENGTH_SHORT).show();
+        }
         entryDataSource.bulkInsert(entries);
     }
 
