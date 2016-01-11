@@ -8,22 +8,4 @@
         android:id="@+id/tb__toolbar"
         style="@style/AppBarStyle"/>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/material_default_margin">
-
-        <org.theronin.expensetracker.view.AmountEditLayout
-            android:layout_width="match_parent"
-            android:padding="0dp"
-            android:layout_height="64dp"/>
-
-        <org.theronin.expensetracker.view.AmountEditLayout
-            android:layout_width="match_parent"
-            android:padding="0dp"
-            android:layout_height="48dp"/>
-
-    </LinearLayout>
-
 </LinearLayout>
