@@ -51,8 +51,7 @@ public class CurrencyConverter {
 //                        "value");
 
                 ExchangeRate foreignExchangeRate = searchExchangeRates(entry, allExchangeRates);
-                double directExchangeRate = foreignExchangeRate != null ?
-                        calculateDirectExchangeRate(foreignExchangeRate) : -1.0;
+                double directExchangeRate = foreignExchangeRate != null ? calculateDirectExchangeRate(foreignExchangeRate) : -1.0;
                 entry.setDirectExchangeRate(directExchangeRate);
 
                 if (foreignExchangeRate == null &&

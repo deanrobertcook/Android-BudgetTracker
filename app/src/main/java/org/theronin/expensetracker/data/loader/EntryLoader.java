@@ -39,8 +39,7 @@ public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.L
                 EntryView.COL_DATE + " DESC, " + EntryView._ID + " DESC");
         List<ExchangeRate> allExchangeRates = exchangeRateDataSource.query();
 
-        final CurrencyConverter converter = new CurrencyConverter(currencySettings
-                .getHomeCurrency(), allExchangeRates);
+        final CurrencyConverter converter = new CurrencyConverter(currencySettings.getHomeCurrency(), allExchangeRates);
         converter.assignExchangeRatesToEntries(entries);
 
 //        for (Long date : converter.getMissingExchangeRateDays()) {

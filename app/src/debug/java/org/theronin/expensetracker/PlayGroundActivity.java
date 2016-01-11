@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import org.theronin.expensetracker.data.backend.ExchangeRateDownloader;
+import org.theronin.expensetracker.data.backend.ParseExchangeRateDownloader;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.ExchangeRate;
 
@@ -14,7 +14,7 @@ import java.util.List;
 import timber.log.Timber;
 
 
-public class PlayGroundActivity extends AppCompatActivity implements ExchangeRateDownloader.Callback {
+public class PlayGroundActivity extends AppCompatActivity implements ParseExchangeRateDownloader.Callback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class PlayGroundActivity extends AppCompatActivity implements ExchangeRat
         toolbar.setTitle("PlayGround Activity");
         setSupportActionBar(toolbar);
 
-        ExchangeRateDownloader downloader = new ExchangeRateDownloader(this);
+        ParseExchangeRateDownloader downloader = new ParseExchangeRateDownloader(this);
 
         List<Currency> currencies = Arrays.asList(
                 new Currency("AUD"),
