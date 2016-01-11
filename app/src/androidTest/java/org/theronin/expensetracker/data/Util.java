@@ -14,8 +14,8 @@ public class Util {
     public static final long DEFAULT_LATCH_WAIT = 2000;
 
     public static List<Entry> createEntries(int numEntries, boolean createGlobalId, SyncState syncState) {
-        long someDate = System.currentTimeMillis();
-        long someAmount = 100L;
+        long someDate = someDateAfter2000();
+        long someAmount = someAmountUnder(100);
         Category someCategory = new Category("Test");
         //Needs to be one of the supported currencies
         Currency someCurrency = new Currency("AUD");
@@ -32,6 +32,16 @@ public class Util {
         }
 
         return entries;
+    }
+
+    public static long someDateAfter2000() {
+        Random random = new Random();
+        return random.nextLong() + 946681200000L; //Any date after 2000-01-01
+    }
+
+    public static long someAmountUnder(int amount) {
+        Random random = new Random();
+        return random.nextInt(amount);
     }
 
     private static final char[] symbols;

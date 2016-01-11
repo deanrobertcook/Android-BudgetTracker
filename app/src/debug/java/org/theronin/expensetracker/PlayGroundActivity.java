@@ -39,7 +39,7 @@ public class PlayGroundActivity extends AppCompatActivity implements ParseExchan
                 System.currentTimeMillis() + 2 * (24 * 60L * 60L * 1000L)
         );
 
-        downloader.downloadExchangeRates(currencies, dates);
+//        downloader.downloadExchangeRates(currencies, dates);
 
 
 //        AutoResizeEditText view = (AutoResizeEditText) findViewById(R.id.test_view);

@@ -215,11 +215,12 @@ public class ExchangeRateDownloadService extends InjectedService {
                 usdRate = ratesObject.get(code).getAsDouble();
             }
 
-            exchangeRates.add(new ExchangeRate(
+            exchangeRates.add(new ExchangeRate(-1,
                             code,
                             utcDate,
                             usdRate,
-                            System.currentTimeMillis())
+                            System.currentTimeMillis(),
+                            0)
             );
         }
         return exchangeRates;

@@ -42,7 +42,8 @@ public class DataSourceExchangeRate extends AbsDataSource<ExchangeRate> {
                 cursor.getString(ExchangeRateTable.INDEX_CURRENCY_CODE),
                 cursor.getLong(ExchangeRateTable.INDEX_DATE),
                 cursor.getDouble(ExchangeRateTable.INDEX_USD_RATE),
-                cursor.getLong(ExchangeRateTable.INDEX_LAST_DOWNLOAD_ATTEMPT)
+                cursor.getLong(ExchangeRateTable.INDEX_LAST_DOWNLOAD_ATTEMPT),
+                cursor.getInt(ExchangeRateTable.INDEX_DOWNLOAD_ATTEMPTS)
         );
     }
 
@@ -66,7 +67,8 @@ public class DataSourceExchangeRate extends AbsDataSource<ExchangeRate> {
         values.put(ExchangeRateTable.COL_CURRENCY_CODE, exchangeRate.currencyCode);
         values.put(ExchangeRateTable.COL_DATE, exchangeRate.utcDate);
         values.put(ExchangeRateTable.COL_USD_RATE, exchangeRate.usdRate);
-        values.put(ExchangeRateTable.COL_LAST_DOWNLOAD_ATTEMPT, exchangeRate.utcLastUpdated);
+        values.put(ExchangeRateTable.COL_LAST_DOWNLOAD_ATTEMPT, exchangeRate.getUtcLastUpdated());
+        values.put(ExchangeRateTable.COL_DOWNLOAD_ATTEMPTS, exchangeRate.getDownloadAttempts());
         return values;
     }
 
