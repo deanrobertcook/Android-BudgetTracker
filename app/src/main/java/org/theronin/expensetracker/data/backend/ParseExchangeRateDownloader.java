@@ -18,14 +18,18 @@ import timber.log.Timber;
 
 public class ParseExchangeRateDownloader implements ExchangeRateDownloader {
 
-    private final Callback callback;
+    private Callback callback;
 
-    public ParseExchangeRateDownloader(Callback callback) {
+    @Override
+    public void setCallback(Callback callback) {
         this.callback = callback;
     }
 
     @Override
     public void downloadExchangeRates(List<ExchangeRate> ratesToDownload) {
+        if (callback == null) {
+            throw new IllegalStateException("A Callback must be set");
+        }
         Map<String, String> params = new HashMap<>();
         params.put("codes", createCodesObject(ratesToDownload));
         params.put("dates", createDatesObject(ratesToDownload));

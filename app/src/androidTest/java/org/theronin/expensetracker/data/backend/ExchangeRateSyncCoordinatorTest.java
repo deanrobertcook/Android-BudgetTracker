@@ -27,7 +27,7 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
@@ -58,15 +58,10 @@ public class ExchangeRateSyncCoordinatorTest {
 
         syncCoordinator = new ExchangeRateSyncCoordinator(
                 entryAbsDataSource, exchangeRateAbsDataSource, downloader, homeCurrency);
+
+        verify(downloader).setCallback(syncCoordinator);
     }
 
-    @Test
-    public void registersItselfToEntryDataSource() {
-        verify(entryAbsDataSource).registerObserver(syncCoordinator);
-    }
-
-
-    //TODO test that rates don't get downloaded again if they already have been!
     @Test
     public void exchangeRatesShouldntBeDownloadedTwice() {
         List<Entry> entriesThatHaveADifferentCurrencyFromHome = Arrays.asList(
@@ -88,7 +83,7 @@ public class ExchangeRateSyncCoordinatorTest {
                 new ExchangeRate(-1, "AUD", JAN_1_2000, -1, -1, 0)
         );
 
-        syncCoordinator.onDataSourceChanged();
+        syncCoordinator.downloadExchangeRates();
 
         verify(downloader).downloadExchangeRates(containsAllExchangeRates(ratesLeftToDownload));
     }
@@ -102,7 +97,7 @@ public class ExchangeRateSyncCoordinatorTest {
         when(entryDataSourceIsQueried()).thenReturn(entriesThatHaveADifferentCurrencyFromHome);
         when(exchangeRateSourceIsQueried()).thenReturn(new ArrayList<ExchangeRate>());
 
-        syncCoordinator.onDataSourceChanged();
+        syncCoordinator.downloadExchangeRates();
 
 
         /*
@@ -125,8 +120,8 @@ public class ExchangeRateSyncCoordinatorTest {
     public void doesntTriggerDownloaderIfAllEntriesHaveTheSameCurrency() {
         when(entryDataSourceIsQueried()).thenReturn(new ArrayList<Entry>());
         when(exchangeRateSourceIsQueried()).thenReturn(new ArrayList<ExchangeRate>());
-        syncCoordinator.onDataSourceChanged();
-        verifyZeroInteractions(downloader);
+        syncCoordinator.downloadExchangeRates();
+        verifyNoMoreInteractions(downloader);
     }
 
     @Test
@@ -146,8 +141,8 @@ public class ExchangeRateSyncCoordinatorTest {
         );
 
         when(exchangeRateSourceIsQueried()).thenReturn(ratesFoundFromDatabase);
-        syncCoordinator.onDataSourceChanged();
-        verifyZeroInteractions(downloader);
+        syncCoordinator.downloadExchangeRates();
+        verifyNoMoreInteractions(downloader);
     }
 
     @Test
@@ -159,7 +154,7 @@ public class ExchangeRateSyncCoordinatorTest {
         when(entryDataSourceIsQueried()).thenReturn(entryWithDifferingExchangeRate);
         when(exchangeRateSourceIsQueried()).thenReturn(new ArrayList<ExchangeRate>());
 
-        syncCoordinator.onDataSourceChanged();
+        syncCoordinator.downloadExchangeRates();
 
         List<ExchangeRate> downloadedExchangeRates = Arrays.asList(
                 new ExchangeRate(-1, "AUD", JAN_1_2000, 1.2439, -1, 0),
@@ -184,7 +179,7 @@ public class ExchangeRateSyncCoordinatorTest {
         when(entryDataSourceIsQueried()).thenReturn(entriesFromDatabaseWithDifferentCurrency);
         when(exchangeRateSourceIsQueried()).thenReturn(new ArrayList<ExchangeRate>());
 
-        syncCoordinator.onDataSourceChanged();
+        syncCoordinator.downloadExchangeRates();
 
         //uh oh, the other date is missing...
         List<ExchangeRate> downloadedExRates = new ArrayList<>(Arrays.asList(

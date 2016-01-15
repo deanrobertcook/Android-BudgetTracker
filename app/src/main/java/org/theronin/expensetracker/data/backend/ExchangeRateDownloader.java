@@ -10,5 +10,7 @@ public interface ExchangeRateDownloader {
         void onDownloadComplete(List<ExchangeRate> exchangeRates);
     }
 
+    void setCallback(Callback callback);
+
     void downloadExchangeRates(List<ExchangeRate> ratesToDownload);
 }

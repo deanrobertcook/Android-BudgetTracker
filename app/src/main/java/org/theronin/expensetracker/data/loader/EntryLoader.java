@@ -1,11 +1,13 @@
 package org.theronin.expensetracker.data.loader;
 
 import android.content.Context;
+import android.content.Intent;
 
 import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.data.Contract.EntryView;
-import org.theronin.expensetracker.data.source.AbsDataSource;
+import org.theronin.expensetracker.data.backend.ExchangeRateDownloadService;
 import org.theronin.expensetracker.data.backend.SyncState;
+import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.ExchangeRate;
@@ -42,11 +44,10 @@ public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.L
         final CurrencyConverter converter = new CurrencyConverter(currencySettings.getHomeCurrency(), allExchangeRates);
         converter.assignExchangeRatesToEntries(entries);
 
-//        for (Long date : converter.getMissingExchangeRateDays()) {
-//            Intent serviceIntent = new Intent(getContext(), ExchangeRateDownloadService.class);
-//            serviceIntent.putExtra(UTC_DATE_KEY, date);
-//            getContext().startService(serviceIntent);
-//        }
+        if (!converter.getMissingExchangeRateDays().isEmpty()) {
+            Intent serviceIntent = new Intent(getContext(), ExchangeRateDownloadService.class);
+            getContext().startService(serviceIntent);
+        }
 
         Timber.d("Returning entries");
         return entries;

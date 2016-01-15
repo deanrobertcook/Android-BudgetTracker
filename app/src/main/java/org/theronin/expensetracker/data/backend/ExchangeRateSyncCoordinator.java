@@ -21,8 +21,7 @@ import static org.theronin.expensetracker.data.Contract.EntryView.COL_CURRENCY_C
  * guess by looking for another date.
  */
 public class ExchangeRateSyncCoordinator implements
-        ExchangeRateDownloader.Callback,
-        AbsDataSource.Observer {
+        ExchangeRateDownloader.Callback {
 
     private final AbsDataSource<Entry> entryAbsDataSource;
     private final AbsDataSource<ExchangeRate> exchangeRateAbsDataSource;
@@ -40,12 +39,12 @@ public class ExchangeRateSyncCoordinator implements
         this.downloader = downloader;
         this.homeCurrency = homeCurrency;
 
-        entryAbsDataSource.registerObserver(this);
+        this.downloader.setCallback(this);
     }
 
     @Override
     public void onDownloadComplete(List<ExchangeRate> downloadedRates) {
-        Timber.i("onDownloadComplete");
+        Timber.v("onDownloadComplete");
         if (ratesBeingDownloaded == null) {
             throw new IllegalStateException("Download was called without a data source change");
         }
@@ -70,9 +69,8 @@ public class ExchangeRateSyncCoordinator implements
         ratesBeingDownloaded = null;
     }
 
-    @Override
-    public void onDataSourceChanged() {
-        Timber.i("onDataSourceChanged");
+    public void downloadExchangeRates() {
+        Timber.v("downloadExchangeRates");
         findPotentialExchangeRatesToDownload();
         removeAlreadyDownloadedExchangeRates();
         if (ratesBeingDownloaded.isEmpty()) {
@@ -92,7 +90,7 @@ public class ExchangeRateSyncCoordinator implements
 
     private void removeAlreadyDownloadedExchangeRates() {
         List<ExchangeRate> alreadyDownloaded = exchangeRateAbsDataSource.query();
-
+        Timber.i("There are : " + alreadyDownloaded.size() + " exchange rates to check");
         Iterator<ExchangeRate> iterator = ratesBeingDownloaded.iterator();
         while (iterator.hasNext()) {
             ExchangeRate rateToDownload = iterator.next();

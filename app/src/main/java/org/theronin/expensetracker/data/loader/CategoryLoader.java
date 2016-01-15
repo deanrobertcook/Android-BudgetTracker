@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import org.theronin.expensetracker.dagger.InjectedComponent;
+import org.theronin.expensetracker.data.backend.ExchangeRateDownloadService;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
@@ -15,8 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import static org.theronin.expensetracker.data.loader.ExchangeRateDownloadService.UTC_DATE_KEY;
 
 public class CategoryLoader extends DataLoader<Category>
         implements AbsDataSource.Observer, CurrencySettings.Listener {
@@ -49,9 +48,8 @@ public class CategoryLoader extends DataLoader<Category>
                     .getHomeCurrency(), allExchangeRates);
             converter.assignExchangeRatesToEntries(allEntries);
 
-            for (Long date : converter.getMissingExchangeRateDays()) {
+            if (!converter.getMissingExchangeRateDays().isEmpty()) {
                 Intent serviceIntent = new Intent(getContext(), ExchangeRateDownloadService.class);
-                serviceIntent.putExtra(UTC_DATE_KEY, date);
                 getContext().startService(serviceIntent);
             }
 

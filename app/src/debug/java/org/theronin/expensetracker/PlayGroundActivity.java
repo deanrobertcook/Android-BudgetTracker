@@ -2,13 +2,10 @@ package org.theronin.expensetracker;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import org.theronin.expensetracker.data.backend.ParseExchangeRateDownloader;
-import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.ExchangeRate;
 
-import java.util.Arrays;
 import java.util.List;
 
 import timber.log.Timber;
@@ -18,26 +15,26 @@ public class PlayGroundActivity extends AppCompatActivity implements ParseExchan
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_playground);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tb__toolbar);
-        toolbar.setTitle("PlayGround Activity");
-        setSupportActionBar(toolbar);
-
-        ParseExchangeRateDownloader downloader = new ParseExchangeRateDownloader(this);
-
-        List<Currency> currencies = Arrays.asList(
-                new Currency("AUD"),
-                new Currency("USD"),
-                new Currency("EUR"),
-                new Currency("WOOP")
-        );
-        List<Long> dates = Arrays.asList(
-                System.currentTimeMillis(),
-                System.currentTimeMillis() - (24 * 60L * 60L * 1000L),
-                System.currentTimeMillis() + 2 * (24 * 60L * 60L * 1000L)
-        );
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_playground);
+//
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.tb__toolbar);
+//        toolbar.setTitle("PlayGround Activity");
+//        setSupportActionBar(toolbar);
+//
+//        ParseExchangeRateDownloader downloader = new ParseExchangeRateDownloader();
+//
+//        List<Currency> currencies = Arrays.asList(
+//                new Currency("AUD"),
+//                new Currency("USD"),
+//                new Currency("EUR"),
+//                new Currency("WOOP")
+//        );
+//        List<Long> dates = Arrays.asList(
+//                System.currentTimeMillis(),
+//                System.currentTimeMillis() - (24 * 60L * 60L * 1000L),
+//                System.currentTimeMillis() + 2 * (24 * 60L * 60L * 1000L)
+//        );
 
 //        downloader.downloadExchangeRates(currencies, dates);
 
