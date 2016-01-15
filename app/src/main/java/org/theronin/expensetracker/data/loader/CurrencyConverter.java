@@ -78,13 +78,13 @@ public class CurrencyConverter {
 
     protected double calculateDirectExchangeRate (ExchangeRate foreignExchangeRate) {
         double homeCurrencyRate = findHomeCurrencyRateForGivenDate(foreignExchangeRate.utcDate);
-        return homeCurrencyRate / foreignExchangeRate.usdRate;
+        return homeCurrencyRate / foreignExchangeRate.getUsdRate();
     }
 
     protected double findHomeCurrencyRateForGivenDate(long utcDate) {
         for (ExchangeRate rate : homeCurrencyRates) {
             if (DateUtils.sameDay(rate.utcDate, utcDate)) {
-                return rate.usdRate;
+                return rate.getUsdRate();
             }
         }
         throw new IllegalStateException("There exists an exchange rate for a given entry, but not" +

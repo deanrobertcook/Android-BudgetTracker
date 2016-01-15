@@ -8,7 +8,10 @@ import org.theronin.expensetracker.utils.ExchangeRateUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+
+import timber.log.Timber;
 
 import static org.theronin.expensetracker.data.Contract.EntryView.COL_CURRENCY_CODE;
 
@@ -40,12 +43,9 @@ public class ExchangeRateSyncCoordinator implements
         entryAbsDataSource.registerObserver(this);
     }
 
-    protected String getQueryString() {
-        return COL_CURRENCY_CODE + " != ?";
-    }
-
     @Override
     public void onDownloadComplete(List<ExchangeRate> downloadedRates) {
+        Timber.i("onDownloadComplete");
         if (ratesBeingDownloaded == null) {
             throw new IllegalStateException("Download was called without a data source change");
         }
@@ -61,6 +61,7 @@ public class ExchangeRateSyncCoordinator implements
             if (!waiting.equals(downloaded)) {
                 waiting.onDownloadFailed();
             } else {
+                waiting.setUsdRate(downloaded.getUsdRate());
                 i++;
             }
         }
@@ -71,18 +72,36 @@ public class ExchangeRateSyncCoordinator implements
 
     @Override
     public void onDataSourceChanged() {
-        List<Entry> entries = entryAbsDataSource.query(getQueryString(), new String[] {homeCurrency.code}, null);
-        if (entries.isEmpty()) {
+        Timber.i("onDataSourceChanged");
+        findPotentialExchangeRatesToDownload();
+        removeAlreadyDownloadedExchangeRates();
+        if (ratesBeingDownloaded.isEmpty()) {
             return;
         }
+        downloader.downloadExchangeRates(ratesBeingDownloaded);
+    }
 
+    private void findPotentialExchangeRatesToDownload() {
+        List<Entry> entries = entryAbsDataSource.query(COL_CURRENCY_CODE + " != ?", new String[] {homeCurrency.code}, null);
         ratesBeingDownloaded = new ArrayList<>();
-
         for (Entry entry : entries) {
             ratesBeingDownloaded.add(new ExchangeRate(-1, entry.currency.code, entry.utcDate, -1, -1, 0));
             ratesBeingDownloaded.add(new ExchangeRate(-1, homeCurrency.code, entry.utcDate, -1, -1, 0));
         }
+    }
 
-        downloader.downloadExchangeRates(ratesBeingDownloaded);
+    private void removeAlreadyDownloadedExchangeRates() {
+        List<ExchangeRate> alreadyDownloaded = exchangeRateAbsDataSource.query();
+
+        Iterator<ExchangeRate> iterator = ratesBeingDownloaded.iterator();
+        while (iterator.hasNext()) {
+            ExchangeRate rateToDownload = iterator.next();
+            for (ExchangeRate downloadedRate : alreadyDownloaded) {
+                if (rateToDownload.equals(downloadedRate)) {
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
     }
 }

@@ -66,7 +66,7 @@ public class DataSourceExchangeRate extends AbsDataSource<ExchangeRate> {
         }
         values.put(ExchangeRateTable.COL_CURRENCY_CODE, exchangeRate.currencyCode);
         values.put(ExchangeRateTable.COL_DATE, exchangeRate.utcDate);
-        values.put(ExchangeRateTable.COL_USD_RATE, exchangeRate.usdRate);
+        values.put(ExchangeRateTable.COL_USD_RATE, exchangeRate.getUsdRate());
         values.put(ExchangeRateTable.COL_LAST_DOWNLOAD_ATTEMPT, exchangeRate.getUtcLastUpdated());
         values.put(ExchangeRateTable.COL_DOWNLOAD_ATTEMPTS, exchangeRate.getDownloadAttempts());
         return values;

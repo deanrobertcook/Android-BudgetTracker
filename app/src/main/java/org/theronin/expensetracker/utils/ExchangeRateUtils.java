@@ -9,7 +9,14 @@ public class ExchangeRateUtils {
         return new Comparator<ExchangeRate>() {
             @Override
             public int compare(ExchangeRate lhs, ExchangeRate rhs) {
-                return (int) (lhs.utcDate - rhs.utcDate);
+                String lhDate = DateUtils.getStorageFormattedDate(lhs.utcDate);
+                String rhDate = DateUtils.getStorageFormattedDate(rhs.utcDate);
+                int byDate = lhDate.compareTo(rhDate);
+                if (byDate == 0) {
+                    return lhs.currencyCode.compareTo(rhs.currencyCode);
+                } else {
+                    return byDate;
+                }
             }
         };
     }

@@ -8,9 +8,9 @@ public class ExchangeRate extends Entity {
 
     public final String currencyCode;
     public final long utcDate;
-    public final double usdRate;
 
-    public long utcLastUpdated;
+    private double usdRate;
+    private long utcLastUpdated;
     private int downloadAttempts;
 
     public ExchangeRate(long id,
@@ -46,8 +46,9 @@ public class ExchangeRate extends Entity {
     @Override
     public String toString() {
         return super.toString() + String.format(
-                "currency: %s, usdRate: %f, date: %s",
-                currencyCode, usdRate, DateUtils.getStorageFormattedDate(utcDate)
+                "currency: %s, usdRate: %f, date: %s, lastUpdated: %s, downloadAttempts: %d",
+                currencyCode, usdRate, DateUtils.getStorageFormattedDate(utcDate),
+                DateUtils.getStorageFormattedDate(utcLastUpdated), downloadAttempts
         );
     }
 
@@ -58,5 +59,13 @@ public class ExchangeRate extends Entity {
         String thisDate = DateUtils.getDisplayFormattedDate(this.utcDate);
         String otherDate = DateUtils.getDisplayFormattedDate(other.utcDate);
         return this.currencyCode.equals(other.currencyCode) && thisDate.equals(otherDate);
+    }
+
+    public void setUsdRate(double usdRate) {
+        this.usdRate = usdRate;
+    }
+
+    public double getUsdRate() {
+        return usdRate;
     }
 }
