@@ -2,7 +2,6 @@ package org.theronin.expensetracker.data.backend;
 
 import android.support.annotation.NonNull;
 
-import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -14,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import timber.log.Timber;
 
 public class ParseExchangeRateDownloader implements ExchangeRateDownloader {
 
@@ -29,24 +30,22 @@ public class ParseExchangeRateDownloader implements ExchangeRateDownloader {
         params.put("codes", createCodesObject(ratesToDownload));
         params.put("dates", createDatesObject(ratesToDownload));
 
-        //TODO make sure that the ExchangeRates passed in get updated, rather than creating a new list
-        //TODO make synchronous
-        ParseCloud.callFunctionInBackground("exchangeRate", params, new FunctionCallback<Object>() {
-            @Override
-            public void done(Object object, ParseException e) {
-                if (e == null) {
-                    List<ExchangeRate> rates = new ArrayList<>();
-                    List<ParseObject> parseObjects = (ArrayList<ParseObject>) object;
-                    for (ParseObject parseObject : parseObjects) {
-                        ExchangeRate rate = getExchangeRate(parseObject);
-                        rates.add(rate);
-                    }
-                    callback.onDownloadComplete(rates);
-                } else {
-                    e.printStackTrace();
-                }
+        //TODO maybe make sure that the ExchangeRates passed in get updated, rather than creating a new list?
+        try {
+            Timber.i("Making call to retrieve exchange rates from BE function");
+            List<ParseObject> parseObjects = ParseCloud.callFunction("exchangeRate", params);
+
+            List<ExchangeRate> rates = new ArrayList<>();
+            for (ParseObject parseObject : parseObjects) {
+                ExchangeRate rate = getExchangeRate(parseObject);
+                Timber.v("Downloaded: " + rate.toString());
+                rates.add(rate);
             }
-        });
+            callback.onDownloadComplete(rates);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @NonNull
