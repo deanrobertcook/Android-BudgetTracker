@@ -1,37 +1,28 @@
 package org.theronin.expensetracker.data.loader;
 
 import android.content.Context;
-import android.content.Intent;
 
 import org.theronin.expensetracker.dagger.InjectedComponent;
-import org.theronin.expensetracker.data.backend.ExchangeRateDownloadService;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
-import org.theronin.expensetracker.model.ExchangeRate;
-import org.theronin.expensetracker.utils.CurrencySettings;
 
 import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
 
-public class CategoryLoader extends DataLoader<Category>
-        implements AbsDataSource.Observer, CurrencySettings.Listener {
-
-    private final CurrencySettings currencySettings;
+public class CategoryLoader extends DataLoader<Category> implements AbsDataSource.Observer {
 
     private boolean calculateTotals;
 
     @Inject AbsDataSource<Category> categoryDataSource;
-    @Inject AbsDataSource<ExchangeRate> exchangeRateDataSource;
     @Inject AbsDataSource<Entry> entryDataSource;
 
     public CategoryLoader(Context context, InjectedComponent component, boolean calculateTotals) {
         super(context, component);
-        setObservedDataSources(categoryDataSource, exchangeRateDataSource, entryDataSource);
-        currencySettings = new CurrencySettings(context, this);
+        setObservedDataSources(categoryDataSource, entryDataSource);
         this.calculateTotals = calculateTotals;
     }
 
@@ -42,16 +33,7 @@ public class CategoryLoader extends DataLoader<Category>
             return categories;
         } else {
             List<Entry> allEntries = entryDataSource.query();
-            List<ExchangeRate> allExchangeRates = exchangeRateDataSource.query();
-
-            CurrencyConverter converter = new CurrencyConverter(currencySettings
-                    .getHomeCurrency(), allExchangeRates);
-            converter.assignExchangeRatesToEntries(allEntries);
-
-            if (!converter.getMissingExchangeRateDays().isEmpty()) {
-                Intent serviceIntent = new Intent(getContext(), ExchangeRateDownloadService.class);
-                getContext().startService(serviceIntent);
-            }
+            assignHomeAmountsToEntries(allEntries);
 
             calculateTotals(categories, allEntries);
             return categories;
@@ -86,9 +68,5 @@ public class CategoryLoader extends DataLoader<Category>
         if (calculateTotals) {
             forceLoad();
         }
-    }
-
-    @Override
-    public void onCurrentCurrencyChanged(Currency currentCurrency) {
     }
 }

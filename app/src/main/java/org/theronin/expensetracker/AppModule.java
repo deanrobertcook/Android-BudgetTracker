@@ -6,6 +6,7 @@ import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.data.backend.ExchangeRateDownloader;
 import org.theronin.expensetracker.data.backend.ParseExchangeRateDownloader;
 import org.theronin.expensetracker.data.loader.CategoryLoader;
+import org.theronin.expensetracker.data.loader.DataLoader;
 import org.theronin.expensetracker.data.loader.EntryLoader;
 import org.theronin.expensetracker.data.backend.ExchangeRateDownloadService;
 import org.theronin.expensetracker.data.source.AbsDataSource;
@@ -40,7 +41,8 @@ import dagger.Provides;
         DataSourceEntry.class,
         ExchangeRateDownloadService.class,
         EntryLoader.class,
-        CategoryLoader.class
+        CategoryLoader.class,
+        DataLoader.class
 })
 public class AppModule {
 

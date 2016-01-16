@@ -1,16 +1,13 @@
 package org.theronin.expensetracker.data.loader;
 
 import android.content.Context;
-import android.content.Intent;
 
 import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.data.Contract.EntryView;
-import org.theronin.expensetracker.data.backend.ExchangeRateDownloadService;
 import org.theronin.expensetracker.data.backend.SyncState;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
-import org.theronin.expensetracker.model.ExchangeRate;
 import org.theronin.expensetracker.utils.CurrencySettings;
 
 import java.util.List;
@@ -22,15 +19,10 @@ import timber.log.Timber;
 public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.Listener {
 
     @Inject AbsDataSource<Entry> entryDataSource;
-    @Inject AbsDataSource<ExchangeRate> exchangeRateDataSource;
-
-    private final CurrencySettings currencySettings;
 
     public EntryLoader(Context context, InjectedComponent component) {
         super(context, component);
-        setObservedDataSources(entryDataSource, exchangeRateDataSource);
-
-        currencySettings = new CurrencySettings(context, this);
+        setObservedDataSources(entryDataSource);
     }
 
     @Override
@@ -39,15 +31,8 @@ public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.L
         List<Entry> entries = entryDataSource.query(
                 EntryView.COL_SYNC_STATUS + " NOT IN (" + SyncState.deleteStateSelection() + ")", null,
                 EntryView.COL_DATE + " DESC, " + EntryView._ID + " DESC");
-        List<ExchangeRate> allExchangeRates = exchangeRateDataSource.query();
 
-        final CurrencyConverter converter = new CurrencyConverter(currencySettings.getHomeCurrency(), allExchangeRates);
-        converter.assignExchangeRatesToEntries(entries);
-
-        if (!converter.getMissingExchangeRateDays().isEmpty()) {
-            Intent serviceIntent = new Intent(getContext(), ExchangeRateDownloadService.class);
-            getContext().startService(serviceIntent);
-        }
+        assignHomeAmountsToEntries(entries);
 
         Timber.i("Returning " + entries.size() + " entries");
         return entries;
@@ -56,10 +41,5 @@ public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.L
     @Override
     public void onHomeCurrencyChanged(Currency homeCurrency) {
         forceLoad();
-    }
-
-    @Override
-    public void onCurrentCurrencyChanged(Currency currentCurrency) {
-
     }
 }

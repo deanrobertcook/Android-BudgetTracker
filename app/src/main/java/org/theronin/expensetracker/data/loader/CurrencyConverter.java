@@ -8,25 +8,49 @@ import org.theronin.expensetracker.utils.DateUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is responsible for finding the exchange rates for the home currency and the current
+ * currency of every entry that is passed into it, and then using this to calculate the direct
+ * exchange rate (not relative to USD) for each of those entries, figuring out their total value,
+ * and then assigning this to the Entry#homeAmount property.
+ */
 public class CurrencyConverter {
-
-    //TODO move in an instance of the DataSourceExchange rate so that this class can control
-    //TODO the downloading of exchange rates.
-    //Downloading of exchange rates is now also needed by the EntryLoader.
-
+    private final Callback callback;
     private final Currency homeCurrency;
-    private final List<ExchangeRate> allExchangeRates;
-    private final List<ExchangeRate> homeCurrencyRates;
 
-    private List<Long> missingExchangeRateDays;
+    private List<ExchangeRate> homeCurrencyRates;
 
-    public CurrencyConverter(Currency homeCurrency, List<ExchangeRate> allRates) {
+    public interface Callback {
+        void needToDownloadExchangeRates();
+    }
+
+    public CurrencyConverter(Callback callback, Currency homeCurrency) {
         if (homeCurrency == null) {
             throw new IllegalArgumentException("homeCurrency must have a value");
         }
+        this.callback = callback;
         this.homeCurrency = homeCurrency;
-        this.allExchangeRates = allRates;
-        this.homeCurrencyRates = findAllExchangeRatesForHomeCurrency(allRates);
+    }
+
+    public void assignExchangeRatesToEntries(List<ExchangeRate> allExchangeRates, List<Entry> allEntries) {
+        this.homeCurrencyRates = findAllExchangeRatesForHomeCurrency(allExchangeRates);
+
+        boolean missingExchangeRateData = false;
+        for (Entry entry : allEntries) {
+            if (entry.currency.code.equals(homeCurrency.code)) {
+                entry.setDirectExchangeRate(1);
+            } else {
+                ExchangeRate foreignExchangeRate = searchExchangeRates(entry, allExchangeRates);
+                double directExchangeRate = foreignExchangeRate != null ? calculateDirectExchangeRate(foreignExchangeRate) : -1.0;
+                entry.setDirectExchangeRate(directExchangeRate);
+
+                missingExchangeRateData = foreignExchangeRate == null;
+            }
+        }
+
+        if (missingExchangeRateData) {
+            callback.needToDownloadExchangeRates();
+        }
     }
 
     protected List<ExchangeRate> findAllExchangeRatesForHomeCurrency(List<ExchangeRate> allRates) {
@@ -37,33 +61,6 @@ public class CurrencyConverter {
             }
         }
         return homeCurrencyRates;
-    }
-
-    public void assignExchangeRatesToEntries(List<Entry> allEntries) {
-        missingExchangeRateDays = new ArrayList<>();
-        for (Entry entry : allEntries) {
-//            Timber.d(entry.toString());
-            if (entry.currency.code.equals(homeCurrency.code)) {
-//                Timber.d("Entry currency code matches home currency code");
-                entry.setDirectExchangeRate(1);
-            } else {
-//                Timber.d("Entry currency differs from home currency - calculating equivalent " +
-//                        "value");
-
-                ExchangeRate foreignExchangeRate = searchExchangeRates(entry, allExchangeRates);
-                double directExchangeRate = foreignExchangeRate != null ? calculateDirectExchangeRate(foreignExchangeRate) : -1.0;
-                entry.setDirectExchangeRate(directExchangeRate);
-
-                if (foreignExchangeRate == null &&
-                        !DateUtils.listContainsDate(missingExchangeRateDays, entry.utcDate)) {
-                    missingExchangeRateDays.add(entry.utcDate);
-                }
-            }
-        }
-    }
-
-    public List<Long> getMissingExchangeRateDays() {
-        return missingExchangeRateDays;
     }
 
     protected ExchangeRate searchExchangeRates(Entry entry, List<ExchangeRate> exchangeRates) {

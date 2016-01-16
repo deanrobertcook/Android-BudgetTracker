@@ -34,7 +34,6 @@ public class ParseExchangeRateDownloader implements ExchangeRateDownloader {
         params.put("codes", createCodesObject(ratesToDownload));
         params.put("dates", createDatesObject(ratesToDownload));
 
-        //TODO maybe make sure that the ExchangeRates passed in get updated, rather than creating a new list?
         try {
             List<ParseObject> parseObjects = ParseCloud.callFunction("exchangeRate", params);
 
