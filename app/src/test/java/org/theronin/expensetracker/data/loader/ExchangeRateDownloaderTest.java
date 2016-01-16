@@ -67,7 +67,7 @@ public class ExchangeRateDownloaderTest {
     @Test @LargeTest
     public void compareRealDownloadedDataWithLocallySavedData() throws MalformedURLException {
         String downloadDate = "2015-12-03";
-        long utcDate = DateUtils.getUtcTimeFromStorageFormattedDate(downloadDate);
+        long utcDate = DateUtils.getUtcTime(downloadDate);
         URL url = new File(String.format(JSON_RES_PATH, downloadDate)).toURI().toURL();
 
         String jsonString = exchangeRateDownloader.downloadJson(url);

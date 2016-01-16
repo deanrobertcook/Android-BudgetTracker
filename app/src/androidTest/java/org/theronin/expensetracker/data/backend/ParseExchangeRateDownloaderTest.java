@@ -28,8 +28,8 @@ public class ParseExchangeRateDownloaderTest {
 
     public static final String PARSE_DATE_KEY = "date";
 
-    public static final long JAN_1_2000 = DateUtils.getUtcTimeFromStorageFormattedDate("2000-01-01");
-    public static final long FEB_1_2000 = DateUtils.getUtcTimeFromStorageFormattedDate("2000-02-01");
+    public static final long JAN_1_2000 = DateUtils.getUtcTime("2000-01-01");
+    public static final long FEB_1_2000 = DateUtils.getUtcTime("2000-02-01");
 
     /**
      * These rates have been taken manually from openexchangerate.org.

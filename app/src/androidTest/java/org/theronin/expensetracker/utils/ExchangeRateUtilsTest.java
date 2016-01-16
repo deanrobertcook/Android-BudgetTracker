@@ -11,8 +11,8 @@ import java.util.List;
 
 public class ExchangeRateUtilsTest {
 
-    private static final long JAN_1_2000 = 946681201000L; //2000-01-01
-    private static final long JAN_2_2000 = JAN_1_2000 + 86400000L; //2000-01-02
+    private static final long JAN_1_2000 = DateUtils.getUtcTime("2000-01-01");
+    private static final long JAN_2_2000 = DateUtils.getUtcTime("2000-01-02");
 
     @Test
     public void testSortingByDate() {

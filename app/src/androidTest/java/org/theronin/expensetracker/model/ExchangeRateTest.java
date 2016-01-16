@@ -1,14 +1,15 @@
 package org.theronin.expensetracker.model;
 
 import org.junit.Test;
+import org.theronin.expensetracker.utils.DateUtils;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 public class ExchangeRateTest {
 
-    private static final long JAN_1_2000 = 946681201000L; //2000-01-01
-    private static final long JAN_2_2000 = JAN_1_2000 + 86400000L; //2000-01-02
+    private static final long JAN_1_2000 = DateUtils.getUtcTime("2000-01-01");
+    private static final long JAN_2_2000 = DateUtils.getUtcTime("2000-01-02");
 
     @Test
     public void equalsMethodShouldReturnTrueForExchangeRatesWithSameDateAndCode() {

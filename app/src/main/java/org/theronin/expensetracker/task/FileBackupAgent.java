@@ -199,7 +199,7 @@ public class FileBackupAgent  {
         private long findDate(JsonObject object) {
             if (object.has("dateEntered")) {
                 String date = object.get("dateEntered").getAsString();
-                long utcDate =  DateUtils.getUtcTimeFromStorageFormattedDate(date);
+                long utcDate =  DateUtils.getUtcTime(date);
                 Timber.d("findDate: " + date + ", utcDate: " + utcDate);
                 return utcDate;
             } else {

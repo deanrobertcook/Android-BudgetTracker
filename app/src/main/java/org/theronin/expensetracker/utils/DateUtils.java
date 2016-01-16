@@ -31,10 +31,14 @@ public class DateUtils {
         return DateTimeComparator.getDateOnlyInstance().compare(date1, date2) == 0;
     }
 
-    public static long getUtcTimeFromStorageFormattedDate(String formattedDate) {
+    /**
+     * @param storageFormattedDate of the form "YYYY-MM-DD"
+     * @return the utcTimeStamp for 05:00h on the date provided, to millisecond precision.
+     */
+    public static long getUtcTime(String storageFormattedDate) {
         Date date = null;
         try {
-            date = DATE_FORMAT_FOR_STORAGE.parse(formattedDate);
+            date = DATE_FORMAT_FOR_STORAGE.parse(storageFormattedDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -43,10 +47,6 @@ public class DateUtils {
 
     public static String getStorageFormattedDate(long utcTime) {
         return DATE_FORMAT_FOR_STORAGE.format(new Date(utcTime));
-    }
-
-    public static String getStorageFormattedCurrentDate() {
-        return getStorageFormattedDate(new Date().getTime());
     }
 
     public static long daysSince(long utcTime) {

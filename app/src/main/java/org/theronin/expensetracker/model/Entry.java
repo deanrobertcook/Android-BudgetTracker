@@ -63,7 +63,10 @@ public class Entry extends Entity{
     public String toString() {
         return super.toString() + String.format(
                 "date: %s, category: %s, amount: %d, currency: %s",
-                DateUtils.getStorageFormattedDate(utcDate), category.name, amount, currency.code
+                DateUtils.getStorageFormattedDate(utcDate),
+                category == null ? null : category.name,
+                amount,
+                currency == null ? null : currency.code
         );
     }
 

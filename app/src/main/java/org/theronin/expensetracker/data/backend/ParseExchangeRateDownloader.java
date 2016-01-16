@@ -54,7 +54,7 @@ public class ParseExchangeRateDownloader implements ExchangeRateDownloader {
     private ExchangeRate getExchangeRate(ParseObject parseObject) {
         return new ExchangeRate(-1,
                 parseObject.getString("currency"),
-                DateUtils.getUtcTimeFromStorageFormattedDate(parseObject.getString("date")),
+                DateUtils.getUtcTime(parseObject.getString("date")),
                 parseObject.getDouble("usdRate"),
                 -1,
                 0

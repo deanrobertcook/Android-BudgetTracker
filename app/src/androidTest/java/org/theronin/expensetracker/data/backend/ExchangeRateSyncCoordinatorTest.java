@@ -15,6 +15,7 @@ import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.ExchangeRate;
+import org.theronin.expensetracker.utils.DateUtils;
 import org.theronin.expensetracker.utils.ExchangeRateUtils;
 
 import java.util.ArrayList;
@@ -37,8 +38,8 @@ public class ExchangeRateSyncCoordinatorTest {
     public static final Long TEST_AMOUNT = 550L; // $5.50
     public static final Category TEST_CATEGORY = new Category("Test");
 
-    public static final long JAN_1_2000 = 946681201000L; //2000-01-01
-    public static final long JAN_2_2000 = JAN_1_2000 + 86400000L; //2000-01-02
+    public static final long JAN_1_2000 = DateUtils.getUtcTime("2000-01-01");
+    public static final long JAN_2_2000 = DateUtils.getUtcTime("2000-01-02");
 
     private DataSourceEntry entryAbsDataSource;
     private DataSourceExchangeRate exchangeRateAbsDataSource;

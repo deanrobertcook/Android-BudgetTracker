@@ -43,7 +43,7 @@ public class CurrencyConverterTest {
     }
 
     private List<ExchangeRate> findTestRatesForDate(String date) throws MalformedURLException {
-        long utcDate = DateUtils.getUtcTimeFromStorageFormattedDate(date);
+        long utcDate = DateUtils.getUtcTime(date);
         URL url = new File(String.format(JSON_RES_PATH, date)).toURI().toURL();
         ExchangeRateDownloader exchangeRateDownloader = new ExchangeRateDownloader(SUPPORTED_CURRENCIES);
         String jsonString = exchangeRateDownloader.downloadJson(url);
@@ -55,13 +55,13 @@ public class CurrencyConverterTest {
     public void entriesWithSameCurrencyAsHome_ShouldBeAssignedRateOfOne() {
         List<Entry> entries = new ArrayList<>();
 
-        entries.add(new Entry(DateUtils.getUtcTimeFromStorageFormattedDate("2015-12-03"),
+        entries.add(new Entry(DateUtils.getUtcTime("2015-12-03"),
                 1000, new Category(""), HOME_CURRENCY));
-        entries.add(new Entry(DateUtils.getUtcTimeFromStorageFormattedDate("2015-12-06"),
+        entries.add(new Entry(DateUtils.getUtcTime("2015-12-06"),
                 1000, new Category(""), HOME_CURRENCY));
-        entries.add(new Entry(DateUtils.getUtcTimeFromStorageFormattedDate("2015-12-07"),
+        entries.add(new Entry(DateUtils.getUtcTime("2015-12-07"),
                 1000, new Category(""), HOME_CURRENCY));
-        entries.add(new Entry(DateUtils.getUtcTimeFromStorageFormattedDate("2015-12-08"),
+        entries.add(new Entry(DateUtils.getUtcTime("2015-12-08"),
                 1000, new Category(""), HOME_CURRENCY));
 
         CONVERTER.assignExchangeRatesToEntries(entries);
@@ -79,13 +79,13 @@ public class CurrencyConverterTest {
     public void entryWithNoExchangeData_ButSameCurrency_ShouldBeAssignedRateOfOne() {
         List<Entry> entries = new ArrayList<>();
 
-        entries.add(new Entry(DateUtils.getUtcTimeFromStorageFormattedDate("2015-11-06"),
+        entries.add(new Entry(DateUtils.getUtcTime("2015-11-06"),
                 1000, new Category(""), HOME_CURRENCY));
-        entries.add(new Entry(DateUtils.getUtcTimeFromStorageFormattedDate("2015-11-03"),
+        entries.add(new Entry(DateUtils.getUtcTime("2015-11-03"),
                 1000, new Category(""), HOME_CURRENCY));
-        entries.add(new Entry(DateUtils.getUtcTimeFromStorageFormattedDate("2014-12-01"),
+        entries.add(new Entry(DateUtils.getUtcTime("2014-12-01"),
                 1000, new Category(""), HOME_CURRENCY));
-        entries.add(new Entry(DateUtils.getUtcTimeFromStorageFormattedDate("2014-12-08"),
+        entries.add(new Entry(DateUtils.getUtcTime("2014-12-08"),
                 1000, new Category(""), HOME_CURRENCY));
 
         CONVERTER.assignExchangeRatesToEntries(entries);
@@ -105,13 +105,13 @@ public class CurrencyConverterTest {
 
         Currency currency = new Currency("AUD", "$");
 
-        entries.add(new Entry(DateUtils.getUtcTimeFromStorageFormattedDate("2015-12-03"),
+        entries.add(new Entry(DateUtils.getUtcTime("2015-12-03"),
                 1000, new Category(""), currency));
-        entries.add(new Entry(DateUtils.getUtcTimeFromStorageFormattedDate("2015-12-06"),
+        entries.add(new Entry(DateUtils.getUtcTime("2015-12-06"),
                 1000, new Category(""), currency));
-        entries.add(new Entry(DateUtils.getUtcTimeFromStorageFormattedDate("2015-12-07"),
+        entries.add(new Entry(DateUtils.getUtcTime("2015-12-07"),
                 1000, new Category(""), currency));
-        entries.add(new Entry(DateUtils.getUtcTimeFromStorageFormattedDate("2015-12-08"),
+        entries.add(new Entry(DateUtils.getUtcTime("2015-12-08"),
                 1000, new Category(""), currency));
 
         CONVERTER.assignExchangeRatesToEntries(entries);
@@ -131,13 +131,13 @@ public class CurrencyConverterTest {
 
         Currency currency = new Currency("AUD", "$");
 
-        entries.add(new Entry(DateUtils.getUtcTimeFromStorageFormattedDate("2015-11-06"),
+        entries.add(new Entry(DateUtils.getUtcTime("2015-11-06"),
                 1000, new Category(""), currency));
-        entries.add(new Entry(DateUtils.getUtcTimeFromStorageFormattedDate("2015-11-03"),
+        entries.add(new Entry(DateUtils.getUtcTime("2015-11-03"),
                 1000, new Category(""), currency));
-        entries.add(new Entry(DateUtils.getUtcTimeFromStorageFormattedDate("2014-12-01"),
+        entries.add(new Entry(DateUtils.getUtcTime("2014-12-01"),
                 1000, new Category(""), currency));
-        entries.add(new Entry(DateUtils.getUtcTimeFromStorageFormattedDate("2014-12-08"),
+        entries.add(new Entry(DateUtils.getUtcTime("2014-12-08"),
                 1000, new Category(""), currency));
 
         CONVERTER.assignExchangeRatesToEntries(entries);
@@ -158,12 +158,12 @@ public class CurrencyConverterTest {
 
         List<ExchangeRate> exchangeRates = new ArrayList<>();
         exchangeRates.add(new ExchangeRate("AUD",
-                DateUtils.getUtcTimeFromStorageFormattedDate(notMissingExchangeDataDay),
+                DateUtils.getUtcTime(notMissingExchangeDataDay),
                 -1.00,
                 System.currentTimeMillis()));
         //Need to ad an exchange rate for the home currency on the same day
         exchangeRates.add(new ExchangeRate("EUR",
-                DateUtils.getUtcTimeFromStorageFormattedDate(notMissingExchangeDataDay),
+                DateUtils.getUtcTime(notMissingExchangeDataDay),
                 -1.00,
                 System.currentTimeMillis()));
 
@@ -171,7 +171,7 @@ public class CurrencyConverterTest {
         //Even though the exchange rate for this date has a negative (not available) rate,
         //We don't want to mark it as missing, as we've attempted to download it before.
         entries.add(new Entry(
-                DateUtils.getUtcTimeFromStorageFormattedDate(notMissingExchangeDataDay),
+                DateUtils.getUtcTime(notMissingExchangeDataDay),
                 100,
                 new Category("test"),
                 new Currency("AUD", "$")
@@ -179,7 +179,7 @@ public class CurrencyConverterTest {
         //This entry should trigger an increment to missing entries, since there is no exchange rate
         //at all for this date, even one with a negative (na) exchange rate
         entries.add(new Entry(
-                DateUtils.getUtcTimeFromStorageFormattedDate(missingExchangeDataDay),
+                DateUtils.getUtcTime(missingExchangeDataDay),
                 100,
                 new Category("test"),
                 new Currency("AUD", "$")
