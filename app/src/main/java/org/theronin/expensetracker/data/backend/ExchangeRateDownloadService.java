@@ -34,7 +34,7 @@ public class ExchangeRateDownloadService extends InjectedService implements Curr
 
     @Override
     public void onCreate() {
-        Timber.d("onCreate()");
+        Timber.i("onCreate()");
         super.onCreate();
 
         currencySettings = new CurrencySettings(this, this);
@@ -58,8 +58,6 @@ public class ExchangeRateDownloadService extends InjectedService implements Curr
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Timber.d("onHandleIntent()");
-
         if (!hasNetworkAccess()) {
             //Just drop the request, the next time we try to calculate rates we'll request it again
             return;
@@ -70,6 +68,7 @@ public class ExchangeRateDownloadService extends InjectedService implements Curr
         }
         isStarted = true;
 
+        Timber.i("Performing download of exchange rates");
         syncCoordinator.downloadExchangeRates();
     }
 

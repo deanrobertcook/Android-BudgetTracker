@@ -12,8 +12,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import timber.log.Timber;
-
 import static org.theronin.expensetracker.data.Contract.EntryView.COL_CURRENCY_CODE;
 
 /**
@@ -45,7 +43,6 @@ public class ExchangeRateSyncCoordinator implements
 
     @Override
     public void onDownloadComplete(List<ExchangeRate> downloadedRates) {
-        Timber.v("onDownloadComplete");
         if (ratesBeingDownloaded == null) {
             throw new IllegalStateException("Download was called without a data source change");
         }
@@ -76,7 +73,6 @@ public class ExchangeRateSyncCoordinator implements
     }
 
     public void downloadExchangeRates() {
-        Timber.v("downloadExchangeRates");
         findPotentialExchangeRatesToDownload();
         removeAlreadyDownloadedExchangeRates();
         if (ratesBeingDownloaded.isEmpty()) {
@@ -90,16 +86,31 @@ public class ExchangeRateSyncCoordinator implements
         DebugUtils.printList("Potential entries: ", entries);
         ratesBeingDownloaded = new ArrayList<>();
         for (Entry entry : entries) {
-            ratesBeingDownloaded.add(new ExchangeRate(-1, entry.currency.code, entry.utcDate, -1, -1, 0));
-            ratesBeingDownloaded.add(new ExchangeRate(-1, homeCurrency.code, entry.utcDate, -1, -1, 0));
+            ExchangeRate currentRate = new ExchangeRate(-1, entry.currency.code, entry.utcDate, -1, -1, 0);
+            ExchangeRate homeRate = new ExchangeRate(-1, homeCurrency.code, entry.utcDate, -1, -1, 0);
+
+            if (!containsExchangeRate(ratesBeingDownloaded, currentRate)) {
+                ratesBeingDownloaded.add(currentRate);
+            }
+
+            if (!containsExchangeRate(ratesBeingDownloaded, homeRate)) {
+                ratesBeingDownloaded.add(homeRate);
+            }
         }
+    }
+
+    private boolean containsExchangeRate(List<ExchangeRate> rates, ExchangeRate rateToCheck) {
+        for (ExchangeRate rate : rates) {
+            if (rate.equals(rateToCheck)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void removeAlreadyDownloadedExchangeRates() {
         List<ExchangeRate> alreadyDownloaded = exchangeRateAbsDataSource.query();
-
         DebugUtils.printList("Already downloaded exRates: ", alreadyDownloaded);
-
         Iterator<ExchangeRate> iterator = ratesBeingDownloaded.iterator();
         while (iterator.hasNext()) {
             ExchangeRate rateToDownload = iterator.next();

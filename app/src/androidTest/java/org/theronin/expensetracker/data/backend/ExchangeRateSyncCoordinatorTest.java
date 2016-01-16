@@ -118,6 +118,49 @@ public class ExchangeRateSyncCoordinatorTest {
     }
 
     @Test
+    public void doesntRequestDuplicateExchangeRates() {
+        //If there are many entries in a foreign currency for the same day, we don't want to pass
+        //a new exchange rate request for each one. The same exchange rate will cover them all
+        List<Entry> entriesResultingInDuplicateExRates = Arrays.asList(
+                new Entry(null, JAN_1_2000, -1, null, new Currency("EUR", "€", "Euro")),
+                new Entry(null, JAN_1_2000, -1, null, new Currency("EUR", "€", "Euro")));
+
+        when(entryDataSourceIsQueried()).thenReturn(entriesResultingInDuplicateExRates);
+        when(exchangeRateSourceIsQueried()).thenReturn(new ArrayList<ExchangeRate>());
+
+        syncCoordinator.downloadExchangeRates();
+
+        List<ExchangeRate> expectedDownloadedRates = Arrays.asList(
+                new ExchangeRate(-1, "EUR", JAN_1_2000, -1, -1, 0),
+                new ExchangeRate(-1, "AUD", JAN_1_2000, -1, -1, 0)
+        );
+
+        verify(downloader).downloadExchangeRates(containsAllExchangeRates(expectedDownloadedRates));
+    }
+
+    @Test
+    public void thirdExchangeRateDoesntCreateDuplicateRequests() {
+        //The case where there is more than one exRate for a given day. This should then create 3
+        //exchange rates, one for each currency on that date
+        List<Entry> entriesFromDatabase = Arrays.asList(
+                new Entry(null, JAN_1_2000, -1, null, new Currency("EUR", "€", "Euro")),
+                new Entry(null, JAN_1_2000, -1, null, new Currency("JPY", "€", "Euro")));
+
+        when(entryDataSourceIsQueried()).thenReturn(entriesFromDatabase);
+        when(exchangeRateSourceIsQueried()).thenReturn(new ArrayList<ExchangeRate>());
+
+        syncCoordinator.downloadExchangeRates();
+
+        List<ExchangeRate> expectedDownloadedRates = Arrays.asList(
+                new ExchangeRate(-1, "EUR", JAN_1_2000, -1, -1, 0),
+                new ExchangeRate(-1, "AUD", JAN_1_2000, -1, -1, 0),
+                new ExchangeRate(-1, "JPY", JAN_1_2000, -1, -1, 0)
+        );
+
+        verify(downloader).downloadExchangeRates(containsAllExchangeRates(expectedDownloadedRates));
+    }
+
+    @Test
     public void doesntTriggerDownloaderIfAllEntriesHaveTheSameCurrency() {
         when(entryDataSourceIsQueried()).thenReturn(new ArrayList<Entry>());
         when(exchangeRateSourceIsQueried()).thenReturn(new ArrayList<ExchangeRate>());
@@ -208,7 +251,6 @@ public class ExchangeRateSyncCoordinatorTest {
         return exchangeRateAbsDataSource.query();
     }
 
-    //TODO test what happens if a datasource change occurs while waiting for results...
     //TODO test what happens if you there are exchange rates that couldn't be downloaded last time
     //TODO test what happens if there is an exchange rate that has unsuccessfully been downloaded 3 times.
 
