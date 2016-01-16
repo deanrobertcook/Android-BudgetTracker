@@ -77,7 +77,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         if (!entry.currency.code.equals(currencySettings.getHomeCurrency().code)) {
             vH.homeDisplay.setVisibility(View.VISIBLE);
             vH.homeDisplay.setCurrency(currencySettings.getHomeCurrency());
-            vH.homeDisplay.setAmount(Math.round((double) entry.amount * entry.getDirectExchangeRate()));
+            vH.homeDisplay.setAmount(entry.getHomeAmount());
         } else {
             vH.homeDisplay.setVisibility(View.INVISIBLE);
         }

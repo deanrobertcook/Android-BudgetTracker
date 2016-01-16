@@ -9,7 +9,7 @@ public class Entry extends Entity{
     public final Category category;
     public final Currency currency;
 
-    private double directExchangeRate = -1;
+    private long homeAmount = -1;
 
     public Entry(
             long utcDate,
@@ -70,15 +70,11 @@ public class Entry extends Entity{
         );
     }
 
-    public double getDirectExchangeRate() {
-        return directExchangeRate;
+    public void setHomeAmount(long amount) {
+        this.homeAmount = amount;
     }
 
-    /**
-     * Note, unlike everywhere else in the application, this will be the direct exchange rate
-     * @param directExchangeRate
-     */
-    public void setDirectExchangeRate(double directExchangeRate) {
-        this.directExchangeRate = directExchangeRate;
+    public long getHomeAmount() {
+        return homeAmount;
     }
 }

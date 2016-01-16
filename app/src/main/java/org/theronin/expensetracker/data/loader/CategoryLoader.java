@@ -49,12 +49,12 @@ public class CategoryLoader extends DataLoader<Category> implements AbsDataSourc
                 Entry entry = entryIterator.next();
                 if (category.name.equals(entry.category.name)) {
                     entryIterator.remove();
-                    if (entry.getDirectExchangeRate() == -1.0) {
+                    if (entry.getHomeAmount() == -1) {
                         //TODO could have a more elegant way of handling missing entry rate data
                         //But for now I'll just drop them from the calculation
                         missingEntries++;
                     } else {
-                        categoryTotal += Math.round((double) entry.amount * entry.getDirectExchangeRate());
+                        categoryTotal += entry.getHomeAmount();
                     }
                 }
             }

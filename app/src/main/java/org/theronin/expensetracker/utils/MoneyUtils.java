@@ -135,10 +135,10 @@ public class MoneyUtils {
         int missingEntries = 0;
         for (Entry entry : entries) {
             if (condition == null || condition.check(entry)) {
-                if (entry.getDirectExchangeRate() < 0) {
+                if (entry.getHomeAmount() < 0) {
                     missingEntries++;
                 } else {
-                    total += Math.round((double) entry.amount * entry.getDirectExchangeRate());
+                    total += entry.getHomeAmount();
                 }
             }
         }

@@ -31,18 +31,20 @@ public class CurrencyConverterTest {
     }
 
     @Test
-    public void entriesWithSameCurrencyAsHome_ShouldBeAssignedRateOfOne() {
+    public void entriesWithSameCurrencyAsHome_ShouldBeAssignedAmountEqualToCurrent() {
+        int entryAmount = 100;
+
         List<Entry> entries = Arrays.asList(
-                new Entry(DEC_03_2015, 10, null, new Currency("AUD")),
-                new Entry(DEC_04_2015, 10, null, new Currency("AUD"))
+                new Entry(DEC_03_2015, entryAmount, null, new Currency("AUD")),
+                new Entry(DEC_04_2015, entryAmount, null, new Currency("AUD"))
         );
 
         //We shouldn't need to pass in any exchange rates
         converter.assignExchangeRatesToEntries(new ArrayList<ExchangeRate>(), entries);
 
         for (Entry entry : entries) {
-            assertEquals("Entry does not have an exchange rate of 1",
-                    1.0, entry.getDirectExchangeRate());
+            assertEquals("Entry does not have the same as its current amount",
+                    entryAmount , entry.getHomeAmount());
         }
     }
 
@@ -63,11 +65,11 @@ public class CurrencyConverterTest {
 
         converter.assignExchangeRatesToEntries(rates, entries);
 
-        assertEquals("Rate for entry not correct", homeRate / currentRate, entries.get(0).getDirectExchangeRate());
+        assertEquals("Rate for entry not correct", Math.round((homeRate / currentRate) * entryAmount), entries.get(0).getHomeAmount());
     }
 
     @Test
-    public void entryWithDifferentCurrency_AndNoExchangeData_ShouldBeAssignedRateOfNegativeOne() {
+    public void entryWithDifferentCurrency_AndNoExchangeData_ShouldBeAssignedHomeAmountOfNegativeOne() {
         int entryAmount = 100;
         List<Entry> entries = Arrays.asList(
                 new Entry(DEC_03_2015, entryAmount, null, new Currency("EUR"))
@@ -75,11 +77,11 @@ public class CurrencyConverterTest {
 
         converter.assignExchangeRatesToEntries(new ArrayList<ExchangeRate>(), entries);
 
-        assertEquals("Rate for entry not correct", -1.0, entries.get(0).getDirectExchangeRate());
+        assertEquals("Rate for entry not correct", -1, entries.get(0).getHomeAmount());
     }
 
     @Test
-    public void anyMissingExchangeRateDataShouldTriggerCallback() {
+    public void entryWithDifferentCurrency_AndNoExchangeData_ShouldTriggerCallback() {
         int entryAmount = 100;
         List<Entry> entries = Arrays.asList(
                 new Entry(DEC_03_2015, entryAmount, null, new Currency("EUR"))
