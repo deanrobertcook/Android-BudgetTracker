@@ -54,34 +54,34 @@ public abstract class DataLoader<T> extends AsyncTaskLoader<List<T>>
                     " loader is registered to");
         }
         for (AbsDataSource absDataSource : dataSources) {
+            Timber.i(this.getClass().getSimpleName() + " registering to " + absDataSource.getClass().getSimpleName());
             absDataSource.registerObserver(this);
         }
     }
 
     @Override
     public void onDataSourceChanged() {
-        Timber.d(this.getClass().getSimpleName() + " onDataSourceChanged()");
+        Timber.i(this.getClass().getSimpleName() + " onDataSourceChanged()");
         forceLoad();
     }
 
     @Override
     protected void onStopLoading() {
-        Timber.d(this.getClass().getSimpleName() + " onStopLoading()");
+        Timber.i(this.getClass().getSimpleName() + " onStopLoading()");
         cancelLoad();
     }
 
     @Override
     protected void onReset() {
-        Timber.d(this.getClass().getSimpleName() + " onReset()");
+        Timber.i(this.getClass().getSimpleName() + " onReset()");
         onStopLoading();
         unregisterFromDataSources();
     }
 
     private void unregisterFromDataSources() {
         for (AbsDataSource absDataSource : dataSources) {
-            Timber.d(this.getClass().getSimpleName() + " unregistering from " + absDataSource.getClass().getSimpleName());
+            Timber.i(this.getClass().getSimpleName() + " unregistering from " + absDataSource.getClass().getSimpleName());
             absDataSource.unregisterObserver(this);
         }
     }
-
 }

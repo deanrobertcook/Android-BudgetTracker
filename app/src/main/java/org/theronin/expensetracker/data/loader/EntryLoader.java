@@ -35,7 +35,7 @@ public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.L
 
     @Override
     public List<Entry> loadInBackground() {
-        Timber.d("loadInBackground");
+        Timber.i("loadInBackground");
         List<Entry> entries = entryDataSource.query(
                 EntryView.COL_SYNC_STATUS + " NOT IN (" + SyncState.deleteStateSelection() + ")", null,
                 EntryView.COL_DATE + " DESC, " + EntryView._ID + " DESC");
@@ -49,7 +49,7 @@ public class EntryLoader extends DataLoader<Entry> implements CurrencySettings.L
             getContext().startService(serviceIntent);
         }
 
-        Timber.d("Returning entries");
+        Timber.i("Returning " + entries.size() + " entries");
         return entries;
     }
 

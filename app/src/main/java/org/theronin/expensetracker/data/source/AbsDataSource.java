@@ -44,10 +44,9 @@ public abstract class AbsDataSource<T extends Entity> {
     }
 
     public void unregisterObserver(Observer observer) {
-        observers.remove(observer);
-//        if (!observers.remove(observer)) {
-//            throw new IllegalStateException("The observer is not registered to this DataSource");
-//        }
+        if (!observers.remove(observer)) {
+            throw new IllegalStateException("The observer is not registered to this: " + this.getClass().getSimpleName());
+        }
     }
 
     /**
@@ -55,11 +54,11 @@ public abstract class AbsDataSource<T extends Entity> {
      * source, to signal any observers that the underlying data source will now be out of date
      */
     public void setDataInValid() {
+        Timber.i(this.getClass().toString() + " data set as invalid");
         for (Observer observer : observers) {
             observer.onDataSourceChanged();
         }
         SyncUtils.requestSync(context);
-        Timber.d(this.getClass().toString() + " data set as invalid");
     }
 
     /**
@@ -94,6 +93,7 @@ public abstract class AbsDataSource<T extends Entity> {
      */
     //TODO consider throwing an Exception for data source operations
     public List<T> bulkInsert(List<T> entities) {
+        Timber.i("bulkInsert: " + entities.size() + " entities");
         if (entities.size() == 0) {
             return new ArrayList<>();
         }
@@ -120,7 +120,7 @@ public abstract class AbsDataSource<T extends Entity> {
     }
 
     public int bulkDelete(Collection<T> entities) {
-        Timber.d("Bulk deleting " + entities.size() + " entries");
+        Timber.i("bulkDelete " + entities.size() + " entities");
         if (entities.size() == 0) {
             return 0;
         }
