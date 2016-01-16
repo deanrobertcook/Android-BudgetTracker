@@ -12,6 +12,7 @@ import org.theronin.expensetracker.utils.DateUtils;
 import java.util.Arrays;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.theronin.expensetracker.data.backend.ExchangeRateSyncCoordinatorTest.containsAllExchangeRates;
@@ -37,6 +38,10 @@ public class ParseExchangeRateDownloaderTest {
     public static final double AUD_JAN_1_2000 = 1.532914;
     public static final double AUD_FEB_1_2000 = 1.579927;
 
+    public static final int QUERY_LIMIT = 200;
+    public static final int COUNT_RATES_JAN_1_2000 = 43;
+    public static final int COUNT_RATES_FEB_1_2000 = 59;
+
     private ExchangeRateDownloader.Callback mockCallback;
     private ParseExchangeRateDownloader downloader;
 
@@ -50,21 +55,28 @@ public class ParseExchangeRateDownloaderTest {
 
     /**
      * Removes the downloaded exchange rates for the given test days from the backend. This forces
-     * the backend to actually query openexchangerate.org for the given test days.
+     * the backend to actually query openexchangerate.org for the given days.
      * @throws ParseException
      */
     @Before
     public void removeExchangeRatesFromBackend() throws ParseException {
         ParseQuery<ParseObject> query = new ParseQuery<>("ExchangeRate");
-        query.whereContains(PARSE_DATE_KEY, DateUtils.getStorageFormattedDate(JAN_1_2000));
-        query.whereContains(PARSE_DATE_KEY, DateUtils.getStorageFormattedDate(FEB_1_2000));
+        query.setLimit(QUERY_LIMIT);
+        List<String> onGivenDates =  Arrays.asList(
+                DateUtils.getStorageFormattedDate(JAN_1_2000),
+                DateUtils.getStorageFormattedDate(FEB_1_2000)
+        );
+
+        query.whereContainedIn(PARSE_DATE_KEY, onGivenDates);
         List<ParseObject> objects = query.find();
 
         ParseObject.deleteAll(objects);
+
+        assertNumberOfEntriesOnBackend(0, onGivenDates);
     }
 
     @Test
-    public void noDuplicateRatesAreDownloadedForSameDate(){
+    public void noDuplicateRatesAreDownloadedForSameDate() throws ParseException {
         List<ExchangeRate> ratesToDownload = Arrays.asList(
                 new ExchangeRate(-1, "AUD", JAN_1_2000, -1, -1, 0),
                 new ExchangeRate(-1, "EUR", JAN_1_2000, -1, -1, 0));
@@ -76,10 +88,12 @@ public class ParseExchangeRateDownloaderTest {
                 new ExchangeRate(-1, "EUR", JAN_1_2000, EUR_JAN_1_2000, -1, 0));
 
         verify(mockCallback).onDownloadComplete(containsAllExchangeRates(expectedRates));
+
+        assertNumberOfEntriesOnBackend(COUNT_RATES_JAN_1_2000, Arrays.asList(DateUtils.getStorageFormattedDate(JAN_1_2000)));
     }
 
     @Test
-    public void noDuplicatesDownloadedForSameCode() {
+    public void noDuplicatesDownloadedForSameCode() throws ParseException {
         List<ExchangeRate> ratesToDownload = Arrays.asList(
                 new ExchangeRate(-1, "AUD", JAN_1_2000, -1, -1, 0),
                 new ExchangeRate(-1, "AUD", FEB_1_2000, -1, -1, 0));
@@ -91,5 +105,18 @@ public class ParseExchangeRateDownloaderTest {
                 new ExchangeRate(-1, "AUD", FEB_1_2000, AUD_FEB_1_2000, -1, 0));
 
         verify(mockCallback).onDownloadComplete(containsAllExchangeRates(expectedRates));
+
+        assertNumberOfEntriesOnBackend(COUNT_RATES_FEB_1_2000 + COUNT_RATES_JAN_1_2000, Arrays.asList(
+                DateUtils.getStorageFormattedDate(JAN_1_2000),
+                DateUtils.getStorageFormattedDate(FEB_1_2000)
+        ));
+    }
+
+    private void assertNumberOfEntriesOnBackend(int expected, List<String> onGivenDates) throws ParseException {
+        ParseQuery<ParseObject> query = new ParseQuery<>("ExchangeRate");
+        query.setLimit(QUERY_LIMIT);
+        query.whereContainedIn(PARSE_DATE_KEY, onGivenDates);
+        List<ParseObject> objects = query.find();
+        assertEquals("Number of saved ExchangeRates is different from expected", expected, objects.size());
     }
 }
