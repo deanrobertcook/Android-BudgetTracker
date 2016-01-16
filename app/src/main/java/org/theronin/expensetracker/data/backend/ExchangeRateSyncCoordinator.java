@@ -4,6 +4,7 @@ import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.ExchangeRate;
+import org.theronin.expensetracker.utils.DebugUtils;
 import org.theronin.expensetracker.utils.ExchangeRateUtils;
 
 import java.util.ArrayList;
@@ -48,6 +49,9 @@ public class ExchangeRateSyncCoordinator implements
         if (ratesBeingDownloaded == null) {
             throw new IllegalStateException("Download was called without a data source change");
         }
+
+        DebugUtils.printList("Downloaded rates: ", downloadedRates);
+
         Collections.sort(ratesBeingDownloaded, ExchangeRateUtils.comparator());
         Collections.sort(downloadedRates, ExchangeRateUtils.comparator());
 
@@ -65,6 +69,8 @@ public class ExchangeRateSyncCoordinator implements
             }
         }
 
+        DebugUtils.printList("ratesBeingDownloaded - final cut: ", ratesBeingDownloaded);
+
         exchangeRateAbsDataSource.bulkInsert(ratesBeingDownloaded);
         ratesBeingDownloaded = null;
     }
@@ -81,6 +87,7 @@ public class ExchangeRateSyncCoordinator implements
 
     private void findPotentialExchangeRatesToDownload() {
         List<Entry> entries = entryAbsDataSource.query(COL_CURRENCY_CODE + " != ?", new String[] {homeCurrency.code}, null);
+        DebugUtils.printList("Potential entries: ", entries);
         ratesBeingDownloaded = new ArrayList<>();
         for (Entry entry : entries) {
             ratesBeingDownloaded.add(new ExchangeRate(-1, entry.currency.code, entry.utcDate, -1, -1, 0));
@@ -90,7 +97,9 @@ public class ExchangeRateSyncCoordinator implements
 
     private void removeAlreadyDownloadedExchangeRates() {
         List<ExchangeRate> alreadyDownloaded = exchangeRateAbsDataSource.query();
-        Timber.i("There are : " + alreadyDownloaded.size() + " exchange rates to check");
+
+        DebugUtils.printList("Already downloaded exRates: ", alreadyDownloaded);
+
         Iterator<ExchangeRate> iterator = ratesBeingDownloaded.iterator();
         while (iterator.hasNext()) {
             ExchangeRate rateToDownload = iterator.next();
