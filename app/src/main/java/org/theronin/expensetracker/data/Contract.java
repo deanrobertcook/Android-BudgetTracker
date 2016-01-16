@@ -81,6 +81,11 @@ public class Contract {
         public static final String COL_CURRENCY_CODE = "currency_code";
         public static final String COL_DATE = "date";
         public static final String COL_USD_RATE = "usd_rate";
+
+        /**
+         * The last downlaoded attempt column will only contain a positive (valid) value when
+         * there was a failed download attempt (download attempts is incremented).
+         */
         public static final String COL_LAST_DOWNLOAD_ATTEMPT = "last_download_attempt";
         public static final String COL_DOWNLOAD_ATTEMPTS = "download_attempts";
 

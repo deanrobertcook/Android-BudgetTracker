@@ -21,11 +21,12 @@ public class ExchangeRateDownloadService extends InjectedService implements Curr
     @Inject AbsDataSource<Entry> entryAbsDataSource;
     @Inject ExchangeRateDownloader downloader;
 
+    private boolean isStarted = false;
+
     private ExchangeRateSyncCoordinator syncCoordinator;
 
     private CurrencySettings currencySettings;
     private Currency homeCurrency;
-
 
     public ExchangeRateDownloadService() {
         super(ExchangeRateDownloadService.class.getName());
@@ -34,6 +35,7 @@ public class ExchangeRateDownloadService extends InjectedService implements Curr
     @Override
     public void onCreate() {
         Timber.d("onCreate()");
+        super.onCreate();
 
         currencySettings = new CurrencySettings(this, this);
         homeCurrency = currencySettings.getHomeCurrency();
@@ -62,6 +64,11 @@ public class ExchangeRateDownloadService extends InjectedService implements Curr
             //Just drop the request, the next time we try to calculate rates we'll request it again
             return;
         }
+
+        if (isStarted) {
+            return; //drop any incoming intents once started
+        }
+        isStarted = true;
 
         syncCoordinator.downloadExchangeRates();
     }
