@@ -32,7 +32,9 @@ Parse.Cloud.define("sendChangePush", function(request, response) {
 Parse.Cloud.define("exchangeRate", function(request, response) {
     var ExchangeRate = Parse.Object.extend("ExchangeRate");
 
-    var dateStrings = request.params.dates.split(",");
+    dateStrings = request.params.dates.split(",").filter(function(item, pos, self) {
+        return self.indexOf(item) == pos;
+    });
     var codes = request.params.codes.split(",");
 
     var query = new Parse.Query(ExchangeRate);
@@ -51,7 +53,7 @@ Parse.Cloud.define("exchangeRate", function(request, response) {
         console.log("Missing: " + missing);
 
         if (missing.length > 0) {
-            console.log("missing " + missing.length + " entries");
+            console.log("missing " + missing.length + " exchange rates");
 
             _.each(missing, function(dateString) {
                 console.log("downloading for date : " + dateString);
