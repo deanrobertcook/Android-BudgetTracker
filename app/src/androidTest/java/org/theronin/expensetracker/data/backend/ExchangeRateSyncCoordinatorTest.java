@@ -269,16 +269,72 @@ public class ExchangeRateSyncCoordinatorTest {
     //TODO get this test working
     @Test
     public void ensureLargeRequestsAreThrottled() {
-        List<Entry> largeNumEntriesWithNoExchangeDate = createEntriesSpanningDays(1000);
+        int numDays = 100;
+        int expectedRates = numDays * 2; //two currencies per day
+        int testThrottle = 10;
+        int expectedBatches = (int) Math.ceil((double) expectedRates / testThrottle);
+        List<Entry> largeNumEntriesWithNoExchangeDate = createEntriesSpanningDays(numDays);
 
         when(entryDataSourceIsQueried()).thenReturn(largeNumEntriesWithNoExchangeDate);
         when(exchangeRateSourceIsQueried()).thenReturn(new ArrayList<ExchangeRate>());
 
+        syncCoordinator.setDownloadThrottle(testThrottle);
         syncCoordinator.downloadExchangeRates();
 
-        verify(downloader, atLeast(10)).downloadExchangeRates(
+        for (int i = 0; i < expectedBatches; i++) {
+            //Pass in all missing exchange rates. This test doesn't care if they fail.
+            syncCoordinator.onDownloadComplete(new ArrayList<ExchangeRate>());
+        }
+
+        verify(downloader, atLeast(expectedBatches)).downloadExchangeRates(
                 anySetOf(String.class),
                 anySetOf(String.class));
+    }
+
+    @Test
+    public void ensureThatMultipleBatchesDownloadsSuccessfully() {
+        int testThrottle = 2;
+        List<Entry> entryWithDifferingExchangeRate = Arrays.asList(
+                new Entry(null, JAN_1_2000, -1, null, new Currency("EUR")),
+                new Entry(null, JAN_2_2000, -1, null, new Currency("EUR")));
+
+        when(entryDataSourceIsQueried()).thenReturn(entryWithDifferingExchangeRate);
+        when(exchangeRateSourceIsQueried()).thenReturn(new ArrayList<ExchangeRate>());
+
+        syncCoordinator.setDownloadThrottle(testThrottle);
+        syncCoordinator.downloadExchangeRates();
+
+        //First batch
+        Set<String> datesToDownload = new HashSet<>(Arrays.asList(
+                DateUtils.getStorageFormattedDate(JAN_1_2000)
+        ));
+
+        Set<String> codesToDownload = new HashSet<>(Arrays.asList(
+                "EUR",
+                "AUD"
+        ));
+
+        verify(downloader).downloadExchangeRates(
+                setContainsAll(datesToDownload),
+                setContainsAll(codesToDownload)
+        );
+
+        syncCoordinator.onDownloadComplete(new ArrayList<ExchangeRate>());
+
+        //Second batch
+        datesToDownload = new HashSet<>(Arrays.asList(
+                DateUtils.getStorageFormattedDate(JAN_2_2000)
+        ));
+
+        codesToDownload = new HashSet<>(Arrays.asList(
+                "EUR",
+                "AUD"
+        ));
+
+        verify(downloader).downloadExchangeRates(
+                setContainsAll(datesToDownload),
+                setContainsAll(codesToDownload)
+        );
     }
 
     private List<Entry> createEntriesSpanningDays(int numDays) {
