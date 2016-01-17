@@ -10,7 +10,9 @@ import org.theronin.expensetracker.model.ExchangeRate;
 import org.theronin.expensetracker.utils.DateUtils;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -77,11 +79,16 @@ public class ParseExchangeRateDownloaderTest {
 
     @Test
     public void noDuplicateRatesAreDownloadedForSameDate() throws ParseException {
-        List<ExchangeRate> ratesToDownload = Arrays.asList(
-                new ExchangeRate(-1, "AUD", JAN_1_2000, -1, -1, 0),
-                new ExchangeRate(-1, "EUR", JAN_1_2000, -1, -1, 0));
+        Set<String> datesToDownload = new HashSet<>(Arrays.asList(
+                DateUtils.getStorageFormattedDate(JAN_1_2000)
+        ));
 
-        downloader.downloadExchangeRates(ratesToDownload);
+        Set<String> codesToDownload = new HashSet<>(Arrays.asList(
+                "EUR",
+                "AUD"
+        ));
+
+        downloader.downloadExchangeRates(datesToDownload, codesToDownload);
 
         List<ExchangeRate> expectedRates = Arrays.asList(
                 new ExchangeRate(-1, "AUD", JAN_1_2000, AUD_JAN_1_2000, -1, 0),
@@ -94,11 +101,16 @@ public class ParseExchangeRateDownloaderTest {
 
     @Test
     public void noDuplicatesDownloadedForSameCode() throws ParseException {
-        List<ExchangeRate> ratesToDownload = Arrays.asList(
-                new ExchangeRate(-1, "AUD", JAN_1_2000, -1, -1, 0),
-                new ExchangeRate(-1, "AUD", FEB_1_2000, -1, -1, 0));
+        Set<String> datesToDownload = new HashSet<>(Arrays.asList(
+                DateUtils.getStorageFormattedDate(JAN_1_2000),
+                DateUtils.getStorageFormattedDate(FEB_1_2000)
+        ));
 
-        downloader.downloadExchangeRates(ratesToDownload);
+        Set<String> codesToDownload = new HashSet<>(Arrays.asList(
+                "AUD"
+        ));
+
+        downloader.downloadExchangeRates(datesToDownload, codesToDownload);
 
         List<ExchangeRate> expectedRates = Arrays.asList(
                 new ExchangeRate(-1, "AUD", JAN_1_2000, AUD_JAN_1_2000, -1, 0),

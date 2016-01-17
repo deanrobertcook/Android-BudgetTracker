@@ -3,6 +3,7 @@ package org.theronin.expensetracker.data.backend;
 import org.theronin.expensetracker.model.ExchangeRate;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ExchangeRateDownloader {
 
@@ -12,5 +13,5 @@ public interface ExchangeRateDownloader {
 
     void setCallback(Callback callback);
 
-    void downloadExchangeRates(List<ExchangeRate> ratesToDownload);
+    void downloadExchangeRates(Set<String> dates, Set<String> currencies);
 }

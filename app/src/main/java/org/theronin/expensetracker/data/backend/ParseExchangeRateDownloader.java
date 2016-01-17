@@ -11,7 +11,6 @@ import org.theronin.expensetracker.utils.DateUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,13 +25,13 @@ public class ParseExchangeRateDownloader implements ExchangeRateDownloader {
     }
 
     @Override
-    public void downloadExchangeRates(List<ExchangeRate> ratesToDownload) {
+    public void downloadExchangeRates(Set<String> datesToDownload, Set<String> codesToDownload) {
         if (callback == null) {
             throw new IllegalStateException("A Callback must be set");
         }
         Map<String, String> params = new HashMap<>();
-        params.put("codes", createCodesObject(ratesToDownload));
-        params.put("dates", createDatesObject(ratesToDownload));
+        params.put("dates", createDatesObject(datesToDownload));
+        params.put("codes", createCodesObject(codesToDownload));
 
         try {
             List<ParseObject> parseObjects = ParseCloud.callFunction("exchangeRate", params);
@@ -60,20 +59,21 @@ public class ParseExchangeRateDownloader implements ExchangeRateDownloader {
         );
     }
 
-    private String createCodesObject(List<ExchangeRate> rates) {
+    private String createCodesObject(Set<String> codes) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < rates.size(); i++) {
-            sb.append(rates.get(i).currencyCode);
-            if (i < rates.size() - 1) {
+        int i = 0;
+        for (String code : codes) {
+            sb.append(code);
+            if (i < codes.size() - 1) {
                 sb.append(",");
             }
+            i++;
         }
         return sb.toString();
     }
 
-    private String createDatesObject(List<ExchangeRate> rates) {
+    private String createDatesObject(Set<String> dates) {
         StringBuilder sb = new StringBuilder();
-        Set<String> dates = extractUniqueDates(rates);
         int i = 0;
         for (String date : dates) {
             sb.append(date);
@@ -84,13 +84,4 @@ public class ParseExchangeRateDownloader implements ExchangeRateDownloader {
         }
         return sb.toString();
     }
-
-    private Set<String> extractUniqueDates(List<ExchangeRate> rates) {
-        Set<String> dates = new HashSet<>();
-        for (ExchangeRate rate : rates) {
-            dates.add(DateUtils.getStorageFormattedDate(rate.utcDate));
-        }
-        return dates;
-    }
-
 }
