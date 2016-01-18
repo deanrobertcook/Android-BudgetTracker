@@ -28,6 +28,8 @@ Parse.Cloud.define("sendChangePush", function(request, response) {
     });
 });
 
+//TODO create a background job to download exchange rates every day - only really needs to be done from point of release.
+
 //Request contains a list of currency codes and dates of the form YYYY-MM-DD, both comma separated
 Parse.Cloud.define("exchangeRate", function(request, response) {
     var ExchangeRate = Parse.Object.extend("ExchangeRate");

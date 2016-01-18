@@ -24,19 +24,16 @@ public class MockitoMatchers {
     public static List<ExchangeRate> containsAllExchangeRates(final List<ExchangeRate> expectedList) {
         return argThat(new TypeSafeMatcher<List<ExchangeRate>>() {
 
+            public List<ExchangeRate> actualList;
             private final double RATE_EPSILON = 0.000001;
-            private boolean sizeDiffers = false;
-            private int expectedSize = 0;
-            private int actualSize = 0;
-            private ExchangeRate expected;
-            private ExchangeRate actual;
 
             @Override
             protected boolean matchesSafely(List<ExchangeRate> actualList) {
-                if ((expectedSize = expectedList.size()) != (actualSize = actualList.size())) {
-                    sizeDiffers = true;
+                this.actualList = actualList;
+                if (expectedList.size() != actualList.size()) {
                     return false;
                 }
+
                 Collections.sort(expectedList, ExchangeRateUtils.comparator());
                 Collections.sort(actualList, ExchangeRateUtils.comparator());
 
@@ -50,9 +47,6 @@ public class MockitoMatchers {
                             expected.getDownloadAttempts() != actual.getDownloadAttempts() ||
                             timeDiff > 1000 ||
                             Math.abs(expected.getUsdRate() - actual.getUsdRate()) > RATE_EPSILON) {
-
-                        this.expected = expected;
-                        this.actual = actual;
                         return false;
                     }
                 }
@@ -62,36 +56,14 @@ public class MockitoMatchers {
             @Override
             public void describeTo(Description description) {
 
-                if (sizeDiffers) {
+                if (expectedList.size() != actualList.size()) {
                     description.appendText(String.format(
-                            "The size of the two arrays did not match. expected: %d, actual: %d",
-                            expectedSize, actualSize
-                    ));
-                    return;
+                            "The size of the two arrays did not match. expected: %d, actual: %d\n",
+                            expectedList.size(), actualList.size()));
                 }
-
-                description.appendText(String.format(
-                        "The first encountered elements that differed were (expected, actual): \n %s \n\t %s",
-                        expected.toString(), actual.toString()
-                ));
-            }
-        });
-    }
-
-    public static Set<String> setSizeMatches(final int expectedSize) {
-        return argThat(new TypeSafeMatcher<Set<String>>() {
-            int actualSize = 0;
-
-            @Override
-            protected boolean matchesSafely(Set<String> actualSet) {
-                actualSize = actualSet.size();
-                return expectedSize == actualSet.size();
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText(String.format("Sizes don't match: expected: %s, actual: %s",
-                        expectedSize, actualSize));
+                description.appendValue(expectedList);
+                description.appendText("\n");
+                description.appendValue(actualList);
             }
         });
     }

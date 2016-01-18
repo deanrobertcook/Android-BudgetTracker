@@ -25,6 +25,7 @@ import java.util.Set;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anySetOf;
 import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -33,6 +34,7 @@ import static org.mockito.Mockito.when;
 import static org.theronin.expensetracker.testutils.Constants.JAN_1_2000;
 import static org.theronin.expensetracker.testutils.Constants.JAN_2_2000;
 import static org.theronin.expensetracker.testutils.Constants.JAN_3_2000;
+import static org.theronin.expensetracker.testutils.MockitoMatchers.containsAllExchangeRates;
 
 @RunWith(AndroidJUnit4.class)
 public class ExchangeRateSyncCoordinatorTest {
@@ -225,12 +227,8 @@ public class ExchangeRateSyncCoordinatorTest {
         when(exchangeRateAbsDataSource.bulkInsert(downloadedExchangeRates)).thenReturn(downloadedExchangeRates);
         syncCoordinator.onDownloadComplete(downloadedExchangeRates);
 
-        verify(exchangeRateAbsDataSource).bulkInsert(MockitoMatchers.containsAllExchangeRates(downloadedExchangeRates));
+        verify(exchangeRateAbsDataSource).bulkInsert(containsAllExchangeRates(downloadedExchangeRates));
     }
-
-    ////////////////////////////////////////////////////////////
-    /// Tests for batching
-    ////////////////////////////////////////////////////////////
 
     @Test
     public void ensureLargeRequestsAreThrottled() {
@@ -266,9 +264,6 @@ public class ExchangeRateSyncCoordinatorTest {
         return entries;
     }
 
-    /**
-     * Make sure that exchange rates are downloaded from the most recently needed entries
-     */
     @Test
     public void ensureMultipleBatchesDownloadInDescendingDateOrder() {
         int testBatchLimit = 2; //batch limit for each test entry (each one should produce 2 exRates)
@@ -324,7 +319,7 @@ public class ExchangeRateSyncCoordinatorTest {
 
         when(exchangeRateAbsDataSource.bulkInsert(downloadedExchangeRates)).thenReturn(downloadedExchangeRates);
         syncCoordinator.onDownloadComplete(downloadedExchangeRates);
-        verify(exchangeRateAbsDataSource).bulkInsert(MockitoMatchers.containsAllExchangeRates(downloadedExchangeRates));
+        verify(exchangeRateAbsDataSource).bulkInsert(containsAllExchangeRates(downloadedExchangeRates));
     }
 
     @Test
@@ -334,8 +329,8 @@ public class ExchangeRateSyncCoordinatorTest {
         double rate_0p9345 = 0.9345;
 
         List<Entry> entriesFromDatabaseWithDifferentCurrency = Arrays.asList(
-                new Entry(null, JAN_1_2000, -1, null, new Currency("EUR", "€", "Euro")),
-                new Entry(null, JAN_2_2000, -1, null, new Currency("EUR", "€", "Euro")));
+                new Entry(null, JAN_1_2000, -1, null, new Currency("EUR")),
+                new Entry(null, JAN_2_2000, -1, null, new Currency("EUR")));
 
         when(entryDataSourceIsQueried()).thenReturn(entriesFromDatabaseWithDifferentCurrency);
         when(exchangeRateSourceIsQueried()).thenReturn(new ArrayList<ExchangeRate>());
@@ -357,7 +352,47 @@ public class ExchangeRateSyncCoordinatorTest {
                 new ExchangeRate(-1, "EUR", JAN_2_2000, -1, System.currentTimeMillis(), 1),
                 new ExchangeRate(-1, "AUD", JAN_2_2000, -1, System.currentTimeMillis(), 1)));
 
-        verify(exchangeRateAbsDataSource).bulkInsert(MockitoMatchers.containsAllExchangeRates(expectedSavedExRates));
+        verify(exchangeRateAbsDataSource).bulkInsert(containsAllExchangeRates(expectedSavedExRates));
+    }
+
+    @Test
+    public void ensureFailedRatesGetIncrementedUpToMaxDownloadAttemptsCount() {
+        for (int i = 0; i < ExchangeRateSyncCoordinator.MAX_DOWNLOAD_ATTEMPTS + 1; i++) {
+            if (i > 0) {
+                setup(); //reset the coordinator (each run might be a long time apart here);
+            }
+
+            List<Entry> entriesFromDatabaseWithDifferentCurrency = Arrays.asList(
+                    new Entry(null, JAN_1_2000, -1, null, new Currency("EUR")));
+
+            when(entryDataSourceIsQueried()).thenReturn(entriesFromDatabaseWithDifferentCurrency);
+
+            List<ExchangeRate> previouslyDownloadedRates = i == 0 ? new ArrayList<ExchangeRate>() : Arrays.asList(
+                    new ExchangeRate(-1, "EUR", JAN_1_2000, -1, 10, i),
+                    new ExchangeRate(-1, "AUD", JAN_1_2000, -1, 10, i));
+
+            when(exchangeRateSourceIsQueried()).thenReturn(previouslyDownloadedRates);
+            syncCoordinator.downloadExchangeRates();
+
+            if (i < ExchangeRateSyncCoordinator.MAX_DOWNLOAD_ATTEMPTS) {
+                //Wouldn't be called on the last run through
+                syncCoordinator.onDownloadComplete(new ArrayList<ExchangeRate>());
+            }
+
+            if (i >= ExchangeRateSyncCoordinator.MAX_DOWNLOAD_ATTEMPTS) {
+                //we expect to see that nothing happened
+                //TODO, probably, these rates should be calculated/estimated by some other means, and so wouldn't appear anyway
+                verify(exchangeRateAbsDataSource, atMost(1)); //needs to be one more call to query the exchangeRateAbsDataSource
+            } else {
+                //We expect to see that the number of download attempts goes up for the missing exchange rates
+                //And that they get saved with a negative usdRate and a last download attempt timestamp
+                List<ExchangeRate> expectedSavedExRates = Arrays.asList(
+                        new ExchangeRate(-1, "EUR", JAN_1_2000, -1, System.currentTimeMillis(), i + 1),
+                        new ExchangeRate(-1, "AUD", JAN_1_2000, -1, System.currentTimeMillis(), i + 1));
+
+                verify(exchangeRateAbsDataSource).bulkInsert(containsAllExchangeRates(expectedSavedExRates));
+            }
+        }
     }
 
     private List<Entry> entryDataSourceIsQueried() {
