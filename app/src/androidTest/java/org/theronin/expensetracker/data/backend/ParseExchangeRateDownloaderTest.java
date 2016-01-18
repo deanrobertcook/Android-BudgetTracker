@@ -17,7 +17,14 @@ import java.util.Set;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.theronin.expensetracker.data.backend.ExchangeRateSyncCoordinatorTest.containsAllExchangeRates;
+import static org.theronin.expensetracker.testutils.Constants.AUD_FEB_1_2000;
+import static org.theronin.expensetracker.testutils.Constants.AUD_JAN_1_2000;
+import static org.theronin.expensetracker.testutils.Constants.COUNT_RATES_FEB_1_2000;
+import static org.theronin.expensetracker.testutils.Constants.COUNT_RATES_JAN_1_2000;
+import static org.theronin.expensetracker.testutils.Constants.EUR_JAN_1_2000;
+import static org.theronin.expensetracker.testutils.Constants.FEB_1_2000;
+import static org.theronin.expensetracker.testutils.Constants.JAN_1_2000;
+import static org.theronin.expensetracker.testutils.MockitoMatchers.containsAllExchangeRates;
 
 /**
  * These tests are NOT unit tests. They actually use real world exchange rate data from openexchangerate.org
@@ -30,19 +37,7 @@ public class ParseExchangeRateDownloaderTest {
 
     public static final String PARSE_DATE_KEY = "date";
 
-    public static final long JAN_1_2000 = DateUtils.getUtcTime("2000-01-01");
-    public static final long FEB_1_2000 = DateUtils.getUtcTime("2000-02-01");
-
-    /**
-     * These rates have been taken manually from openexchangerate.org.
-     */
-    public static final double EUR_JAN_1_2000 = 0.993161;
-    public static final double AUD_JAN_1_2000 = 1.532914;
-    public static final double AUD_FEB_1_2000 = 1.579927;
-
     public static final int QUERY_LIMIT = 200;
-    public static final int COUNT_RATES_JAN_1_2000 = 43;
-    public static final int COUNT_RATES_FEB_1_2000 = 59;
 
     private ExchangeRateDownloader.Callback mockCallback;
     private ParseExchangeRateDownloader downloader;

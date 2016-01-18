@@ -1,5 +1,7 @@
 package org.theronin.expensetracker.data.backend;
 
+import android.support.annotation.NonNull;
+
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
@@ -11,6 +13,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import timber.log.Timber;
 
@@ -24,18 +27,26 @@ import static org.theronin.expensetracker.data.Contract.EntryView.COL_CURRENCY_C
 public class ExchangeRateSyncCoordinator implements
         ExchangeRateDownloader.Callback {
 
-    protected static final int DEFAULT_DOWNLOAD_THROTTLE = 100;
+    protected static final int DEFAULT_DOWNLOAD_BATCH_SIZE = 100;
 
-    private int downloadThrottle;
+    private int downloadBatchSize = DEFAULT_DOWNLOAD_BATCH_SIZE;
 
     private final AbsDataSource<Entry> entryAbsDataSource;
     private final AbsDataSource<ExchangeRate> exchangeRateAbsDataSource;
     private final ExchangeRateDownloader downloader;
     private final Currency homeCurrency;
 
-    /* Map from code to set of dates */
-    private Set<CodeRatePair> ratesToDownload;
-    private Set<CodeRatePair> ratesBeingDownloaded;
+    /**
+     * CodeDatePair to be downloaded by this instance of Sync Coordinator. They should be maintained
+     * in reverse date order
+     */
+    private Set<CodeDatePair> ratesToDownload;
+
+    /**
+     * The next/current set of rates to be downloaded (represented by CodeDatePairs), as many of which
+     * will be taken from ratesToDownload up to the download threshold limit
+     */
+    private Set<CodeDatePair> ratesBeingDownloaded;
 
     public ExchangeRateSyncCoordinator(AbsDataSource<Entry> entryAbsDataSource,
                                        AbsDataSource<ExchangeRate> exchangeRateAbsDataSource,
@@ -49,12 +60,8 @@ public class ExchangeRateSyncCoordinator implements
         this.downloader.setCallback(this);
     }
 
-    public void setDownloadThrottle(int throttle) {
-        this.downloadThrottle = throttle;
-    }
-
-    public int getDownloadThrottle() {
-        return downloadThrottle;
+    public void setDownloadBatchSize(int batchSize) {
+        this.downloadBatchSize = batchSize;
     }
 
     public void downloadExchangeRates() {
@@ -78,14 +85,14 @@ public class ExchangeRateSyncCoordinator implements
      * before each call to the downloader's downloadExchangeRates() method.
      */
     private void setRatesBeingDownloaded() {
-        Set<CodeRatePair> rates = new HashSet<>();
+        Set<CodeDatePair> rates = new HashSet<>();
         int i = 0;
-        Iterator<CodeRatePair> iterator = ratesToDownload.iterator();
+        Iterator<CodeDatePair> iterator = ratesToDownload.iterator();
         while (iterator.hasNext()) {
-            if (i == DEFAULT_DOWNLOAD_THROTTLE) {
+            if (i == downloadBatchSize) {
                 break;
             }
-            CodeRatePair next = iterator.next();
+            CodeDatePair next = iterator.next();
             iterator.remove();
             rates.add(next);
             i++;
@@ -101,7 +108,7 @@ public class ExchangeRateSyncCoordinator implements
      */
     private Set<String> getDates() {
         Set<String> dates = new HashSet<>();
-        for (CodeRatePair rate : ratesBeingDownloaded) {
+        for (CodeDatePair rate : ratesBeingDownloaded) {
             dates.add(rate.date);
         }
         return dates;
@@ -115,7 +122,7 @@ public class ExchangeRateSyncCoordinator implements
      */
     private Set<String> getCodes() {
         Set<String> codes = new HashSet<>();
-        for (CodeRatePair rate : ratesBeingDownloaded) {
+        for (CodeDatePair rate : ratesBeingDownloaded) {
             codes.add(rate.code);
         }
         return codes;
@@ -123,10 +130,10 @@ public class ExchangeRateSyncCoordinator implements
 
     private void findPotentialExchangeRatesToDownload() {
         List<Entry> entries = entryAbsDataSource.query(COL_CURRENCY_CODE + " != ?", new String[]{homeCurrency.code}, null);
-        ratesToDownload = new HashSet<>();
+        ratesToDownload = new TreeSet<>();
         for (Entry entry : entries) {
-            ratesToDownload.add(new CodeRatePair(entry.currency.code, entry.utcDate));
-            ratesToDownload.add(new CodeRatePair(homeCurrency.code, entry.utcDate));
+            ratesToDownload.add(new CodeDatePair(entry.currency.code, entry.utcDate));
+            ratesToDownload.add(new CodeDatePair(homeCurrency.code, entry.utcDate));
         }
     }
 
@@ -136,9 +143,9 @@ public class ExchangeRateSyncCoordinator implements
      * @param exchangeRates A list of exchange rates (their codes/dates) to remove
      * @param ratePairs     The set of CodeRatePairs to remove the downloaded exchange rates from.
      */
-    private void removeDownloadedExchangeRatesFrom(List<ExchangeRate> exchangeRates, Set<CodeRatePair> ratePairs) {
+    private void removeDownloadedExchangeRatesFrom(List<ExchangeRate> exchangeRates, Set<CodeDatePair> ratePairs) {
         for (ExchangeRate downloadedRate : exchangeRates) {
-            ratePairs.remove(new CodeRatePair(downloadedRate));
+            ratePairs.remove(new CodeDatePair(downloadedRate));
         }
     }
 
@@ -167,14 +174,13 @@ public class ExchangeRateSyncCoordinator implements
             //finished downloading all rates
             ratesToDownload = null;
         }
-
     }
 
-    private static class CodeRatePair {
+    protected static class CodeDatePair implements Comparable<CodeDatePair> {
         public final String code;
         public final String date;
 
-        public CodeRatePair(String code, String date) {
+        public CodeDatePair(String code, String date) {
             if (code.length() != 3 || date.length() != 10) {
                 throw new IllegalArgumentException("Be sure that the code and date are in the right format");
             }
@@ -182,26 +188,40 @@ public class ExchangeRateSyncCoordinator implements
             this.date = date;
         }
 
-        public CodeRatePair(String code, long date) {
+        public CodeDatePair(String code, long date) {
             this(code, DateUtils.getStorageFormattedDate(date));
         }
 
-        public CodeRatePair(ExchangeRate exchangeRate) {
+        public CodeDatePair(ExchangeRate exchangeRate) {
             this(exchangeRate.currencyCode, exchangeRate.utcDate);
         }
 
         @Override
+        public String toString() {
+            return String.format("[%s, %s]", code, date);
+        }
+
+        @Override
         public boolean equals(Object o) {
-            if (!(o instanceof CodeRatePair)) {
+            if (!(o instanceof CodeDatePair)) {
                 return false;
             }
-            CodeRatePair other = (CodeRatePair) o;
+            CodeDatePair other = (CodeDatePair) o;
             return code.equals(other.code) && date.equals(other.date);
         }
 
         @Override
         public int hashCode() {
             return 0;
+        }
+
+        @Override
+        public int compareTo(@NonNull CodeDatePair another) {
+            int byDate = -date.compareTo(another.date);
+            if (byDate == 0) {
+                return code.compareTo(another.code);
+            }
+            return byDate;
         }
     }
 }
