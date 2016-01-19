@@ -31,6 +31,9 @@ public class ExchangeRateSyncCoordinator implements
     protected static final int DEFAULT_DOWNLOAD_BATCH_SIZE = 100;
     protected static final int MAX_DOWNLOAD_ATTEMPTS = 3;
 
+    protected static final long BACKOFF_FIRST_ATTEMPT = 24L * 60L * 60L * 1000L; //a day
+    protected static final long BACKOFF_SECOND_ATTEMPT = 7L * 24L * 60L * 60L * 1000L; //a week
+
     private int downloadBatchSize = DEFAULT_DOWNLOAD_BATCH_SIZE;
 
     private final AbsDataSource<Entry> entryAbsDataSource;
@@ -150,7 +153,16 @@ public class ExchangeRateSyncCoordinator implements
             } else if (rateInfo.attempts >= MAX_DOWNLOAD_ATTEMPTS){
                 //TODO deal with troublesome exchange rates!!
             } else {
-                rateInfo.attempts = downloadedRate.getDownloadAttempts();
+                long timeSinceLastAttempt = System.currentTimeMillis() - downloadedRate.getUtcLastUpdated();
+
+                if (rateInfo.attempts == 1 && timeSinceLastAttempt < BACKOFF_FIRST_ATTEMPT) {
+                    continue;
+                }
+
+                if (rateInfo.attempts == 2 && timeSinceLastAttempt < BACKOFF_SECOND_ATTEMPT) {
+                    continue;
+                }
+
                 ratesToDownload.add(rateInfo);
             }
         }
@@ -196,6 +208,7 @@ public class ExchangeRateSyncCoordinator implements
         return failedRates;
     }
 
+    //TODO, move this back into exchange rate...
     protected static class CodeDatePair implements Comparable<CodeDatePair> {
         public final String code;
         public final String date;

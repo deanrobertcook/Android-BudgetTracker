@@ -13,7 +13,6 @@ import org.theronin.expensetracker.data.source.DataSourceExchangeRate;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.ExchangeRate;
-import org.theronin.expensetracker.testutils.MockitoMatchers;
 import org.theronin.expensetracker.utils.DateUtils;
 
 import java.util.ArrayList;
@@ -35,6 +34,7 @@ import static org.theronin.expensetracker.testutils.Constants.JAN_1_2000;
 import static org.theronin.expensetracker.testutils.Constants.JAN_2_2000;
 import static org.theronin.expensetracker.testutils.Constants.JAN_3_2000;
 import static org.theronin.expensetracker.testutils.MockitoMatchers.containsAllExchangeRates;
+import static org.theronin.expensetracker.testutils.MockitoMatchers.setContainsAll;
 
 @RunWith(AndroidJUnit4.class)
 public class ExchangeRateSyncCoordinatorTest {
@@ -90,8 +90,8 @@ public class ExchangeRateSyncCoordinatorTest {
         syncCoordinator.downloadExchangeRates();
 
         verify(downloader).downloadExchangeRates(
-                MockitoMatchers.setContainsAll(datesToDownload),
-                MockitoMatchers.setContainsAll(codesToDownload));
+                setContainsAll(datesToDownload),
+                setContainsAll(codesToDownload));
     }
     //TODO test the above scenario, but inverted for testing currency (you know it'll fail, because
     //TODO we can't remove codes like we can dates, but check it anyway)
@@ -118,8 +118,8 @@ public class ExchangeRateSyncCoordinatorTest {
         ));
 
         verify(downloader).downloadExchangeRates(
-                MockitoMatchers.setContainsAll(datesToDownload),
-                MockitoMatchers.setContainsAll(codesToDownload)
+                setContainsAll(datesToDownload),
+                setContainsAll(codesToDownload)
         );
     }
 
@@ -146,8 +146,8 @@ public class ExchangeRateSyncCoordinatorTest {
         ));
 
         verify(downloader).downloadExchangeRates(
-                MockitoMatchers.setContainsAll(datesToDownload),
-                MockitoMatchers.setContainsAll(codesToDownload)
+                setContainsAll(datesToDownload),
+                setContainsAll(codesToDownload)
         );
     }
 
@@ -175,8 +175,8 @@ public class ExchangeRateSyncCoordinatorTest {
         ));
 
         verify(downloader).downloadExchangeRates(
-                MockitoMatchers.setContainsAll(datesToDownload),
-                MockitoMatchers.setContainsAll(codesToDownload)
+                setContainsAll(datesToDownload),
+                setContainsAll(codesToDownload)
         );
     }
 
@@ -305,7 +305,7 @@ public class ExchangeRateSyncCoordinatorTest {
                 verifyDownloadCompleteCycle(DateUtils.getUtcTime(lastDate));
             }
 
-            verify(downloader).downloadExchangeRates(MockitoMatchers.setContainsAll(expectedDatesToBeRequested), MockitoMatchers.setContainsAll(expectedCodesToBeRequested));
+            verify(downloader).downloadExchangeRates(setContainsAll(expectedDatesToBeRequested), setContainsAll(expectedCodesToBeRequested));
         }
 
         //Confirm third batch saved properly
@@ -382,7 +382,7 @@ public class ExchangeRateSyncCoordinatorTest {
             if (i >= ExchangeRateSyncCoordinator.MAX_DOWNLOAD_ATTEMPTS) {
                 //we expect to see that nothing happened
                 //TODO, probably, these rates should be calculated/estimated by some other means, and so wouldn't appear anyway
-                verify(exchangeRateAbsDataSource, atMost(1)); //needs to be one more call to query the exchangeRateAbsDataSource
+                verify(exchangeRateAbsDataSource, atMost(1)); //needs one more call to query the exchangeRateAbsDataSource
             } else {
                 //We expect to see that the number of download attempts goes up for the missing exchange rates
                 //And that they get saved with a negative usdRate and a last download attempt timestamp
@@ -403,7 +403,77 @@ public class ExchangeRateSyncCoordinatorTest {
         return exchangeRateAbsDataSource.query();
     }
 
-    //TODO test what happens if you there are exchange rates that couldn't be downloaded last time
-    //TODO test what happens if there is an exchange rate that has unsuccessfully been downloaded 3 times.
+    //TODO last (I hope) test - check time spans between tests
+    @Test
+    public void entriesWithOneFailedAttemptShouldntBeDownloadedAgainFor24Hours() {
+        List<Entry> entriesFromDatabaseWithDifferentCurrency = Arrays.asList(
+                new Entry(null, JAN_1_2000, -1, null, new Currency("EUR")),
+                new Entry(null, JAN_2_2000, -1, null, new Currency("EUR")));
+
+        when(entryDataSourceIsQueried()).thenReturn(entriesFromDatabaseWithDifferentCurrency);
+
+        long aFewHoursAgo = System.currentTimeMillis() - 3L * 60L * 60L * 1000L;
+        long oneDayAgo = System.currentTimeMillis() - ExchangeRateSyncCoordinator.BACKOFF_FIRST_ATTEMPT;
+
+        List<ExchangeRate> alreadyDownloadedExchangeRates = Arrays.asList(
+                //Should be downloaded again
+                new ExchangeRate(-1, "EUR", JAN_1_2000, -1, oneDayAgo, 1),
+                new ExchangeRate(-1, "AUD", JAN_1_2000, -1, oneDayAgo, 1),
+                //Shouldn't be downloaded again
+                new ExchangeRate(-1, "EUR", JAN_2_2000, -1, aFewHoursAgo, 1),
+                new ExchangeRate(-1, "AUD", JAN_2_2000, -1, aFewHoursAgo, 1)
+        );
+
+        when(exchangeRateSourceIsQueried()).thenReturn(alreadyDownloadedExchangeRates);
+
+        Set<String> expectedDatesToBeRequested = new HashSet<>(Arrays.asList(
+                DateUtils.getStorageFormattedDate(JAN_1_2000)
+        ));
+
+        Set<String> expectedCodesToBeRequested = new HashSet<>(Arrays.asList(
+                "EUR",
+                "AUD"
+        ));
+
+        syncCoordinator.downloadExchangeRates();
+
+        verify(downloader).downloadExchangeRates(setContainsAll(expectedDatesToBeRequested), setContainsAll(expectedCodesToBeRequested));
+    }
+
+    @Test
+    public void entriesWithTwoFailedAttemptsShouldntBeDownloadedAgainFor1Week() {
+        List<Entry> entriesFromDatabaseWithDifferentCurrency = Arrays.asList(
+                new Entry(null, JAN_1_2000, -1, null, new Currency("EUR")),
+                new Entry(null, JAN_2_2000, -1, null, new Currency("EUR")));
+
+        when(entryDataSourceIsQueried()).thenReturn(entriesFromDatabaseWithDifferentCurrency);
+
+        long aFewDaysAgo = System.currentTimeMillis() - 3L * 24L * 60L * 60L * 1000L;
+        long oneWeekAgo = System.currentTimeMillis() - ExchangeRateSyncCoordinator.BACKOFF_SECOND_ATTEMPT;
+
+        List<ExchangeRate> alreadyDownloadedExchangeRates = Arrays.asList(
+                //Should be downloaded again
+                new ExchangeRate(-1, "EUR", JAN_1_2000, -1, oneWeekAgo, 2),
+                new ExchangeRate(-1, "AUD", JAN_1_2000, -1, oneWeekAgo, 2),
+                //Shouldn't be downloaded again
+                new ExchangeRate(-1, "EUR", JAN_2_2000, -1, aFewDaysAgo, 2),
+                new ExchangeRate(-1, "AUD", JAN_2_2000, -1, aFewDaysAgo, 2)
+        );
+
+        when(exchangeRateSourceIsQueried()).thenReturn(alreadyDownloadedExchangeRates);
+
+        Set<String> expectedDatesToBeRequested = new HashSet<>(Arrays.asList(
+                DateUtils.getStorageFormattedDate(JAN_1_2000)
+        ));
+
+        Set<String> expectedCodesToBeRequested = new HashSet<>(Arrays.asList(
+                "EUR",
+                "AUD"
+        ));
+
+        syncCoordinator.downloadExchangeRates();
+
+        verify(downloader).downloadExchangeRates(setContainsAll(expectedDatesToBeRequested), setContainsAll(expectedCodesToBeRequested));
+    }
 
 }
