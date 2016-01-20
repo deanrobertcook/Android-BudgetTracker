@@ -24,7 +24,6 @@ import java.util.Set;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anySetOf;
 import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -373,6 +372,7 @@ public class ExchangeRateSyncCoordinatorTest {
 
             when(exchangeRateSourceIsQueried()).thenReturn(previouslyDownloadedRates);
             syncCoordinator.downloadExchangeRates();
+            verify(exchangeRateAbsDataSource).query();
 
             if (i < ExchangeRateSyncCoordinator.MAX_DOWNLOAD_ATTEMPTS) {
                 //Wouldn't be called on the last run through
@@ -381,8 +381,7 @@ public class ExchangeRateSyncCoordinatorTest {
 
             if (i >= ExchangeRateSyncCoordinator.MAX_DOWNLOAD_ATTEMPTS) {
                 //we expect to see that nothing happened
-                //TODO, probably, these rates should be calculated/estimated by some other means, and so wouldn't appear anyway
-                verify(exchangeRateAbsDataSource, atMost(1)); //needs one more call to query the exchangeRateAbsDataSource
+                verifyNoMoreInteractions(exchangeRateAbsDataSource);
             } else {
                 //We expect to see that the number of download attempts goes up for the missing exchange rates
                 //And that they get saved with a negative usdRate and a last download attempt timestamp
