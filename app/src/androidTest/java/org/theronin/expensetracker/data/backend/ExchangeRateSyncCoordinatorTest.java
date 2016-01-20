@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.theronin.expensetracker.data.Contract.EntryView;
-import org.theronin.expensetracker.data.backend.ExchangeRateSyncCoordinator.CodeDatePair;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.data.source.DataSourceEntry;
 import org.theronin.expensetracker.data.source.DataSourceExchangeRate;
@@ -276,24 +275,24 @@ public class ExchangeRateSyncCoordinatorTest {
         when(entryDataSourceIsQueried()).thenReturn(unorderedEntriesToBeFetchedFromDataSource);
         when(exchangeRateSourceIsQueried()).thenReturn(new ArrayList<ExchangeRate>());
 
-        List<CodeDatePair> ratesInExpectedDownloadOrder = Arrays.asList(
-                new CodeDatePair("EUR", JAN_3_2000),
-                new CodeDatePair("AUD", JAN_3_2000),
-                new CodeDatePair("EUR", JAN_2_2000),
-                new CodeDatePair("AUD", JAN_2_2000),
-                new CodeDatePair("EUR", JAN_1_2000),
-                new CodeDatePair("AUD", JAN_1_2000)
+        List<ExchangeRate> ratesInExpectedDownloadOrder = Arrays.asList(
+                new ExchangeRate("EUR", JAN_3_2000),
+                new ExchangeRate("AUD", JAN_3_2000),
+                new ExchangeRate("EUR", JAN_2_2000),
+                new ExchangeRate("AUD", JAN_2_2000),
+                new ExchangeRate("EUR", JAN_1_2000),
+                new ExchangeRate("AUD", JAN_1_2000)
         );
 
         syncCoordinator.setDownloadBatchSize(testBatchLimit);
 
         for (int i = 0; i < ratesInExpectedDownloadOrder.size(); i = i + 2) {
-            CodeDatePair rate1 = ratesInExpectedDownloadOrder.get(i);
-            CodeDatePair rate2 = ratesInExpectedDownloadOrder.get(i + 1);
+            ExchangeRate rate1 = ratesInExpectedDownloadOrder.get(i);
+            ExchangeRate rate2 = ratesInExpectedDownloadOrder.get(i + 1);
 
             Set<String> expectedDatesToBeRequested = new HashSet<>(Arrays.asList(rate1.date));
 
-            Set<String> expectedCodesToBeRequested = new HashSet<>(Arrays.asList(rate1.code, rate2.code));
+            Set<String> expectedCodesToBeRequested = new HashSet<>(Arrays.asList(rate1.currencyCode, rate2.currencyCode));
 
             if (i == 0) {
                 //Trigger first batch

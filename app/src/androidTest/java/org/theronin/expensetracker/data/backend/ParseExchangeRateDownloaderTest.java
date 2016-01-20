@@ -1,5 +1,7 @@
 package org.theronin.expensetracker.data.backend;
 
+import android.test.suitebuilder.annotation.LargeTest;
+
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -72,7 +74,7 @@ public class ParseExchangeRateDownloaderTest {
         assertNumberOfEntriesOnBackend(0, onGivenDates);
     }
 
-    @Test
+    @Test @LargeTest
     public void noDuplicateRatesAreDownloadedForSameDate() throws ParseException {
         Set<String> datesToDownload = new HashSet<>(Arrays.asList(
                 DateUtils.getStorageFormattedDate(JAN_1_2000)
@@ -94,7 +96,7 @@ public class ParseExchangeRateDownloaderTest {
         assertNumberOfEntriesOnBackend(COUNT_RATES_JAN_1_2000, Arrays.asList(DateUtils.getStorageFormattedDate(JAN_1_2000)));
     }
 
-    @Test
+    @Test @LargeTest
     public void noDuplicatesDownloadedForSameCode() throws ParseException {
         Set<String> datesToDownload = new HashSet<>(Arrays.asList(
                 DateUtils.getStorageFormattedDate(JAN_1_2000),

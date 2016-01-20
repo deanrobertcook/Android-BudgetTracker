@@ -1,15 +1,11 @@
 package org.theronin.expensetracker.data.backend;
 
-import android.support.annotation.NonNull;
-
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.ExchangeRate;
-import org.theronin.expensetracker.utils.DateUtils;
 import org.theronin.expensetracker.utils.DebugUtils;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -45,13 +41,13 @@ public class ExchangeRateSyncCoordinator implements
      * CodeDatePair to be downloaded by this instance of Sync Coordinator. They should be maintained
      * in reverse date order
      */
-    private Set<CodeDatePair> ratesToDownload;
+    private Set<ExchangeRate> ratesToDownload;
 
     /**
      * The next/current set of rates to be downloaded (represented by CodeDatePairs), as many of which
      * as possible will be taken from ratesToDownload up to the download threshold limit
      */
-    private Set<CodeDatePair> ratesBeingDownloaded;
+    private Set<ExchangeRate> ratesBeingDownloaded;
 
     public ExchangeRateSyncCoordinator(AbsDataSource<Entry> entryAbsDataSource,
                                        AbsDataSource<ExchangeRate> exchangeRateAbsDataSource,
@@ -90,14 +86,14 @@ public class ExchangeRateSyncCoordinator implements
      * before each call to the downloader's downloadExchangeRates() method.
      */
     private void setRatesBeingDownloaded() {
-        Set<CodeDatePair> rates = new HashSet<>();
+        Set<ExchangeRate> rates = new HashSet<>();
         int i = 0;
-        Iterator<CodeDatePair> iterator = ratesToDownload.iterator();
+        Iterator<ExchangeRate> iterator = ratesToDownload.iterator();
         while (iterator.hasNext()) {
             if (i == downloadBatchSize) {
                 break;
             }
-            CodeDatePair next = iterator.next();
+            ExchangeRate next = iterator.next();
             iterator.remove();
             rates.add(next);
             i++;
@@ -113,7 +109,7 @@ public class ExchangeRateSyncCoordinator implements
      */
     private Set<String> getDates() {
         Set<String> dates = new HashSet<>();
-        for (CodeDatePair rate : ratesBeingDownloaded) {
+        for (ExchangeRate rate : ratesBeingDownloaded) {
             dates.add(rate.date);
         }
         return dates;
@@ -127,8 +123,8 @@ public class ExchangeRateSyncCoordinator implements
      */
     private Set<String> getCodes() {
         Set<String> codes = new HashSet<>();
-        for (CodeDatePair rate : ratesBeingDownloaded) {
-            codes.add(rate.code);
+        for (ExchangeRate rate : ratesBeingDownloaded) {
+            codes.add(rate.currencyCode);
         }
         return codes;
     }
@@ -137,33 +133,32 @@ public class ExchangeRateSyncCoordinator implements
         List<Entry> entries = entryAbsDataSource.query(COL_CURRENCY_CODE + " != ?", new String[]{homeCurrency.code}, null);
         ratesToDownload = new TreeSet<>();
         for (Entry entry : entries) {
-            ratesToDownload.add(new CodeDatePair(entry.currency.code, entry.utcDate));
-            ratesToDownload.add(new CodeDatePair(homeCurrency.code, entry.utcDate));
+            ratesToDownload.add(new ExchangeRate(entry.currency.code, entry.utcDate));
+            ratesToDownload.add(new ExchangeRate(homeCurrency.code, entry.utcDate));
         }
     }
 
     private void filterOutPreviouslyDownloadedRates() {
-        for (ExchangeRate downloadedRate : exchangeRateAbsDataSource.query()) {
-            CodeDatePair rateInfo = new CodeDatePair(downloadedRate);
+        for (ExchangeRate rate : exchangeRateAbsDataSource.query()) {
             //take out the rateInfo to examine it.
-            ratesToDownload.remove(rateInfo);
-            if (rateInfo.attempts == 0) {
+            ratesToDownload.remove(rate);
+            if (rate.getDownloadAttempts() == 0) {
                 //successfully downloaded some time previously, don't try to download again
                 //already removed, don't bother doing anything
-            } else if (rateInfo.attempts >= MAX_DOWNLOAD_ATTEMPTS){
+            } else if (rate.getDownloadAttempts() >= MAX_DOWNLOAD_ATTEMPTS){
                 //TODO deal with troublesome exchange rates!!
             } else {
-                long timeSinceLastAttempt = System.currentTimeMillis() - downloadedRate.getUtcLastUpdated();
+                long timeSinceLastAttempt = System.currentTimeMillis() - rate.getUtcLastUpdated();
 
-                if (rateInfo.attempts == 1 && timeSinceLastAttempt < BACKOFF_FIRST_ATTEMPT) {
+                if (rate.getDownloadAttempts() == 1 && timeSinceLastAttempt < BACKOFF_FIRST_ATTEMPT) {
                     continue;
                 }
 
-                if (rateInfo.attempts == 2 && timeSinceLastAttempt < BACKOFF_SECOND_ATTEMPT) {
+                if (rate.getDownloadAttempts() == 2 && timeSinceLastAttempt < BACKOFF_SECOND_ATTEMPT) {
                     continue;
                 }
 
-                ratesToDownload.add(rateInfo);
+                ratesToDownload.add(rate);
             }
         }
     }
@@ -196,63 +191,14 @@ public class ExchangeRateSyncCoordinator implements
 
     private void filterOutSuccessfullyDownloadedRates(List<ExchangeRate> exchangeRates) {
         for (ExchangeRate downloadedRate : exchangeRates) {
-            ratesBeingDownloaded.remove(new CodeDatePair(downloadedRate));
+            ratesBeingDownloaded.remove(downloadedRate);
         }
     }
 
-    private List<ExchangeRate> createFailedRates() {
-        List<ExchangeRate> failedRates = new ArrayList<>();
-        for (CodeDatePair codeDatePair : ratesBeingDownloaded) {
-            failedRates.add(new ExchangeRate(-1, codeDatePair.code, codeDatePair.utcDate, -1.0, System.currentTimeMillis(), codeDatePair.attempts + 1));
+    private Set<ExchangeRate> createFailedRates() {
+        for (ExchangeRate rate : ratesBeingDownloaded) {
+            rate.onDownloadFailed();
         }
-        return failedRates;
-    }
-
-    //TODO, move this back into exchange rate...
-    protected static class CodeDatePair implements Comparable<CodeDatePair> {
-        public final String code;
-        public final String date;
-        public final long utcDate;
-
-        public int attempts = 0;
-
-        public CodeDatePair(String code, long utcDate) {
-            this.code = code;
-            this.utcDate = utcDate;
-            this.date = DateUtils.getStorageFormattedDate(utcDate);
-        }
-
-        public CodeDatePair(ExchangeRate exchangeRate) {
-            this(exchangeRate.currencyCode, exchangeRate.utcDate);
-            attempts = exchangeRate.getDownloadAttempts();
-        }
-
-        @Override
-        public String toString() {
-            return String.format("[%s, %s]", code, date);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (!(o instanceof CodeDatePair)) {
-                return false;
-            }
-            CodeDatePair other = (CodeDatePair) o;
-            return code.equals(other.code) && date.equals(other.date);
-        }
-
-        @Override
-        public int hashCode() {
-            return 0;
-        }
-
-        @Override
-        public int compareTo(@NonNull CodeDatePair another) {
-            int byDate = -date.compareTo(another.date);
-            if (byDate == 0) {
-                return code.compareTo(another.code);
-            }
-            return byDate;
-        }
+        return ratesBeingDownloaded;
     }
 }
