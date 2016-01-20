@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import org.theronin.expensetracker.dagger.InjectedComponent;
-import org.theronin.expensetracker.data.backend.ExchangeRateDownloadService;
+import org.theronin.expensetracker.data.backend.exchangerate.ExchangeRateDownloadService;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;

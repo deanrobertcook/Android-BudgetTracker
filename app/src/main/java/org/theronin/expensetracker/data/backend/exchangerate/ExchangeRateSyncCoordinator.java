@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.data.backend;
+package org.theronin.expensetracker.data.backend.exchangerate;
 
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Currency;

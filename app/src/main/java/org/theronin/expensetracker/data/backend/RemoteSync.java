@@ -27,10 +27,10 @@ public abstract class RemoteSync {
         void onFail(Exception e);
     }
 
-    public void saveEntities(List<? extends Entity> entities, PushResult callback) {
+    public void saveEntities(List<Entry> entities, PushResult callback) {
         try {
             bulkAddOperation(entities);
-            for (Entity entity : entities) {
+            for (Entry entity : entities) {
                 if (entity.getSyncState() == SyncState.NEW) {
                     entity.setGlobalId(getObjectId(entity));
                 }
@@ -46,10 +46,10 @@ public abstract class RemoteSync {
 
     protected abstract String getObjectId(Entity entity);
 
-    public void deleteEntities(List<? extends Entity> entities, PushResult callback) {
+    public void deleteEntities(List<Entry> entities, PushResult callback) {
         try {
             bulkDeleteOperation(entities);
-            for (Entity entity : entities) {
+            for (Entry entity : entities) {
                 entity.setSyncState(SyncState.DELETE_SYNCED);
             }
             callback.onSuccess();

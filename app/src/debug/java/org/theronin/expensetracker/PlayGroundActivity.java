@@ -3,7 +3,7 @@ package org.theronin.expensetracker;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import org.theronin.expensetracker.data.backend.ParseExchangeRateDownloader;
+import org.theronin.expensetracker.data.backend.exchangerate.ParseExchangeRateDownloader;
 import org.theronin.expensetracker.model.ExchangeRate;
 
 import java.util.List;

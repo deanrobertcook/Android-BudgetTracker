@@ -9,6 +9,8 @@ public class Entry extends Entity{
     public final Category category;
     public final Currency currency;
 
+    private String globalId;
+    private SyncState syncState;
     private long homeAmount = -1;
 
     public Entry(
@@ -76,5 +78,25 @@ public class Entry extends Entity{
 
     public long getHomeAmount() {
         return homeAmount;
+    }
+
+    public boolean hasGlobalId() {
+        return globalId != null && globalId.length() > 0;
+    }
+
+    public String getGlobalId() {
+        return globalId;
+    }
+
+    public void setGlobalId(String globalId) {
+        this.globalId = globalId;
+    }
+
+    public SyncState getSyncState() {
+        return syncState;
+    }
+
+    public void setSyncState(SyncState syncState) {
+        this.syncState = syncState;
     }
 }

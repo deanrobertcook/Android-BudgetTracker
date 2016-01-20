@@ -43,7 +43,7 @@ public class PushCoordinatorTest {
         entryAbsDataSource.bulkInsert(entriesToAdd);
 
         FakeRemoteSync alwaysPassSync = new FakeRemoteSync(true);
-        PushCoordinator<Entry> pushCoordinator = new PushCoordinator<>(entryAbsDataSource, alwaysPassSync);
+        PushCoordinator pushCoordinator = new PushCoordinator(entryAbsDataSource, alwaysPassSync);
         pushCoordinator.syncEntries(entriesToAdd);
 
         List<Entry> updatedEntries = entryAbsDataSource.query();
@@ -60,7 +60,7 @@ public class PushCoordinatorTest {
         entryAbsDataSource.bulkInsert(entriesToAdd);
 
         FakeRemoteSync alwaysFailSync = new FakeRemoteSync(false);
-        PushCoordinator<Entry> pushCoordinator = new PushCoordinator<>(entryAbsDataSource, alwaysFailSync);
+        PushCoordinator pushCoordinator = new PushCoordinator(entryAbsDataSource, alwaysFailSync);
         pushCoordinator.syncEntries(entriesToAdd);
 
         List<Entry> updatedEntries = entryAbsDataSource.query();
@@ -77,7 +77,7 @@ public class PushCoordinatorTest {
         entryAbsDataSource.bulkInsert(entriesToAdd);
 
         FakeRemoteSync alwaysPassSync = new FakeRemoteSync(true);
-        PushCoordinator<Entry> pushCoordinator = new PushCoordinator<>(entryAbsDataSource, alwaysPassSync);
+        PushCoordinator pushCoordinator = new PushCoordinator(entryAbsDataSource, alwaysPassSync);
         pushCoordinator.syncEntries(entriesToAdd);
 
         List<Entry> entriesRemaining = entryAbsDataSource.query();
@@ -91,7 +91,7 @@ public class PushCoordinatorTest {
         entryAbsDataSource.bulkInsert(entriesToAdd);
 
         FakeRemoteSync alwaysPassSync = new FakeRemoteSync(true);
-        PushCoordinator<Entry> pushCoordinator = new PushCoordinator<>(entryAbsDataSource, alwaysPassSync);
+        PushCoordinator pushCoordinator = new PushCoordinator(entryAbsDataSource, alwaysPassSync);
         pushCoordinator.syncEntries(entriesToAdd);
 
         assertFalse("There should not have been a call to remote delete", alwaysPassSync.calledRemoteDelete());
@@ -106,7 +106,7 @@ public class PushCoordinatorTest {
         List<Entry> entriesToAdd = Util.createEntries(numEntries, true, SyncState.NEW);
 
         FakeRemoteSync alwaysPassSync = new FakeRemoteSync(true);
-        PushCoordinator<Entry> pushCoordinator = new PushCoordinator<>(entryAbsDataSource, alwaysPassSync);
+        PushCoordinator pushCoordinator = new PushCoordinator(entryAbsDataSource, alwaysPassSync);
         pushCoordinator.syncEntries(entriesToAdd);
     }
 }

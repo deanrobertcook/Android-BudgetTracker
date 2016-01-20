@@ -7,7 +7,6 @@ import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-import org.theronin.expensetracker.data.backend.SyncState;
 import org.theronin.expensetracker.model.Entity;
 import org.theronin.expensetracker.utils.SyncUtils;
 
@@ -130,41 +129,6 @@ public abstract class AbsDataSource<T extends Entity> {
     }
 
     protected abstract int deleteOperation(SQLiteDatabase sb, Collection<T> entities);
-
-    protected String createEntityIdsInClause(Collection<T> entities) {
-        StringBuilder sb = new StringBuilder();
-        int i = 0;
-        for (T entity : entities) {
-            checkEntityDeleted(entity);
-            sb.append(entity.getId());
-            if (i != entities.size() - 1) {
-                sb.append(", ");
-            }
-            i++;
-        }
-        return sb.toString();
-    }
-
-    protected String createEntityGlobalIdsInClause(Collection<T> entities) {
-        StringBuilder sb = new StringBuilder();
-        int i = 0;
-        for (T entity : entities) {
-            checkEntityDeleted(entity);
-            sb.append(String.format("'%s'", entity.getGlobalId()));
-            if (i != entities.size() - 1) {
-                sb.append(", ");
-            }
-            i++;
-        }
-        return sb.toString();
-    }
-
-    public void checkEntityDeleted(T entity) {
-        if (entity.getSyncState() != SyncState.DELETE_SYNCED) {
-            throw new IllegalStateException("An entity needs to be deleted on the backend (DELETE_SYNCED) before it can" +
-                    " be removed from the local database");
-        }
-    }
 
     public boolean update(T entity) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();

@@ -3,12 +3,12 @@ package org.theronin.expensetracker;
 import android.content.Context;
 
 import org.theronin.expensetracker.dagger.InjectedComponent;
-import org.theronin.expensetracker.data.backend.ExchangeRateDownloader;
-import org.theronin.expensetracker.data.backend.ParseExchangeRateDownloader;
+import org.theronin.expensetracker.data.backend.exchangerate.ExchangeRateDownloader;
+import org.theronin.expensetracker.data.backend.exchangerate.ParseExchangeRateDownloader;
 import org.theronin.expensetracker.data.loader.CategoryLoader;
 import org.theronin.expensetracker.data.loader.DataLoader;
 import org.theronin.expensetracker.data.loader.EntryLoader;
-import org.theronin.expensetracker.data.backend.ExchangeRateDownloadService;
+import org.theronin.expensetracker.data.backend.exchangerate.ExchangeRateDownloadService;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.data.source.DataSourceCategory;
 import org.theronin.expensetracker.data.source.DataSourceCurrency;

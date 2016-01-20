@@ -113,6 +113,41 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
         return count;
     }
 
+    protected String createEntityIdsInClause(Collection<Entry> entities) {
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        for (Entry entity : entities) {
+            checkEntityDeleted(entity);
+            sb.append(entity.getId());
+            if (i != entities.size() - 1) {
+                sb.append(", ");
+            }
+            i++;
+        }
+        return sb.toString();
+    }
+
+    protected String createEntityGlobalIdsInClause(Collection<Entry> entities) {
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        for (Entry entity : entities) {
+            checkEntityDeleted(entity);
+            sb.append(String.format("'%s'", entity.getGlobalId()));
+            if (i != entities.size() - 1) {
+                sb.append(", ");
+            }
+            i++;
+        }
+        return sb.toString();
+    }
+
+    public void checkEntityDeleted(Entry entity) {
+        if (entity.getSyncState() != SyncState.DELETE_SYNCED) {
+            throw new IllegalStateException("An entity needs to be deleted on the backend (DELETE_SYNCED) before it can" +
+                    " be removed from the local database");
+        }
+    }
+
     private void checkEntryValues(ContentValues values) {
         changeCategoryObjectToId(values);
         changeCurrencyObjectToId(values);

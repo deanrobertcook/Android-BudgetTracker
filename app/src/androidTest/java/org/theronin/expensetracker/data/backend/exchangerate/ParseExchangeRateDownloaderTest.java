@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.data.backend;
+package org.theronin.expensetracker.data.backend.exchangerate;
 
 import android.test.suitebuilder.annotation.LargeTest;
 
@@ -8,6 +8,8 @@ import com.parse.ParseQuery;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.theronin.expensetracker.data.backend.exchangerate.ExchangeRateDownloader;
+import org.theronin.expensetracker.data.backend.exchangerate.ParseExchangeRateDownloader;
 import org.theronin.expensetracker.model.ExchangeRate;
 import org.theronin.expensetracker.utils.DateUtils;
 

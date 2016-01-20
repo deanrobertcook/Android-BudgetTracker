@@ -1,29 +1,29 @@
 package org.theronin.expensetracker.data.backend;
 
 import org.theronin.expensetracker.data.source.AbsDataSource;
-import org.theronin.expensetracker.model.Entity;
+import org.theronin.expensetracker.model.Entry;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
 
-public class PushCoordinator<T extends Entity> {
+public class PushCoordinator {
 
-    private final AbsDataSource<T> dataSource;
+    private final AbsDataSource<Entry> dataSource;
     private final RemoteSync remoteSync;
 
-    public PushCoordinator(AbsDataSource<T> dataSource, RemoteSync remoteSync) {
+    public PushCoordinator(AbsDataSource<Entry> dataSource, RemoteSync remoteSync) {
         this.dataSource = dataSource;
         this.remoteSync = remoteSync;
     }
 
-    public void syncEntries(List<T> entitiesToSync) {
-        List<T> toAddOrUpdate = new ArrayList<>();
-        List<T> toDeleteRemote = new ArrayList<>();
-        List<T> toDeleteLocal = new ArrayList<>();
+    public void syncEntries(List<Entry> entitiesToSync) {
+        List<Entry> toAddOrUpdate = new ArrayList<>();
+        List<Entry> toDeleteRemote = new ArrayList<>();
+        List<Entry> toDeleteLocal = new ArrayList<>();
 
-        for (T entity : entitiesToSync) {
+        for (Entry entity : entitiesToSync) {
             switch (entity.getSyncState()) {
                 case NEW:
                     if (entity.getGlobalId() != null) {
@@ -53,7 +53,7 @@ public class PushCoordinator<T extends Entity> {
         deleteEntitiesLocally(toDeleteLocal);
     }
 
-    private void addEntitiesToRemote(final List<T> entities) {
+    private void addEntitiesToRemote(final List<Entry> entities) {
         if (entities.isEmpty()) {
             return;
         }
@@ -74,7 +74,7 @@ public class PushCoordinator<T extends Entity> {
         remoteSync.saveEntities(entities, callback);
     }
 
-    private void deleteEntitiesFromRemote(final List<T> entities) {
+    private void deleteEntitiesFromRemote(final List<Entry> entities) {
         if (entities.isEmpty()) {
             return;
         }
@@ -94,7 +94,7 @@ public class PushCoordinator<T extends Entity> {
         remoteSync.deleteEntities(entities, callback);
     }
 
-    private void deleteEntitiesLocally(final List<T> entities) {
+    private void deleteEntitiesLocally(final List<Entry> entities) {
         dataSource.bulkDelete(entities);
     }
 }
