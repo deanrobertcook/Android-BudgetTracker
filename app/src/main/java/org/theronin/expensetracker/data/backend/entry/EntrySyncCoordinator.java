@@ -117,8 +117,8 @@ public class EntrySyncCoordinator {
                     toDelete.add(entry);
                 }
             }
-            dataSource.bulkInsert(entries);
-            dataSource.bulkDelete(entries);
+            dataSource.bulkInsert(toAdd);
+            dataSource.bulkDelete(toDelete);
         } catch (Exception e) {
             Timber.i("Pull failed");
             e.printStackTrace();

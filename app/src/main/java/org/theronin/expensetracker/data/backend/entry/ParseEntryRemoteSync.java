@@ -10,7 +10,6 @@ import com.parse.ParseUser;
 
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
-import org.theronin.expensetracker.model.Entity;
 import org.theronin.expensetracker.model.Entry;
 
 import java.util.ArrayList;
@@ -40,14 +39,14 @@ public class ParseEntryRemoteSync implements EntryRemoteSync {
     public static final String PARSE_DATA_INSTALLATION_ID_KEY = "installationId";
 
     /**
-     * Used to map Entities to their created parse objects so we can later retrieve the globalId
-     * for each recently uploaded Entity in getObjectId()
+     * Used to map Entries to their created parse objects so we can later retrieve the globalId
+     * for each recently uploaded Entry in getObjectId()
      */
-    private Map<Entity, ParseObject> currentSyncMap;;
+    private Map<Entry, ParseObject> currentSyncMap;
 
     @Override
-    public void saveToRemote(List<? extends Entity> entities) throws Exception {
-        currentSyncMap = createEntityToParseObjectMap(entities);
+    public void saveToRemote(List<Entry> entries) throws Exception {
+        currentSyncMap = createEntryToParseObjectMap(entries);
         try {
             ParseObject.saveAll(new ArrayList<>(currentSyncMap.values()));
             callPushToOtherDevices();
@@ -63,43 +62,35 @@ public class ParseEntryRemoteSync implements EntryRemoteSync {
     }
 
     @Override
-    public String getObjectId(Entity entity) {
-        return currentSyncMap.get(entity).getObjectId();
+    public String getObjectId(Entry entry) {
+        return currentSyncMap.get(entry).getObjectId();
     }
 
     @Override
-    public void deleteOnRemote(List<? extends Entity> entities) throws Exception {
+    public void deleteOnRemote(List<Entry> entries) throws Exception {
         try {
             //Since I am using a soft-delete, I actually just want to update the objects
-            ParseObject.saveAll(createParseObjectsFromEntities(entities));
+            ParseObject.saveAll(createParseObjectsFromEntries(entries));
             callPushToOtherDevices();
         } catch (ParseException e) {
             throw e;
         }
     }
 
-    private List<ParseObject> createParseObjectsFromEntities(List<? extends Entity> entities) {
+    private List<ParseObject> createParseObjectsFromEntries(List<Entry> entries) {
         List<ParseObject> objects = new ArrayList<>();
-        for (Entity entity : entities) {
-            objects.add(getParseObjectFrom(entity));
+        for (Entry entry : entries) {
+            objects.add(fromEntry(entry));
         }
         return objects;
     }
 
-    private Map<Entity, ParseObject> createEntityToParseObjectMap(Collection<? extends Entity> entities) {
-        Map<Entity, ParseObject> toSync = new HashMap<>();
-        for (Entity entity : entities) {
-            toSync.put(entity, getParseObjectFrom(entity));
+    private Map<Entry, ParseObject> createEntryToParseObjectMap(Collection<Entry> entries) {
+        Map<Entry, ParseObject> toSync = new HashMap<>();
+        for (Entry entry : entries) {
+            toSync.put(entry, fromEntry(entry));
         }
         return toSync;
-    }
-
-    private ParseObject getParseObjectFrom(Entity entity) {
-        if (entity instanceof Entry) {
-            return fromEntry((Entry) entity);
-        }
-        throw new IllegalArgumentException("Entity of type: " + entity.getClass() + " cannot currently " +
-                " be converted to a ParseObject");
     }
 
     private ParseObject fromEntry(Entry entry) {

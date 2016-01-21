@@ -1,17 +1,16 @@
 package org.theronin.expensetracker.data.backend.entry;
 
-import org.theronin.expensetracker.model.Entity;
 import org.theronin.expensetracker.model.Entry;
 
 import java.util.List;
 
 public interface EntryRemoteSync {
 
-    void saveToRemote(List<? extends Entity> entities) throws Exception;
+    void saveToRemote(List<Entry> entries) throws Exception;
 
-    String getObjectId(Entity entity);
+    String getObjectId(Entry entry);
 
-    void deleteOnRemote(List<? extends Entity> entities) throws Exception;
+    void deleteOnRemote(List<Entry> entries) throws Exception;
 
     abstract void registerForPush();
 
