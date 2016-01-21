@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ParseRemoteSync implements EntryRemote {
+public class ParseEntryRemoteSync implements EntryRemoteSync {
 
     /**
      * These constants correspond the the names of classes and their columns in the Parse.com storage

@@ -9,7 +9,7 @@ import com.parse.ParseInstallation;
 import com.parse.ParsePushBroadcastReceiver;
 import com.parse.ParseUser;
 
-import org.theronin.expensetracker.data.backend.entry.ParseRemoteSync;
+import org.theronin.expensetracker.data.backend.entry.ParseEntryRemoteSync;
 import org.theronin.expensetracker.utils.SyncUtils;
 
 import timber.log.Timber;
@@ -19,7 +19,7 @@ public class CustomParsePushReceiver extends ParsePushBroadcastReceiver {
     public static final String UPDATE_NOTIFICATION_FLAG = "deviceShouldUpdate";
     public static final String PARSE_DATA_INTENT_KEY = "com.parse.Data";
     public static final String PARSE_CHANNEL_INTENT_KEY = "com.parse.Channel";
-    public static final String PARSE_DATA_INSTALLATION_ID_KEY = ParseRemoteSync.PARSE_DATA_INSTALLATION_ID_KEY;
+    public static final String PARSE_DATA_INSTALLATION_ID_KEY = ParseEntryRemoteSync.PARSE_DATA_INSTALLATION_ID_KEY;
 
     @Override
     protected void onPushReceive(Context context, Intent intent) {

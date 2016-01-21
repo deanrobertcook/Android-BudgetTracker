@@ -5,7 +5,7 @@ import org.theronin.expensetracker.model.Entry;
 
 import java.util.List;
 
-public interface EntryRemote {
+public interface EntryRemoteSync {
 
     void saveToRemote(List<? extends Entity> entities) throws Exception;
 

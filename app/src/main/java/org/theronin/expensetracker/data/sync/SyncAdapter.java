@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import org.theronin.expensetracker.dagger.InjectedComponent;
-import org.theronin.expensetracker.data.backend.entry.EntryRemote;
+import org.theronin.expensetracker.data.backend.entry.EntryRemoteSync;
 import org.theronin.expensetracker.data.backend.entry.EntrySyncCoordinator;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Entry;
@@ -24,7 +24,7 @@ import timber.log.Timber;
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Inject AbsDataSource<Entry> entryDataSource;
-    @Inject EntryRemote remoteSync;
+    @Inject EntryRemoteSync remoteSync;
 
     //TODO fix this ugly hack to prevent the SyncAdapter from running in tests
     private boolean execute;

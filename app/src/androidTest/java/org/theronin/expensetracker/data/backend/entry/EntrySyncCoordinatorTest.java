@@ -23,13 +23,13 @@ import static org.theronin.expensetracker.testutils.MockitoMatchers.containsAllE
 public class EntrySyncCoordinatorTest {
 
     private AbsDataSource<Entry> entryAbsDataSource;
-    private EntryRemote remoteSync;
+    private EntryRemoteSync remoteSync;
     private EntrySyncCoordinator entrySyncCoordinator;
 
     @Before
     public void setup() {
         entryAbsDataSource = mock(DataSourceEntry.class);
-        remoteSync = mock(EntryRemote.class);
+        remoteSync = mock(EntryRemoteSync.class);
         entrySyncCoordinator = new EntrySyncCoordinator(entryAbsDataSource, remoteSync);
     }
 

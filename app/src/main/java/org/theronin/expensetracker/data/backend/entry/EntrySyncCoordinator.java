@@ -14,9 +14,9 @@ import static org.theronin.expensetracker.data.backend.entry.SyncState.NEW;
 public class EntrySyncCoordinator {
 
     private final AbsDataSource<Entry> dataSource;
-    private final EntryRemote remoteSync;
+    private final EntryRemoteSync remoteSync;
 
-    public EntrySyncCoordinator(AbsDataSource<Entry> dataSource, EntryRemote remoteSync) {
+    public EntrySyncCoordinator(AbsDataSource<Entry> dataSource, EntryRemoteSync remoteSync) {
         this.dataSource = dataSource;
         this.remoteSync = remoteSync;
     }
