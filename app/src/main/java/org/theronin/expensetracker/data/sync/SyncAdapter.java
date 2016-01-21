@@ -23,6 +23,8 @@ import timber.log.Timber;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
+    private static final String PREF_LAST_SYNC_CHECK_KEY = "SYNC_CHECK";
+
     @Inject AbsDataSource<Entry> entryDataSource;
     @Inject EntryRemoteSync remoteSync;
 
@@ -37,7 +39,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         } catch (IllegalStateException e) {
             execute = false;
         }
-
     }
 
     public SyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
@@ -69,10 +70,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     private void pullEntries() {
         final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        long lastSync = pref.getLong("SYNC_CHECK", -1);
+        long lastSync = pref.getLong(PREF_LAST_SYNC_CHECK_KEY, -1);
         final long syncTime = System.currentTimeMillis();
-        new EntrySyncCoordinator(entryDataSource, null).findEntries(lastSync);
-        pref.edit().putLong("SYNC_CHECK", syncTime).apply();
+        new EntrySyncCoordinator(entryDataSource, remoteSync).findEntries(lastSync);
+        pref.edit().putLong(PREF_LAST_SYNC_CHECK_KEY, syncTime).apply();
 
     }
 }
