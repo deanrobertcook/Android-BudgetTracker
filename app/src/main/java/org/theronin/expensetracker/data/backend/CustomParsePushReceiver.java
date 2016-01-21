@@ -9,6 +9,7 @@ import com.parse.ParseInstallation;
 import com.parse.ParsePushBroadcastReceiver;
 import com.parse.ParseUser;
 
+import org.theronin.expensetracker.data.backend.entry.ParseRemoteSync;
 import org.theronin.expensetracker.utils.SyncUtils;
 
 import timber.log.Timber;

@@ -71,4 +71,12 @@ public class Category extends Entity {
     public void setMissingEntries(int missingEntries) {
         this.missingEntries = missingEntries;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Category)) {
+            return false;
+        }
+        return name.equals(((Category) o).name);
+    }
 }

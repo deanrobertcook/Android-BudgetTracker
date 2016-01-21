@@ -77,11 +77,6 @@ public class ExchangeRate extends Entity implements Comparable<ExchangeRate> {
     }
 
     @Override
-    public int hashCode() {
-        return 0;
-    }
-
-    @Override
     public int compareTo(ExchangeRate another) {
         int byDate = -(int) (utcDate - another.utcDate);
         if (byDate == 0) {

@@ -2,8 +2,8 @@ package org.theronin.expensetracker.testutils;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
+import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.ExchangeRate;
-import org.theronin.expensetracker.utils.ExchangeRateUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -12,6 +12,56 @@ import java.util.Set;
 import static org.mockito.Matchers.argThat;
 
 public class MockitoMatchers {
+
+    /**
+     * Check that two lists of entries are the same, where each entry has to match by its usual
+     * sense of equality, plus the sync states and global ids must match - since this matcher
+     * will be used mostly to check sync states.
+     * @param expectedList
+     * @return a mockito matcher for comparing the two lists.
+     */
+    public static List<Entry> containsAllEntries(final List<Entry> expectedList) {
+        return argThat(new TypeSafeMatcher<List<Entry>>() {
+
+            public List<Entry> actualList;
+
+            @Override
+            protected boolean matchesSafely(List<Entry> actualList) {
+                this.actualList = actualList;
+                if (expectedList.size() != actualList.size()) {
+                    return false;
+                }
+
+                Collections.sort(expectedList);
+                Collections.sort(actualList);
+
+                for (int i = 0; i < expectedList.size(); i++) {
+                    Entry expected = expectedList.get(i);
+                    Entry actual = actualList.get(i);
+
+                    if (!expected.equals(actual) ||
+                            expected.getGlobalId() != actual.getGlobalId() ||
+                            expected.getSyncState() != actual.getSyncState()) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+
+                if (expectedList.size() != actualList.size()) {
+                    description.appendText(String.format(
+                            "The size of the two lists did not match. expected: %d, actual: %d\n",
+                            expectedList.size(), actualList.size()));
+                }
+                description.appendValue(expectedList);
+                description.appendText("\n");
+                description.appendValue(actualList);
+            }
+        });
+    }
 
     /**
      * A matcher that takes two lists of Exchange rates and compares them by date (of the form
@@ -34,8 +84,8 @@ public class MockitoMatchers {
                     return false;
                 }
 
-                Collections.sort(expectedList, ExchangeRateUtils.comparator());
-                Collections.sort(actualList, ExchangeRateUtils.comparator());
+                Collections.sort(expectedList);
+                Collections.sort(actualList);
 
                 for (int i = 0; i < expectedList.size(); i++) {
                     ExchangeRate expected = expectedList.get(i);

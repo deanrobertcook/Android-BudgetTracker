@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.data.backend;
+package org.theronin.expensetracker.data.backend.entry;
 
 import com.parse.ParseCloud;
 import com.parse.ParseException;
@@ -20,9 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import timber.log.Timber;
-
-public class ParseRemoteSync extends RemoteSync {
+public class ParseRemoteSync implements EntryRemote {
 
     /**
      * These constants correspond the the names of classes and their columns in the Parse.com storage
@@ -48,8 +46,7 @@ public class ParseRemoteSync extends RemoteSync {
     private Map<Entity, ParseObject> currentSyncMap;;
 
     @Override
-    protected void bulkAddOperation(List<? extends Entity> entities) throws Exception {
-        Timber.v("bulkAddOperation");
+    public void saveToRemote(List<? extends Entity> entities) throws Exception {
         currentSyncMap = createEntityToParseObjectMap(entities);
         try {
             ParseObject.saveAll(new ArrayList<>(currentSyncMap.values()));
@@ -60,20 +57,18 @@ public class ParseRemoteSync extends RemoteSync {
     }
 
     private void callPushToOtherDevices() {
-        Timber.v("callPushToOTheDevices");
         Map<String, Object> params = new HashMap<>();
         params.put(PARSE_DATA_INSTALLATION_ID_KEY, ParseInstallation.getCurrentInstallation().getInstallationId());
         ParseCloud.callFunctionInBackground(FUNCTION_SEND_CHANGE_PUSH, params);
     }
 
     @Override
-    protected String getObjectId(Entity entity) {
+    public String getObjectId(Entity entity) {
         return currentSyncMap.get(entity).getObjectId();
     }
 
     @Override
-    protected void bulkDeleteOperation(List<? extends Entity> entities) throws Exception {
-        Timber.v("bulkDeleteOperation");
+    public void deleteOnRemote(List<? extends Entity> entities) throws Exception {
         try {
             //Since I am using a soft-delete, I actually just want to update the objects
             ParseObject.saveAll(createParseObjectsFromEntities(entities));
@@ -126,12 +121,12 @@ public class ParseRemoteSync extends RemoteSync {
     }
 
     @Override
-    protected void registerForPush() {
+    public void registerForPush() {
         ParsePush.subscribeInBackground(ParseUser.getCurrentUser().getObjectId());
     }
 
     @Override
-    protected List<Entry> findOperation(long lastSync) throws Exception {
+    public List<Entry> pullFromRemote(long lastSync) throws Exception {
         ParseQuery<ParseObject> query = ParseQuery.getQuery(ENTRY_CLASS_NAME);
         query.setLimit(1000);
         if (lastSync == -1) { //first sync for device

@@ -4,7 +4,7 @@ import android.content.Context;
 
 import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.data.Contract.EntryView;
-import org.theronin.expensetracker.data.backend.SyncState;
+import org.theronin.expensetracker.data.backend.entry.SyncState;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;

@@ -39,4 +39,12 @@ public class Currency extends Entity {
                 code, symbol, name
         );
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Currency)) {
+            return false;
+        }
+        return code.equals(((Currency) o).code);
+    }
 }

@@ -1,6 +1,6 @@
 package org.theronin.expensetracker.data;
 
-import org.theronin.expensetracker.data.backend.SyncState;
+import org.theronin.expensetracker.data.backend.entry.SyncState;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;

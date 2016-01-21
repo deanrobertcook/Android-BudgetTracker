@@ -1,15 +1,18 @@
 package org.theronin.expensetracker.model;
 
 import org.junit.Test;
-import org.theronin.expensetracker.utils.DateUtils;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
+import static org.theronin.expensetracker.testutils.Constants.JAN_1_2000;
+import static org.theronin.expensetracker.testutils.Constants.JAN_2_2000;
 
 public class ExchangeRateTest {
-
-    private static final long JAN_1_2000 = DateUtils.getUtcTime("2000-01-01");
-    private static final long JAN_2_2000 = DateUtils.getUtcTime("2000-01-02");
 
     @Test
     public void equalsMethodShouldReturnTrueForExchangeRatesWithSameDateAndCode() {
@@ -33,6 +36,30 @@ public class ExchangeRateTest {
         ExchangeRate rate2 = new ExchangeRate(-1, "EUR", JAN_1_2000, -1, -1, 0);
 
         assertFalse(rate1.equals(rate2));
+    }
+
+    @Test
+    public void testSortingByDate() {
+        List<ExchangeRate> list = Arrays.asList(
+                new ExchangeRate(-1, "AUD", JAN_2_2000, -1, -1, 0),
+                new ExchangeRate(-1, "AUD", JAN_1_2000, -1, -1, 0));
+
+        Collections.sort(list);
+
+        assertEquals(list.get(0).utcDate, JAN_2_2000);
+        assertEquals(list.get(1).utcDate, JAN_1_2000);
+    }
+
+    @Test
+    public void testSortingByCode() {
+        List<ExchangeRate> list = Arrays.asList(
+                new ExchangeRate(-1, "EUR", JAN_1_2000, -1, -1, 0),
+                new ExchangeRate(-1, "AUD", JAN_1_2000, -1, -1, 0));
+
+        Collections.sort(list);
+
+        assertEquals(list.get(0).currencyCode, "AUD");
+        assertEquals(list.get(1).currencyCode, "EUR");
     }
 
 }

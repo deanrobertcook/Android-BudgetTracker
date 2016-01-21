@@ -2,7 +2,7 @@ package org.theronin.expensetracker.data;
 
 import android.provider.BaseColumns;
 
-import org.theronin.expensetracker.data.backend.SyncState;
+import org.theronin.expensetracker.data.backend.entry.SyncState;
 
 public class Contract {
     

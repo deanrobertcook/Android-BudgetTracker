@@ -3,6 +3,7 @@ package org.theronin.expensetracker;
 import android.content.Context;
 
 import org.theronin.expensetracker.dagger.InjectedComponent;
+import org.theronin.expensetracker.data.backend.entry.EntryRemote;
 import org.theronin.expensetracker.data.backend.exchangerate.ExchangeRateDownloader;
 import org.theronin.expensetracker.data.backend.exchangerate.ParseExchangeRateDownloader;
 import org.theronin.expensetracker.data.loader.CategoryLoader;
@@ -15,8 +16,7 @@ import org.theronin.expensetracker.data.source.DataSourceCurrency;
 import org.theronin.expensetracker.data.source.DataSourceEntry;
 import org.theronin.expensetracker.data.source.DataSourceExchangeRate;
 import org.theronin.expensetracker.data.source.DbHelper;
-import org.theronin.expensetracker.data.backend.ParseRemoteSync;
-import org.theronin.expensetracker.data.backend.RemoteSync;
+import org.theronin.expensetracker.data.backend.entry.ParseRemoteSync;
 import org.theronin.expensetracker.data.sync.SyncAdapter;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
@@ -81,7 +81,7 @@ public class AppModule {
     }
 
     @Provides
-    RemoteSync provideRemoteSync() {
+    EntryRemote provideEntryRemote() {
         return new ParseRemoteSync();
     }
 

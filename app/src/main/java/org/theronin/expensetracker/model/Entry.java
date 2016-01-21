@@ -1,9 +1,9 @@
 package org.theronin.expensetracker.model;
 
-import org.theronin.expensetracker.data.backend.SyncState;
+import org.theronin.expensetracker.data.backend.entry.SyncState;
 import org.theronin.expensetracker.utils.DateUtils;
 
-public class Entry extends Entity{
+public class Entry extends Entity implements Comparable<Entry> {
     public final long utcDate;
     public final long amount;
     public final Category category;
@@ -64,7 +64,9 @@ public class Entry extends Entity{
     @Override
     public String toString() {
         return super.toString() + String.format(
-                "date: %s, category: %s, amount: %d, currency: %s",
+                "globalId: %s, syncState: %s, date: %s, category: %s, amount: %d, currency: %s",
+                globalId,
+                syncState,
                 DateUtils.getStorageFormattedDate(utcDate),
                 category == null ? null : category.name,
                 amount,
@@ -98,5 +100,50 @@ public class Entry extends Entity{
 
     public void setSyncState(SyncState syncState) {
         this.syncState = syncState;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Entry)) {
+            return false;
+        }
+        Entry other = (Entry) o;
+
+        //if the global ids don't match...
+        if (globalId != null && globalId.equals(other.getGlobalId())) {
+            assertContentsMatch(other);
+            return true;
+        }
+        //then still check the local id, since we may be comparing synced with un-synced things.
+        if (id > 0 && id == other.id) {
+            assertContentsMatch(other);
+            return true;
+        }
+        return false;
+    }
+
+    private void assertContentsMatch(Entry other) {
+        boolean contentsMatch = amount == other.amount;
+
+        contentsMatch = contentsMatch && isEqual(category, other.category);
+        contentsMatch = contentsMatch && isEqual(currency, other.currency);
+
+        if (!contentsMatch) {
+            throw new IllegalStateException(String.format("The globalId or id of the two entries match, but their" +
+                    " contents differ. (this, other)\n%s\n%s", this, other));
+        }
+    }
+
+    private boolean isEqual(Entity thisPart, Entity otherPart) {
+        if (thisPart == null || otherPart == null) {
+            return thisPart == null && otherPart == null;
+        } else {
+            return thisPart.equals(otherPart);
+        }
+    }
+
+    @Override
+    public int compareTo(Entry another) {
+        return -(int) (utcDate - another.utcDate);
     }
 }

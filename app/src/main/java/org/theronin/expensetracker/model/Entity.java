@@ -17,4 +17,9 @@ public abstract class Entity {
         return String.format("%s: id: %d, ",
                 getClass().getSimpleName(), id);
     }
+
+    @Override
+    public final int hashCode() {
+        return 0;
+    }
 }
