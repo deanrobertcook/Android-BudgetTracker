@@ -33,19 +33,23 @@ public class ParseExchangeRateDownloader implements ExchangeRateDownloader {
         params.put("dates", createDatesObject(datesToDownload));
         params.put("codes", createCodesObject(codesToDownload));
 
+
+        List<ExchangeRate> rates = new ArrayList<>();
         try {
             List<ParseObject> parseObjects = ParseCloud.callFunction("exchangeRate", params);
+            if (parseObjects == null) {
+                parseObjects = new ArrayList<>();
+            }
 
-            List<ExchangeRate> rates = new ArrayList<>();
             for (ParseObject parseObject : parseObjects) {
                 ExchangeRate rate = getExchangeRate(parseObject);
                 rates.add(rate);
             }
-            callback.onDownloadComplete(rates);
-
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        //ensure downloadComplete is always called.
+        callback.onDownloadComplete(rates);
     }
 
     @NonNull
