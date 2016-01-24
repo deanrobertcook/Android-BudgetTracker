@@ -7,6 +7,8 @@ public class Constants {
     public static final long JAN_1_2000 = DateUtils.getUtcTime("2000-01-01");
     public static final long JAN_2_2000 = DateUtils.getUtcTime("2000-01-02");
     public static final long JAN_3_2000 = DateUtils.getUtcTime("2000-01-03");
+    public static final long JAN_4_2000 = DateUtils.getUtcTime("2000-01-04");
+    public static final long JAN_5_2000 = DateUtils.getUtcTime("2000-01-05");
     public static final long FEB_1_2000 = DateUtils.getUtcTime("2000-02-01");
     public static final long JAN_1_2011 = DateUtils.getUtcTime("2011-01-01");
 

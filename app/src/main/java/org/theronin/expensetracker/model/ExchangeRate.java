@@ -4,8 +4,6 @@ import org.theronin.expensetracker.utils.DateUtils;
 
 public class ExchangeRate extends Entity implements Comparable<ExchangeRate> {
 
-    public static final int MAX_DOWNLOAD_ATTEMPTS = 3;
-
     /**
      * Since currencyCode and date together make the unique key for an ExchangeRate, we don't ever
      * want those to change.
@@ -39,9 +37,6 @@ public class ExchangeRate extends Entity implements Comparable<ExchangeRate> {
 
     public void onDownloadFailed() {
         this.utcLastUpdated = System.currentTimeMillis();
-        if (downloadAttempts > MAX_DOWNLOAD_ATTEMPTS) {
-            throw new IllegalStateException("We shouldn't attempt to download this exchange rate again");
-        }
         this.downloadAttempts++;
     }
 

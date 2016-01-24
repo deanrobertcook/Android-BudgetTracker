@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -28,9 +27,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.theronin.expensetracker.data.backend.exchangerate.ExchangeRateSyncCoordinator.BACKOFF_RATE;
+import static org.theronin.expensetracker.data.backend.exchangerate.ExchangeRateSyncCoordinator.BASE_BACKOFF;
 import static org.theronin.expensetracker.testutils.Constants.JAN_1_2000;
 import static org.theronin.expensetracker.testutils.Constants.JAN_2_2000;
 import static org.theronin.expensetracker.testutils.Constants.JAN_3_2000;
+import static org.theronin.expensetracker.testutils.Constants.JAN_4_2000;
+import static org.theronin.expensetracker.testutils.Constants.JAN_5_2000;
 import static org.theronin.expensetracker.testutils.MockitoMatchers.containsAllExchangeRates;
 import static org.theronin.expensetracker.testutils.MockitoMatchers.setContainsAll;
 
@@ -227,34 +230,6 @@ public class ExchangeRateSyncCoordinatorTest {
     }
 
     @Test @SmallTest
-    public void ensureRatesDownloadInDescendingDateOrder() {
-        List<Entry> unorderedEntriesToBeFetchedFromDataSource = Arrays.asList(
-                new Entry(null, JAN_2_2000, -1, null, new Currency("EUR")),
-                new Entry(null, JAN_3_2000, -1, null, new Currency("EUR")),
-                new Entry(null, JAN_1_2000, -1, null, new Currency("EUR"))
-        );
-
-        when(entryDataSourceIsQueried()).thenReturn(unorderedEntriesToBeFetchedFromDataSource);
-        when(exchangeRateSourceIsQueried()).thenReturn(new ArrayList<ExchangeRate>());
-
-        Set<String> expectedDatesToBeRequested = new TreeSet<>(Arrays.asList(
-                DateUtils.getStorageFormattedDate(JAN_3_2000),
-                DateUtils.getStorageFormattedDate(JAN_2_2000),
-                DateUtils.getStorageFormattedDate(JAN_1_2000)
-        )).descendingSet();
-
-        Set<String> expectedCodesToBeRequested = new HashSet<>(Arrays.asList(
-                "EUR",
-                "AUD"
-        ));
-
-        syncCoordinator.downloadExchangeRates();
-
-        verify(downloader).downloadExchangeRates(
-                setContainsAll(expectedDatesToBeRequested, true), setContainsAll(expectedCodesToBeRequested));
-    }
-
-    @Test @SmallTest
     public void ifExRateMissingAfterDownload_CreateAnAttemptedExRate() {
         //some rates for the entries
         double rate_1p2340 = 1.2340;
@@ -288,8 +263,9 @@ public class ExchangeRateSyncCoordinatorTest {
     }
 
     @Test @SmallTest
-    public void ensureFailedRatesGetIncrementedUpToMaxDownloadAttemptsCount() {
-        for (int i = 0; i < ExchangeRateSyncCoordinator.MAX_DOWNLOAD_ATTEMPTS + 1; i++) {
+    public void ensureFailedRatesGetIncrementedUp() {
+        int testIncrements = 10;
+        for (int i = 0; i < testIncrements + 1; i++) {
             if (i > 0) {
                 setup(); //reset the coordinator (each run might be a long time apart here);
             }
@@ -307,12 +283,12 @@ public class ExchangeRateSyncCoordinatorTest {
             syncCoordinator.downloadExchangeRates();
             verify(exchangeRateAbsDataSource).query();
 
-            if (i < ExchangeRateSyncCoordinator.MAX_DOWNLOAD_ATTEMPTS) {
+            if (i < testIncrements) {
                 //Wouldn't be called on the last run through
                 syncCoordinator.onDownloadComplete(new ArrayList<ExchangeRate>());
             }
 
-            if (i >= ExchangeRateSyncCoordinator.MAX_DOWNLOAD_ATTEMPTS) {
+            if (i >= testIncrements) {
                 //we expect to see that nothing happened
                 verifyNoMoreInteractions(exchangeRateAbsDataSource);
             } else {
@@ -336,29 +312,45 @@ public class ExchangeRateSyncCoordinatorTest {
     }
 
     @Test @SmallTest
-    public void entriesWithOneFailedAttemptShouldntBeDownloadedAgainFor24Hours() {
+    public void exRatesWithFailedAttemptsShouldWaitTheAppropriateBackoffTime() {
         List<Entry> entriesFromDatabaseWithDifferentCurrency = Arrays.asList(
                 new Entry(null, JAN_1_2000, -1, null, new Currency("EUR")),
-                new Entry(null, JAN_2_2000, -1, null, new Currency("EUR")));
+                new Entry(null, JAN_2_2000, -1, null, new Currency("EUR")),
+                new Entry(null, JAN_3_2000, -1, null, new Currency("EUR")),
+                new Entry(null, JAN_4_2000, -1, null, new Currency("EUR")),
+                new Entry(null, JAN_5_2000, -1, null, new Currency("EUR"))
+                );
 
         when(entryDataSourceIsQueried()).thenReturn(entriesFromDatabaseWithDifferentCurrency);
 
-        long aFewHoursAgo = System.currentTimeMillis() - 3L * 60L * 60L * 1000L;
-        long oneDayAgo = System.currentTimeMillis() - ExchangeRateSyncCoordinator.BACKOFF_FIRST_ATTEMPT;
+        long backOffAfterOneAttempt = BASE_BACKOFF * (long) Math.pow(BACKOFF_RATE, 0) + 1000L; //1:01 minutes
+        long backOffAfterTwoAttempts = BASE_BACKOFF * (long) Math.pow(BACKOFF_RATE, 1) + 1000L; //2:01 minutes
+
+        long durationLessThanBackOffAfterOneAttempt = backOffAfterOneAttempt / 2; //~30 secs
+        long durationBetweenFirstAndSecondBackoff =
+                (backOffAfterTwoAttempts - backOffAfterOneAttempt) / 2 + backOffAfterOneAttempt; //~90 secs
 
         List<ExchangeRate> alreadyDownloadedExchangeRates = Arrays.asList(
-                //Should be downloaded again
-                new ExchangeRate(-1, "EUR", JAN_1_2000, -1, oneDayAgo, 1),
-                new ExchangeRate(-1, "AUD", JAN_1_2000, -1, oneDayAgo, 1),
                 //Shouldn't be downloaded again
-                new ExchangeRate(-1, "EUR", JAN_2_2000, -1, aFewHoursAgo, 1),
-                new ExchangeRate(-1, "AUD", JAN_2_2000, -1, aFewHoursAgo, 1)
+                new ExchangeRate(-1, "EUR", JAN_2_2000, -1, System.currentTimeMillis() - durationLessThanBackOffAfterOneAttempt, 1),
+                new ExchangeRate(-1, "AUD", JAN_2_2000, -1, System.currentTimeMillis() - durationLessThanBackOffAfterOneAttempt, 1),
+                //Should be downloaded again
+                new ExchangeRate(-1, "EUR", JAN_3_2000, -1, System.currentTimeMillis() - backOffAfterOneAttempt, 1),
+                new ExchangeRate(-1, "AUD", JAN_3_2000, -1, System.currentTimeMillis() - backOffAfterOneAttempt, 1),
+                //Shouldn't be downloaded again
+                new ExchangeRate(-1, "EUR", JAN_4_2000, -1, System.currentTimeMillis() - durationBetweenFirstAndSecondBackoff, 2),
+                new ExchangeRate(-1, "AUD", JAN_4_2000, -1, System.currentTimeMillis() - durationBetweenFirstAndSecondBackoff, 2),
+                //Should be downloaded again
+                new ExchangeRate(-1, "EUR", JAN_5_2000, -1, System.currentTimeMillis() - backOffAfterTwoAttempts, 2),
+                new ExchangeRate(-1, "AUD", JAN_5_2000, -1, System.currentTimeMillis() - backOffAfterTwoAttempts, 2)
         );
 
         when(exchangeRateSourceIsQueried()).thenReturn(alreadyDownloadedExchangeRates);
 
         Set<String> expectedDatesToBeRequested = new HashSet<>(Arrays.asList(
-                DateUtils.getStorageFormattedDate(JAN_1_2000)
+                DateUtils.getStorageFormattedDate(JAN_1_2000),
+                DateUtils.getStorageFormattedDate(JAN_3_2000),
+                DateUtils.getStorageFormattedDate(JAN_5_2000)
         ));
 
         Set<String> expectedCodesToBeRequested = new HashSet<>(Arrays.asList(
@@ -370,41 +362,4 @@ public class ExchangeRateSyncCoordinatorTest {
 
         verify(downloader).downloadExchangeRates(setContainsAll(expectedDatesToBeRequested), setContainsAll(expectedCodesToBeRequested));
     }
-
-    @Test @SmallTest
-    public void entriesWithTwoFailedAttemptsShouldntBeDownloadedAgainFor1Week() {
-        List<Entry> entriesFromDatabaseWithDifferentCurrency = Arrays.asList(
-                new Entry(null, JAN_1_2000, -1, null, new Currency("EUR")),
-                new Entry(null, JAN_2_2000, -1, null, new Currency("EUR")));
-
-        when(entryDataSourceIsQueried()).thenReturn(entriesFromDatabaseWithDifferentCurrency);
-
-        long aFewDaysAgo = System.currentTimeMillis() - 3L * 24L * 60L * 60L * 1000L;
-        long oneWeekAgo = System.currentTimeMillis() - ExchangeRateSyncCoordinator.BACKOFF_SECOND_ATTEMPT;
-
-        List<ExchangeRate> alreadyDownloadedExchangeRates = Arrays.asList(
-                //Should be downloaded again
-                new ExchangeRate(-1, "EUR", JAN_1_2000, -1, oneWeekAgo, 2),
-                new ExchangeRate(-1, "AUD", JAN_1_2000, -1, oneWeekAgo, 2),
-                //Shouldn't be downloaded again
-                new ExchangeRate(-1, "EUR", JAN_2_2000, -1, aFewDaysAgo, 2),
-                new ExchangeRate(-1, "AUD", JAN_2_2000, -1, aFewDaysAgo, 2)
-        );
-
-        when(exchangeRateSourceIsQueried()).thenReturn(alreadyDownloadedExchangeRates);
-
-        Set<String> expectedDatesToBeRequested = new HashSet<>(Arrays.asList(
-                DateUtils.getStorageFormattedDate(JAN_1_2000)
-        ));
-
-        Set<String> expectedCodesToBeRequested = new HashSet<>(Arrays.asList(
-                "EUR",
-                "AUD"
-        ));
-
-        syncCoordinator.downloadExchangeRates();
-
-        verify(downloader).downloadExchangeRates(setContainsAll(expectedDatesToBeRequested), setContainsAll(expectedCodesToBeRequested));
-    }
-
 }

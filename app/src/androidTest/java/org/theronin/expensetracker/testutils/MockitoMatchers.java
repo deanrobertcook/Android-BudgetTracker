@@ -5,7 +5,6 @@ import org.hamcrest.TypeSafeMatcher;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.ExchangeRate;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -120,10 +119,6 @@ public class MockitoMatchers {
     }
 
     public static Set<String> setContainsAll(final Set<String> expectedSet) {
-        return setContainsAll(expectedSet, false);
-    }
-
-    public static Set<String> setContainsAll(final Set<String> expectedSet, final boolean checkOrder) {
         return argThat(new TypeSafeMatcher<Set<String>>() {
 
             private Set<String> actualDates;
@@ -131,13 +126,7 @@ public class MockitoMatchers {
             @Override
             protected boolean matchesSafely(final Set<String> actualSet) {
                 this.actualDates = actualSet;
-                if (checkOrder) {
-                    List<String> expectedList = new ArrayList<>(expectedSet);
-                    List<String> actualList = new ArrayList<>(actualSet);
-                    return expectedList.equals(actualList);
-                } else {
-                    return expectedSet.equals(actualSet);
-                }
+                return expectedSet.equals(actualSet);
             }
 
             @Override
