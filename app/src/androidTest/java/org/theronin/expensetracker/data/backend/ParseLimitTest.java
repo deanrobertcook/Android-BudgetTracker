@@ -1,8 +1,5 @@
 package org.theronin.expensetracker.data.backend;
 
-import android.test.suitebuilder.annotation.LargeTest;
-
-import org.junit.Test;
 import org.theronin.expensetracker.data.backend.entry.EntrySyncCoordinator;
 import org.theronin.expensetracker.data.backend.entry.ParseEntryRemoteSync;
 import org.theronin.expensetracker.data.backend.entry.SyncState;
@@ -26,7 +23,7 @@ import static org.theronin.expensetracker.testutils.Constants.JAN_1_2011;
 
 public class ParseLimitTest {
 
-    @Test @LargeTest
+//    @Test @LargeTest
     public void testEntryLimit() {
         int numEntriesToSync = 2000;
         AbsDataSource<Entry> absDataSource = mock(DataSourceEntry.class);
@@ -45,7 +42,7 @@ public class ParseLimitTest {
         return entries;
     }
 
-    @Test @LargeTest
+//    @Test @LargeTest
     public void testExchangeRateLimit() {
         int numDatesTowDownload = 15;
 

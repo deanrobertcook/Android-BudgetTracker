@@ -1,5 +1,7 @@
 package org.theronin.expensetracker.model;
 
+import android.test.suitebuilder.annotation.SmallTest;
+
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -14,7 +16,7 @@ import static org.theronin.expensetracker.testutils.Constants.JAN_2_2000;
 
 public class ExchangeRateTest {
 
-    @Test
+    @Test @SmallTest
     public void equalsMethodShouldReturnTrueForExchangeRatesWithSameDateAndCode() {
         ExchangeRate rate1 = new ExchangeRate(-1, "AUD", JAN_1_2000, -1, -1, 0);
         ExchangeRate rate2 = new ExchangeRate(-1, "AUD", JAN_1_2000, -1, -1, 0);
@@ -22,7 +24,7 @@ public class ExchangeRateTest {
         assertTrue(rate1.equals(rate2));
     }
 
-    @Test
+    @Test @SmallTest
     public void equalsMethodShouldReturnFalseIfDateDiffers() {
         ExchangeRate rate1 = new ExchangeRate(-1, "AUD", JAN_1_2000, -1, -1, 0);
         ExchangeRate rate2 = new ExchangeRate(-1, "AUD", JAN_2_2000, -1, -1, 0);
@@ -30,7 +32,7 @@ public class ExchangeRateTest {
         assertFalse(rate1.equals(rate2));
     }
 
-    @Test
+    @Test @SmallTest
     public void equalsMethodShouldReturnFalseIfCodeDiffers() {
         ExchangeRate rate1 = new ExchangeRate(-1, "AUD", JAN_1_2000, -1, -1, 0);
         ExchangeRate rate2 = new ExchangeRate(-1, "EUR", JAN_1_2000, -1, -1, 0);
@@ -38,7 +40,7 @@ public class ExchangeRateTest {
         assertFalse(rate1.equals(rate2));
     }
 
-    @Test
+    @Test @SmallTest
     public void testSortingByDate() {
         List<ExchangeRate> list = Arrays.asList(
                 new ExchangeRate(-1, "AUD", JAN_2_2000, -1, -1, 0),
@@ -50,7 +52,7 @@ public class ExchangeRateTest {
         assertEquals(list.get(1).utcDate, JAN_1_2000);
     }
 
-    @Test
+    @Test @SmallTest
     public void testSortingByCode() {
         List<ExchangeRate> list = Arrays.asList(
                 new ExchangeRate(-1, "EUR", JAN_1_2000, -1, -1, 0),

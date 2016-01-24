@@ -1,6 +1,7 @@
 package org.theronin.expensetracker.data.backend.exchangerate;
 
 import android.support.test.runner.AndroidJUnit4;
+import android.test.suitebuilder.annotation.SmallTest;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,10 +20,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anySetOf;
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -59,7 +59,7 @@ public class ExchangeRateSyncCoordinatorTest {
         verify(downloader).setCallback(syncCoordinator);
     }
 
-    @Test
+    @Test @SmallTest
     public void exchangeRatesShouldntBeDownloadedIfTheyAreAlreadyDownloaded() {
         List<Entry> entriesThatHaveADifferentCurrencyFromHome = Arrays.asList(
                 new Entry(null, JAN_1_2000, -1, null, new Currency("EUR")),
@@ -91,10 +91,8 @@ public class ExchangeRateSyncCoordinatorTest {
                 setContainsAll(datesToDownload),
                 setContainsAll(codesToDownload));
     }
-    //TODO test the above scenario, but inverted for testing currency (you know it'll fail, because
-    //TODO we can't remove codes like we can dates, but check it anyway)
 
-    @Test
+    @Test @SmallTest
     public void queriesAnyEntriesWhereCurrenciesDontMatch_AndCallsTheDownloader() {
         List<Entry> entriesThatHaveADifferentCurrencyFromHome = Arrays.asList(
                 new Entry(null, JAN_1_2000, -1, null, new Currency("EUR")),
@@ -121,7 +119,7 @@ public class ExchangeRateSyncCoordinatorTest {
         );
     }
 
-    @Test
+    @Test @SmallTest
     public void doesntRequestDuplicateExchangeRates() {
         //If there are many entries in a foreign currency for the same day, we don't want to pass
         //a new exchange rate request for each one. The same exchange rate will cover them all
@@ -149,7 +147,7 @@ public class ExchangeRateSyncCoordinatorTest {
         );
     }
 
-    @Test
+    @Test @SmallTest
     public void thirdExchangeRateDoesntCreateDuplicateRequests() {
         //The case where there is more than one exRate for a given day. This should then create 3
         //exchange rates, one for each currency on that date
@@ -178,7 +176,7 @@ public class ExchangeRateSyncCoordinatorTest {
         );
     }
 
-    @Test
+    @Test @SmallTest
     public void doesntTriggerDownloaderIfAllEntriesHaveTheSameCurrency() {
         when(entryDataSourceIsQueried()).thenReturn(new ArrayList<Entry>());
         when(exchangeRateSourceIsQueried()).thenReturn(new ArrayList<ExchangeRate>());
@@ -186,7 +184,7 @@ public class ExchangeRateSyncCoordinatorTest {
         verifyNoMoreInteractions(downloader);
     }
 
-    @Test
+    @Test @SmallTest
     public void doesntTriggerDownloaderIfAllExRatesAreDownloaded() {
         List<Entry> entriesThatHaveADifferentCurrencyFromHome = Arrays.asList(
                 new Entry(null, JAN_1_2000, -1, null, new Currency("EUR")),
@@ -207,7 +205,7 @@ public class ExchangeRateSyncCoordinatorTest {
         verifyNoMoreInteractions(downloader);
     }
 
-    @Test
+    @Test @SmallTest
     public void whenDownloadCompletesTheCoordinatorSavesTheExchangeRates() {
 
         List<Entry> entryWithDifferingExchangeRate = Arrays.asList(
@@ -228,44 +226,8 @@ public class ExchangeRateSyncCoordinatorTest {
         verify(exchangeRateAbsDataSource).bulkInsert(containsAllExchangeRates(downloadedExchangeRates));
     }
 
-    @Test
-    public void ensureLargeRequestsAreThrottled() {
-        int numDays = 1000;
-        int expectedRates = numDays * 2; //two currencies per day
-        int testBatchSize = 100;
-        int expectedBatches = (int) Math.ceil((double) expectedRates / testBatchSize);
-        List<Entry> largeNumEntriesWithNoExchangeDate = createEntriesSpanningDays(numDays);
-
-        when(entryDataSourceIsQueried()).thenReturn(largeNumEntriesWithNoExchangeDate);
-        when(exchangeRateSourceIsQueried()).thenReturn(new ArrayList<ExchangeRate>());
-
-        syncCoordinator.setDownloadBatchSize(testBatchSize);
-        syncCoordinator.downloadExchangeRates();
-
-        for (int i = 0; i < expectedBatches; i++) {
-            //Pass in all missing exchange rates. This test doesn't care if they fail.
-            syncCoordinator.onDownloadComplete(new ArrayList<ExchangeRate>());
-        }
-
-        verify(downloader, atLeast(expectedBatches)).downloadExchangeRates(
-                anySetOf(String.class),
-                anySetOf(String.class));
-    }
-
-    private List<Entry> createEntriesSpanningDays(int numDays) {
-        List<Entry> entries = new ArrayList<>();
-        long dayInMillis = 24L * 60L * 60L * 1000L;
-        long startDate = DateUtils.getUtcTime("2000-01-01");
-        for (int i = 0; i < numDays; i++) {
-            entries.add(new Entry(null, null, (startDate + i * dayInMillis), 100, null, new Currency("EUR")));
-        }
-        return entries;
-    }
-
-    @Test
-    public void ensureMultipleBatchesDownloadInDescendingDateOrder() {
-        int testBatchLimit = 2; //batch limit for each test entry (each one should produce 2 exRates)
-
+    @Test @SmallTest
+    public void ensureRatesDownloadInDescendingDateOrder() {
         List<Entry> unorderedEntriesToBeFetchedFromDataSource = Arrays.asList(
                 new Entry(null, JAN_2_2000, -1, null, new Currency("EUR")),
                 new Entry(null, JAN_3_2000, -1, null, new Currency("EUR")),
@@ -275,52 +237,24 @@ public class ExchangeRateSyncCoordinatorTest {
         when(entryDataSourceIsQueried()).thenReturn(unorderedEntriesToBeFetchedFromDataSource);
         when(exchangeRateSourceIsQueried()).thenReturn(new ArrayList<ExchangeRate>());
 
-        List<ExchangeRate> ratesInExpectedDownloadOrder = Arrays.asList(
-                new ExchangeRate("EUR", JAN_3_2000),
-                new ExchangeRate("AUD", JAN_3_2000),
-                new ExchangeRate("EUR", JAN_2_2000),
-                new ExchangeRate("AUD", JAN_2_2000),
-                new ExchangeRate("EUR", JAN_1_2000),
-                new ExchangeRate("AUD", JAN_1_2000)
-        );
+        Set<String> expectedDatesToBeRequested = new TreeSet<>(Arrays.asList(
+                DateUtils.getStorageFormattedDate(JAN_3_2000),
+                DateUtils.getStorageFormattedDate(JAN_2_2000),
+                DateUtils.getStorageFormattedDate(JAN_1_2000)
+        )).descendingSet();
 
-        syncCoordinator.setDownloadBatchSize(testBatchLimit);
+        Set<String> expectedCodesToBeRequested = new HashSet<>(Arrays.asList(
+                "EUR",
+                "AUD"
+        ));
 
-        for (int i = 0; i < ratesInExpectedDownloadOrder.size(); i = i + 2) {
-            ExchangeRate rate1 = ratesInExpectedDownloadOrder.get(i);
-            ExchangeRate rate2 = ratesInExpectedDownloadOrder.get(i + 1);
+        syncCoordinator.downloadExchangeRates();
 
-            Set<String> expectedDatesToBeRequested = new HashSet<>(Arrays.asList(rate1.date));
-
-            Set<String> expectedCodesToBeRequested = new HashSet<>(Arrays.asList(rate1.currencyCode, rate2.currencyCode));
-
-            if (i == 0) {
-                //Trigger first batch
-                syncCoordinator.downloadExchangeRates();
-            } else {
-                String lastDate = ratesInExpectedDownloadOrder.get(i - 2).date;
-                //Confirm the first and second batch, while also triggering the second and third batches
-                verifyDownloadCompleteCycle(DateUtils.getUtcTime(lastDate));
-            }
-
-            verify(downloader).downloadExchangeRates(setContainsAll(expectedDatesToBeRequested), setContainsAll(expectedCodesToBeRequested));
-        }
-
-        //Confirm third batch saved properly
-        verifyDownloadCompleteCycle(JAN_1_2000);
+        verify(downloader).downloadExchangeRates(
+                setContainsAll(expectedDatesToBeRequested, true), setContainsAll(expectedCodesToBeRequested));
     }
 
-    private void verifyDownloadCompleteCycle(long date) {
-        List<ExchangeRate> downloadedExchangeRates = Arrays.asList(
-                new ExchangeRate(-1, "EUR", date, 1, -1, 0),
-                new ExchangeRate(-1, "AUD", date, 1, -1, 0));
-
-        when(exchangeRateAbsDataSource.bulkInsert(downloadedExchangeRates)).thenReturn(downloadedExchangeRates);
-        syncCoordinator.onDownloadComplete(downloadedExchangeRates);
-        verify(exchangeRateAbsDataSource).bulkInsert(containsAllExchangeRates(downloadedExchangeRates));
-    }
-
-    @Test
+    @Test @SmallTest
     public void ifExRateMissingAfterDownload_CreateAnAttemptedExRate() {
         //some rates for the entries
         double rate_1p2340 = 1.2340;
@@ -353,7 +287,7 @@ public class ExchangeRateSyncCoordinatorTest {
         verify(exchangeRateAbsDataSource).bulkInsert(containsAllExchangeRates(expectedSavedExRates));
     }
 
-    @Test
+    @Test @SmallTest
     public void ensureFailedRatesGetIncrementedUpToMaxDownloadAttemptsCount() {
         for (int i = 0; i < ExchangeRateSyncCoordinator.MAX_DOWNLOAD_ATTEMPTS + 1; i++) {
             if (i > 0) {
@@ -401,8 +335,7 @@ public class ExchangeRateSyncCoordinatorTest {
         return exchangeRateAbsDataSource.query();
     }
 
-    //TODO last (I hope) test - check time spans between tests
-    @Test
+    @Test @SmallTest
     public void entriesWithOneFailedAttemptShouldntBeDownloadedAgainFor24Hours() {
         List<Entry> entriesFromDatabaseWithDifferentCurrency = Arrays.asList(
                 new Entry(null, JAN_1_2000, -1, null, new Currency("EUR")),
@@ -438,7 +371,7 @@ public class ExchangeRateSyncCoordinatorTest {
         verify(downloader).downloadExchangeRates(setContainsAll(expectedDatesToBeRequested), setContainsAll(expectedCodesToBeRequested));
     }
 
-    @Test
+    @Test @SmallTest
     public void entriesWithTwoFailedAttemptsShouldntBeDownloadedAgainFor1Week() {
         List<Entry> entriesFromDatabaseWithDifferentCurrency = Arrays.asList(
                 new Entry(null, JAN_1_2000, -1, null, new Currency("EUR")),

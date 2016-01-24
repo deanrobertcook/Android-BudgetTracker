@@ -1,6 +1,7 @@
 package org.theronin.expensetracker.data.backend.entry;
 
 import android.support.test.runner.AndroidJUnit4;
+import android.test.suitebuilder.annotation.SmallTest;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +34,7 @@ public class EntrySyncCoordinatorTest {
         entrySyncCoordinator = new EntrySyncCoordinator(entryAbsDataSource, remoteSync);
     }
 
-    @Test
+    @Test @SmallTest
     public void addingEntitiesSyncsThemInDatabaseWhenRemoteSyncSucceeds() throws InterruptedException {
         List<Entry> entriesToAdd = Arrays.asList(
                 new Entry(1, null, SyncState.NEW, -1, -1, null, null)
@@ -50,7 +51,7 @@ public class EntrySyncCoordinatorTest {
         verify(entryAbsDataSource).bulkUpdate(containsAllEntries(expectedEntriesToSave));
     }
 
-    @Test
+    @Test @SmallTest
     public void addEntitiesDoesNothingWhenRemoteSyncFails() throws Exception {
         List<Entry> entriesToAdd = Arrays.asList(
                 new Entry(1, null, SyncState.NEW, -1, -1, null, null)
@@ -63,7 +64,7 @@ public class EntrySyncCoordinatorTest {
         verifyNoMoreInteractions(entryAbsDataSource);
     }
 
-    @Test
+    @Test @SmallTest
     public void deleteSyncedEntitiesAlsoDeletesFromLocalWhenSyncSucceeds() {
         List<Entry> entriesToAdd = Arrays.asList(
                 new Entry(1, "xyz", SyncState.MARKED_AS_DELETED, -1, -1, null, null)
@@ -78,7 +79,7 @@ public class EntrySyncCoordinatorTest {
         verify(entryAbsDataSource).bulkDelete(containsAllEntries(expectedEntriesToBeDeleted));
     }
 
-    @Test
+    @Test @SmallTest
     public void deleteNonSyncedEntitiesOnlyCallsLocalDeleteWhenSyncSucceeds() throws InterruptedException {
         List<Entry> entriesToAdd = Arrays.asList(
                 new Entry(1, null, SyncState.MARKED_AS_DELETED, -1, -1, null, null)

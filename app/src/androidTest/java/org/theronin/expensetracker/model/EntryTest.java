@@ -1,5 +1,7 @@
 package org.theronin.expensetracker.model;
 
+import android.test.suitebuilder.annotation.SmallTest;
+
 import org.junit.Test;
 import org.theronin.expensetracker.data.backend.entry.SyncState;
 
@@ -15,7 +17,7 @@ import static org.theronin.expensetracker.testutils.Constants.JAN_2_2000;
 import static org.theronin.expensetracker.testutils.Constants.JAN_3_2000;
 
 public class EntryTest {
-    @Test
+    @Test @SmallTest
     public void equalityTestShouldFailIfGlobalIdsDiffer() {
         Entry entry1 = new Entry("abc", 0, 0, null, null);
         Entry entry2 = new Entry("xyz", 0, 0, null, null);
@@ -23,7 +25,7 @@ public class EntryTest {
         assertFalse(entry1.equals(entry2));
     }
 
-    @Test
+    @Test @SmallTest
     public void equalityTestShouldPassIfGlobalIdsAreTheSameButIdsDiffer() {
         Entry entry1 = new Entry(2, "abc", SyncState.SYNCED, 0, 0, null, null);
         Entry entry2 = new Entry(1, "abc", SyncState.SYNCED, 0, 0, null, null);
@@ -31,7 +33,7 @@ public class EntryTest {
         assertTrue(entry1.equals(entry2));
     }
 
-    @Test
+    @Test @SmallTest
     public void equalityTestShouldFailIfNoGlobalIdAndIdsDiffer() {
         Entry entry1 = new Entry(2, null, SyncState.SYNCED, 0, 0, null, null);
         Entry entry2 = new Entry(1, null, SyncState.SYNCED, 0, 0, null, null);
@@ -47,7 +49,7 @@ public class EntryTest {
         entry1.equals(entry2);
     }
 
-    @Test
+    @Test @SmallTest
     public void sortingEntriesShouldReturnThemInDateOrder() {
         List<Entry> entryList = Arrays.asList(
                 new Entry(1, null, SyncState.SYNCED, JAN_1_2000, 1, new Category("test1"), new Currency("AUD")),

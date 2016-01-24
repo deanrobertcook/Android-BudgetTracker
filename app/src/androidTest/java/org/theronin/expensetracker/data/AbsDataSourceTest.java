@@ -1,12 +1,13 @@
 package org.theronin.expensetracker.data;
 
 import android.support.test.runner.AndroidJUnit4;
+import android.test.suitebuilder.annotation.SmallTest;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.data.backend.entry.SyncState;
+import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
@@ -35,7 +36,7 @@ public class AbsDataSourceTest {
         testApplication.inject(this);
     }
 
-    @Test
+    @Test @SmallTest
     public void observersAreNotifiedOnDataInsert() throws InterruptedException {
         final CountDownLatch callbackLatch = new CountDownLatch(1);
         AbsDataSource.Observer observer = new AbsDataSource.Observer() {
@@ -53,7 +54,7 @@ public class AbsDataSourceTest {
         assertEquals("Observer was not notified", 0, callbackLatch.getCount());
     }
 
-    @Test
+    @Test @SmallTest
     public void observersAreNotifiedOnDataDeletion() throws InterruptedException {
         final CountDownLatch callbackLatch = new CountDownLatch(1);
 
@@ -72,7 +73,7 @@ public class AbsDataSourceTest {
         assertEquals("Observer was not notified", 0, callbackLatch.getCount());
     }
 
-    @Test
+    @Test @SmallTest
     public void testBulkUpdatesArePerformed() throws InterruptedException {
         List<Entry> entries = Util.createEntries(10, true, SyncState.SYNCED);
         entryAbsDataSource.bulkInsert(entries);

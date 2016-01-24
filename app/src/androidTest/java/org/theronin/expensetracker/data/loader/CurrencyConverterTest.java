@@ -1,5 +1,7 @@
 package org.theronin.expensetracker.data.loader;
 
+import android.test.suitebuilder.annotation.SmallTest;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.theronin.expensetracker.model.Currency;
@@ -30,7 +32,7 @@ public class CurrencyConverterTest {
         converter = new CurrencyConverter(mockCallback, new Currency("AUD"));
     }
 
-    @Test
+    @Test @SmallTest
     public void entriesWithSameCurrencyAsHome_ShouldBeAssignedAmountEqualToCurrent() {
         int entryAmount = 100;
 
@@ -48,7 +50,7 @@ public class CurrencyConverterTest {
         }
     }
 
-    @Test
+    @Test @SmallTest
     public void entryWithDifferentCurrency_ShouldBeAssignedRateOfGreaterThanZero() {
         int entryAmount = 100;
         List<Entry> entries = Arrays.asList(
@@ -68,7 +70,7 @@ public class CurrencyConverterTest {
         assertEquals("Rate for entry not correct", Math.round((homeRate / currentRate) * entryAmount), entries.get(0).getHomeAmount());
     }
 
-    @Test
+    @Test @SmallTest
     public void entryWithDifferentCurrency_AndNoExchangeData_ShouldBeAssignedHomeAmountOfNegativeOne() {
         int entryAmount = 100;
         List<Entry> entries = Arrays.asList(
@@ -80,7 +82,7 @@ public class CurrencyConverterTest {
         assertEquals("Rate for entry not correct", -1, entries.get(0).getHomeAmount());
     }
 
-    @Test
+    @Test @SmallTest
     public void entryWithDifferentCurrency_AndNoExchangeData_ShouldTriggerCallback() {
         int entryAmount = 100;
         List<Entry> entries = Arrays.asList(
