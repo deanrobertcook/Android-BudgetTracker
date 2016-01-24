@@ -1,5 +1,8 @@
 package org.theronin.expensetracker.data.backend;
 
+import android.test.suitebuilder.annotation.LargeTest;
+
+import org.junit.Test;
 import org.theronin.expensetracker.data.backend.entry.EntrySyncCoordinator;
 import org.theronin.expensetracker.data.backend.entry.ParseEntryRemoteSync;
 import org.theronin.expensetracker.data.backend.entry.SyncState;
@@ -42,9 +45,10 @@ public class ParseLimitTest {
         return entries;
     }
 
-//    @Test @LargeTest
+    @Test
+    @LargeTest
     public void testExchangeRateLimit() {
-        int numDatesTowDownload = 15;
+        int numDatesTowDownload = 15; //exeeds the limit of 10 fresh ex rates
 
         Currency homeCurrency = new Currency("AUD");
 

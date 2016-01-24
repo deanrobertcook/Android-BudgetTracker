@@ -40,7 +40,7 @@ function getDate() {
     var dd  = date.getDate().toString();
     var mmChars = mm.split('');
     var ddChars = dd.split('');
-    return datestring = yyyy + '-' + (mmChars[1]?mm:"0"+mmChars[0]) + '-' + (ddChars[1]?dd:"0"+ddChars[0]);
+    return yyyy + '-' + (mmChars[1]?mm:"0"+mmChars[0]) + '-' + (ddChars[1]?dd:"0"+ddChars[0]);
 }
 
 //Request contains a list of currency codes and dates of the form YYYY-MM-DD, both comma separated
@@ -50,6 +50,8 @@ Parse.Cloud.define("exchangeRate", function(request, response) {
     return query.find()
     .then(function(results) {
         return Parse.Promise.when(buildDownloadPromises(getMissingDates(results)))
+    }).then(function() {
+        return query.find();
     }).then(function (results) {
         console.log("All downloads successful");
         response.success(results);
@@ -64,7 +66,7 @@ function getExchangeRatesQuery(dates, codes) {
 
     dateStrings = dates.split(",").filter(function(item, pos, self) {
         return self.indexOf(item) == pos;
-    });
+    }).sort().reverse();
     var codes = codes.split(",");
 
     var query = new Parse.Query(ExchangeRate);
@@ -84,6 +86,8 @@ function getMissingDates(resultsSaved) {
     }
     return dateStrings
         .filter(function(obj) { return datesRetrieved.indexOf(obj) == -1; })
+        .sort()
+        .reverse()
         .slice(0, MAX_DOWNLOADS);
 }
 

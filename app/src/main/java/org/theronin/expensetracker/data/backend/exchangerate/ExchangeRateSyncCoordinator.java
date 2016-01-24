@@ -132,4 +132,7 @@ public class ExchangeRateSyncCoordinator implements
         }
         return ratesToDownload;
     }
+
+    //TODO do a test with an in-memory database. I'm worried that bulkInsert will just fail silently
+    //TODO whenever we try to increment an ExchangeRate's download attempt data.
 }
