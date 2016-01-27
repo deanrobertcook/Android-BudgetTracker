@@ -5,47 +5,11 @@
               android:orientation="vertical"
               android:background="?attr/selectableItemBackground">
 
-    <LinearLayout
-        android:id="@+id/ll__border"
-        android:orientation="vertical"
+    <ViewStub
+        android:id="@+id/stub__date_border_layout"
+        android:layout="@layout/list_item__entry_date_border"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/material_default_margin"
-        android:paddingRight="@dimen/material_default_margin"
-        android:visibility="gone">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:paddingTop="@dimen/material_default_margin">
-
-            <TextView
-                android:id="@+id/tv__boundary_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:text="12 December 2015"
-                android:textColor="@color/primary"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:id="@+id/tv__boundary_total"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:text="€100.50"
-                android:textColor="@color/primary"
-                android:textSize="16sp"/>
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/primary"/>
-
-    </LinearLayout>
+        android:layout_height="wrap_content"/>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:id="@+id/ll__list_item__content_layout"

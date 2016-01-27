@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.TextView;
 
 import org.apache.commons.lang.WordUtils;
@@ -65,15 +66,27 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
         vH.contentLayout.setTag(R.id.entry_id, entry.getId());
 
-        String formattedDate = DateUtils.getDisplayFormattedDate(entry.utcDate);
-        String formattedDayTotal = getFormattedDayTotal(entry.utcDate);
-        displayDateBorder(vH, position, formattedDate, formattedDayTotal);
+        if (shouldDisplayDateBorder(position)) {
+            vH.displayDateBorder(DateUtils.getDisplayFormattedDate(entry.utcDate), getFormattedDayTotal(entry.utcDate));
+        } else {
+            vH.hideInflatedDateBorder();
+        }
 
-        vH.currentDisplay.setCurrency(entry.currency);
-        vH.currentDisplay.setAmount(entry.amount);
+        setCurrentAmount(vH, entry);
 
         vH.categoryTextView.setText(WordUtils.capitalize(entry.category.name));
 
+        setHomeAmount(vH, entry);
+
+        selectionManager.listenToItemView(vH.contentLayout);
+    }
+
+    private void setCurrentAmount(ViewHolder vH, Entry entry) {
+        vH.currentDisplay.setCurrency(entry.currency);
+        vH.currentDisplay.setAmount(entry.amount);
+    }
+
+    private void setHomeAmount(ViewHolder vH, Entry entry) {
         if (!entry.currency.code.equals(currencySettings.getHomeCurrency().code)) {
             vH.homeDisplay.setVisibility(View.VISIBLE);
             vH.homeDisplay.setCurrency(currencySettings.getHomeCurrency());
@@ -81,8 +94,6 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         } else {
             vH.homeDisplay.setVisibility(View.INVISIBLE);
         }
-
-        selectionManager.listenToItemView(vH.contentLayout);
     }
 
     private String getFormattedDayTotal(final long utcDate) {
@@ -95,17 +106,6 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         return (entrySum.missingEntries > 0 ? "~" : "") +
                 currencySettings.getHomeCurrency().symbol +
                 MoneyUtils.getDisplayCompact(context, entrySum.amount);
-    }
-
-    private void displayDateBorder(ViewHolder viewHolder, int position, String formattedDate, String formattedTotal) {
-        if (shouldDisplayDateBorder(position)) {
-            viewHolder.borderLayout.setVisibility(View.VISIBLE);
-
-            viewHolder.borderDateTextView.setText(formattedDate);
-            viewHolder.borderTotalTextView.setText(formattedTotal);
-        } else {
-            viewHolder.borderLayout.setVisibility(View.GONE);
-        }
     }
 
     private boolean shouldDisplayDateBorder(int position) {
@@ -126,9 +126,10 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public final View borderLayout;
-        public final TextView borderDateTextView;
-        private final TextView borderTotalTextView;
+        public final ViewStub borderStub;
+        public View borderLayout;
+        public TextView borderDateTextView;
+        private TextView borderTotalTextView;
 
         public final View contentLayout;
         public final AmountDisplayLayout currentDisplay;
@@ -138,14 +139,35 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         public ViewHolder(View view) {
             super(view);
 
-            borderLayout = itemView.findViewById(R.id.ll__border);
-            borderDateTextView = (TextView) itemView.findViewById(R.id.tv__boundary_date);
-            borderTotalTextView = (TextView) itemView.findViewById(R.id.tv__boundary_total);
+            borderStub = (ViewStub) itemView.findViewById(R.id.stub__date_border_layout);
 
             contentLayout = itemView.findViewById(R.id.ll__list_item__content_layout);
             currentDisplay = (AmountDisplayLayout) contentLayout.findViewById(R.id.amount_display_current);
             categoryTextView = (TextView) contentLayout.findViewById(R.id.tv__list_item__entry__category);
             homeDisplay = (AmountDisplayLayout) contentLayout.findViewById(R.id.amount_display_home);
+        }
+
+        public void displayDateBorder(String formattedDate, String formattedTotal) {
+            inflateDateBorder();
+            borderLayout.setVisibility(View.VISIBLE);
+
+            borderDateTextView.setText(formattedDate);
+            borderTotalTextView.setText(formattedTotal);
+        }
+
+        private void inflateDateBorder() {
+            if (borderLayout == null) {
+                borderLayout = borderStub.inflate();
+                borderDateTextView = (TextView) borderLayout.findViewById(R.id.tv__boundary_date);
+                borderTotalTextView = (TextView) borderLayout.findViewById(R.id.tv__boundary_total);
+            }
+        }
+
+        public void hideInflatedDateBorder() {
+            if (borderLayout == null) {
+                return;
+            }
+            borderLayout.setVisibility(View.GONE);
         }
     }
 
