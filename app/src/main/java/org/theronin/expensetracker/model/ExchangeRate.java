@@ -53,7 +53,8 @@ public class ExchangeRate extends Entity implements Comparable<ExchangeRate> {
         return super.toString() + String.format(
                 "currency: %s, usdRate: %f, date: %s, lastUpdated: %s, downloadAttempts: %d",
                 currencyCode, usdRate, DateUtils.getStorageFormattedDate(utcDate),
-                DateUtils.getStorageFormattedDate(utcLastUpdated), downloadAttempts
+                utcLastUpdated > 0 ? DateUtils.getStorageFormattedDate(utcLastUpdated) : "----",
+                downloadAttempts
         );
     }
 

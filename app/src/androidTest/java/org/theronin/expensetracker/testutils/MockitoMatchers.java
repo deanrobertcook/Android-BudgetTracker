@@ -72,7 +72,11 @@ public class MockitoMatchers {
      * @return
      */
     public static List<ExchangeRate> containsAllExchangeRates(final List<ExchangeRate> expectedList) {
-        return argThat(new TypeSafeMatcher<List<ExchangeRate>>() {
+        return argThat(matchExchangeRates(expectedList));
+    }
+
+    public static TypeSafeMatcher<List<ExchangeRate>> matchExchangeRates(final List<ExchangeRate> expectedList) {
+        return new TypeSafeMatcher<List<ExchangeRate>>() {
 
             public List<ExchangeRate> actualList;
             private final double RATE_EPSILON = 0.000001;
@@ -115,7 +119,7 @@ public class MockitoMatchers {
                 description.appendText("\n");
                 description.appendValue(actualList);
             }
-        });
+        };
     }
 
     public static Set<String> setContainsAll(final Set<String> expectedSet) {

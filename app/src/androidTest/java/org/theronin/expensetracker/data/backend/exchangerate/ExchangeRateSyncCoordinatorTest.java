@@ -1,5 +1,7 @@
 package org.theronin.expensetracker.data.backend.exchangerate;
 
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.SmallTest;
 
@@ -10,6 +12,7 @@ import org.theronin.expensetracker.data.Contract.EntryView;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.data.source.DataSourceEntry;
 import org.theronin.expensetracker.data.source.DataSourceExchangeRate;
+import org.theronin.expensetracker.data.source.DbHelper;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.ExchangeRate;
@@ -21,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -35,6 +39,7 @@ import static org.theronin.expensetracker.testutils.Constants.JAN_3_2000;
 import static org.theronin.expensetracker.testutils.Constants.JAN_4_2000;
 import static org.theronin.expensetracker.testutils.Constants.JAN_5_2000;
 import static org.theronin.expensetracker.testutils.MockitoMatchers.containsAllExchangeRates;
+import static org.theronin.expensetracker.testutils.MockitoMatchers.matchExchangeRates;
 import static org.theronin.expensetracker.testutils.MockitoMatchers.setContainsAll;
 
 @RunWith(AndroidJUnit4.class)
@@ -264,7 +269,7 @@ public class ExchangeRateSyncCoordinatorTest {
 
     @Test @SmallTest
     public void ensureFailedRatesGetIncrementedUp() {
-        int testIncrements = 10;
+        int testIncrements = 3;
         for (int i = 0; i < testIncrements + 1; i++) {
             if (i > 0) {
                 setup(); //reset the coordinator (each run might be a long time apart here);
@@ -301,6 +306,49 @@ public class ExchangeRateSyncCoordinatorTest {
                 verify(exchangeRateAbsDataSource).bulkInsert(containsAllExchangeRates(expectedSavedExRates));
             }
         }
+    }
+
+    @Test
+    @SmallTest
+    public void ensureFailedRatesGetUpdatedInDatabase() {
+        when(entryDataSourceIsQueried()).thenReturn(Arrays.asList(
+                new Entry(null, JAN_1_2000, -1, null, new Currency("EUR"))));
+
+        AbsDataSource<ExchangeRate> exchangeRateAbsDataSource = getInMemoryExchangeRateDataSource();
+        //put in some failed exchange rates;
+        long oneMinuteAgo = System.currentTimeMillis() - 60L * 1000L;
+        exchangeRateAbsDataSource.bulkInsert(Arrays.asList(
+                new ExchangeRate(-1, "EUR", JAN_1_2000, -1, oneMinuteAgo, 1),
+                new ExchangeRate(-1, "AUD", JAN_1_2000, -1, oneMinuteAgo, 1)));
+
+        ExchangeRateSyncCoordinator coordinator = new ExchangeRateSyncCoordinator(
+                entryAbsDataSource, exchangeRateAbsDataSource, downloader, homeCurrency);
+
+        coordinator.downloadExchangeRates();
+
+        Set<String> expectedDates = new HashSet<>(Arrays.asList(
+                DateUtils.getStorageFormattedDate(JAN_1_2000)));
+        Set<String> expectedCurrencies = new HashSet<>(Arrays.asList("AUD", "EUR"));
+
+        verify(downloader).downloadExchangeRates(setContainsAll(expectedDates), setContainsAll(expectedCurrencies));
+
+        coordinator.onDownloadComplete(Arrays.asList(
+                new ExchangeRate(-1, "EUR", JAN_1_2000, 1.0, -1, 0),
+                new ExchangeRate(-1, "AUD", JAN_1_2000, 1.0, -1, 0)));
+
+        List<ExchangeRate> actualSavedRates = exchangeRateAbsDataSource.query();
+        List<ExchangeRate> expectedSavedRates = Arrays.asList(
+                new ExchangeRate(-1, "EUR", JAN_1_2000, 1.0, -1, 0),
+                new ExchangeRate(-1, "AUD", JAN_1_2000, 1.0, -1, 0));
+
+        assertThat(actualSavedRates, matchExchangeRates(expectedSavedRates));
+
+    }
+
+    private AbsDataSource<ExchangeRate> getInMemoryExchangeRateDataSource() {
+        Context context = InstrumentationRegistry.getTargetContext();
+        DbHelper helper = DbHelper.getInstance(context, null);
+        return new DataSourceExchangeRate(context, helper);
     }
 
     private List<Entry> entryDataSourceIsQueried() {

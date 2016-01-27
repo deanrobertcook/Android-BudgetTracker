@@ -51,10 +51,12 @@ public class DataSourceExchangeRate extends AbsDataSource<ExchangeRate> {
     protected long insertOperation(SQLiteDatabase db, ExchangeRate exchangeRate) {
         //TODO check that the rates for the given days are not already in the database
         ContentValues values = getContentValues(exchangeRate);
-        return db.insertOrThrow(
+        int replaceAlgorithm = 5;
+        return db.insertWithOnConflict(
                 ExchangeRateTable.TABLE_NAME,
                 null,
-                values
+                values,
+                replaceAlgorithm
         );
     }
 
