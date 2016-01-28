@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import org.apache.commons.lang.WordUtils;
 import org.theronin.expensetracker.R;
+import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.utils.CurrencySettings;
 import org.theronin.expensetracker.utils.DateUtils;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.theronin.expensetracker.utils.DateUtils.sameDay;
+import static org.theronin.expensetracker.utils.DateUtils.sameMonth;
 import static org.theronin.expensetracker.utils.MoneyUtils.calculateTotals;
 
 public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHolder> {
@@ -66,6 +68,12 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
         vH.contentLayout.setTag(R.id.entry_id, entry.getId());
 
+        if (shouldDisplaySummaryRow(position)) {
+            vH.displaySummaryRow(DateUtils.getMonth(entry.utcDate), getMonthSummary(position), currencySettings.getCurrentCurrency());
+        } else {
+            vH.hideInflatedSummaryRow();
+        }
+
         if (shouldDisplayDateBorder(position)) {
             vH.displayDateBorder(DateUtils.getDisplayFormattedDate(entry.utcDate), getFormattedDayTotal(entry.utcDate));
         } else {
@@ -79,6 +87,24 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         setHomeAmount(vH, entry);
 
         selectionManager.listenToItemView(vH.contentLayout);
+    }
+
+    private boolean shouldDisplaySummaryRow(int position) {
+        if (position == 0) {
+            return true;
+        }
+        return !sameMonth(entries.get(position).utcDate, entries.get(position - 1).utcDate);
+    }
+
+    private long getMonthSummary(int position) {
+        Entry startEntry = entries.get(position);
+        long total = 0;
+        int i = position;
+        while (i < entries.size() && sameMonth(startEntry.utcDate, entries.get(i).utcDate)) {
+            total += entries.get(i).amount;
+            i++;
+        }
+        return total;
     }
 
     private void setCurrentAmount(ViewHolder vH, Entry entry) {
@@ -112,11 +138,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         if (position == 0) {
             return true;
         }
-
-        Entry currentEntry = entries.get(position);
-        Entry lastEntry = entries.get(position - 1);
-
-        return !sameDay(currentEntry.utcDate, lastEntry.utcDate);
+        return !sameDay(entries.get(position).utcDate, entries.get(position - 1).utcDate);
     }
 
     @Override
@@ -126,9 +148,15 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
+        public final ViewStub summaryRowStub;
+
+        private View summaryRowLayout;
+        private TextView summaryTitleTextView;
+        private AmountDisplayLayout summaryDisplay;
+
         public final ViewStub borderStub;
-        public View borderLayout;
-        public TextView borderDateTextView;
+        private View borderLayout;
+        private TextView borderDateTextView;
         private TextView borderTotalTextView;
 
         public final View contentLayout;
@@ -139,6 +167,8 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         public ViewHolder(View view) {
             super(view);
 
+            summaryRowStub = (ViewStub) itemView.findViewById(R.id.stub__summary_row_layout);
+
             borderStub = (ViewStub) itemView.findViewById(R.id.stub__date_border_layout);
 
             contentLayout = itemView.findViewById(R.id.ll__list_item__content_layout);
@@ -147,10 +177,32 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
             homeDisplay = (AmountDisplayLayout) contentLayout.findViewById(R.id.amount_display_home);
         }
 
+        public void displaySummaryRow(String month, long amount, Currency currency) {
+            inflateSummaryRow();
+            summaryRowLayout.setVisibility(View.VISIBLE);
+            summaryTitleTextView.setText("Total for " + month + ": ");
+            summaryDisplay.setAmount(amount, false);
+            summaryDisplay.setCurrency(currency);
+        }
+
+        private void inflateSummaryRow() {
+            if (summaryRowLayout == null) {
+                summaryRowLayout = summaryRowStub.inflate();
+                summaryTitleTextView = (TextView) summaryRowLayout.findViewById(R.id.tv__summary_row_title);
+                summaryDisplay = (AmountDisplayLayout) summaryRowLayout.findViewById(R.id.adl__summary_row_amount);
+            }
+        }
+
+        public void hideInflatedSummaryRow() {
+            if (summaryRowLayout == null) {
+                return;
+            }
+            summaryRowLayout.setVisibility(View.GONE);
+        }
+
         public void displayDateBorder(String formattedDate, String formattedTotal) {
             inflateDateBorder();
             borderLayout.setVisibility(View.VISIBLE);
-
             borderDateTextView.setText(formattedDate);
             borderTotalTextView.setText(formattedTotal);
         }

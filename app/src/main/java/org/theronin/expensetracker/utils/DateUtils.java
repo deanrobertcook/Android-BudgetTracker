@@ -1,6 +1,8 @@
 package org.theronin.expensetracker.utils;
 
+import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
+import org.joda.time.YearMonth;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -61,5 +63,13 @@ public class DateUtils {
             }
         }
         return false;
+    }
+
+    public static boolean sameMonth(long utcDate1, long utcDate2) {
+        return (new DateTime(utcDate1).getMonthOfYear()) == (new DateTime(utcDate2).getMonthOfYear());
+    }
+
+    public static String getMonth(long utcDate) {
+        return new YearMonth(utcDate).monthOfYear().getAsText();
     }
 }

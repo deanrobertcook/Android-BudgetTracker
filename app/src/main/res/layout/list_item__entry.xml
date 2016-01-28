@@ -6,6 +6,12 @@
               android:background="?attr/selectableItemBackground">
 
     <ViewStub
+        android:id="@+id/stub__summary_row_layout"
+        android:layout="@layout/list_item__entry_summary_row"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_item__height_three_lines"/>
+
+    <ViewStub
         android:id="@+id/stub__date_border_layout"
         android:layout="@layout/list_item__entry_date_border"
         android:layout_width="match_parent"
@@ -36,7 +42,6 @@
             android:fontFamily="sans-serif"
             android:maxLines="1"
             android:paddingBottom="2dp"
-            android:text="A Much Longer Category That Will Overflow"
             android:textSize="16sp"/>
 
         <org.theronin.expensetracker.view.AmountDisplayLayout

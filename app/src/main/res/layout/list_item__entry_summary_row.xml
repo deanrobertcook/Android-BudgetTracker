@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/ll__summary_row"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/primary_light"
+              android:orientation="horizontal"
+              android:paddingLeft="@dimen/material_default_margin"
+              android:paddingRight="@dimen/material_default_margin">
+
+    <TextView
+        android:id="@+id/tv__summary_row_title"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:paddingLeft="@dimen/material_default_margin"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif"
+        android:maxLines="1"
+        android:paddingBottom="2dp"
+        android:textSize="16sp"/>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+
+        <org.theronin.expensetracker.view.AmountDisplayLayout
+            android:id="@+id/adl__summary_row_amount"
+            android:layout_width="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_height="26dp"/>
+
+    </FrameLayout>
+
+</LinearLayout>

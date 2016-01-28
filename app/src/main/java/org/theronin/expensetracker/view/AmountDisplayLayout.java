@@ -27,6 +27,7 @@ public class AmountDisplayLayout extends ViewGroup {
     private TextView amountView;
 
     private String currentAmountDisplay;
+    private boolean fullDisplay = false;
 
     public AmountDisplayLayout(Context context) {
         this(context, null);
@@ -79,6 +80,7 @@ public class AmountDisplayLayout extends ViewGroup {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
         int measuredWidth = MeasureSpec.getSize(widthMeasureSpec) - getPaddingLeft() - getPaddingRight();
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int measuredHeight = MeasureSpec.getSize(heightMeasureSpec) - getPaddingTop() - getPaddingBottom();
 
         int cSH = measuredHeight;
@@ -91,15 +93,20 @@ public class AmountDisplayLayout extends ViewGroup {
 
         int aW = measuredWidth - currencySymbol.getMeasuredWidth();
         int aH = (CTA - 1) * (measuredHeight / (CTA));
-        measureView(amountView, aW, MeasureSpec.EXACTLY, aH, MeasureSpec.EXACTLY);
+        measureView(amountView, aW, MeasureSpec.AT_MOST, aH, MeasureSpec.EXACTLY);
+
+        int contentWidth = currencySymbol.getMeasuredWidth() + amountView.getMeasuredWidth();
+        if (widthMode != MeasureSpec.EXACTLY && contentWidth < measuredWidth) {
+            widthMeasureSpec = MeasureSpec.makeMeasureSpec(contentWidth, MeasureSpec.EXACTLY);
+        }
 
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
     }
 
-    private void measureView(View view, int width, int widthSpec, int height, int heightSpec) {
+    private void measureView(View view, int width, int widthMode, int height, int heightMode) {
         measureChild(view,
-                MeasureSpec.makeMeasureSpec(width, widthSpec),
-                MeasureSpec.makeMeasureSpec(height, heightSpec));
+                MeasureSpec.makeMeasureSpec(width, widthMode),
+                MeasureSpec.makeMeasureSpec(height, heightMode));
     }
 
     @Override
