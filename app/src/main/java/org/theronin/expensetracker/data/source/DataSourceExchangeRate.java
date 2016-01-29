@@ -12,12 +12,15 @@ import org.theronin.expensetracker.model.ExchangeRate;
 import java.util.Collection;
 import java.util.List;
 
+import timber.log.Timber;
+
 import static android.provider.BaseColumns._ID;
 
 public class DataSourceExchangeRate extends AbsDataSource<ExchangeRate> {
 
     public DataSourceExchangeRate(Context context, DbHelper dbHelper) {
         super(context, dbHelper);
+        Timber.d("Instantiating DataSourceExchangeRate");
     }
 
     @Override

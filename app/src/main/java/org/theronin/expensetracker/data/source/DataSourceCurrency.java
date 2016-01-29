@@ -12,10 +12,13 @@ import org.theronin.expensetracker.model.Currency;
 import java.util.Collection;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class DataSourceCurrency extends AbsDataSource<Currency> {
 
     public DataSourceCurrency(Context context, DbHelper dbHelper) {
         super(context, dbHelper);
+        Timber.d("Instantiating DataSourceCurrency");
     }
 
     @Override

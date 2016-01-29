@@ -2,21 +2,20 @@ package org.theronin.expensetracker;
 
 import android.content.Context;
 
-import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.data.backend.entry.EntryRemoteSync;
+import org.theronin.expensetracker.data.backend.entry.ParseEntryRemoteSync;
+import org.theronin.expensetracker.data.backend.exchangerate.ExchangeRateDownloadService;
 import org.theronin.expensetracker.data.backend.exchangerate.ExchangeRateDownloader;
 import org.theronin.expensetracker.data.backend.exchangerate.ParseExchangeRateDownloader;
 import org.theronin.expensetracker.data.loader.CategoryLoader;
 import org.theronin.expensetracker.data.loader.DataLoader;
 import org.theronin.expensetracker.data.loader.EntryLoader;
-import org.theronin.expensetracker.data.backend.exchangerate.ExchangeRateDownloadService;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.data.source.DataSourceCategory;
 import org.theronin.expensetracker.data.source.DataSourceCurrency;
 import org.theronin.expensetracker.data.source.DataSourceEntry;
 import org.theronin.expensetracker.data.source.DataSourceExchangeRate;
 import org.theronin.expensetracker.data.source.DbHelper;
-import org.theronin.expensetracker.data.backend.entry.ParseEntryRemoteSync;
 import org.theronin.expensetracker.data.sync.SyncAdapter;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
@@ -38,7 +37,6 @@ import dagger.Provides;
         EntryDialogActivity.class,
         CategorySelectActivity.class,
         SyncAdapter.class,
-        DataSourceEntry.class,
         ExchangeRateDownloadService.class,
         EntryLoader.class,
         CategoryLoader.class,
@@ -46,38 +44,33 @@ import dagger.Provides;
 })
 public class AppModule {
 
-    private InjectedComponent component;
-    private Context context;
-    private DbHelper dbHelper;
+    private AbsDataSource<ExchangeRate> exchangeRateDataSource;
+    private AbsDataSource<Category> categoryDataSource;
+    private AbsDataSource<Entry> entryDataSource;
 
-    public AppModule(Context context, InjectedComponent component, DbHelper dbHelper) {
-        this.component = component;
-        this.context = context.getApplicationContext();
-        this.dbHelper = dbHelper;
-    }
-
-    @Provides
-    @Singleton
-    AbsDataSource<Currency> provideCurrencyDataSource() {
-        return new DataSourceCurrency(context, dbHelper);
+    public AppModule(Context context, DbHelper dbHelper) {
+        this.exchangeRateDataSource = new DataSourceExchangeRate(context, dbHelper);
+        this.categoryDataSource = new DataSourceCategory(context, dbHelper);
+        AbsDataSource<Currency> currencyDataSource = new DataSourceCurrency(context, dbHelper);
+        this.entryDataSource = new DataSourceEntry(context, dbHelper, categoryDataSource, currencyDataSource);
     }
 
     @Provides
     @Singleton
     AbsDataSource<ExchangeRate> provideExchangeRateDataSource() {
-        return new DataSourceExchangeRate(context, dbHelper);
+        return exchangeRateDataSource;
     }
 
     @Provides
     @Singleton
     AbsDataSource<Category> provideCategoryDataSource() {
-        return new DataSourceCategory(context, dbHelper);
+        return categoryDataSource;
     }
 
     @Provides
     @Singleton
     AbsDataSource<Entry> provideEntryDataSource() {
-        return new DataSourceEntry(context, component, dbHelper);
+        return entryDataSource;
     }
 
     @Provides

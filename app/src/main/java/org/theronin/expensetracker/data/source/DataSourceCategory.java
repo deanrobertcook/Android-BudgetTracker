@@ -12,6 +12,8 @@ import org.theronin.expensetracker.model.Category;
 import java.util.Collection;
 import java.util.List;
 
+import timber.log.Timber;
+
 import static org.theronin.expensetracker.data.Contract.CategoryTable.COL_NAME;
 import static org.theronin.expensetracker.data.Contract.CategoryTable.TABLE_NAME;
 import static org.theronin.expensetracker.data.Contract.CategoryView.COL_CATEGORY_NAME;
@@ -24,6 +26,7 @@ public class DataSourceCategory extends AbsDataSource<Category> {
 
     public DataSourceCategory(Context context, DbHelper dbHelper) {
         super(context, dbHelper);
+        Timber.d("Instantiating DataSourceCategory");
     }
 
     @Override

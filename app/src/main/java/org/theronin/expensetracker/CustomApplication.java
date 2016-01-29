@@ -17,8 +17,6 @@ public class CustomApplication extends Application implements InjectedComponent 
 
     private ObjectGraph graph;
 
-    private DbHelper dbHelper;
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -45,8 +43,8 @@ public class CustomApplication extends Application implements InjectedComponent 
     }
 
     public void setDatabase() {
-        dbHelper = DbHelper.getInstance(getApplicationContext(), getDatabaseName());
-        graph = ObjectGraph.create(new AppModule(this, this, dbHelper));
+        DbHelper dbHelper = DbHelper.getInstance(getApplicationContext(), getDatabaseName());
+        graph = ObjectGraph.create(new AppModule(this, dbHelper));
     }
 
     @Override
