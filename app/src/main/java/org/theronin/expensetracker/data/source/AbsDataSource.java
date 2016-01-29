@@ -8,6 +8,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.theronin.expensetracker.model.Entity;
+import org.theronin.expensetracker.utils.DebugUtils;
 import org.theronin.expensetracker.utils.SyncUtils;
 
 import java.util.ArrayList;
@@ -96,6 +97,7 @@ public abstract class AbsDataSource<T extends Entity> {
             return new ArrayList<>();
         }
         Timber.i("bulkInsert " + entities.size() + " " + entities.get(0).getClass().getSimpleName() + "s");
+        DebugUtils.printList(getClass().getName(), entities);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
@@ -123,6 +125,7 @@ public abstract class AbsDataSource<T extends Entity> {
             return 0;
         }
         Timber.i("bulkDelete " + entities.size() + " " + entities.get(0).getClass().getSimpleName() + "s");
+        DebugUtils.printList(getClass().getName(), entities);
         int numDeleted = deleteOperation(dbHelper.getWritableDatabase(), entities);
         setDataInValid();
         return numDeleted;
@@ -144,7 +147,7 @@ public abstract class AbsDataSource<T extends Entity> {
             return 0;
         }
         Timber.i("bulkUpdate " + entities.size() + " " + entities.get(0).getClass().getSimpleName() + "s");
-
+        DebugUtils.printList(getClass().getName(), entities);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {

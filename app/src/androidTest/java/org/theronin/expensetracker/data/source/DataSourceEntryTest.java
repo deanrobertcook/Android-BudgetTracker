@@ -13,18 +13,18 @@ import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.testutils.InMemoryDataSource;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
 
 import static junit.framework.Assert.assertEquals;
 import static org.theronin.expensetracker.testutils.Constants.DEFAULT_LATCH_WAIT;
 
 @RunWith(AndroidJUnit4.class)
 public class DataSourceEntryTest {
-    @Inject AbsDataSource<Entry> entryAbsDataSource;
+
+    AbsDataSource<Entry> entryAbsDataSource;
 
     @Before
     public void setup() {
@@ -64,5 +64,29 @@ public class DataSourceEntryTest {
         for (Entry entry : updatedEntries) {
             assertEquals("The sync state should have been changed", SyncState.UPDATED, entry.getSyncState());
         }
+    }
+
+    @Test @SmallTest
+    public void addingEntriesWithMatchingGlobalIdsDoesNothing() {
+        List<Entry> entriesWithIds = Arrays.asList(
+                new Entry(1, "abc", SyncState.UPDATED, -1, -1, new Category("Test"), new Currency("AUD")),
+                new Entry(2, "bcd", SyncState.UPDATED, -1, -1, new Category("Test"), new Currency("AUD")),
+                new Entry(3, "cde", SyncState.UPDATED, -1, -1, new Category("Test"), new Currency("AUD"))
+        );
+
+        List<Entry> sameWithoutLocalIds = Arrays.asList(
+                new Entry(-1, "abc", SyncState.UPDATED, -1, -1, new Category("Test"), new Currency("AUD")),
+                new Entry(-1, "bcd", SyncState.UPDATED, -1, -1, new Category("Test"), new Currency("AUD")),
+                new Entry(-1, "cde", SyncState.UPDATED, -1, -1, new Category("Test"), new Currency("AUD"))
+        );
+
+        entryAbsDataSource.bulkInsert(entriesWithIds);
+
+        assertEquals(3, entryAbsDataSource.query().size());
+
+        entryAbsDataSource.bulkInsert(sameWithoutLocalIds);
+
+        assertEquals(3, entryAbsDataSource.query().size());
+
     }
 }

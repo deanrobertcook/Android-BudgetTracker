@@ -109,7 +109,8 @@ public class ExchangeRateSyncCoordinator implements
             throw new IllegalStateException("onDownLoadComplete was called without calling" +
                     " downloadExchangeRates() first.");
         }
-        DebugUtils.printList("Downloaded rates: ", downloadedRates);
+        Timber.d("Downloaded rates:");
+        DebugUtils.printList(getClass().getSimpleName(), downloadedRates);
 
         filterOutSuccessfullyDownloadedRates(downloadedRates);
 

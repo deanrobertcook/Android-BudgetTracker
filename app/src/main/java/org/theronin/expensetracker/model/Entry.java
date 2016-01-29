@@ -30,7 +30,7 @@ public class Entry extends Entity implements Comparable<Entry> {
         //TODO This is used when reading files from backup agent - they may already exist
         //TODO on the backend, so this could be a tricky corner case. Consider deleting
         //TODO file backup agent
-        this(-1, globalId, SyncState.UPDATED, utcDate, amount, category, currency);
+        this(-1, globalId, SyncState.NEW, utcDate, amount, category, currency);
     }
 
     public Entry(

@@ -2,6 +2,7 @@ package org.theronin.expensetracker.data.backend.entry;
 
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Entry;
+import org.theronin.expensetracker.utils.DebugUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,8 @@ public class EntrySyncCoordinator {
         if (entries.isEmpty()) {
             return;
         }
+        Timber.d("addEntities to remote");
+        DebugUtils.printList(getClass().getSimpleName(), entries);
         try {
             remoteSync.saveToRemote(entries);
             for (Entry entity : entries) {
