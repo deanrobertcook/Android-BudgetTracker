@@ -4,6 +4,8 @@ import org.theronin.expensetracker.utils.DateUtils;
 
 public class Constants {
 
+    public static final int DEFAULT_LATCH_WAIT = 2000;
+
     public static final long JAN_1_2000 = DateUtils.getUtcTime("2000-01-01");
     public static final long JAN_2_2000 = DateUtils.getUtcTime("2000-01-02");
     public static final long JAN_3_2000 = DateUtils.getUtcTime("2000-01-03");

@@ -11,8 +11,6 @@ import java.util.Random;
 
 public class Util {
 
-    public static final long DEFAULT_LATCH_WAIT = 2000;
-
     public static List<Entry> createEntries(int numEntries, boolean createGlobalId, SyncState syncState) {
         long someDate = someDateAfter2000();
         long someAmount = someAmountUnder(100);

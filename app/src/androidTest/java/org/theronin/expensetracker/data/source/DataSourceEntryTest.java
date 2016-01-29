@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.data;
+package org.theronin.expensetracker.data.source;
 
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.SmallTest;
@@ -6,11 +6,12 @@ import android.test.suitebuilder.annotation.SmallTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.theronin.expensetracker.data.Util;
 import org.theronin.expensetracker.data.backend.entry.SyncState;
-import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
+import org.theronin.expensetracker.testutils.InMemoryDataSource;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -19,39 +20,15 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import static junit.framework.Assert.assertEquals;
+import static org.theronin.expensetracker.testutils.Constants.DEFAULT_LATCH_WAIT;
 
 @RunWith(AndroidJUnit4.class)
-public class AbsDataSourceTest {
-
-    private final int DEFAULT_LATCH_WAIT = 2000;
-
-    private TestApplication testApplication;
-
-    @Inject AbsDataSource<Category> categoryAbsDataSource;
+public class DataSourceEntryTest {
     @Inject AbsDataSource<Entry> entryAbsDataSource;
 
     @Before
     public void setup() {
-        testApplication = new TestApplication();
-        testApplication.inject(this);
-    }
-
-    @Test @SmallTest
-    public void observersAreNotifiedOnDataInsert() throws InterruptedException {
-        final CountDownLatch callbackLatch = new CountDownLatch(1);
-        AbsDataSource.Observer observer = new AbsDataSource.Observer() {
-            @Override
-            public void onDataSourceChanged() {
-                callbackLatch.countDown();
-            }
-        };
-
-        categoryAbsDataSource.registerObserver(observer);
-
-        categoryAbsDataSource.insert(new Category("test"));
-
-        callbackLatch.await(DEFAULT_LATCH_WAIT, TimeUnit.MILLISECONDS);
-        assertEquals("Observer was not notified", 0, callbackLatch.getCount());
+        entryAbsDataSource = new InMemoryDataSource().getEntryDataSource();
     }
 
     @Test @SmallTest

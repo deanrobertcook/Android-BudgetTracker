@@ -1,7 +1,5 @@
 package org.theronin.expensetracker.data.backend.exchangerate;
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.SmallTest;
 
@@ -12,10 +10,10 @@ import org.theronin.expensetracker.data.Contract.EntryView;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.data.source.DataSourceEntry;
 import org.theronin.expensetracker.data.source.DataSourceExchangeRate;
-import org.theronin.expensetracker.data.source.DbHelper;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.ExchangeRate;
+import org.theronin.expensetracker.testutils.InMemoryDataSource;
 import org.theronin.expensetracker.utils.DateUtils;
 
 import java.util.ArrayList;
@@ -314,7 +312,7 @@ public class ExchangeRateSyncCoordinatorTest {
         when(entryDataSourceIsQueried()).thenReturn(Arrays.asList(
                 new Entry(null, JAN_1_2000, -1, null, new Currency("EUR"))));
 
-        AbsDataSource<ExchangeRate> exchangeRateAbsDataSource = getInMemoryExchangeRateDataSource();
+        AbsDataSource<ExchangeRate> exchangeRateAbsDataSource = new InMemoryDataSource().getExchangeRateDataSource();
         //put in some failed exchange rates;
         long oneMinuteAgo = System.currentTimeMillis() - 60L * 1000L;
         exchangeRateAbsDataSource.bulkInsert(Arrays.asList(
@@ -343,12 +341,6 @@ public class ExchangeRateSyncCoordinatorTest {
 
         assertThat(actualSavedRates, matchExchangeRates(expectedSavedRates));
 
-    }
-
-    private AbsDataSource<ExchangeRate> getInMemoryExchangeRateDataSource() {
-        Context context = InstrumentationRegistry.getTargetContext();
-        DbHelper helper = DbHelper.getInstance(context, null);
-        return new DataSourceExchangeRate(context, helper);
     }
 
     private List<Entry> entryDataSourceIsQueried() {
