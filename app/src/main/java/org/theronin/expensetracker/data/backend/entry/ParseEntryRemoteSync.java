@@ -1,7 +1,6 @@
 package org.theronin.expensetracker.data.backend.entry;
 
 import com.parse.ParseCloud;
-import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
@@ -47,12 +46,8 @@ public class ParseEntryRemoteSync implements EntryRemoteSync {
     @Override
     public void saveToRemote(List<Entry> entries) throws Exception {
         currentSyncMap = createEntryToParseObjectMap(entries);
-        try {
-            ParseObject.saveAll(new ArrayList<>(currentSyncMap.values()));
-            callPushToOtherDevices();
-        } catch (ParseException e) {
-            throw e;
-        }
+        ParseObject.saveAll(new ArrayList<>(currentSyncMap.values()));
+        callPushToOtherDevices();
     }
 
     private void callPushToOtherDevices() {
@@ -68,13 +63,9 @@ public class ParseEntryRemoteSync implements EntryRemoteSync {
 
     @Override
     public void deleteOnRemote(List<Entry> entries) throws Exception {
-        try {
-            //Since I am using a soft-delete, I actually just want to update the objects
-            ParseObject.saveAll(createParseObjectsFromEntries(entries));
-            callPushToOtherDevices();
-        } catch (ParseException e) {
-            throw e;
-        }
+        //Since I am using a soft-delete, I actually just want to update the objects
+        ParseObject.saveAll(createParseObjectsFromEntries(entries));
+        callPushToOtherDevices();
     }
 
     private List<ParseObject> createParseObjectsFromEntries(List<Entry> entries) {

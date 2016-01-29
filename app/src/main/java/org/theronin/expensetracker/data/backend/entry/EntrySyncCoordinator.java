@@ -68,10 +68,10 @@ public class EntrySyncCoordinator {
                 }
                 entity.setSyncState(SyncState.SYNCED);
             }
-            Timber.i("saveEntities() successful, " + entries.size() + " entities synced");
+            Timber.i("addBatchToRemote() successful, " + entries.size() + " entities synced");
             dataSource.bulkUpdate(entries);
         } catch (Exception e) {
-            Timber.i("saveEntities() failed:");
+            Timber.i("addBatchToRemote() failed:");
             e.printStackTrace();
         }
     }
@@ -85,10 +85,10 @@ public class EntrySyncCoordinator {
             for (Entry entity : entries) {
                 entity.setSyncState(DELETE_SYNCED);
             }
-            Timber.i("deleteEntities successful. " + entries.size() + " objects deleted");
+            Timber.i("deleteEntitiesFromRemote successful. " + entries.size() + " objects deleted");
             deleteEntitiesLocally(entries);
         } catch (Exception e) {
-            Timber.i("deleteEntities failed");
+            Timber.i("deleteEntitiesFromRemote failed");
             e.printStackTrace();
         }
     }
