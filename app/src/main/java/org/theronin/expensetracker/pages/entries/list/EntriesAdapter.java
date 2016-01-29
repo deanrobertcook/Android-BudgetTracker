@@ -223,8 +223,8 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         }
     }
 
-    public Set<Entry> getSelection() {
-        return selectionManager.selectedEntries;
+    public List<Entry> getSelection() {
+        return new ArrayList<>(selectionManager.selectedEntries);
     }
 
     public void exitSelectMode() {

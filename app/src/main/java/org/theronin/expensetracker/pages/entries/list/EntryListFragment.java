@@ -12,8 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import org.theronin.expensetracker.dagger.InjectedFragment;
 import org.theronin.expensetracker.R;
+import org.theronin.expensetracker.dagger.InjectedFragment;
 import org.theronin.expensetracker.data.loader.EntryLoader;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.data.source.DataSourceEntry;
@@ -23,7 +23,6 @@ import org.theronin.expensetracker.pages.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -131,12 +130,10 @@ public class EntryListFragment extends InjectedFragment implements
     @Override
     public void onDeleteSelectionConfirmed() {
         Timber.d("onDeleteSelectionConfirmed");
-        Set<Entry> selectedEntries = adapter.getSelection();
-
         //TODO abstract away the mark as deleted functionality
-        ((DataSourceEntry) entryDataSource).bulkMarkAsDeleted(selectedEntries);
+        ((DataSourceEntry) entryDataSource).bulkMarkAsDeleted(adapter.getSelection());
 
-        Toast.makeText(getActivity(), selectedEntries.size() + " entries deleted.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), adapter.getSelection().size() + " entries deleted.", Toast.LENGTH_SHORT).show();
         adapter.exitSelectMode();
     }
 

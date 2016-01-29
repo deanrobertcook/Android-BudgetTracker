@@ -175,7 +175,7 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
         values.remove(COL_CURRENCY_CODE);
     }
 
-    public int bulkMarkAsDeleted(Collection<Entry> entries) {
+    public int bulkMarkAsDeleted(List<Entry> entries) {
         for (Entry entry : entries) {
             entry.setSyncState(SyncState.MARKED_AS_DELETED);
         }

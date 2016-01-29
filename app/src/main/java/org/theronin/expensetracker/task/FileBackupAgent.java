@@ -93,6 +93,7 @@ public class FileBackupAgent  {
                 replaceCurrencyObjectWithCode(object);
                 remove(object, "directExchangeRate");
                 remove(object, "syncState");
+                remove(object, "globalId");
             }
             return gson.toJson(jsonArray);
         }

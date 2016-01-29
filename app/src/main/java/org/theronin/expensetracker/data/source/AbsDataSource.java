@@ -92,10 +92,10 @@ public abstract class AbsDataSource<T extends Entity> {
      */
     //TODO consider throwing an Exception for data source operations
     public List<T> bulkInsert(List<T> entities) {
-        Timber.i("bulkInsert: " + entities.size() + " entities");
         if (entities.size() == 0) {
             return new ArrayList<>();
         }
+        Timber.i("bulkInsert " + entities.size() + " " + entities.get(0).getClass().getSimpleName() + "s");
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
@@ -118,11 +118,11 @@ public abstract class AbsDataSource<T extends Entity> {
         return numDeleted == 1;
     }
 
-    public int bulkDelete(Collection<T> entities) {
-        Timber.i("bulkDelete " + entities.size() + " entities");
+    public int bulkDelete(List<T> entities) {
         if (entities.size() == 0) {
             return 0;
         }
+        Timber.i("bulkDelete " + entities.size() + " " + entities.get(0).getClass().getSimpleName() + "s");
         int numDeleted = deleteOperation(dbHelper.getWritableDatabase(), entities);
         setDataInValid();
         return numDeleted;
@@ -139,11 +139,11 @@ public abstract class AbsDataSource<T extends Entity> {
 
     protected abstract int updateOperation(SQLiteDatabase db, T entity);
 
-    public int bulkUpdate(Collection<T> entities) {
-        Timber.d("Bulk updating " + entities.size() + " entries");
+    public int bulkUpdate(List<T> entities) {
         if (entities.size() == 0) {
             return 0;
         }
+        Timber.i("bulkUpdate " + entities.size() + " " + entities.get(0).getClass().getSimpleName() + "s");
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();

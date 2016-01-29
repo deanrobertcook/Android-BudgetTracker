@@ -68,10 +68,10 @@ public class EntrySyncCoordinator {
                 }
                 entity.setSyncState(SyncState.SYNCED);
             }
-            Timber.i("addBatchToRemote() successful, " + entries.size() + " entities synced");
+            Timber.i("addEntitiesToRemote() successful, " + entries.size() + " entities synced");
             dataSource.bulkUpdate(entries);
         } catch (Exception e) {
-            Timber.i("addBatchToRemote() failed:");
+            Timber.i("addEntitiesToRemote() failed:");
             e.printStackTrace();
         }
     }
@@ -102,6 +102,7 @@ public class EntrySyncCoordinator {
 
 
     public void findEntries(long lastSync) {
+        Timber.d("findEntries()");
         if (lastSync == -1) {
             remoteSync.registerForPush();
         }
