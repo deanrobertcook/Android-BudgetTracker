@@ -26,9 +26,6 @@ public class AmountDisplayLayout extends ViewGroup {
     private TextView currencyCode;
     private TextView amountView;
 
-    private String currentAmountDisplay;
-    private boolean fullDisplay = false;
-
     public AmountDisplayLayout(Context context) {
         this(context, null);
     }
@@ -68,6 +65,7 @@ public class AmountDisplayLayout extends ViewGroup {
     }
 
     public void setAmount(long amount, boolean compact) {
+        String currentAmountDisplay;
         if (compact) {
             currentAmountDisplay = MoneyUtils.getDisplayCompact(getContext(), amount);
         } else {
@@ -78,29 +76,30 @@ public class AmountDisplayLayout extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-        int measuredWidth = MeasureSpec.getSize(widthMeasureSpec) - getPaddingLeft() - getPaddingRight();
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int measuredHeight = MeasureSpec.getSize(heightMeasureSpec) - getPaddingTop() - getPaddingBottom();
 
+        int cSW = getTextWidth(currencySymbol);
         int cSH = measuredHeight;
-        int cSW = measuredWidth;
-        measureView(currencySymbol, cSW, MeasureSpec.UNSPECIFIED, cSH, MeasureSpec.EXACTLY);
+        measureView(currencySymbol, cSW, MeasureSpec.EXACTLY, cSH, MeasureSpec.EXACTLY);
 
-        int cCW = measuredWidth - currencySymbol.getMeasuredWidth();
+        int cCW = getTextWidth(currencyCode);
         int cCH = measuredHeight / CTA;
         measureView(currencyCode, cCW, MeasureSpec.EXACTLY, cCH, MeasureSpec.EXACTLY);
 
-        int aW = measuredWidth - currencySymbol.getMeasuredWidth();
+        int aW = getTextWidth(amountView);
         int aH = (CTA - 1) * (measuredHeight / (CTA));
-        measureView(amountView, aW, MeasureSpec.AT_MOST, aH, MeasureSpec.EXACTLY);
+        measureView(amountView, aW, MeasureSpec.EXACTLY, aH, MeasureSpec.EXACTLY);
 
-        int contentWidth = currencySymbol.getMeasuredWidth() + amountView.getMeasuredWidth();
-        if (widthMode != MeasureSpec.EXACTLY && contentWidth < measuredWidth) {
+        int contentWidth = cSW + aW;
+        if (MeasureSpec.getMode(widthMeasureSpec) != MeasureSpec.EXACTLY && contentWidth < MeasureSpec.getSize(widthMeasureSpec)) {
             widthMeasureSpec = MeasureSpec.makeMeasureSpec(contentWidth, MeasureSpec.EXACTLY);
         }
 
-        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    private int getTextWidth(TextView view) {
+        return (int) Math.ceil(view.getPaint().measureText(view.getText().toString()));
     }
 
     private void measureView(View view, int width, int widthMode, int height, int heightMode) {
