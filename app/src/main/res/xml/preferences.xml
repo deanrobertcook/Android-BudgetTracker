@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:title="@string/prefcat_currency_title">
+        android:title="@string/pref_cat_currency_title">
         <ListPreference
             android:key="@string/pref_home_currency_key"
             android:title="@string/pref_home_currency_title"
@@ -12,5 +12,13 @@
             android:title="@string/pref_current_currency_title"
             android:summary="@string/pref_current_currency_summary"
             android:defaultValue="@string/pref_currency_default"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_cat_budget_setting_title">
+        <EditTextPreference
+            android:key="@string/pref_monthly_limit_key"
+            android:title="@string/pref_monthly_limit_title"
+            android:summary="@string/pref_monthly_limit_summary_off"
+            android:defaultValue="@string/pref_monthly_limit_default"/>
     </PreferenceCategory>
 </PreferenceScreen>

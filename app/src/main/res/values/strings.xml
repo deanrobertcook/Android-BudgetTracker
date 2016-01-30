@@ -3,7 +3,7 @@
 
     <string name="shared_preferences_key">org.theronin.budgettracker.PREFERENCES</string>
 
-    <string name="prefcat_currency_title">Currency Settings</string>
+    <string name="pref_cat_currency_title">Currency Settings</string>
 
     <string name="pref_home_currency_key">home_currency</string>
     <string name="pref_home_currency_title">Home Currency</string>
@@ -13,6 +13,14 @@
     <string name="pref_current_currency_key">current_currency</string>
     <string name="pref_current_currency_title">Current Currency</string>
     <string name="pref_current_currency_summary">All new entries will be stored in: %s</string>
+
+    <string name="pref_cat_budget_setting_title">Budget Settings</string>
+
+    <string name="pref_monthly_limit_key">monthly_limit</string>
+    <string name="pref_monthly_limit_title">Monthly Limit</string>
+    <string name="pref_monthly_limit_summary">You will be warned when you exceed %s for the month</string>
+    <string name="pref_monthly_limit_summary_off">You do not have a monthly limit set</string>
+    <string name="pref_monthly_limit_default">0</string>
 
     <string name="settings_activity">Settings</string>
 
