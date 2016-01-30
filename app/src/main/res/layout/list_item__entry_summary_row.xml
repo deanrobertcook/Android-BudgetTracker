@@ -22,14 +22,35 @@
 
     <FrameLayout
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:layout_height="match_parent">
 
-        <org.theronin.expensetracker.view.AmountDisplayLayout
-            android:id="@+id/adl__summary_row_amount"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_gravity="right|center_vertical"
-            android:layout_height="26dp"/>
+            android:layout_gravity="right"
+            android:orientation="horizontal"
+            android:layout_height="match_parent">
+
+            <org.theronin.expensetracker.view.AmountDisplayLayout
+                android:id="@+id/adl__summary_row_amount"
+                android:layout_width="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_height="26dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="24dp"
+                android:text="/"/>
+
+            <org.theronin.expensetracker.view.AmountDisplayLayout
+                android:id="@+id/adl__summary_monthly_limit"
+                android:layout_width="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_height="26dp"/>
+
+        </LinearLayout>
 
     </FrameLayout>
 

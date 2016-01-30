@@ -18,6 +18,7 @@ import org.theronin.expensetracker.utils.DateUtils;
 import org.theronin.expensetracker.utils.MoneyUtils;
 import org.theronin.expensetracker.utils.MoneyUtils.EntryCondition;
 import org.theronin.expensetracker.utils.MoneyUtils.EntrySum;
+import org.theronin.expensetracker.utils.SettingsUtils;
 import org.theronin.expensetracker.view.AmountDisplayLayout;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         this.context = context;
         this.selectionManager = new SelectionManager(selectionListener);
         this.currencySettings = new CurrencySettings(context, null);
+
     }
 
     public void setEntries(List<Entry> entries) {
@@ -146,13 +148,14 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         return entries.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         public final ViewStub summaryRowStub;
 
         private View summaryRowLayout;
         private TextView summaryTitleTextView;
         private AmountDisplayLayout summaryDisplay;
+        private AmountDisplayLayout summaryLimit;
 
         public final ViewStub borderStub;
         private View borderLayout;
@@ -180,9 +183,12 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         public void displaySummaryRow(String month, long amount, Currency currency) {
             inflateSummaryRow();
             summaryRowLayout.setVisibility(View.VISIBLE);
-            summaryTitleTextView.setText("Total for " + month + ": ");
+            summaryTitleTextView.setText(month + ": ");
             summaryDisplay.setAmount(amount, false);
             summaryDisplay.setCurrency(currency);
+
+            summaryLimit.setCurrency(currency);
+            summaryLimit.setAmount(SettingsUtils.getMonthlyLimit(EntriesAdapter.this.context), false);
         }
 
         private void inflateSummaryRow() {
@@ -190,6 +196,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
                 summaryRowLayout = summaryRowStub.inflate();
                 summaryTitleTextView = (TextView) summaryRowLayout.findViewById(R.id.tv__summary_row_title);
                 summaryDisplay = (AmountDisplayLayout) summaryRowLayout.findViewById(R.id.adl__summary_row_amount);
+                summaryLimit = (AmountDisplayLayout) summaryRowLayout.findViewById(R.id.adl__summary_monthly_limit);
             }
         }
 
