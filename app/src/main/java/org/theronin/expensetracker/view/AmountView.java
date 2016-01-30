@@ -11,7 +11,7 @@ import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.utils.MoneyUtils;
 
-public class AmountDisplayLayout extends ViewGroup {
+public class AmountView extends ViewGroup {
 
     /**
      * Code to Amount (the proportion of the total height that the amount field takes up compared
@@ -24,21 +24,21 @@ public class AmountDisplayLayout extends ViewGroup {
 
     private TextView currencySymbol;
     private TextView currencyCode;
-    private TextView amountView;
+    protected TextView amountView;
 
-    public AmountDisplayLayout(Context context) {
+    public AmountView(Context context) {
         this(context, null);
     }
 
-    public AmountDisplayLayout(Context context, AttributeSet attrs) {
+    public AmountView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public AmountDisplayLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public AmountView(Context context, AttributeSet attrs, int defStyleAttr) {
         this(context, attrs, defStyleAttr, 0);
     }
 
-    public AmountDisplayLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public AmountView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
 
         LayoutInflater.from(context).inflate(R.layout.layout_amount_display, this, true);

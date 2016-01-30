@@ -6,7 +6,7 @@
               android:paddingEnd="@dimen/material_default_margin"
               android:paddingStart="@dimen/material_default_margin">
 
-    <org.theronin.expensetracker.view.AmountDisplayLayout
+    <org.theronin.expensetracker.view.AmountView
         android:id="@+id/amount_display_total"
         android:layout_width="0dp"
         android:layout_height="26dp"

@@ -19,7 +19,7 @@ import org.theronin.expensetracker.utils.MoneyUtils;
 import org.theronin.expensetracker.utils.MoneyUtils.EntryCondition;
 import org.theronin.expensetracker.utils.MoneyUtils.EntrySum;
 import org.theronin.expensetracker.utils.SettingsUtils;
-import org.theronin.expensetracker.view.AmountDisplayLayout;
+import org.theronin.expensetracker.view.AmountView;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -154,8 +154,9 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
         private View summaryRowLayout;
         private TextView summaryTitleTextView;
-        private AmountDisplayLayout summaryDisplay;
-        private AmountDisplayLayout summaryLimit;
+        private AmountView summaryDisplay;
+        private View limitSeparator;
+        private AmountView summaryLimit;
 
         public final ViewStub borderStub;
         private View borderLayout;
@@ -163,9 +164,9 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         private TextView borderTotalTextView;
 
         public final View contentLayout;
-        public final AmountDisplayLayout currentDisplay;
+        public final AmountView currentDisplay;
         public final TextView categoryTextView;
-        public final AmountDisplayLayout homeDisplay;
+        public final AmountView homeDisplay;
 
         public ViewHolder(View view) {
             super(view);
@@ -175,28 +176,35 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
             borderStub = (ViewStub) itemView.findViewById(R.id.stub__date_border_layout);
 
             contentLayout = itemView.findViewById(R.id.ll__list_item__content_layout);
-            currentDisplay = (AmountDisplayLayout) contentLayout.findViewById(R.id.amount_display_current);
+            currentDisplay = (AmountView) contentLayout.findViewById(R.id.amount_display_current);
             categoryTextView = (TextView) contentLayout.findViewById(R.id.tv__list_item__entry__category);
-            homeDisplay = (AmountDisplayLayout) contentLayout.findViewById(R.id.amount_display_home);
+            homeDisplay = (AmountView) contentLayout.findViewById(R.id.amount_display_home);
         }
 
-        public void displaySummaryRow(String month, long amount, Currency currency) {
+        public void displaySummaryRow(String month, long monthTotal, Currency currency) {
             inflateSummaryRow();
             summaryRowLayout.setVisibility(View.VISIBLE);
             summaryTitleTextView.setText(month + ": ");
-            summaryDisplay.setAmount(amount, false);
+            summaryDisplay.setAmount(monthTotal, false);
             summaryDisplay.setCurrency(currency);
 
-            summaryLimit.setCurrency(currency);
-            summaryLimit.setAmount(SettingsUtils.getMonthlyLimit(EntriesAdapter.this.context), false);
+            long limit = SettingsUtils.getMonthlyLimit(EntriesAdapter.this.context);
+            if (limit == 0) {
+                limitSeparator.setVisibility(View.GONE);
+                summaryLimit.setVisibility(View.GONE);
+            } else {
+                summaryLimit.setCurrency(currency);
+                summaryLimit.setAmount(limit, false);
+            }
         }
 
         private void inflateSummaryRow() {
             if (summaryRowLayout == null) {
                 summaryRowLayout = summaryRowStub.inflate();
                 summaryTitleTextView = (TextView) summaryRowLayout.findViewById(R.id.tv__summary_row_title);
-                summaryDisplay = (AmountDisplayLayout) summaryRowLayout.findViewById(R.id.adl__summary_row_amount);
-                summaryLimit = (AmountDisplayLayout) summaryRowLayout.findViewById(R.id.adl__summary_monthly_limit);
+                summaryDisplay = (AmountView) summaryRowLayout.findViewById(R.id.adl__summary_row_amount);
+                limitSeparator = summaryRowLayout.findViewById(R.id.separator);
+                summaryLimit = (AmountView) summaryRowLayout.findViewById(R.id.adl__summary_monthly_limit);
             }
         }
 

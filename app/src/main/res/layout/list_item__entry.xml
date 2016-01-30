@@ -24,7 +24,7 @@
                   android:paddingLeft="@dimen/material_default_margin"
                   android:paddingRight="@dimen/material_default_margin">
 
-        <org.theronin.expensetracker.view.AmountDisplayLayout
+        <org.theronin.expensetracker.view.AmountView
             android:id="@+id/amount_display_current"
             android:layout_width="0dp"
             android:layout_height="26dp"
@@ -44,7 +44,7 @@
             android:paddingBottom="2dp"
             android:textSize="16sp"/>
 
-        <org.theronin.expensetracker.view.AmountDisplayLayout
+        <org.theronin.expensetracker.view.AmountView
             android:id="@+id/amount_display_home"
             android:layout_width="0dp"
             android:layout_weight="3"

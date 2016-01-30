@@ -17,7 +17,7 @@ import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.utils.DateUtils;
 import org.theronin.expensetracker.utils.MoneyUtils;
-import org.theronin.expensetracker.view.AmountDisplayLayout;
+import org.theronin.expensetracker.view.AmountView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -84,13 +84,13 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public AmountDisplayLayout totalDisplay;
+        public AmountView totalDisplay;
         public TextView nameTextView;
         public TextView dateSinceTextView;
 
         public ViewHolder(View listItemView) {
             super(listItemView);
-            totalDisplay = (AmountDisplayLayout) listItemView.findViewById(R.id.amount_display_total);
+            totalDisplay = (AmountView) listItemView.findViewById(R.id.amount_display_total);
             nameTextView = (TextView) listItemView.findViewById(R.id.tv__name_column);
             dateSinceTextView = (TextView) listItemView.findViewById(R.id.tv__date_since);
 

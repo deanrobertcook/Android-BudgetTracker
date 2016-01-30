@@ -70,7 +70,8 @@ public class SettingsFragment extends PreferenceFragment
     }
 
     private void updateMonthlyLimitPreferenceSummary(String newLimit) {
-        String summary = Long.parseLong(newLimit) > 0 ?
+        long amount = newLimit.isEmpty() ? 0 : Long.parseLong(newLimit);
+        String summary = amount > 0 ?
                 String.format(getString(R.string.pref_monthly_limit_summary), newLimit) :
                 getString(R.string.pref_monthly_limit_summary_off);
         monthlyLimitPreference.setSummary(summary);
