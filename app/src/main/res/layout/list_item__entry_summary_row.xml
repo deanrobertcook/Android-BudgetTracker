@@ -14,7 +14,6 @@
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:paddingLeft="@dimen/material_default_margin"
         android:ellipsize="end"
         android:fontFamily="sans-serif"
         android:maxLines="1"
