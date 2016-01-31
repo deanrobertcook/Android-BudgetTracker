@@ -104,6 +104,7 @@
             android:name=".pages.entries.insert.EntryDialogActivity"
             android:parentActivityName="org.theronin.expensetracker.pages.main.MainActivity"
             android:windowSoftInputMode="stateAlwaysVisible"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
