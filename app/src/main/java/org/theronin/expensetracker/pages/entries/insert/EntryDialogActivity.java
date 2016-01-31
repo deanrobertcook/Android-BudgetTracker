@@ -19,7 +19,6 @@ import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.pages.reusable.DatePickerFragment;
-import org.theronin.expensetracker.utils.CurrencySettings;
 import org.theronin.expensetracker.utils.DateUtils;
 
 import java.util.ArrayList;
@@ -28,16 +27,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static org.theronin.expensetracker.utils.SettingsUtils.getCurrentCurrency;
+
 public class EntryDialogActivity extends InjectedActivity
         implements View.OnClickListener,
-        CurrencySettings.Listener,
         DatePickerFragment.Container, InsertRowViewHolder.RowClickListener {
 
     private static final String TAG = EntryDialogActivity.class.getName();
 
     @Inject AbsDataSource<Entry> entryDataSource;
-
-    private CurrencySettings currencySettings;
 
     private TextView currencySymbolTextView;
     private TextView currencyCodeTextView;
@@ -62,10 +60,9 @@ public class EntryDialogActivity extends InjectedActivity
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        currencySettings = new CurrencySettings(this, this);
         currencySymbolTextView = (TextView) findViewById(R.id.currency__symbol);
         currencyCodeTextView = (TextView) findViewById(R.id.currency__code);
-        setCurrentCurrency(currencySettings.getCurrentCurrency());
+        setCurrentCurrency(getCurrentCurrency(this));
 
         dateTextView = (TextView) findViewById(R.id.tv__add_entry_date);
         setDateTextView(new Date().getTime());
@@ -161,16 +158,6 @@ public class EntryDialogActivity extends InjectedActivity
         return false;
     }
 
-    @Override
-    public void onHomeCurrencyChanged(Currency homeCurrency) {
-        //do nothing
-    }
-
-    @Override
-    public void onCurrentCurrencyChanged(Currency currentCurrency) {
-        setCurrentCurrency(currentCurrency);
-    }
-
     private void setDateTextView(long utcTime) {
         currentSelectedUtcTime = utcTime;
         dateTextView.setText(DateUtils.getDisplayFormattedDate(currentSelectedUtcTime));
@@ -203,7 +190,7 @@ public class EntryDialogActivity extends InjectedActivity
                     currentSelectedUtcTime,
                     amount,
                     viewHolder.getCategory(),
-                    new Currency(currencySettings.getCurrentCurrency().code)
+                    new Currency(getCurrentCurrency(this).code)
             );
 
             entriesToInsert.add(entry);

@@ -7,10 +7,9 @@ import android.content.Intent;
 import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.data.backend.exchangerate.ExchangeRateDownloadService;
 import org.theronin.expensetracker.data.source.AbsDataSource;
-import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.ExchangeRate;
-import org.theronin.expensetracker.utils.CurrencySettings;
+import org.theronin.expensetracker.utils.SettingsUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,12 +21,10 @@ import timber.log.Timber;
 
 public abstract class DataLoader<T> extends AsyncTaskLoader<List<T>> implements
         AbsDataSource.Observer,
-        CurrencyConverter.Callback,
-        CurrencySettings.Listener {
+        CurrencyConverter.Callback {
 
     protected final List<AbsDataSource> dataSources;
 
-    protected final CurrencySettings currencySettings;
     protected final CurrencyConverter currencyConverter;
 
     @Inject AbsDataSource<ExchangeRate> exchangeRateDataSource;
@@ -35,13 +32,13 @@ public abstract class DataLoader<T> extends AsyncTaskLoader<List<T>> implements
 
     public DataLoader(Context context, InjectedComponent component) {
         super(context);
+        Timber.tag(getClass().getName()).v("DataLoader initialising.");
         component.inject(this);
 
         this.dataSources = new ArrayList<>();
         setObservedDataSources(exchangeRateDataSource);
 
-        currencySettings = new CurrencySettings(context, this);
-        currencyConverter = new CurrencyConverter(this, currencySettings.getHomeCurrency());
+        currencyConverter = new CurrencyConverter(this, SettingsUtils.getHomeCurrency(context));
     }
 
     /**
@@ -124,9 +121,5 @@ public abstract class DataLoader<T> extends AsyncTaskLoader<List<T>> implements
     public void needToDownloadExchangeRates() {
         Intent serviceIntent = new Intent(getContext(), ExchangeRateDownloadService.class);
         getContext().startService(serviceIntent);
-    }
-
-    @Override
-    public void onCurrentCurrencyChanged(Currency currentCurrency) {
     }
 }

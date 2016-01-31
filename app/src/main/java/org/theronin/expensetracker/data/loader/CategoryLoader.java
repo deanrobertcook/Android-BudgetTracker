@@ -5,7 +5,6 @@ import android.content.Context;
 import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Category;
-import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 
 import java.util.Iterator;
@@ -60,13 +59,6 @@ public class CategoryLoader extends DataLoader<Category> implements AbsDataSourc
             }
             category.setTotal(categoryTotal);
             category.setMissingEntries(missingEntries);
-        }
-    }
-
-    @Override
-    public void onHomeCurrencyChanged(Currency homeCurrency) {
-        if (calculateTotals) {
-            forceLoad();
         }
     }
 }

@@ -13,7 +13,6 @@ import org.apache.commons.lang.WordUtils;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
-import org.theronin.expensetracker.utils.CurrencySettings;
 import org.theronin.expensetracker.utils.DateUtils;
 import org.theronin.expensetracker.utils.MoneyUtils;
 import org.theronin.expensetracker.utils.MoneyUtils.EntryCondition;
@@ -30,12 +29,11 @@ import java.util.Set;
 import static org.theronin.expensetracker.utils.DateUtils.sameDay;
 import static org.theronin.expensetracker.utils.DateUtils.sameMonth;
 import static org.theronin.expensetracker.utils.MoneyUtils.calculateTotals;
+import static org.theronin.expensetracker.utils.SettingsUtils.getHomeCurrency;
 
 public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHolder> {
 
     private Context context;
-
-    private CurrencySettings currencySettings;
 
     private SelectionManager selectionManager;
 
@@ -44,8 +42,6 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
     public EntriesAdapter(Context context, SelectionListener selectionListener) {
         this.context = context;
         this.selectionManager = new SelectionManager(selectionListener);
-        this.currencySettings = new CurrencySettings(context, null);
-
     }
 
     public void setEntries(List<Entry> entries) {
@@ -71,7 +67,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         vH.contentLayout.setTag(R.id.entry_id, entry.getId());
 
         if (shouldDisplaySummaryRow(position)) {
-            vH.displaySummaryRow(DateUtils.getMonth(entry.utcDate), getMonthSummary(position), currencySettings.getCurrentCurrency());
+            vH.displaySummaryRow(DateUtils.getMonth(entry.utcDate), getMonthSummary(position), getHomeCurrency(context));
         } else {
             vH.hideInflatedSummaryRow();
         }
@@ -103,7 +99,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         long total = 0;
         int i = position;
         while (i < entries.size() && sameMonth(startEntry.utcDate, entries.get(i).utcDate)) {
-            total += entries.get(i).amount;
+            total += entries.get(i).getHomeAmount();
             i++;
         }
         return total;
@@ -115,9 +111,9 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
     }
 
     private void setHomeAmount(ViewHolder vH, Entry entry) {
-        if (!entry.currency.code.equals(currencySettings.getHomeCurrency().code)) {
+        if (!entry.currency.code.equals(getHomeCurrency(context).code)) {
             vH.homeDisplay.setVisibility(View.VISIBLE);
-            vH.homeDisplay.setCurrency(currencySettings.getHomeCurrency());
+            vH.homeDisplay.setCurrency(getHomeCurrency(context));
             vH.homeDisplay.setAmount(entry.getHomeAmount());
         } else {
             vH.homeDisplay.setVisibility(View.INVISIBLE);
@@ -132,7 +128,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
             }
         });
         return (entrySum.missingEntries > 0 ? "~" : "") +
-                currencySettings.getHomeCurrency().symbol +
+                getHomeCurrency(context).symbol +
                 MoneyUtils.getDisplayCompact(context, entrySum.amount);
     }
 
@@ -335,7 +331,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         private String getEntrySumAmountDisplay(Collection<Entry> entries) {
             EntrySum entrySum = calculateTotals(entries, null);
             return (entrySum.missingEntries > 0 ? "~" : "") +
-                    currencySettings.getHomeCurrency().symbol +
+                    getHomeCurrency(context).symbol +
                     MoneyUtils.getDisplayCompact(context, entrySum.amount);
         }
         

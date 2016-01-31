@@ -1,11 +1,8 @@
 package org.theronin.expensetracker.utils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import org.theronin.expensetracker.R;
-import org.theronin.expensetracker.data.SupportedCurrencies;
-import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 
 import java.math.BigDecimal;
@@ -17,25 +14,6 @@ import java.util.NavigableMap;
 import java.util.TreeMap;
 
 public class MoneyUtils {
-
-    public static Currency getHomeCurrency(Context context, SharedPreferences defaultPreferences) {
-        return getCurrency(R.string.pref_home_currency_key, context, defaultPreferences);
-    }
-
-    public static Currency getCurrentCurrency(Context context, SharedPreferences defaultPreferences) {
-        return getCurrency(R.string.pref_current_currency_key, context, defaultPreferences);
-    }
-
-    public static Currency getCurrency(int currencyKeyResourceId,
-                                       Context context,
-                                       SharedPreferences defaultPreferences) {
-        String defaultCurrency = context.getString(R.string.pref_currency_default);
-        String currentCurrencyKey = context.getString(currencyKeyResourceId);
-
-        String currencyCode = defaultPreferences.getString(currentCurrencyKey, defaultCurrency);
-
-        return new SupportedCurrencies().findCurrency(currencyCode);
-    }
 
     public static String getDisplay(Context context, long cents) {
         return getDisplay(context, cents, false);

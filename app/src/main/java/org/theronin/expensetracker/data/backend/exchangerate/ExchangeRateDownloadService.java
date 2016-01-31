@@ -9,13 +9,13 @@ import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.ExchangeRate;
-import org.theronin.expensetracker.utils.CurrencySettings;
+import org.theronin.expensetracker.utils.SettingsUtils;
 
 import javax.inject.Inject;
 
 import timber.log.Timber;
 
-public class ExchangeRateDownloadService extends InjectedService implements CurrencySettings.Listener {
+public class ExchangeRateDownloadService extends InjectedService {
 
     @Inject AbsDataSource<ExchangeRate> exchangeRateAbsDataSource;
     @Inject AbsDataSource<Entry> entryAbsDataSource;
@@ -25,7 +25,6 @@ public class ExchangeRateDownloadService extends InjectedService implements Curr
 
     private ExchangeRateSyncCoordinator syncCoordinator;
 
-    private CurrencySettings currencySettings;
     private Currency homeCurrency;
 
     public ExchangeRateDownloadService() {
@@ -37,23 +36,12 @@ public class ExchangeRateDownloadService extends InjectedService implements Curr
         Timber.i("onCreate()");
         super.onCreate();
 
-        currencySettings = new CurrencySettings(this, this);
-        homeCurrency = currencySettings.getHomeCurrency();
+        homeCurrency = SettingsUtils.getHomeCurrency(this);
 
         syncCoordinator = new ExchangeRateSyncCoordinator(
                 entryAbsDataSource, exchangeRateAbsDataSource, downloader, homeCurrency);
 
         super.onCreate();
-    }
-
-    @Override
-    public void onHomeCurrencyChanged(Currency homeCurrency) {
-        this.homeCurrency = homeCurrency;
-    }
-
-    @Override
-    public void onCurrentCurrencyChanged(Currency currentCurrency) {
-
     }
 
     @Override
