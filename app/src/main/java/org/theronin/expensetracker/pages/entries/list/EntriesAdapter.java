@@ -1,7 +1,6 @@
 package org.theronin.expensetracker.pages.entries.list;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,13 +10,11 @@ import android.widget.TextView;
 
 import org.apache.commons.lang.WordUtils;
 import org.theronin.expensetracker.R;
-import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.utils.DateUtils;
 import org.theronin.expensetracker.utils.MoneyUtils;
 import org.theronin.expensetracker.utils.MoneyUtils.EntryCondition;
 import org.theronin.expensetracker.utils.MoneyUtils.EntrySum;
-import org.theronin.expensetracker.utils.Prefs;
 import org.theronin.expensetracker.view.AmountView;
 
 import java.util.ArrayList;
@@ -52,6 +49,13 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         notifyDataSetChanged();
     }
 
+    public Entry getEntryAt(int position) {
+        if (position < 0 || position >= entries.size()) {
+            return null;
+        }
+        return entries.get(position);
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View listItemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item__entry, parent, false);
@@ -66,14 +70,8 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
         vH.contentLayout.setTag(R.id.entry_id, entry.getId());
 
-        if (shouldDisplaySummaryRow(position)) {
-            vH.displaySummaryRow(DateUtils.getMonth(entry.utcDate), getMonthSummary(position), getHomeCurrency(context));
-        } else {
-            vH.hideInflatedSummaryRow();
-        }
-
         if (shouldDisplayDateBorder(position)) {
-            vH.displayDateBorder(DateUtils.getDisplayFormattedDate(entry.utcDate), getFormattedDayTotal(entry.utcDate));
+            vH.displayDateBorder(DateUtils.getDisplayFormattedDateNoMonth(entry.utcDate), getFormattedDayTotal(entry.utcDate));
         } else {
             vH.hideInflatedDateBorder();
         }
@@ -87,20 +85,12 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         selectionManager.listenToItemView(vH.contentLayout);
     }
 
-    private boolean shouldDisplaySummaryRow(int position) {
-        if (position == 0) {
-            return true;
-        }
-        return !sameMonth(entries.get(position).utcDate, entries.get(position - 1).utcDate);
-    }
-
-    private long getMonthSummary(int position) {
-        Entry startEntry = entries.get(position);
+    public long getMonthSummary(Entry entryInMonth) {
         long total = 0;
-        int i = position;
-        while (i < entries.size() && sameMonth(startEntry.utcDate, entries.get(i).utcDate)) {
-            total += entries.get(i).getHomeAmount();
-            i++;
+        for (Entry entry : entries) {
+            if (sameMonth(entryInMonth.utcDate, entry.utcDate)) {
+                total += entry.getHomeAmount();
+            }
         }
         return total;
     }
@@ -145,15 +135,6 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
-        public final ViewStub summaryRowStub;
-
-        private View summaryRowLayout;
-        private TextView summaryTitleTextView;
-        private AmountView summaryDisplay;
-        private View limitSeparator;
-        private AmountView summaryLimit;
-
         public final ViewStub borderStub;
         private View borderLayout;
         private TextView borderDateTextView;
@@ -166,49 +147,12 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
         public ViewHolder(View view) {
             super(view);
-
-            summaryRowStub = (ViewStub) itemView.findViewById(R.id.stub__summary_row_layout);
-
             borderStub = (ViewStub) itemView.findViewById(R.id.stub__date_border_layout);
 
             contentLayout = itemView.findViewById(R.id.ll__list_item__content_layout);
             currentDisplay = (AmountView) contentLayout.findViewById(R.id.amount_display_current);
             categoryTextView = (TextView) contentLayout.findViewById(R.id.tv__list_item__entry__category);
             homeDisplay = (AmountView) contentLayout.findViewById(R.id.amount_display_home);
-        }
-
-        public void displaySummaryRow(String month, long monthTotal, Currency currency) {
-            inflateSummaryRow();
-            summaryRowLayout.setVisibility(View.VISIBLE);
-            summaryTitleTextView.setText(month + ": ");
-            summaryDisplay.setAmount(monthTotal, false);
-            summaryDisplay.setCurrency(currency);
-
-            long limit = Prefs.getMonthlyLimit(EntriesAdapter.this.context);
-            if (limit == 0) {
-                limitSeparator.setVisibility(View.GONE);
-                summaryLimit.setVisibility(View.GONE);
-            } else {
-                summaryLimit.setCurrency(currency);
-                summaryLimit.setAmount(limit, false);
-            }
-        }
-
-        private void inflateSummaryRow() {
-            if (summaryRowLayout == null) {
-                summaryRowLayout = summaryRowStub.inflate();
-                summaryTitleTextView = (TextView) summaryRowLayout.findViewById(R.id.tv__summary_row_title);
-                summaryDisplay = (AmountView) summaryRowLayout.findViewById(R.id.adl__summary_row_amount);
-                limitSeparator = summaryRowLayout.findViewById(R.id.separator);
-                summaryLimit = (AmountView) summaryRowLayout.findViewById(R.id.adl__summary_monthly_limit);
-            }
-        }
-
-        public void hideInflatedSummaryRow() {
-            if (summaryRowLayout == null) {
-                return;
-            }
-            summaryRowLayout.setVisibility(View.GONE);
         }
 
         public void displayDateBorder(String formattedDate, String formattedTotal) {
@@ -295,10 +239,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         }
 
         private void setViewUnselected(View itemView) {
-            TypedArray a = context.getTheme().obtainStyledAttributes(R.style.AppTheme, new int[]{R.attr.selectableItemBackground});
-            int attributeResourceId = a.getResourceId(0, 0);
-            a.recycle();
-            itemView.setBackground(context.getResources().getDrawable(attributeResourceId, context.getTheme()));
+            itemView.setBackground(context.getResources().getDrawable(R.drawable.list_item_selector, context.getTheme()));
         }
 
         public void exitSelectMode() {

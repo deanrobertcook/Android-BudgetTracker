@@ -17,8 +17,6 @@
     <dimen name="list_item__entry_main_text_size">13sp</dimen>
     <dimen name="list_item__entry_secondary_text_size">11sp</dimen>
 
-
-
     <dimen name="status_bar__height">24dp</dimen>
     <dimen name="navigation_drawer_width">304dp</dimen>
     <dimen name="navigation_drawer_header_height">172dp</dimen>

@@ -29,6 +29,10 @@ public class DateUtils {
         return sdf.format(new Date(utcTime));
     }
 
+    public static String getDisplayFormattedDateNoMonth(long utcTime) {
+        return new SimpleDateFormat("EEEE dd").format(new Date(utcTime));
+    }
+
     public static boolean sameDay(long date1, long date2) {
         return DateTimeComparator.getDateOnlyInstance().compare(date1, date2) == 0;
     }

@@ -27,6 +27,8 @@
     <string name="entries_activity">Entries</string>
     <string name="categories_activity">Categories</string>
 
+    <string name="total_summary_month">%s:</string>
+
     <string name="tv__menu_item_entries">Organise Entries</string>
     <string name="tv__menu_item_categories">Organise Categories</string>
 

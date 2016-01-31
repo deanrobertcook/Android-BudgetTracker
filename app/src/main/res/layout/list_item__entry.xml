@@ -3,13 +3,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical"
-              android:background="?attr/selectableItemBackground">
-
-    <ViewStub
-        android:id="@+id/stub__summary_row_layout"
-        android:layout="@layout/list_item__entry_summary_row"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item__height_three_lines"/>
+              android:background="@drawable/list_item_selector">
 
     <ViewStub
         android:id="@+id/stub__date_border_layout"
@@ -19,6 +13,7 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:id="@+id/ll__list_item__content_layout"
+                  android:background="@drawable/list_item_selector"
                   android:layout_width="match_parent"
                   android:layout_height="@dimen/list_item__height_three_lines"
                   android:paddingLeft="@dimen/material_default_margin"
