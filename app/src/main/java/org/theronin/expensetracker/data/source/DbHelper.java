@@ -1,12 +1,9 @@
 package org.theronin.expensetracker.data.source;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.preference.PreferenceManager;
 
-import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.Contract.CategoryTable;
 import org.theronin.expensetracker.data.Contract.CategoryView;
 import org.theronin.expensetracker.data.Contract.CurrencyTable;
@@ -74,7 +71,6 @@ public class DbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(EntryTable.SQL_CREATE_ENTRIES_TABLE);
         sqLiteDatabase.execSQL(CategoryView.SQL_CREATE_CATEGORIES_VIEW);
         sqLiteDatabase.execSQL(EntryView.SQL_CREATE_CATEGORIES_VIEW);
-        setFullSyncWithBackend();
     }
 
     public void dropTables(SQLiteDatabase sqLiteDatabase) {
@@ -105,10 +101,5 @@ public class DbHelper extends SQLiteOpenHelper {
             i++;
         }
         return sb.toString();
-    }
-
-    private void setFullSyncWithBackend() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        sharedPreferences.edit().putBoolean(context.getString(R.string.pref_newly_created_database), true).apply();
     }
 }

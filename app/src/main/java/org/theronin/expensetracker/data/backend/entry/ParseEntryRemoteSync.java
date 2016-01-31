@@ -47,6 +47,7 @@ public class ParseEntryRemoteSync implements EntryRemoteSync {
     public void saveToRemote(List<Entry> entries) throws Exception {
         currentSyncMap = createEntryToParseObjectMap(entries);
         ParseObject.saveAll(new ArrayList<>(currentSyncMap.values()));
+
         callPushToOtherDevices();
     }
 

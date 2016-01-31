@@ -9,7 +9,7 @@ import org.theronin.expensetracker.data.backend.exchangerate.ExchangeRateDownloa
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.ExchangeRate;
-import org.theronin.expensetracker.utils.SettingsUtils;
+import org.theronin.expensetracker.utils.Prefs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +38,7 @@ public abstract class DataLoader<T> extends AsyncTaskLoader<List<T>> implements
         this.dataSources = new ArrayList<>();
         setObservedDataSources(exchangeRateDataSource);
 
-        currencyConverter = new CurrencyConverter(this, SettingsUtils.getHomeCurrency(context));
+        currencyConverter = new CurrencyConverter(this, Prefs.getHomeCurrency(context));
     }
 
     /**

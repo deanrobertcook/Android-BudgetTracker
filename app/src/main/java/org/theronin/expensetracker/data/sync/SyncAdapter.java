@@ -4,16 +4,15 @@ import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.SyncResult;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 
 import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.data.backend.entry.EntryRemoteSync;
 import org.theronin.expensetracker.data.backend.entry.EntrySyncCoordinator;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Entry;
+import org.theronin.expensetracker.utils.Prefs;
 
 import java.util.List;
 
@@ -22,8 +21,6 @@ import javax.inject.Inject;
 import timber.log.Timber;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
-
-    private static final String PREF_LAST_SYNC_CHECK_KEY = "SYNC_CHECK";
 
     @Inject AbsDataSource<Entry> entryDataSource;
     @Inject EntryRemoteSync remoteSync;
@@ -69,11 +66,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private void pullEntries() {
-        final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        long lastSync = pref.getLong(PREF_LAST_SYNC_CHECK_KEY, -1);
-        final long syncTime = System.currentTimeMillis();
-        new EntrySyncCoordinator(entryDataSource, remoteSync).findEntries(lastSync);
-        pref.edit().putLong(PREF_LAST_SYNC_CHECK_KEY, syncTime).apply();
-
+        new EntrySyncCoordinator(entryDataSource, remoteSync).findEntries(Prefs.getLastSyncTime(getContext()));
+        Prefs.setLastSyncTime(System.currentTimeMillis(), getContext());
     }
 }

@@ -17,7 +17,7 @@ import org.theronin.expensetracker.utils.DateUtils;
 import org.theronin.expensetracker.utils.MoneyUtils;
 import org.theronin.expensetracker.utils.MoneyUtils.EntryCondition;
 import org.theronin.expensetracker.utils.MoneyUtils.EntrySum;
-import org.theronin.expensetracker.utils.SettingsUtils;
+import org.theronin.expensetracker.utils.Prefs;
 import org.theronin.expensetracker.view.AmountView;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import java.util.Set;
 import static org.theronin.expensetracker.utils.DateUtils.sameDay;
 import static org.theronin.expensetracker.utils.DateUtils.sameMonth;
 import static org.theronin.expensetracker.utils.MoneyUtils.calculateTotals;
-import static org.theronin.expensetracker.utils.SettingsUtils.getHomeCurrency;
+import static org.theronin.expensetracker.utils.Prefs.getHomeCurrency;
 
 public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHolder> {
 
@@ -184,7 +184,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
             summaryDisplay.setAmount(monthTotal, false);
             summaryDisplay.setCurrency(currency);
 
-            long limit = SettingsUtils.getMonthlyLimit(EntriesAdapter.this.context);
+            long limit = Prefs.getMonthlyLimit(EntriesAdapter.this.context);
             if (limit == 0) {
                 limitSeparator.setVisibility(View.GONE);
                 summaryLimit.setVisibility(View.GONE);

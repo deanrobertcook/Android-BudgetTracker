@@ -3,7 +3,6 @@ package org.theronin.expensetracker.pages.launch;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +12,7 @@ import com.parse.ParseUser;
 import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.pages.main.MainActivity;
+import org.theronin.expensetracker.utils.Prefs;
 
 public class LaunchActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -64,7 +64,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private LaunchPage getFirstPageToDisplay() {
-        if (!hasWelcomeScreenBeenShown()) {
+        if (!Prefs.hasWelcomeScreenBeenShown(this)) {
             return LaunchPage.WELCOME;
         }
         if (ParseUser.getCurrentUser() == null) {
@@ -73,11 +73,6 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
         return LaunchPage.ENTER_APP;
         //return the welcome page to manually test signing in with different users
 //        return LaunchPage.WELCOME;
-    }
-
-    private boolean hasWelcomeScreenBeenShown() {
-        return PreferenceManager.getDefaultSharedPreferences(this)
-                .getBoolean(this.getString(R.string.pref_welcome_screen_has_been_shown), false);
     }
 
     @Override

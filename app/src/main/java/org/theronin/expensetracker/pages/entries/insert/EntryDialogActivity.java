@@ -27,7 +27,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import static org.theronin.expensetracker.utils.SettingsUtils.getCurrentCurrency;
+import static org.theronin.expensetracker.utils.Prefs.getCurrentCurrency;
 
 public class EntryDialogActivity extends InjectedActivity
         implements View.OnClickListener,

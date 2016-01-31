@@ -13,7 +13,7 @@ import org.theronin.expensetracker.comparators.CategoryTotalComparator;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.utils.DateUtils;
-import org.theronin.expensetracker.utils.SettingsUtils;
+import org.theronin.expensetracker.utils.Prefs;
 import org.theronin.expensetracker.view.AmountView;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
     public CategoriesAdapter(Context context) {
         this.context = context;
-        homeCurrency = SettingsUtils.getHomeCurrency(context);
+        homeCurrency = Prefs.getHomeCurrency(context);
     }
 
     public void setCategories(List<Category> categories) {

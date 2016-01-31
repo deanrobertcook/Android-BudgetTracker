@@ -1,13 +1,13 @@
 package org.theronin.expensetracker.pages.launch;
 
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.theronin.expensetracker.R;
+import org.theronin.expensetracker.utils.Prefs;
 
 public class WelcomeFragment extends LaunchFragment {
 
@@ -25,13 +25,8 @@ public class WelcomeFragment extends LaunchFragment {
 
     @Override
     public void onPositiveButtonClicked() {
-        setWelcomeScreenHasBeenShown();
+        Prefs.setWelcomeScreenShown(getActivity());
         setPage(LaunchPage.SIGN_IN);
-    }
-
-    private void setWelcomeScreenHasBeenShown() {
-        PreferenceManager.getDefaultSharedPreferences(getActivity())
-                .edit().putBoolean(getString(R.string.pref_welcome_screen_has_been_shown), true).commit();
     }
 
     @Override

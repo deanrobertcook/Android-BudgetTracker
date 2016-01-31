@@ -9,7 +9,7 @@ import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.ExchangeRate;
-import org.theronin.expensetracker.utils.SettingsUtils;
+import org.theronin.expensetracker.utils.Prefs;
 
 import javax.inject.Inject;
 
@@ -36,7 +36,7 @@ public class ExchangeRateDownloadService extends InjectedService {
         Timber.i("onCreate()");
         super.onCreate();
 
-        homeCurrency = SettingsUtils.getHomeCurrency(this);
+        homeCurrency = Prefs.getHomeCurrency(this);
 
         syncCoordinator = new ExchangeRateSyncCoordinator(
                 entryAbsDataSource, exchangeRateAbsDataSource, downloader, homeCurrency);
