@@ -20,6 +20,7 @@ import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.pages.reusable.DatePickerFragment;
 import org.theronin.expensetracker.utils.DateUtils;
+import org.theronin.expensetracker.utils.TransitionUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -114,7 +115,7 @@ public class EntryDialogActivity extends InjectedActivity
     @Override
     public void onRowSelectCategoryFieldClicked(int rowIndex) {
         Intent intent = new Intent(EntryDialogActivity.this, CategorySelectActivity.class);
-        startActivityForResult(intent, rowIndex);
+        startActivityForResult(intent, rowIndex, TransitionUtils.getLeftTransitionAnimation(this));
     }
 
     @Override

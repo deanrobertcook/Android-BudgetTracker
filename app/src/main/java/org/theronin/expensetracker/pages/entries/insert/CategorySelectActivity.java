@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -86,6 +87,7 @@ public class CategorySelectActivity extends InjectedActivity implements
         result.putExtra(CATEGORY_NAME_KEY, categoryName);
         setResult(RESULT_OK, result);
         finish();
+        overridePendingTransition(R.anim.left_to_right_in, R.anim.left_to_right_out);
     }
 
     @Override
@@ -96,6 +98,16 @@ public class CategorySelectActivity extends InjectedActivity implements
                 new CategoryDialogFragment().show(getFragmentManager(), CategoryDialogFragment.TAG);
                 break;
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            overridePendingTransition(R.anim.left_to_right_in, R.anim.left_to_right_out);
+            return true;
+        }
+        return false;
     }
 
     @Override
