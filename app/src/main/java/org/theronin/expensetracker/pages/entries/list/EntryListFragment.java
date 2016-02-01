@@ -84,9 +84,9 @@ public class EntryListFragment extends InjectedFragment implements
         return rootView;
     }
 
-    private void setMonthSummary(Entry entry) {
-        summaryTitleTextView.setText(getString(R.string.total_summary_month, DateUtils.getMonth(entry.utcDate)));
-        summaryDisplay.setAmount(adapter.getMonthSummary(entry), false);
+    private void setMonthSummary(long date) {
+        summaryTitleTextView.setText(getString(R.string.total_summary_month, DateUtils.getMonth(date)));
+        summaryDisplay.setAmount(adapter.getMonthSummary(date), false);
         summaryDisplay.setCurrency(getHomeCurrency(getActivity()));
 
         long limit = Prefs.getMonthlyLimit(getActivity());
@@ -119,12 +119,13 @@ public class EntryListFragment extends InjectedFragment implements
     @Override
     public void onLoadFinished(Loader<List<Entry>> loader, List<Entry> data) {
         adapter.setEntries(data);
-        setMonthSummary(data.get(0));
+        setMonthSummary(data.isEmpty() ? System.currentTimeMillis() : data.get(0).utcDate);
     }
 
     @Override
     public void onLoaderReset(Loader<List<Entry>> loader) {
         adapter.setEntries(new ArrayList<Entry>());
+        setMonthSummary(System.currentTimeMillis());
     }
 
     @Override
@@ -181,6 +182,6 @@ public class EntryListFragment extends InjectedFragment implements
 
     @Override
     public void onMonthChanged(Entry lastEntry) {
-        setMonthSummary(lastEntry);
+        setMonthSummary(lastEntry.utcDate);
     }
 }

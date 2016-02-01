@@ -85,10 +85,10 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         selectionManager.listenToItemView(vH.contentLayout);
     }
 
-    public long getMonthSummary(Entry entryInMonth) {
+    public long getMonthSummary(long dateInMonth) {
         long total = 0;
         for (Entry entry : entries) {
-            if (sameMonth(entryInMonth.utcDate, entry.utcDate)) {
+            if (sameMonth(dateInMonth, entry.utcDate)) {
                 total += entry.getHomeAmount();
             }
         }
