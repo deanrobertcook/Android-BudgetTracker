@@ -28,8 +28,10 @@
 
         <TextView
             android:id="@+id/tv__add_entry_category"
-            style="@style/Widget.AppCompat.Spinner.Underlined"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            style="@style/Widget.AppCompat.EditText"
+            android:focusable="false"
             android:layout_height="match_parent"
             android:maxLines="1"
             android:ellipsize="end"
