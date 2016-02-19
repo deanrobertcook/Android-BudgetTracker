@@ -20,7 +20,7 @@ import java.util.List;
 
 public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAdapter.ViewHolder> {
 
-    private final int MIN_CATEGORIES_FOR_FREQUENCY_SORT = 20;
+    private static final int MIN_CATEGORIES_FOR_FREQUENCY_SORT = 20;
 
     private List<Comparator<Category>> comparators;
     private int[] sortSizes;

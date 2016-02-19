@@ -23,13 +23,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import timber.log.Timber;
-
 public class CategorySelectActivity extends InjectedActivity implements
         LoaderManager.LoaderCallbacks<List<Category>>,
-        CategorySelectAdapter.CategorySelectedListener,
-        View.OnClickListener,
-        CategoryDialogFragment.Container {
+        CategorySelectPresenter.CategorySelectUI,
+        CategoryDialogFragment.Container,
+        View.OnClickListener {
 
     public static final String CATEGORY_NAME_KEY = "CATEGORY_NAME";
     public static final String RESULT_ACTION = "org.theronin.expensetracker.CATEGORY_SELECTED";
@@ -38,6 +36,7 @@ public class CategorySelectActivity extends InjectedActivity implements
     @Inject AbsDataSource<Category> dataSourceCategory;
 
     private CategorySelectAdapter selectAdapter;
+    private CategorySelectPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +54,9 @@ public class CategorySelectActivity extends InjectedActivity implements
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab__add_category_button);
         floatingActionButton.setOnClickListener(this);
 
-        selectAdapter = new CategorySelectAdapter(this);
+        presenter = new CategorySelectPresenter(dataSourceCategory, this);
+        selectAdapter = new CategorySelectAdapter(presenter);
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view__category_list);
         recyclerView.setLayoutManager(layoutManager);
@@ -78,57 +79,56 @@ public class CategorySelectActivity extends InjectedActivity implements
     }
 
     @Override
-    public void onCategorySelected(String categoryName) {
-        returnCategoryResult(categoryName);
-    }
-
-    private void returnCategoryResult(String categoryName) {
-        Intent result = new Intent(RESULT_ACTION);
-        result.putExtra(CATEGORY_NAME_KEY, categoryName);
-        setResult(RESULT_OK, result);
-        finish();
-        overridePendingTransition(R.anim.left_to_right_in, R.anim.left_to_right_out);
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab__add_category_button:
-                Timber.d("FAB clicked");
                 new CategoryDialogFragment().show(getFragmentManager(), CategoryDialogFragment.TAG);
                 break;
         }
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            overridePendingTransition(R.anim.left_to_right_in, R.anim.left_to_right_out);
-            return true;
+    public void showCategoryDuplicateError() {
+        Toast.makeText(this, R.string.duplicate_category_error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showCategoryCreationSuccess() {
+        Toast.makeText(this, R.string.category_creation_success, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showCategoryEmptyCategoryNameError() {
+        Toast.makeText(this, R.string.empty_category_name_error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void returnCategoryResult(String categoryName) {
+        if (categoryName != null) {
+            Intent result = new Intent(RESULT_ACTION);
+            result.putExtra(CATEGORY_NAME_KEY, categoryName);
+            setResult(RESULT_OK, result);
         }
-        return false;
+        finish();
+        overridePendingTransition(R.anim.left_to_right_in, R.anim.left_to_right_out);
     }
 
     @Override
     public void onCategoryCreated(String categoryName) {
-        if (categoryName != null && categoryName.length() > 0) {
-            String sanitisedCategoryName = sanitiseCategoryName(categoryName);
-            long id = dataSourceCategory.insert(new Category(sanitisedCategoryName)).getId();
-            if (id == -1) {
-                Toast.makeText(this, R.string.duplicate_category_error, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, R.string.category_creation_success, Toast.LENGTH_SHORT).show();
-                returnCategoryResult(sanitisedCategoryName);
-            }
-        } else {
-            Toast.makeText(this, R.string.empty_category_name_error, Toast.LENGTH_SHORT).show();
-        }
+        presenter.onCategoryCreated(categoryName);
     }
 
-    private String sanitiseCategoryName(String categoryName) {
-        categoryName = categoryName.toLowerCase();
-        categoryName = categoryName.trim();
-        return categoryName;
+    @Override
+    public void onBackPressed() {
+        presenter.onBackButtonPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            presenter.onBackButtonPressed();
+            return true;
+        }
+        return false;
     }
 }
