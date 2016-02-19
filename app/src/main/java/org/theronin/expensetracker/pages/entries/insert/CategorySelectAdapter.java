@@ -4,35 +4,37 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import org.apache.commons.lang.WordUtils;
-import org.theronin.expensetracker.BuildConfig;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.comparators.CategoryAlphabeticalComparator;
 import org.theronin.expensetracker.comparators.CategoryFrequencyComparator;
 import org.theronin.expensetracker.model.Category;
+import org.theronin.expensetracker.view.SelectCategorySwipeView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAdapter.ViewHolder> {
+import timber.log.Timber;
+
+public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAdapter.ViewHolder> implements SelectCategorySwipeView.Listener {
 
     private static final int MIN_CATEGORIES_FOR_FREQUENCY_SORT = 20;
+    private final RecyclerView recyclerView;
 
     private List<Comparator<Category>> comparators;
     private int[] sortSizes;
 
-    private final int VIEW_TYPE_NORMAL = 0;
-    private final int VIEW_TYPE_WITH_BORDER = 1;
+    private static final int VIEW_TYPE_NORMAL = 0;
+    private static final int VIEW_TYPE_WITH_SEPARATOR = 1;
 
     private List<Category> categories;
     private CategorySelectedListener listener;
 
-    public CategorySelectAdapter(CategorySelectedListener listener) {
+    public CategorySelectAdapter(CategorySelectedListener listener, RecyclerView recyclerView) {
         categories = new ArrayList<>();
+        this.recyclerView = recyclerView;
         this.listener = listener;
     }
 
@@ -102,7 +104,7 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
         for (int sortSize : sortSizes) {
             borderIndex += sortSize;
             if (position == borderIndex - 1 && position != categories.size() - 1) {
-                return VIEW_TYPE_WITH_BORDER;
+                return VIEW_TYPE_WITH_SEPARATOR;
             }
         }
         return VIEW_TYPE_NORMAL;
@@ -110,36 +112,16 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.list_item__category_select, parent, false);
-
-        return new ViewHolder(itemView);
+        return new ViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_item__category_select, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        final Category category = categories.get(position);
-
-        switch (getItemViewType(position)) {
-            case VIEW_TYPE_NORMAL:
-                break;
-            case VIEW_TYPE_WITH_BORDER:
-                holder.separator.setVisibility(View.VISIBLE);
-                break;
-        }
-
-        String text = WordUtils.capitalize(category.name);
-        if (BuildConfig.DEBUG) {
-            text += String.format(" (%d)", category.frequency);
-        }
-        ((TextView) holder.categoryNameTextView).setText(text);
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onCategorySelected(category.name);
-            }
-        });
+    public void onBindViewHolder(ViewHolder vh, int position) {
+        vh.setSeparatorVisible(getItemViewType(position) == VIEW_TYPE_WITH_SEPARATOR);
+        vh.swipeView.reset();
+        vh.swipeView.setCategory(categories.get(position));
+        vh.swipeView.setListener(this);
     }
 
     @Override
@@ -147,19 +129,58 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
         return categories.size();
     }
 
+    @Override
+    public void onCategorySelected(Category category) {
+        listener.onCategorySelected(category);
+    }
+
+    @Override
+    public void onEditClicked(Category category) {
+        Timber.v("onEditClicked %s", category.name);
+    }
+
+    @Override
+    public void onMergeClicked(Category category) {
+        Timber.v("onMergeClicked %s", category.name);
+    }
+
+    @Override
+    public void onDeleteClicked(Category category) {
+        Timber.v("onDeleteClicked %s", category.name);
+    }
+
+    @Override
+    public void onOptionsExpanding() {
+        Timber.v("onOptionsExpanding");
+        for (int i = 0; i < recyclerView.getChildCount(); i++) {
+            View child = recyclerView.getChildAt(i);
+            if (child instanceof ViewGroup) {
+                ((SelectCategorySwipeView) child.findViewById(R.id.swipe_view)).closeOptions(false);
+            }
+        }
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        public final SelectCategorySwipeView swipeView;
         public final View separator;
-        public final View categoryNameTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            separator = itemView.findViewById(R.id.v__separator);
-            categoryNameTextView = itemView.findViewById(R.id.tv__category_name);
+            this.swipeView = (SelectCategorySwipeView) itemView.findViewById(R.id.swipe_view);
+            this.separator = itemView.findViewById(R.id.separator);
+        }
+
+        public void setSeparatorVisible(boolean visible) {
+            if (visible) {
+                separator.setVisibility(View.VISIBLE);
+            } else {
+                separator.setVisibility(View.GONE);
+            }
         }
     }
 
     public interface CategorySelectedListener {
-        void onCategorySelected(String categoryName);
+        void onCategorySelected(Category categoryName);
     }
 }

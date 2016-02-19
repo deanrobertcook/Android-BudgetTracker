@@ -55,10 +55,10 @@ public class CategorySelectActivity extends InjectedActivity implements
         floatingActionButton.setOnClickListener(this);
 
         presenter = new CategorySelectPresenter(dataSourceCategory, this);
-        selectAdapter = new CategorySelectAdapter(presenter);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view__category_list);
+        selectAdapter = new CategorySelectAdapter(presenter, recyclerView);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(selectAdapter);
     }

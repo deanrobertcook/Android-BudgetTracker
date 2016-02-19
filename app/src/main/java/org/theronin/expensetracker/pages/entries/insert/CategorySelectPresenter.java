@@ -32,8 +32,8 @@ public class CategorySelectPresenter implements CategorySelectedListener {
     }
 
     @Override
-    public void onCategorySelected(String categoryName) {
-        categorySelectUI.returnCategoryResult(categoryName);
+    public void onCategorySelected(Category category) {
+        categorySelectUI.returnCategoryResult(category.name);
     }
 
     private String sanitiseCategoryName(String categoryName) {
