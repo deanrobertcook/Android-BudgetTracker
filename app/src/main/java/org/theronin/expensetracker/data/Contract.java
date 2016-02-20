@@ -44,7 +44,7 @@ public class Contract {
                 "UNIQUE (" + COL_GLOBAL_ID + ") ON CONFLICT IGNORE, " +
 
                 "FOREIGN KEY (" + COL_CATEGORY_ID + ") REFERENCES " +
-                CategoryView.VIEW_NAME + " (" + CategoryView._ID + "), " +
+                CurrencyTable.TABLE_NAME + " (" + CategoryTable._ID + "), " +
 
                 "FOREIGN KEY (" + COL_CURRENCY_ID + ") REFERENCES " +
                 CurrencyTable.TABLE_NAME + " (" + CurrencyTable._ID + "))";

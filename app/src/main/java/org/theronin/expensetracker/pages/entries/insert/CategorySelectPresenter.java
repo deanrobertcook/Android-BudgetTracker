@@ -1,5 +1,7 @@
 package org.theronin.expensetracker.pages.entries.insert;
 
+import android.support.annotation.NonNull;
+
 import org.theronin.expensetracker.data.Contract.CategoryView;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Category;
@@ -45,24 +47,28 @@ public class CategorySelectPresenter implements CategorySelectedListener {
     }
 
     private void onCategoryUpdated(String oldCategoryName, String newCategoryName) {
-        String sanitisedOldCategoryName = sanitiseCategoryName(oldCategoryName);
-        String sanitisedNewCategoryName = sanitiseCategoryName(newCategoryName);
+        Category category = getCategory(sanitiseCategoryName(oldCategoryName));
+        category.setName(sanitiseCategoryName(newCategoryName));
+        if (!dataSourceCategory.update(category)) {
+            categorySelectUI.showCategoryDuplicateError(newCategoryName);
+        } else {
+            categorySelectUI.showCategoryUpdateSuccess();
+        }
+    }
 
+    @NonNull
+    private Category getCategory(String sanitisedOldCategoryName) {
         List<Category> categories = dataSourceCategory.query(CategoryView.COL_CATEGORY_NAME + " = ?",
                 new String[] {sanitisedOldCategoryName}, null);
 
         if (categories.size() != 1) {
             throw new IllegalStateException("The requested old category should exist, and there should only be 1");
         }
+        return categories.get(0);
+    }
 
-        Category category = categories.get(0);
-
-        category.setName(sanitisedNewCategoryName);
-        if (!dataSourceCategory.update(category)) {
-            categorySelectUI.showCategoryDuplicateError(newCategoryName);
-        } else {
-            categorySelectUI.showCategoryUpdateSuccess();
-        }
+    public void onCategoryDeleted(String categoryName) {
+        dataSourceCategory.delete(getCategory(sanitiseCategoryName(categoryName)));
     }
 
     public void onCreateCategoryButtonSelected() {

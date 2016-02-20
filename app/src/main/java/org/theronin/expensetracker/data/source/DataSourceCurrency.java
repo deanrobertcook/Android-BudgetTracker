@@ -55,7 +55,7 @@ public class DataSourceCurrency extends AbsDataSource<Currency> {
     }
 
     @Override
-    protected int deleteOperation(SQLiteDatabase sb, Collection<Currency> entities) {
+    protected int deleteOperation(SQLiteDatabase db, List<Currency> entities) {
         throw new NotImplementedException("Cannot delete from Currencies table");
     }
 

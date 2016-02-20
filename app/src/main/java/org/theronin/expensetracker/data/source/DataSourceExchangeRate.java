@@ -83,7 +83,7 @@ public class DataSourceExchangeRate extends AbsDataSource<ExchangeRate> {
     }
 
     @Override
-    protected int deleteOperation(SQLiteDatabase sb, Collection<ExchangeRate> entities) {
+    protected int deleteOperation(SQLiteDatabase db, List<ExchangeRate> entities) {
         throw new NotImplementedException("Deleting exchange rates currently doesn't make sense");
     }
 }

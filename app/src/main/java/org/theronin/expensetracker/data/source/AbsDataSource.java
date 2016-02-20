@@ -12,7 +12,7 @@ import org.theronin.expensetracker.utils.DebugUtils;
 import org.theronin.expensetracker.utils.SyncUtils;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -123,9 +123,7 @@ public abstract class AbsDataSource<T extends Entity> {
     }
 
     public boolean delete(T entity) {
-        List<T> entities = new ArrayList<>();
-        entities.add(entity);
-        int numDeleted = bulkDelete(entities);
+        int numDeleted = bulkDelete(Collections.singletonList(entity));
         return numDeleted == 1;
     }
 
@@ -140,7 +138,7 @@ public abstract class AbsDataSource<T extends Entity> {
         return numDeleted;
     }
 
-    protected abstract int deleteOperation(SQLiteDatabase sb, Collection<T> entities);
+    protected abstract int deleteOperation(SQLiteDatabase db, List<T> entities);
 
     public boolean update(T entity) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -225,6 +223,8 @@ public abstract class AbsDataSource<T extends Entity> {
      * TODO this feels a bit hacky. It might be better to think of a BUS system instead
      */
     protected interface UpdateListener<T> {
-        void onEntityUpdated(T category);
+        void onEntityUpdated(T entity);
+
+        void beforeEntityDeleted(T entity);
     }
 }

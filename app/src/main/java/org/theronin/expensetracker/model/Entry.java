@@ -4,15 +4,15 @@ import org.theronin.expensetracker.data.backend.entry.SyncState;
 import org.theronin.expensetracker.utils.DateUtils;
 
 public class Entry extends Entity implements Comparable<Entry> {
+
     public final long utcDate;
     public final long amount;
-    public final Category category;
+    private Category category;
     public final Currency currency;
-
     private String globalId;
+
     private SyncState syncState;
     private long homeAmount = -1;
-
     public Entry(
             long utcDate,
             long amount,
@@ -43,7 +43,6 @@ public class Entry extends Entity implements Comparable<Entry> {
         this(-1, globalId, syncState, utcDate, amount, category, currency);
     }
 
-
     public Entry(
             long id,
             String globalId,
@@ -61,6 +60,7 @@ public class Entry extends Entity implements Comparable<Entry> {
         this.currency = currency;
     }
 
+
     @Override
     public String toString() {
         return super.toString() + String.format(
@@ -68,7 +68,7 @@ public class Entry extends Entity implements Comparable<Entry> {
                 globalId,
                 syncState,
                 DateUtils.getStorageFormattedDate(utcDate),
-                category == null ? null : category.getName(),
+                getCategory() == null ? null : getCategory().getName(),
                 amount,
                 currency == null ? null : currency.code
         );
@@ -125,7 +125,7 @@ public class Entry extends Entity implements Comparable<Entry> {
     private void assertContentsMatch(Entry other) {
         boolean contentsMatch = amount == other.amount;
 
-        contentsMatch = contentsMatch && isEqual(category, other.category);
+        contentsMatch = contentsMatch && isEqual(getCategory(), other.getCategory());
         contentsMatch = contentsMatch && isEqual(currency, other.currency);
 
         if (!contentsMatch) {
@@ -145,5 +145,13 @@ public class Entry extends Entity implements Comparable<Entry> {
     @Override
     public int compareTo(Entry another) {
         return -(int) (utcDate - another.utcDate);
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

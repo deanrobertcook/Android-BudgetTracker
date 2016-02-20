@@ -1,6 +1,8 @@
 package org.theronin.expensetracker.pages.entries.insert;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
@@ -163,7 +165,17 @@ public class CategorySelectActivity extends InjectedActivity implements
     }
 
     @Override
-    public void onDeleteClicked(String categoryName) {
-        Timber.v("onDeleteClicked %s", categoryName);
+    public void onDeleteClicked(final String categoryName) {
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.category_delete_dialog__title, categoryName))
+                .setMessage(R.string.category_delete_dialog__message)
+                .setPositiveButton(R.string.category_delete_dialog__positive_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        presenter.onCategoryDeleted(categoryName);
+                    }
+                })
+                .setNegativeButton(R.string.category_delete_dialog__negative_button, null)
+                .show();
     }
 }

@@ -5,12 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.theronin.expensetracker.data.Contract.CategoryTable;
 import org.theronin.expensetracker.data.Contract.CategoryView;
 import org.theronin.expensetracker.model.Category;
 
-import java.util.Collection;
 import java.util.List;
 
 import timber.log.Timber;
@@ -76,10 +74,7 @@ public class DataSourceCategory extends AbsDataSource<Category> {
 
     @Override
     protected int updateOperation(SQLiteDatabase db, Category category) {
-        if (listener == null) {
-            throw new IllegalStateException("The Category DataSource needs to inform other data sources on updates");
-        }
-
+        assertListenerNotNull();
         ContentValues values = getContentValues(category);
 
         int affected = db.update(CategoryTable.TABLE_NAME,
@@ -95,8 +90,23 @@ public class DataSourceCategory extends AbsDataSource<Category> {
     }
 
     @Override
-    protected int deleteOperation(SQLiteDatabase sb, Collection<Category> entities) {
-        throw new NotImplementedException("Can't yet delete Categories");
+    protected int deleteOperation(SQLiteDatabase db, List<Category> entities) {
+        assertListenerNotNull();
+        if (entities.size() > 1) {
+            throw new IllegalArgumentException("Bulk deletion not supported by category data source");
+        }
+
+        listener.beforeEntityDeleted(entities.get(0));
+
+        return db.delete(CategoryTable.TABLE_NAME,
+                CategoryTable._ID  + " = ?",
+                new String[] {Long.toString(entities.get(0).getId())});
+    }
+
+    private void assertListenerNotNull() {
+        if (listener == null) {
+            throw new IllegalStateException("The Category DataSource needs to inform other data sources on updates");
+        }
     }
 
     @Override

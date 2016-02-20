@@ -3,9 +3,11 @@ package org.theronin.expensetracker.data.loader;
 import android.content.Context;
 
 import org.theronin.expensetracker.dagger.InjectedComponent;
+import org.theronin.expensetracker.data.Contract.CategoryView;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Entry;
+import org.theronin.expensetracker.model.NullCategory;
 
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +29,8 @@ public class CategoryLoader extends DataLoader<Category> implements AbsDataSourc
 
     @Override
     public List<Category> loadInBackground() {
-        List<Category> categories = categoryDataSource.query();
+        List<Category> categories = categoryDataSource.query(
+                CategoryView.COL_CATEGORY_NAME + " != ?", new String[] {NullCategory.NAME}, null);
         if (!calculateTotals) {
             return categories;
         } else {
@@ -46,7 +49,7 @@ public class CategoryLoader extends DataLoader<Category> implements AbsDataSourc
             Iterator<Entry> entryIterator = allEntries.iterator();
             while (entryIterator.hasNext()) {
                 Entry entry = entryIterator.next();
-                if (category.getName().equals(entry.category.getName())) {
+                if (category.getName().equals(entry.getCategory().getName())) {
                     entryIterator.remove();
                     if (entry.getHomeAmount() == -1) {
                         //TODO could have a more elegant way of handling missing entry rate data

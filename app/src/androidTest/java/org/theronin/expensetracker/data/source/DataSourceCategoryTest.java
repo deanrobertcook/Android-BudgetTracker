@@ -8,6 +8,7 @@ import org.theronin.expensetracker.data.backend.entry.SyncState;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
+import org.theronin.expensetracker.model.NullCategory;
 import org.theronin.expensetracker.testutils.InMemoryDataSource;
 
 import java.util.Arrays;
@@ -127,7 +128,43 @@ public class DataSourceCategoryTest {
         List<Entry> entries = entryAbsDataSource.query();
         for (Entry entry : entries) {
             assertEquals(SyncState.UPDATED, entry.getSyncState());
-            assertEquals(newName, entry.category.getName());
+            assertEquals(newName, entry.getCategory().getName());
+        }
+    }
+
+    @Test
+    @SmallTest
+    public void deleteCategoryRemovesAllEntriesAndNotifiesEntryDataSource() throws InterruptedException {
+        String categoryName = "test1";
+        //add a few entries
+        entryAbsDataSource.bulkInsert(Arrays.asList(
+                new Entry("abc", SyncState.SYNCED, 0, 0, new Category(categoryName), new Currency("AUD")),
+                new Entry("def", SyncState.SYNCED, 0, 0, new Category(categoryName), new Currency("AUD"))
+        ));
+
+        //get the automatically created category
+        Category category = categoryAbsDataSource.query().get(0);
+
+        //register observer to entry datasource
+        final CountDownLatch latch = new CountDownLatch(1);
+        entryAbsDataSource.registerObserver(new AbsDataSource.Observer() {
+            @Override
+            public void onDataSourceChanged() {
+                latch.countDown();
+            }
+        });
+
+        //delete category:
+        assertTrue(categoryAbsDataSource.delete(category));
+
+        latch.await(LATCH_WAIT, TimeUnit.MILLISECONDS);
+        assertEquals("Observer was not notified", 0, latch.getCount());
+
+        //check that the entries now have no category name, and that they are MARKED_AS_DELETED
+        List<Entry> entries = entryAbsDataSource.query();
+        for (Entry entry : entries) {
+            assertEquals(SyncState.MARKED_AS_DELETED, entry.getSyncState());
+            assertEquals(NullCategory.NAME, entry.getCategory().getName());
         }
     }
 }

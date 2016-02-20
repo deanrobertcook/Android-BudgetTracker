@@ -12,6 +12,7 @@ import org.theronin.expensetracker.data.backend.entry.SyncState;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
+import org.theronin.expensetracker.model.NullCategory;
 
 import java.util.Collection;
 import java.util.List;
@@ -102,15 +103,15 @@ public class DataSourceEntry extends AbsDataSource<Entry> implements
     }
 
     @Override
-    protected int deleteOperation(SQLiteDatabase sb, Collection<Entry> entities) {
-        int count = sb.delete(
+    protected int deleteOperation(SQLiteDatabase db, List<Entry> entities) {
+        int count = db.delete(
                 EntryTable.TABLE_NAME,
                 EntryTable._ID + " IN (" + createEntryIdsInClause(entities) + ")",
                 null);
 
         if (count == 0) {
         //delete failed because the entities have no assigned local ids, use globalIds instead
-            count = sb.delete(
+            count = db.delete(
                     EntryTable.TABLE_NAME,
                     EntryTable.COL_GLOBAL_ID + " IN (" + createEntryGlobalIdsInClause(entities) + ")",
                     null);
@@ -202,8 +203,8 @@ public class DataSourceEntry extends AbsDataSource<Entry> implements
         values.put(EntryTable.COL_DATE, entry.utcDate);
         values.put(EntryTable.COL_AMOUNT, entry.amount);
 
-        values.put(EntryTable.COL_CATEGORY_ID, entry.category.getId());
-        values.put(EntryView.COL_CATEGORY_NAME, entry.category.getName());
+        values.put(EntryTable.COL_CATEGORY_ID, entry.getCategory().getId());
+        values.put(EntryView.COL_CATEGORY_NAME, entry.getCategory().getName());
 
         values.put(EntryTable.COL_CURRENCY_ID, entry.currency.getId());
         values.put(EntryView.COL_CURRENCY_CODE, entry.currency.code);
@@ -212,13 +213,25 @@ public class DataSourceEntry extends AbsDataSource<Entry> implements
 
     @Override
     public void onEntityUpdated(Category category) {
-        List<Entry> affectedEntries = query(EntryView.COL_CATEGORY_NAME + " = ?",
-                new String[] {category.getName()}, null);
-
+        List<Entry> affectedEntries = getEntriesFromCategory(category);
         for (Entry entry : affectedEntries) {
             entry.setSyncState(SyncState.UPDATED);
         }
-
         bulkUpdate(affectedEntries);
+    }
+
+    @Override
+    public void beforeEntityDeleted(Category category) {
+        List<Entry> affectedEntries = getEntriesFromCategory(category);
+        for (Entry entry : affectedEntries) {
+            entry.setSyncState(SyncState.MARKED_AS_DELETED);
+            entry.setCategory(new NullCategory());
+        }
+        bulkUpdate(affectedEntries);
+    }
+
+    private List<Entry> getEntriesFromCategory(Category category) {
+        return query(EntryView.COL_CATEGORY_NAME + " = ?",
+                new String[] {category.getName()}, null);
     }
 }
