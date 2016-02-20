@@ -31,7 +31,7 @@ import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_GLOBAL_I
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_ID;
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_SYNC_STATUS;
 
-public class DataSourceEntry extends AbsDataSource<Entry> {
+public class DataSourceEntry extends AbsDataSource<Entry> implements AbsDataSource.Observer {
 
     AbsDataSource<Category> categoryAbsDataSource;
     AbsDataSource<Currency> currencyAbsDataSource;
@@ -42,6 +42,7 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
                            AbsDataSource<Currency> currencyAbsDataSource) {
         super(context, dbHelper);
         this.categoryAbsDataSource = categoryAbsDataSource;
+        this.categoryAbsDataSource.registerObserver(this);
         this.currencyAbsDataSource = currencyAbsDataSource;
         Timber.d("Instantiating DataSourceEntry");
     }
@@ -103,27 +104,27 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
     protected int deleteOperation(SQLiteDatabase sb, Collection<Entry> entities) {
         int count = sb.delete(
                 EntryTable.TABLE_NAME,
-                EntryTable._ID + " IN (" + createEntityIdsInClause(entities) + ")",
+                EntryTable._ID + " IN (" + createEntryIdsInClause(entities) + ")",
                 null);
 
         if (count == 0) {
         //delete failed because the entities have no assigned local ids, use globalIds instead
             count = sb.delete(
                     EntryTable.TABLE_NAME,
-                    EntryTable.COL_GLOBAL_ID + " IN (" + createEntityGlobalIdsInClause(entities) + ")",
+                    EntryTable.COL_GLOBAL_ID + " IN (" + createEntryGlobalIdsInClause(entities) + ")",
                     null);
         }
 
         return count;
     }
 
-    protected String createEntityIdsInClause(Collection<Entry> entities) {
+    protected String createEntryIdsInClause(Collection<Entry> entries) {
         StringBuilder sb = new StringBuilder();
         int i = 0;
-        for (Entry entity : entities) {
-            checkEntityDeleted(entity);
+        for (Entry entity : entries) {
+            checkEntryDeleted(entity);
             sb.append(entity.getId());
-            if (i != entities.size() - 1) {
+            if (i != entries.size() - 1) {
                 sb.append(", ");
             }
             i++;
@@ -131,13 +132,13 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
         return sb.toString();
     }
 
-    protected String createEntityGlobalIdsInClause(Collection<Entry> entities) {
+    protected String createEntryGlobalIdsInClause(Collection<Entry> entries) {
         StringBuilder sb = new StringBuilder();
         int i = 0;
-        for (Entry entity : entities) {
-            checkEntityDeleted(entity);
+        for (Entry entity : entries) {
+            checkEntryDeleted(entity);
             sb.append(String.format("'%s'", entity.getGlobalId()));
-            if (i != entities.size() - 1) {
+            if (i != entries.size() - 1) {
                 sb.append(", ");
             }
             i++;
@@ -145,9 +146,9 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
         return sb.toString();
     }
 
-    public void checkEntityDeleted(Entry entity) {
-        if (entity.getSyncState() != SyncState.DELETE_SYNCED) {
-            throw new IllegalStateException("An entity needs to be deleted on the backend (DELETE_SYNCED) before it can" +
+    public void checkEntryDeleted(Entry entry) {
+        if (entry.getSyncState() != SyncState.DELETE_SYNCED) {
+            throw new IllegalStateException("An entry needs to be deleted on the backend (DELETE_SYNCED) before it can" +
                     " be removed from the local database");
         }
     }
@@ -201,10 +202,15 @@ public class DataSourceEntry extends AbsDataSource<Entry> {
         values.put(EntryTable.COL_AMOUNT, entry.amount);
 
         values.put(EntryTable.COL_CATEGORY_ID, entry.category.getId());
-        values.put(EntryView.COL_CATEGORY_NAME, entry.category.name);
+        values.put(EntryView.COL_CATEGORY_NAME, entry.category.getName());
 
         values.put(EntryTable.COL_CURRENCY_ID, entry.currency.getId());
         values.put(EntryView.COL_CURRENCY_CODE, entry.currency.code);
         return values;
+    }
+
+    @Override
+    public void onDataSourceChanged() {
+        setDataInValid();
     }
 }

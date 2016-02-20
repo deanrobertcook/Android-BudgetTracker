@@ -54,7 +54,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
         vH.totalDisplay.setCurrency(homeCurrency);
         vH.totalDisplay.setAmount(category.getTotal());
-        vH.nameTextView.setText(WordUtils.capitalize(category.name));
+        vH.nameTextView.setText(WordUtils.capitalize(category.getName()));
 
         vH.dateSinceTextView.setText(String.format(context.getString(R.string.date_since), DateUtils.getDisplayFormattedDate(category.utcFirstEntryDate)));
     }

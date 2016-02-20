@@ -93,7 +93,7 @@ public class ParseEntryRemoteSync implements EntryRemoteSync {
             object = new ParseObject(ENTRY_CLASS_NAME);
         }
         object.put(ENTRY_CLASS_COL_AMOUNT, entry.amount);
-        object.put(ENTRY_CLASS_COL_CATEGORY, entry.category.name);
+        object.put(ENTRY_CLASS_COL_CATEGORY, entry.category.getName());
         object.put(ENTRY_CLASS_COL_CURRENCY, entry.currency.code);
         object.put(ENTRY_CLASS_COL_DATE, entry.utcDate);
 

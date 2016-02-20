@@ -42,7 +42,7 @@ public class InsertRowViewHolder implements View.OnClickListener {
 
     public void setCategory(Category category) {
         this.category = category;
-        categorySelectorTextView.setText(WordUtils.capitalize(category.name));
+        categorySelectorTextView.setText(WordUtils.capitalize(category.getName()));
     }
 
     public Category getCategory() {

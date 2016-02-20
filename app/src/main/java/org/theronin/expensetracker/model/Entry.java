@@ -68,7 +68,7 @@ public class Entry extends Entity implements Comparable<Entry> {
                 globalId,
                 syncState,
                 DateUtils.getStorageFormattedDate(utcDate),
-                category == null ? null : category.name,
+                category == null ? null : category.getName(),
                 amount,
                 currency == null ? null : currency.code
         );

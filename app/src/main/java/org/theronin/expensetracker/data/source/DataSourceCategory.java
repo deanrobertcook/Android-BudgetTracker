@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.theronin.expensetracker.data.Contract.CategoryTable;
 import org.theronin.expensetracker.data.Contract.CategoryView;
 import org.theronin.expensetracker.model.Category;
 
@@ -16,7 +17,6 @@ import timber.log.Timber;
 
 import static org.theronin.expensetracker.data.Contract.CategoryTable.COL_NAME;
 import static org.theronin.expensetracker.data.Contract.CategoryTable.TABLE_NAME;
-import static org.theronin.expensetracker.data.Contract.CategoryView.COL_CATEGORY_NAME;
 import static org.theronin.expensetracker.data.Contract.CategoryView.INDEX_CATEGORY_NAME;
 import static org.theronin.expensetracker.data.Contract.CategoryView.INDEX_ENTRY_FREQUENCY;
 import static org.theronin.expensetracker.data.Contract.CategoryView.INDEX_FIRST_ENTRY_DATE;
@@ -60,10 +60,10 @@ public class DataSourceCategory extends AbsDataSource<Category> {
     }
 
     @Override
-    protected List<Category> searchForIdFromEntity(Category entity) {
+    protected List<Category> searchForIdFromEntity(Category category) {
         return query(
                 COL_NAME + " = ?",
-                new String[]{entity.name},
+                new String[]{category.getName()},
                 null
         );
     }
@@ -75,19 +75,26 @@ public class DataSourceCategory extends AbsDataSource<Category> {
     }
 
     @Override
-    protected ContentValues getContentValues(Category category) {
-        ContentValues values = new ContentValues();
-        values.put(COL_CATEGORY_NAME, category.name);
-        return values;
-    }
-
-    @Override
-    protected int updateOperation(SQLiteDatabase db, Category entity) {
-        throw new NotImplementedException("Category update method not yet implemented");
+    protected int updateOperation(SQLiteDatabase db, Category category) {
+        ContentValues values = getContentValues(category);
+        return db.update(CategoryTable.TABLE_NAME,
+                values,
+                CategoryTable._ID + " = ?",
+                new String[]{Long.toString(category.getId())});
     }
 
     @Override
     protected int deleteOperation(SQLiteDatabase sb, Collection<Category> entities) {
         throw new NotImplementedException("Can't yet delete Categories");
+    }
+
+    @Override
+    protected ContentValues getContentValues(Category category) {
+        ContentValues values = new ContentValues();
+        if (category.getId() > -1) {
+            values.put(CategoryTable._ID, category.getId());
+        }
+        values.put(CategoryTable.COL_NAME, category.getName());
+        return values;
     }
 }

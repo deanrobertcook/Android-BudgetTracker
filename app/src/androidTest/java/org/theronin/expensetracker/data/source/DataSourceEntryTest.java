@@ -19,7 +19,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static junit.framework.Assert.assertEquals;
-import static org.theronin.expensetracker.testutils.Constants.DEFAULT_LATCH_WAIT;
+import static org.theronin.expensetracker.testutils.Constants.LATCH_WAIT;
 
 @RunWith(AndroidJUnit4.class)
 public class DataSourceEntryTest {
@@ -46,7 +46,7 @@ public class DataSourceEntryTest {
         entryAbsDataSource.registerObserver(observer);
         entryAbsDataSource.delete(insertedEntry);
 
-        callbackLatch.await(DEFAULT_LATCH_WAIT, TimeUnit.MILLISECONDS);
+        callbackLatch.await(LATCH_WAIT, TimeUnit.MILLISECONDS);
         assertEquals("Observer was not notified", 0, callbackLatch.getCount());
     }
 

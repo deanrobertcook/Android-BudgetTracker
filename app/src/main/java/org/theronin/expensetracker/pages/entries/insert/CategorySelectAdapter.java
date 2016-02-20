@@ -134,7 +134,7 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
             }
         });
 
-        String text = WordUtils.capitalize(category.name);
+        String text = WordUtils.capitalize(category.getName());
         if (BuildConfig.DEBUG) {
             text += String.format(" (%d)", category.frequency);
         }

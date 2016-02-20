@@ -78,7 +78,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
         setCurrentAmount(vH, entry);
 
-        vH.categoryTextView.setText(WordUtils.capitalize(entry.category.name));
+        vH.categoryTextView.setText(WordUtils.capitalize(entry.category.getName()));
 
         setHomeAmount(vH, entry);
 

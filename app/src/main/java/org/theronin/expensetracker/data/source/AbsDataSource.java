@@ -65,7 +65,7 @@ public abstract class AbsDataSource<T extends Entity> {
      * Insert a single Entity into the local database. If the insertion is successful, then the newly
      * created ID is assigned to the entity and that same entity is returned, and also any observers
      * on this DataSource are notified. If the transaction is not successful, then nothing happens
-     * (including not observing notification)
+     * (including not notifying any observers)
      * @param entity the newly created entity to insert into the database.
      * @return the same entity with it's new local DB ID if it was inserted successfully.
      */
@@ -136,8 +136,10 @@ public abstract class AbsDataSource<T extends Entity> {
     public boolean update(T entity) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         int affected = updateOperation(db, entity);
-        setDataInValid();
-        return affected != 0;
+        if (affected > 0) {
+            setDataInValid();
+        }
+        return affected > 0;
     }
 
     protected abstract int updateOperation(SQLiteDatabase db, T entity);

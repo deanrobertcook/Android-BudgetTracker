@@ -3,13 +3,14 @@ package org.theronin.expensetracker.model;
 import org.theronin.expensetracker.utils.DateUtils;
 
 public class Category extends Entity {
-    public final String name;
+
+    private String name;
+
     public final long utcFirstEntryDate;
     public final long frequency;
-
     private long total = -1;
-    private int missingEntries = 1;
 
+    private int missingEntries = 1;
     public Category(String name) {
         //TODO check what a good default date is.
         this(name, 0);
@@ -32,6 +33,14 @@ public class Category extends Entity {
         this.name = name;
         this.utcFirstEntryDate = utcFirstEntryDate;
         this.frequency = frequency;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

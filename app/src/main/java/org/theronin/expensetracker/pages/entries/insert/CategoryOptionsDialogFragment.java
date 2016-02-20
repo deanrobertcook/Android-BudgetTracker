@@ -23,7 +23,7 @@ public class CategoryOptionsDialogFragment extends DialogFragment implements Vie
     public static CategoryOptionsDialogFragment newInstance(Category category) {
         CategoryOptionsDialogFragment fragment = new CategoryOptionsDialogFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_CATEGORY_NAME, category.name);
+        args.putString(ARG_CATEGORY_NAME, category.getName());
         fragment.setArguments(args);
         return fragment;
     }
