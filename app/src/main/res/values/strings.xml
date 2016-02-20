@@ -53,9 +53,11 @@
 
     <string name="date_since">Since %s</string>
 
-    <string name="create_category_dialog__title">New Category</string>
-    <string name="create_category_dialog__positive_button">Create</string>
-    <string name="create_category_dialog__hint">Category Name</string>
+    <string name="category_name_dialog__title_new">New Category</string>
+    <string name="category_name_dialog__title_edit">Edit Category Name</string>
+    <string name="category_name_dialog__positive_button_new">Create</string>
+    <string name="category_name_dialog__positive_button_edit">Update</string>
+    <string name="category_name_dialog__hint">Category Name</string>
 
     <string name="category_options_dialog__title">Category: %s</string>
     <string name="category_options_edit_name">Edit name</string>
@@ -63,8 +65,9 @@
     <string name="category_options_delete">Delete category</string>
 
     <string name="empty_category_name_error">Please enter a name for the new category.</string>
-    <string name="duplicate_category_error">This category has already been created.</string>
+    <string name="duplicate_category_error">The category %s already exists.</string>
     <string name="category_creation_success">Category successfully added.</string>
+    <string name="category_update_success">Category successfully updated.</string>
     <string name="delete_selection_dialog_title">Delete Selection?</string>
     <string name="delete_selection_dialog_positive_button">DELETE</string>
     <string name="delete_selection_dialog_negative_button">CANCEL</string>

@@ -4,6 +4,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.theronin.expensetracker.data.backend.entry.SyncState;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
@@ -50,13 +51,25 @@ public class DataSourceCategoryTest {
 
     @Test
     @SmallTest
-    public void editCategoryName() {
+    public void editCategoryNameWorksAndNotifiesObservers() throws InterruptedException {
         String originalName = "test";
         String newName = "test2";
 
         Category category = categoryAbsDataSource.insert(new Category(originalName));
         category.setName(newName);
+
+        final CountDownLatch callbackLatch = new CountDownLatch(1);
+        categoryAbsDataSource.registerObserver(new AbsDataSource.Observer() {
+            @Override
+            public void onDataSourceChanged() {
+                callbackLatch.countDown();
+            }
+        });
+
         categoryAbsDataSource.update(category);
+
+        callbackLatch.await(LATCH_WAIT, TimeUnit.MILLISECONDS);
+        assertEquals("Observer was not notified", 0, callbackLatch.getCount());
 
         List<Category> savedCategories = categoryAbsDataSource.query();
 
@@ -87,8 +100,8 @@ public class DataSourceCategoryTest {
         String newName = "test2";
         //add a few entries
         entryAbsDataSource.bulkInsert(Arrays.asList(
-                new Entry(0, 0, new Category(categoryName), new Currency("AUD")),
-                new Entry(0, 0, new Category(categoryName), new Currency("AUD"))
+                new Entry("abc", SyncState.SYNCED, 0, 0, new Category(categoryName), new Currency("AUD")),
+                new Entry("def", SyncState.SYNCED, 0, 0, new Category(categoryName), new Currency("AUD"))
         ));
 
         //get the automatically created category
@@ -110,11 +123,11 @@ public class DataSourceCategoryTest {
         latch.await(LATCH_WAIT, TimeUnit.MILLISECONDS);
         assertEquals("Observer was not notified", 0, latch.getCount());
 
-        //check that the entries now have the new category name
+        //check that the entries now have the new category name, and that they are UPDATED
         List<Entry> entries = entryAbsDataSource.query();
         for (Entry entry : entries) {
+            assertEquals(SyncState.UPDATED, entry.getSyncState());
             assertEquals(newName, entry.category.getName());
         }
-
     }
 }

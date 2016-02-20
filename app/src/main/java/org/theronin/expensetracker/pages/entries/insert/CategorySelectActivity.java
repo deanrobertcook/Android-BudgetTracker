@@ -17,6 +17,8 @@ import org.theronin.expensetracker.dagger.InjectedActivity;
 import org.theronin.expensetracker.data.loader.CategoryLoader;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Category;
+import org.theronin.expensetracker.pages.entries.insert.dialogs.CategoryNameEditFragment;
+import org.theronin.expensetracker.pages.entries.insert.dialogs.CategoryOptionsDialogFragment;
 
 import java.util.List;
 
@@ -27,7 +29,7 @@ import timber.log.Timber;
 public class CategorySelectActivity extends InjectedActivity implements
         LoaderManager.LoaderCallbacks<List<Category>>,
         CategorySelectPresenter.CategorySelectUI,
-        CategoryCreateDialogFragment.Container,
+        CategoryNameEditFragment.Container,
         CategoryOptionsDialogFragment.Container,
         View.OnClickListener {
 
@@ -90,13 +92,18 @@ public class CategorySelectActivity extends InjectedActivity implements
     }
 
     @Override
-    public void showCategoryDuplicateError() {
-        Toast.makeText(this, R.string.duplicate_category_error, Toast.LENGTH_SHORT).show();
+    public void showCategoryDuplicateError(String categoryName) {
+        Toast.makeText(this, getString(R.string.duplicate_category_error, categoryName), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void showCategoryCreationSuccess() {
         Toast.makeText(this, R.string.category_creation_success, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showCategoryUpdateSuccess() {
+        Toast.makeText(this, R.string.category_update_success, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -117,7 +124,7 @@ public class CategorySelectActivity extends InjectedActivity implements
 
     @Override
     public void displayCategoryCreateDialog() {
-        new CategoryCreateDialogFragment().show(getFragmentManager(), CategoryCreateDialogFragment.TAG);
+        CategoryNameEditFragment.newInstance(null).show(getFragmentManager(), CategoryNameEditFragment.TAG);
     }
 
     @Override
@@ -127,8 +134,8 @@ public class CategorySelectActivity extends InjectedActivity implements
     }
 
     @Override
-    public void onCategoryCreated(String categoryName) {
-        presenter.onCategoryCreated(categoryName);
+    public void onPositiveButtonClicked(String oldCategoryName, String newCategoryName) {
+        presenter.onNameChange(oldCategoryName, newCategoryName);
     }
 
     @Override
@@ -147,7 +154,7 @@ public class CategorySelectActivity extends InjectedActivity implements
 
     @Override
     public void onEditClicked(String categoryName) {
-        Timber.v("onEditClicked %s", categoryName);
+        CategoryNameEditFragment.newInstance(categoryName).show(getFragmentManager(), CategoryNameEditFragment.TAG);
     }
 
     @Override

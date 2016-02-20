@@ -76,11 +76,22 @@ public class DataSourceCategory extends AbsDataSource<Category> {
 
     @Override
     protected int updateOperation(SQLiteDatabase db, Category category) {
+        if (listener == null) {
+            throw new IllegalStateException("The Category DataSource needs to inform other data sources on updates");
+        }
+
         ContentValues values = getContentValues(category);
-        return db.update(CategoryTable.TABLE_NAME,
+
+        int affected = db.update(CategoryTable.TABLE_NAME,
                 values,
                 CategoryTable._ID + " = ?",
                 new String[]{Long.toString(category.getId())});
+
+        if (affected != 0) {
+            listener.onEntityUpdated(category);
+        }
+
+        return affected;
     }
 
     @Override

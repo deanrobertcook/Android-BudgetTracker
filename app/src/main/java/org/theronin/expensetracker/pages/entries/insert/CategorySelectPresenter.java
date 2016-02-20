@@ -1,8 +1,11 @@
 package org.theronin.expensetracker.pages.entries.insert;
 
+import org.theronin.expensetracker.data.Contract.CategoryView;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.pages.entries.insert.CategorySelectAdapter.CategorySelectedListener;
+
+import java.util.List;
 
 public class CategorySelectPresenter implements CategorySelectedListener {
 
@@ -16,18 +19,49 @@ public class CategorySelectPresenter implements CategorySelectedListener {
         this.categorySelectUI = categorySelectUI;
     }
 
-    public void onCategoryCreated(String categoryName) {
-        if (categoryName != null && categoryName.length() > 0) {
-            String sanitisedCategoryName = sanitiseCategoryName(categoryName);
-            long id = dataSourceCategory.insert(new Category(sanitisedCategoryName)).getId();
-            if (id == -1) {
-                categorySelectUI.showCategoryDuplicateError();
-            } else {
-                categorySelectUI.showCategoryCreationSuccess();
-                categorySelectUI.returnCategoryResult(sanitisedCategoryName);
-            }
-        } else {
+    public void onNameChange(String oldCategoryName, String newCategoryName) {
+        if (newCategoryName == null || newCategoryName.length() == 0) {
             categorySelectUI.showCategoryEmptyCategoryNameError();
+            return;
+        }
+        if (oldCategoryName == null) {
+            onCategoryCreated(newCategoryName);
+        } else {
+            onCategoryUpdated(oldCategoryName, newCategoryName);
+        }
+    }
+
+    private void onCategoryCreated(String categoryName) {
+        String sanitisedCategoryName = sanitiseCategoryName(categoryName);
+        long id = dataSourceCategory.insert(new Category(sanitisedCategoryName)).getId();
+
+        if (id == -1) {
+            categorySelectUI.showCategoryDuplicateError(categoryName);
+            return;
+        }
+
+        categorySelectUI.showCategoryCreationSuccess();
+        categorySelectUI.returnCategoryResult(sanitisedCategoryName);
+    }
+
+    private void onCategoryUpdated(String oldCategoryName, String newCategoryName) {
+        String sanitisedOldCategoryName = sanitiseCategoryName(oldCategoryName);
+        String sanitisedNewCategoryName = sanitiseCategoryName(newCategoryName);
+
+        List<Category> categories = dataSourceCategory.query(CategoryView.COL_CATEGORY_NAME + " = ?",
+                new String[] {sanitisedOldCategoryName}, null);
+
+        if (categories.size() != 1) {
+            throw new IllegalStateException("The requested old category should exist, and there should only be 1");
+        }
+
+        Category category = categories.get(0);
+
+        category.setName(sanitisedNewCategoryName);
+        if (!dataSourceCategory.update(category)) {
+            categorySelectUI.showCategoryDuplicateError(newCategoryName);
+        } else {
+            categorySelectUI.showCategoryUpdateSuccess();
         }
     }
 
@@ -56,9 +90,11 @@ public class CategorySelectPresenter implements CategorySelectedListener {
     }
 
     public interface CategorySelectUI {
-        void showCategoryDuplicateError();
+        void showCategoryDuplicateError(String categoryName);
 
         void showCategoryCreationSuccess();
+
+        void showCategoryUpdateSuccess();
 
         void showCategoryEmptyCategoryNameError();
 

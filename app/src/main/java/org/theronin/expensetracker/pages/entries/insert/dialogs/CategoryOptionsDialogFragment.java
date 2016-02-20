@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.pages.entries.insert;
+package org.theronin.expensetracker.pages.entries.insert.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -67,6 +67,7 @@ public class CategoryOptionsDialogFragment extends DialogFragment implements Vie
                 container.onDeleteClicked(categoryName);
                 break;
         }
+        dismiss();
     }
 
     public interface Container {

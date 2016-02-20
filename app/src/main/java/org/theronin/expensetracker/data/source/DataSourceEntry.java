@@ -31,7 +31,8 @@ import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_GLOBAL_I
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_ID;
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_SYNC_STATUS;
 
-public class DataSourceEntry extends AbsDataSource<Entry> implements AbsDataSource.Observer {
+public class DataSourceEntry extends AbsDataSource<Entry> implements
+        AbsDataSource.UpdateListener<Category> {
 
     AbsDataSource<Category> categoryAbsDataSource;
     AbsDataSource<Currency> currencyAbsDataSource;
@@ -42,7 +43,7 @@ public class DataSourceEntry extends AbsDataSource<Entry> implements AbsDataSour
                            AbsDataSource<Currency> currencyAbsDataSource) {
         super(context, dbHelper);
         this.categoryAbsDataSource = categoryAbsDataSource;
-        this.categoryAbsDataSource.registerObserver(this);
+        this.categoryAbsDataSource.setListener(this);
         this.currencyAbsDataSource = currencyAbsDataSource;
         Timber.d("Instantiating DataSourceEntry");
     }
@@ -210,7 +211,14 @@ public class DataSourceEntry extends AbsDataSource<Entry> implements AbsDataSour
     }
 
     @Override
-    public void onDataSourceChanged() {
-        setDataInValid();
+    public void onEntityUpdated(Category category) {
+        List<Entry> affectedEntries = query(EntryView.COL_CATEGORY_NAME + " = ?",
+                new String[] {category.getName()}, null);
+
+        for (Entry entry : affectedEntries) {
+            entry.setSyncState(SyncState.UPDATED);
+        }
+
+        bulkUpdate(affectedEntries);
     }
 }

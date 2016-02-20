@@ -44,6 +44,7 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
 
         initialiseSortingBlocks();
         sortCategories(comparators, sortSizes);
+        notifyDataSetChanged();
     }
 
     private void initialiseSortingBlocks() {

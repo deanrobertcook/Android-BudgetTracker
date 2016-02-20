@@ -24,7 +24,16 @@ public abstract class AbsDataSource<T extends Entity> {
     protected Context context;
     private DbHelper dbHelper;
 
+    /**
+     * Useful for when another datasource needs to know about changes in this datasource.
+     */
+    protected UpdateListener<T> listener;
+
     private Set<Observer> observers;
+
+    protected void setListener(UpdateListener<T> listener) {
+        this.listener = listener;
+    }
 
     public AbsDataSource(Context context, DbHelper dbHelper) {
         this.context = context;
@@ -210,4 +219,12 @@ public abstract class AbsDataSource<T extends Entity> {
     }
 
     protected abstract T fromCursor(Cursor cursor);
+
+    /**
+     * An interface for other data sources only
+     * TODO this feels a bit hacky. It might be better to think of a BUS system instead
+     */
+    protected interface UpdateListener<T> {
+        void onEntityUpdated(T category);
+    }
 }
