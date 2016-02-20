@@ -1,4 +1,4 @@
-package org.theronin.expensetracker.pages.categories;
+package org.theronin.expensetracker.pages.entries.insert;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,9 +12,9 @@ import android.widget.EditText;
 
 import org.theronin.expensetracker.R;
 
-public class CategoryDialogFragment extends DialogFragment {
+public class CategoryCreateDialogFragment extends DialogFragment {
 
-    public static final String TAG = CategoryDialogFragment.class.getName();
+    public static final String TAG = CategoryCreateDialogFragment.class.getName();
 
     private Container container;
 

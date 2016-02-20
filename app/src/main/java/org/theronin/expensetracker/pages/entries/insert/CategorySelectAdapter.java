@@ -4,24 +4,23 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import org.apache.commons.lang.WordUtils;
+import org.theronin.expensetracker.BuildConfig;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.comparators.CategoryAlphabeticalComparator;
 import org.theronin.expensetracker.comparators.CategoryFrequencyComparator;
 import org.theronin.expensetracker.model.Category;
-import org.theronin.expensetracker.view.SelectCategorySwipeView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import timber.log.Timber;
-
-public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAdapter.ViewHolder> implements SelectCategorySwipeView.Listener {
+public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAdapter.ViewHolder> {
 
     private static final int MIN_CATEGORIES_FOR_FREQUENCY_SORT = 20;
-    private final RecyclerView recyclerView;
 
     private List<Comparator<Category>> comparators;
     private int[] sortSizes;
@@ -32,9 +31,8 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
     private List<Category> categories;
     private CategorySelectedListener listener;
 
-    public CategorySelectAdapter(CategorySelectedListener listener, RecyclerView recyclerView) {
+    public CategorySelectAdapter(CategorySelectedListener listener) {
         categories = new ArrayList<>();
-        this.recyclerView = recyclerView;
         this.listener = listener;
     }
 
@@ -118,10 +116,29 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
 
     @Override
     public void onBindViewHolder(ViewHolder vh, int position) {
+        final Category category = categories.get(position);
+
         vh.setSeparatorVisible(getItemViewType(position) == VIEW_TYPE_WITH_SEPARATOR);
-        vh.swipeView.reset();
-        vh.swipeView.setCategory(categories.get(position));
-        vh.swipeView.setListener(this);
+
+        vh.categoryNameView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onCategorySelected(category);
+            }
+        });
+
+        vh.moreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onMoreButtonSelected(category);
+            }
+        });
+
+        String text = WordUtils.capitalize(category.name);
+        if (BuildConfig.DEBUG) {
+            text += String.format(" (%d)", category.frequency);
+        }
+        vh.categoryNameView.setText(text);
     }
 
     @Override
@@ -129,46 +146,17 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
         return categories.size();
     }
 
-    @Override
-    public void onCategorySelected(Category category) {
-        listener.onCategorySelected(category);
-    }
-
-    @Override
-    public void onEditClicked(Category category) {
-        Timber.v("onEditClicked %s", category.name);
-    }
-
-    @Override
-    public void onMergeClicked(Category category) {
-        Timber.v("onMergeClicked %s", category.name);
-    }
-
-    @Override
-    public void onDeleteClicked(Category category) {
-        Timber.v("onDeleteClicked %s", category.name);
-    }
-
-    @Override
-    public void onOptionsExpanding() {
-        Timber.v("onOptionsExpanding");
-        for (int i = 0; i < recyclerView.getChildCount(); i++) {
-            View child = recyclerView.getChildAt(i);
-            if (child instanceof ViewGroup) {
-                ((SelectCategorySwipeView) child.findViewById(R.id.swipe_view)).closeOptions(false);
-            }
-        }
-    }
-
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public final SelectCategorySwipeView swipeView;
         public final View separator;
+        public final TextView categoryNameView;
+        public final View moreButton;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            this.swipeView = (SelectCategorySwipeView) itemView.findViewById(R.id.swipe_view);
             this.separator = itemView.findViewById(R.id.separator);
+            this.categoryNameView = (TextView) itemView.findViewById(R.id.category_name);
+            this.moreButton = itemView.findViewById(R.id.more);
         }
 
         public void setSeparatorVisible(boolean visible) {
@@ -181,6 +169,8 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
     }
 
     public interface CategorySelectedListener {
-        void onCategorySelected(Category categoryName);
+        void onCategorySelected(Category category);
+
+        void onMoreButtonSelected(Category category);
     }
 }

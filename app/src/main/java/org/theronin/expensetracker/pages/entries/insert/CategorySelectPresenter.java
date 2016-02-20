@@ -31,9 +31,18 @@ public class CategorySelectPresenter implements CategorySelectedListener {
         }
     }
 
+    public void onCreateCategoryButtonSelected() {
+        categorySelectUI.displayCategoryCreateDialog();
+    }
+
     @Override
     public void onCategorySelected(Category category) {
         categorySelectUI.returnCategoryResult(category.name);
+    }
+
+    @Override
+    public void onMoreButtonSelected(Category category) {
+        categorySelectUI.displayCategoryOptionsDialog(category);
     }
 
     private String sanitiseCategoryName(String categoryName) {
@@ -54,5 +63,9 @@ public class CategorySelectPresenter implements CategorySelectedListener {
         void showCategoryEmptyCategoryNameError();
 
         void returnCategoryResult(String categoryName);
+
+        void displayCategoryCreateDialog();
+
+        void displayCategoryOptionsDialog(Category category);
     }
 }

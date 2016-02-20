@@ -5,11 +5,10 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <org.theronin.expensetracker.view.SelectCategorySwipeView
+    <LinearLayout
         android:id="@+id/swipe_view"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_marginRight="-144dp"
         android:orientation="horizontal">
 
 
@@ -24,58 +23,17 @@
             android:paddingLeft="@dimen/material_default_margin"
             android:textSize="16dp"/>
 
-        <LinearLayout
-            android:id="@+id/options_menu"
+        <ImageView
+            android:id="@+id/more"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:background="@drawable/list_item_selector"
+            android:clickable="true"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:src="@drawable/ic_more_vert"/>
 
-            <ImageView
-                android:id="@+id/more"
-                android:layout_width="48dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/list_item_selector"
-                android:clickable="true"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:src="@drawable/ic_more_vert"/>
-
-            <ImageView
-                android:id="@+id/edit"
-                android:layout_width="48dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/list_item_selector"
-                android:clickable="true"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:src="@drawable/ic_edit"/>
-
-
-            <ImageView
-                android:id="@+id/merge"
-                android:layout_width="48dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/list_item_selector"
-                android:clickable="true"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:src="@drawable/ic_merge"/>
-
-            <ImageView
-                android:id="@+id/delete"
-                android:layout_width="48dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/list_item_selector"
-                android:clickable="true"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:src="@drawable/ic_delete_black"/>
-
-
-        </LinearLayout>
-
-
-    </org.theronin.expensetracker.view.SelectCategorySwipeView>
+    </LinearLayout>
 
     <View
         android:id="@+id/separator"
@@ -85,5 +43,6 @@
         android:paddingLeft="@dimen/material_default_margin"
         android:paddingRight="@dimen/material_default_margin"
         android:visibility="gone"/>
+
 </LinearLayout>
 
