@@ -22,6 +22,15 @@ import static org.theronin.expensetracker.data.Contract.CategoryView.INDEX_ID;
 
 public class DataSourceCategory extends AbsDataSource<Category> {
 
+    /**
+     * Useful for when another datasource needs to know about changes in this datasource.
+     */
+    protected UpdateListener listener;
+
+    protected void setListener(UpdateListener listener) {
+        this.listener = listener;
+    }
+
     public DataSourceCategory(Context context, DbHelper dbHelper) {
         super(context, dbHelper);
         Timber.d("Instantiating DataSourceCategory");
@@ -83,7 +92,7 @@ public class DataSourceCategory extends AbsDataSource<Category> {
                 new String[]{Long.toString(category.getId())});
 
         if (affected != 0) {
-            listener.onEntityUpdated(category);
+            listener.onCategoryEdited(category);
         }
 
         return affected;
@@ -96,7 +105,7 @@ public class DataSourceCategory extends AbsDataSource<Category> {
             throw new IllegalArgumentException("Bulk deletion not supported by category data source");
         }
 
-        listener.beforeEntityDeleted(entities.get(0));
+        listener.beforeCategoryDeleted(entities.get(0));
 
         return db.delete(CategoryTable.TABLE_NAME,
                 CategoryTable._ID  + " = ?",
@@ -117,5 +126,27 @@ public class DataSourceCategory extends AbsDataSource<Category> {
         }
         values.put(CategoryTable.COL_NAME, category.getName());
         return values;
+    }
+
+    public void mergeCategories(List<Category> from, Category to) {
+        assertListenerNotNull();
+        listener.beforeCategoryMerged(from, to);
+
+        for (Category category : from) {
+            delete(category);
+        }
+        setDataInValid();
+    }
+
+    /**
+     * An interface for other data sources only
+     * TODO this feels a bit hacky. It might be better to think of a BUS system instead
+     */
+    protected interface UpdateListener {
+        void onCategoryEdited(Category category);
+
+        void beforeCategoryDeleted(Category category);
+
+        void beforeCategoryMerged(List<Category> from, Category to);
     }
 }

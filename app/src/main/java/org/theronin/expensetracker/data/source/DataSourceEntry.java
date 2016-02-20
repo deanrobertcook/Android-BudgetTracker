@@ -14,6 +14,7 @@ import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.NullCategory;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -33,7 +34,7 @@ import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_ID;
 import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_SYNC_STATUS;
 
 public class DataSourceEntry extends AbsDataSource<Entry> implements
-        AbsDataSource.UpdateListener<Category> {
+        DataSourceCategory.UpdateListener {
 
     AbsDataSource<Category> categoryAbsDataSource;
     AbsDataSource<Currency> currencyAbsDataSource;
@@ -44,7 +45,7 @@ public class DataSourceEntry extends AbsDataSource<Entry> implements
                            AbsDataSource<Currency> currencyAbsDataSource) {
         super(context, dbHelper);
         this.categoryAbsDataSource = categoryAbsDataSource;
-        this.categoryAbsDataSource.setListener(this);
+        ((DataSourceCategory) this.categoryAbsDataSource).setListener(this);
         this.currencyAbsDataSource = currencyAbsDataSource;
         Timber.d("Instantiating DataSourceEntry");
     }
@@ -212,7 +213,7 @@ public class DataSourceEntry extends AbsDataSource<Entry> implements
     }
 
     @Override
-    public void onEntityUpdated(Category category) {
+    public void onCategoryEdited(Category category) {
         List<Entry> affectedEntries = getEntriesFromCategory(category);
         for (Entry entry : affectedEntries) {
             entry.setSyncState(SyncState.UPDATED);
@@ -221,11 +222,25 @@ public class DataSourceEntry extends AbsDataSource<Entry> implements
     }
 
     @Override
-    public void beforeEntityDeleted(Category category) {
+    public void beforeCategoryDeleted(Category category) {
         List<Entry> affectedEntries = getEntriesFromCategory(category);
         for (Entry entry : affectedEntries) {
             entry.setSyncState(SyncState.MARKED_AS_DELETED);
             entry.setCategory(new NullCategory());
+        }
+        bulkUpdate(affectedEntries);
+    }
+
+    @Override
+    public void beforeCategoryMerged(List<Category> from, Category to) {
+        List<Entry> affectedEntries = new ArrayList<>();
+        for (Category category : from) {
+            List<Entry> entries = getEntriesFromCategory(category);
+            for (Entry entry : entries) {
+                entry.setSyncState(SyncState.UPDATED);
+                entry.setCategory(to);
+            }
+            affectedEntries.addAll(entries);
         }
         bulkUpdate(affectedEntries);
     }

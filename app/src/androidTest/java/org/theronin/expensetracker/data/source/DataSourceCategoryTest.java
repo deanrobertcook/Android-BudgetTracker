@@ -167,4 +167,56 @@ public class DataSourceCategoryTest {
             assertEquals(NullCategory.NAME, entry.getCategory().getName());
         }
     }
+
+    @Test
+    @SmallTest
+    public void mergeCategoriesUpdatesAllObservers() throws InterruptedException {
+        String categoryName1 = "test1";
+        String categoryName2 = "test2";
+        String categoryName3 = "test3";
+
+        //add a few entries
+        entryAbsDataSource.bulkInsert(Arrays.asList(
+                new Entry("abc", SyncState.SYNCED, 0, 0, new Category(categoryName1), new Currency("AUD")),
+                new Entry("def", SyncState.SYNCED, 0, 0, new Category(categoryName2), new Currency("AUD")),
+                new Entry("ghi", SyncState.SYNCED, 0, 0, new Category(categoryName3), new Currency("AUD"))
+        ));
+
+        //get the categories
+        Category category1 = categoryAbsDataSource.query().get(0);
+        Category category2 = categoryAbsDataSource.query().get(1);
+        Category category3 = categoryAbsDataSource.query().get(2);
+
+        //register observer to both data sources
+        final CountDownLatch latch = new CountDownLatch(2);
+        entryAbsDataSource.registerObserver(new AbsDataSource.Observer() {
+            @Override
+            public void onDataSourceChanged() {
+                latch.countDown();
+            }
+        });
+
+        categoryAbsDataSource.registerObserver(new AbsDataSource.Observer() {
+            @Override
+            public void onDataSourceChanged() {
+                latch.countDown();
+            }
+        });
+
+        //merge categories 1 and 2 into 3:
+        ((DataSourceCategory) categoryAbsDataSource).mergeCategories(
+                Arrays.asList(category1, category2), category3);
+
+        latch.await(LATCH_WAIT, TimeUnit.MILLISECONDS);
+        assertEquals("Observer was not notified", 0, latch.getCount());
+
+        //check that the entries now all have the same category
+        List<Entry> entries = entryAbsDataSource.query();
+        for (Entry entry : entries) {
+            if (entry.getGlobalId().equals("abc") || entry.getGlobalId().equals("def")) {
+                assertEquals(SyncState.UPDATED, entry.getSyncState());
+            }
+            assertEquals(categoryName3, entry.getCategory().getName());
+        }
+    }
 }
