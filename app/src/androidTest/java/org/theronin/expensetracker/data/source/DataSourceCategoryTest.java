@@ -11,6 +11,7 @@ import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.NullCategory;
 import org.theronin.expensetracker.testutils.InMemoryDataSource;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -205,7 +206,7 @@ public class DataSourceCategoryTest {
 
         //merge categories 1 and 2 into 3:
         ((DataSourceCategory) categoryAbsDataSource).mergeCategories(
-                Arrays.asList(category1, category2), category3);
+                new ArrayList<>(Arrays.asList(category1, category2)), category3);
 
         latch.await(LATCH_WAIT, TimeUnit.MILLISECONDS);
         assertEquals("Observer was not notified", 0, latch.getCount());
@@ -217,6 +218,36 @@ public class DataSourceCategoryTest {
                 assertEquals(SyncState.UPDATED, entry.getSyncState());
             }
             assertEquals(categoryName3, entry.getCategory().getName());
+        }
+    }
+
+    @Test
+    @SmallTest
+    public void ensureMergingACategoryOntoItselfDoesNotDeleteIt() {
+        String categoryName = "test1";
+
+        //add a few entries
+        entryAbsDataSource.bulkInsert(Arrays.asList(
+                new Entry("abc", SyncState.SYNCED, 0, 0, new Category(categoryName), new Currency("AUD")),
+                new Entry("def", SyncState.SYNCED, 0, 0, new Category(categoryName), new Currency("AUD"))
+        ));
+
+        //get the categories
+        Category category = categoryAbsDataSource.query().get(0);
+
+        //register observer to both data sources
+
+        //merge category onto itself
+        ((DataSourceCategory) categoryAbsDataSource).mergeCategories(
+                new ArrayList<>(Arrays.asList(category)), category);
+
+        //check that the entries now all have the same category
+        List<Entry> entries = entryAbsDataSource.query();
+        assertEquals(2, entries.size());
+        for (Entry entry : entries) {
+            //nothing should happen to the sync state - no need to waste time/data
+            assertEquals(SyncState.SYNCED, entry.getSyncState());
+            assertEquals(categoryName, entry.getCategory().getName());
         }
     }
 }

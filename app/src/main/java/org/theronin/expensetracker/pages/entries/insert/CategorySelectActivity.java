@@ -5,6 +5,7 @@ import android.app.LoaderManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,8 +27,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import timber.log.Timber;
-
 public class CategorySelectActivity extends InjectedActivity implements
         LoaderManager.LoaderCallbacks<List<Category>>,
         CategorySelectPresenter.CategorySelectUI,
@@ -44,6 +43,9 @@ public class CategorySelectActivity extends InjectedActivity implements
     private CategorySelectAdapter selectAdapter;
     private CategorySelectPresenter presenter;
 
+    private Drawable defaultHomeButtonDrawable;
+    private FloatingActionButton floatingActionButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,16 +54,17 @@ public class CategorySelectActivity extends InjectedActivity implements
         getLoaderManager().initLoader(CATEGORY_LOADER_ID, null, this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tb__toolbar);
-        toolbar.setTitle("Select a Category");
+        toolbar.setTitle(R.string.select_category_dialog_header);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        defaultHomeButtonDrawable = toolbar.getNavigationIcon();
 
-        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab__add_category_button);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab__add_category_button);
         floatingActionButton.setOnClickListener(this);
 
         presenter = new CategorySelectPresenter(dataSourceCategory, this);
-        selectAdapter = new CategorySelectAdapter(presenter);
+        selectAdapter = new CategorySelectAdapter(this, presenter);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view__category_list);
@@ -136,6 +139,43 @@ public class CategorySelectActivity extends InjectedActivity implements
     }
 
     @Override
+    public void setMergeHeaderVisible(String categoryName, boolean visible) {
+        if (visible) {
+            getSupportActionBar().setTitle(getString(R.string.merging_categories, categoryName));
+        } else {
+            getSupportActionBar().setTitle(R.string.select_category_dialog_header);
+        }
+    }
+
+    @Override
+    public void setMergeCancelButtonVisible(boolean visible) {
+        if (visible) {
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear);
+        } else {
+            getSupportActionBar().setHomeAsUpIndicator(defaultHomeButtonDrawable);
+        }
+    }
+
+    @Override
+    public void setCreateButtonVisible(boolean visible) {
+        if (visible) {
+            floatingActionButton.setVisibility(View.VISIBLE);
+        } else {
+            floatingActionButton.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void setMoreOptionsVisible(boolean visible) {
+        selectAdapter.setMoreButtonsVisible(visible);
+    }
+
+    @Override
+    public void setMergingCategoryHighlighted(String categoryName) {
+        selectAdapter.setCategoryHighlighted(categoryName);
+    }
+
+    @Override
     public void onPositiveButtonClicked(String oldCategoryName, String newCategoryName) {
         presenter.onNameChange(oldCategoryName, newCategoryName);
     }
@@ -160,8 +200,18 @@ public class CategorySelectActivity extends InjectedActivity implements
     }
 
     @Override
-    public void onMergeClicked(String categoryName) {
-        Timber.v("onMergeClicked %s", categoryName);
+    public void onMergeClicked(final String categoryName) {
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.category_merge_dialog__title, categoryName))
+                .setMessage(R.string.category_merge_dialog__message)
+                .setPositiveButton(R.string.category_merge_dialog__positive_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        presenter.startMerge(categoryName);
+                    }
+                })
+                .setNegativeButton(R.string.category_merge_dialog__negative_button, null)
+                .show();
     }
 
     @Override

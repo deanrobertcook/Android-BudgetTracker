@@ -1,5 +1,6 @@
 package org.theronin.expensetracker.pages.entries.insert;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import java.util.List;
 public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAdapter.ViewHolder> {
 
     private static final int MIN_CATEGORIES_FOR_FREQUENCY_SORT = 20;
+    private final Context context;
 
     private List<Comparator<Category>> comparators;
     private int[] sortSizes;
@@ -30,8 +32,11 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
 
     private List<Category> categories;
     private CategorySelectedListener listener;
+    private boolean moreButtonsVisible = true;
+    private int selectedPosition = -1;
 
-    public CategorySelectAdapter(CategorySelectedListener listener) {
+    public CategorySelectAdapter(Context context, CategorySelectedListener listener) {
+        this.context = context;
         categories = new ArrayList<>();
         this.listener = listener;
     }
@@ -140,11 +145,34 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
             text += String.format(" (%d)", category.frequency);
         }
         vh.categoryNameView.setText(text);
+        vh.setMoreOptionsVisible(moreButtonsVisible);
+        vh.setHighlighted(position == selectedPosition);
     }
 
     @Override
     public int getItemCount() {
         return categories.size();
+    }
+
+    public void setMoreButtonsVisible(boolean moreButtonsVisible) {
+        this.moreButtonsVisible = moreButtonsVisible;
+        notifyDataSetChanged();
+    }
+
+    public void setCategoryHighlighted(String categoryName) {
+        if (categoryName == null) {
+            selectedPosition = -1;
+            return;
+        }
+        int i = 0;
+        for (Category category : categories) {
+            if (category.getName().equals(categoryName)) {
+                selectedPosition = i;
+                notifyDataSetChanged();
+                return;
+            }
+            i++;
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -158,6 +186,23 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
             this.separator = itemView.findViewById(R.id.separator);
             this.categoryNameView = (TextView) itemView.findViewById(R.id.category_name);
             this.moreButton = itemView.findViewById(R.id.more);
+        }
+
+        public void setHighlighted(boolean highlighted) {
+            if (highlighted) {
+                categoryNameView.setBackgroundColor(context.getResources().getColor(R.color.primary_light));
+            } else {
+                categoryNameView.setBackground(context.getResources().
+                        getDrawable(R.drawable.list_item_selector, context.getTheme()));
+            }
+        }
+
+        public void setMoreOptionsVisible(boolean visible) {
+            if (visible) {
+                moreButton.setVisibility(View.VISIBLE);
+            } else {
+                moreButton.setVisibility(View.GONE);
+            }
         }
 
         public void setSeparatorVisible(boolean visible) {

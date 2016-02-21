@@ -64,6 +64,11 @@
     <string name="category_delete_dialog__positive_button">DELETE</string>
     <string name="category_delete_dialog__negative_button">CANCEL</string>
 
+    <string name="category_merge_dialog__title">Merge Category: %s?</string>
+    <string name="category_merge_dialog__message">Merging two categories cannot be undone and you run the risk of making them too general. This can be useful if you realize you have duplicate category names.</string>
+    <string name="category_merge_dialog__positive_button">MERGE</string>
+    <string name="category_merge_dialog__negative_button">CANCEL</string>
+
     <string name="category_options_dialog__title">Category: %s</string>
     <string name="category_options_edit_name">Edit name</string>
     <string name="category_options_merge">Merge with another category </string>
@@ -105,4 +110,6 @@
 
     <string name="content_authority">com.theronin.expensetracker.provider</string>
     <string name="sync_account_type">org.theronin</string>
+    <string name="merging_categories">Merging %s to:</string>
+    <string name="select_category_dialog_header">Select a Category</string>
 </resources>

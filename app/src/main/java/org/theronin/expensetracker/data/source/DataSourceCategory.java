@@ -9,6 +9,7 @@ import org.theronin.expensetracker.data.Contract.CategoryTable;
 import org.theronin.expensetracker.data.Contract.CategoryView;
 import org.theronin.expensetracker.model.Category;
 
+import java.util.Iterator;
 import java.util.List;
 
 import timber.log.Timber;
@@ -130,6 +131,17 @@ public class DataSourceCategory extends AbsDataSource<Category> {
 
     public void mergeCategories(List<Category> from, Category to) {
         assertListenerNotNull();
+        Iterator<Category> iterator = from.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().equals(to)) {
+                iterator.remove();
+            }
+        }
+
+        if (from.size() == 0) {
+            return;
+        }
+
         listener.beforeCategoryMerged(from, to);
 
         for (Category category : from) {
