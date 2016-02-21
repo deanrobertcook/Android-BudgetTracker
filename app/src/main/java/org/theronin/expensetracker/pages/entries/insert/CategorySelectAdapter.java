@@ -26,7 +26,8 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
     private int[] sortSizes;
 
     private static final int VIEW_TYPE_NORMAL = 0;
-    private static final int VIEW_TYPE_WITH_SEPARATOR = 1;
+    private static final int VIEW_TYPE_WITH_SEPARATOR_FREQUENCY = 1;
+    private static final int VIEW_TYPE_WITH_SEPARATOR_ALPHABETICAL = 2;
 
     private List<Category> categories;
     private CategorySelectedListener listener;
@@ -102,11 +103,14 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
 
     @Override
     public int getItemViewType(int position) {
+        if (position == 0) {
+            return VIEW_TYPE_WITH_SEPARATOR_FREQUENCY;
+        }
         int borderIndex = 0;
         for (int sortSize : sortSizes) {
             borderIndex += sortSize;
-            if (position == borderIndex - 1 && position != categories.size() - 1) {
-                return VIEW_TYPE_WITH_SEPARATOR;
+            if (position == borderIndex && position != categories.size() - 1) {
+                return VIEW_TYPE_WITH_SEPARATOR_ALPHABETICAL;
             }
         }
         return VIEW_TYPE_NORMAL;
@@ -123,7 +127,7 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
         final Category category = categories.get(position);
 
         vh.setCategory(category);
-        vh.setSeparatorVisible(getItemViewType(position) == VIEW_TYPE_WITH_SEPARATOR);
+        vh.setSeparator(getItemViewType(position));
 
         vh.categoryNameView.setOnClickListener(vh);
         vh.moreButton.setOnClickListener(vh);
@@ -153,14 +157,14 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public final View separator;
+        public final TextView separator;
         public final TextView categoryNameView;
         public final View moreButton;
         private Category category;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            this.separator = itemView.findViewById(R.id.separator);
+            this.separator = (TextView) itemView.findViewById(R.id.separator);
             this.categoryNameView = (TextView) itemView.findViewById(R.id.category_name);
             this.moreButton = itemView.findViewById(R.id.more);
         }
@@ -186,11 +190,18 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
             }
         }
 
-        public void setSeparatorVisible(boolean visible) {
-            if (visible) {
-                separator.setVisibility(View.VISIBLE);
-            } else {
-                separator.setVisibility(View.GONE);
+        public void setSeparator(int viewType) {
+            switch (viewType) {
+                case VIEW_TYPE_WITH_SEPARATOR_FREQUENCY:
+                    separator.setVisibility(View.VISIBLE);
+                    separator.setText(context.getString(R.string.category_separator_frequency));
+                    break;
+                case VIEW_TYPE_WITH_SEPARATOR_ALPHABETICAL:
+                    separator.setVisibility(View.VISIBLE);
+                    separator.setText(context.getString(R.string.category_separator_alphabetical));
+                    break;
+                default:
+                    separator.setVisibility(View.GONE);
             }
         }
 

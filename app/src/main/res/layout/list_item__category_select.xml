@@ -3,7 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="13dp"
+        android:textColor="@color/text_color_secondary"
+        android:gravity="center_horizontal|bottom"
+        android:paddingTop="16dp"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/swipe_view"
@@ -34,15 +44,6 @@
             android:src="@drawable/ic_more_vert"/>
 
     </LinearLayout>
-
-    <View
-        android:id="@+id/separator"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#999999"
-        android:paddingLeft="@dimen/material_default_margin"
-        android:paddingRight="@dimen/material_default_margin"
-        android:visibility="gone"/>
 
 </LinearLayout>
 

@@ -119,4 +119,7 @@
     <string name="sync_account_type">org.theronin</string>
     <string name="merging_categories">Merging \"%s\" to:</string>
     <string name="select_category_dialog_header">Select a Category</string>
+
+    <string name="category_separator_frequency">TOP CATEGORIES</string>
+    <string name="category_separator_alphabetical">BY ALPHABETICAL ORDER</string>
 </resources>
