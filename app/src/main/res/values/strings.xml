@@ -53,6 +53,10 @@
 
     <string name="date_since">Since %s</string>
 
+    <string name="entry_confirm_discard_dialog__message">Discard new entries?</string>
+    <string name="entry_confirm_discard_dialog__positive_button">DISCARD</string>
+    <string name="entry_confirm_discard_dialog__negative_button">CANCEL</string>
+
     <string name="category_name_dialog__title_new">New Category</string>
     <string name="category_name_dialog__title_edit">Edit Category Name</string>
     <string name="category_name_dialog__positive_button_new">Create</string>

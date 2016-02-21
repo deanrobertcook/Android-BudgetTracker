@@ -1,6 +1,8 @@
 package org.theronin.expensetracker.pages.entries.insert;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -149,10 +151,51 @@ public class EntryDialogActivity extends InjectedActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish(); //emulate back rather than up
+                onCancelPressed();
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        onCancelPressed();
+    }
+
+    private void onCancelPressed() {
+        if (inputProvided()) {
+            showCancelConfirmationDialog();
+        } else {
+            finish();
+        }
+    }
+
+    private boolean inputProvided() {
+        boolean amountEntered = false;
+        boolean categoryEntered = false;
+
+        for (InsertRowViewHolder viewHolder : inputRows) {
+            if (viewHolder.moneyEditText.getAmount() > 0) {
+                amountEntered = true;
+            }
+            if (viewHolder.getCategory() != null) {
+                categoryEntered = true;
+            }
+        }
+        return amountEntered || categoryEntered;
+    }
+
+    private void showCancelConfirmationDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.entry_confirm_discard_dialog__message)
+                .setPositiveButton(R.string.entry_confirm_discard_dialog__positive_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton(R.string.entry_confirm_discard_dialog__negative_button, null)
+                .show();
     }
 
     private void setDateTextView(long utcTime) {
