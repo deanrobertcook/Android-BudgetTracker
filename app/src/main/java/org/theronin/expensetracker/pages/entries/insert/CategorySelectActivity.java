@@ -176,6 +176,21 @@ public class CategorySelectActivity extends InjectedActivity implements
     }
 
     @Override
+    public void showConfirmMergeDialog(Category from, Category to) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.category_merge_confirm_dialog__title)
+                .setMessage(getString(R.string.category_merge_confirm_dialog__message, from.getDisplayName(), to.getDisplayName()))
+                .setPositiveButton(R.string.category_merge_confirm_dialog__positive_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        presenter.finishMerge();
+                    }
+                })
+                .setNegativeButton(R.string.category_merge_confirm_dialog__negative_button, null)
+                .show();
+    }
+
+    @Override
     public void onPositiveButtonClicked(Category category, String newCategoryName) {
         presenter.onNameChange(category, newCategoryName);
     }

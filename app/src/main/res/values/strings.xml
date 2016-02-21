@@ -66,8 +66,13 @@
 
     <string name="category_merge_dialog__title">Merge Category: \"%s\"?</string>
     <string name="category_merge_dialog__message">Merging two categories cannot be undone and you run the risk of losing specific information about your spending habits.\n\nMerging can be useful if you realize you have duplicate category names, or you\'re sure you won\'t care about keeping track of this category.</string>
-    <string name="category_merge_dialog__positive_button">MERGE</string>
+    <string name="category_merge_dialog__positive_button">CONTINUE</string>
     <string name="category_merge_dialog__negative_button">CANCEL</string>
+
+    <string name="category_merge_confirm_dialog__title">Confirm Merge</string>
+    <string name="category_merge_confirm_dialog__message">Merge \"%1$s\" into \"%2$s\"?</string>
+    <string name="category_merge_confirm_dialog__positive_button">MERGE</string>
+    <string name="category_merge_confirm_dialog__negative_button">CANCEL</string>
 
     <string name="category_options_dialog__title">Category: \"%s\"</string>
     <string name="category_options_edit_name">Edit name</string>

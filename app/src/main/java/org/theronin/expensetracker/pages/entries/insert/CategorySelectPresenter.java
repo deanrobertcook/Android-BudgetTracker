@@ -15,6 +15,7 @@ public class CategorySelectPresenter implements CategorySelectedListener {
 
     private boolean mergeMode;
     private Category mergeFrom;
+    private Category mergeTo;
 
     public CategorySelectPresenter(AbsDataSource<Category> dataSourceCategory,
 
@@ -68,7 +69,11 @@ public class CategorySelectPresenter implements CategorySelectedListener {
     @Override
     public void onCategorySelected(Category category) {
         if (mergeMode) {
-            finishMerge(category);
+            if (category.equals(mergeFrom)) {
+                return; //do nothing when same category is clicked
+            }
+            this.mergeTo = category;
+            categorySelectUI.showConfirmMergeDialog(mergeFrom, mergeTo);
         } else {
             categorySelectUI.returnCategoryResult(category);
         }
@@ -101,9 +106,10 @@ public class CategorySelectPresenter implements CategorySelectedListener {
         return mergeMode;
     }
 
-    public void finishMerge(Category mergeTo) {
-        if (mergeFrom == null) {
-            throw new IllegalStateException("mergeFrom should not be null when finishMerge is called");
+    public void finishMerge() {
+        if (!mergeMode || mergeFrom == null || mergeTo == null) {
+            throw new IllegalStateException("finishMerge should only be called after a merge is started and a category " +
+                    "has been selected");
         }
         ((DataSourceCategory) dataSourceCategory).mergeCategories(new ArrayList<>(Arrays.asList(mergeFrom)), mergeTo);
         cancelMerge();
@@ -143,5 +149,7 @@ public class CategorySelectPresenter implements CategorySelectedListener {
         void setMoreOptionsVisible(boolean visible);
 
         void setMergingCategoryHighlighted(Category category);
+
+        void showConfirmMergeDialog(Category from, Category to);
     }
 }
