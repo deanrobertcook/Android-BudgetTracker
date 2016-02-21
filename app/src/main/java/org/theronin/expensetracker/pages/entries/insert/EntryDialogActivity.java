@@ -55,7 +55,7 @@ public class EntryDialogActivity extends InjectedActivity
         setContentView(R.layout.activity__entry_dialog);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tb__toolbar);
-        toolbar.setTitle("Add Entries");
+        toolbar.setTitle(getString(R.string.add_entry_dialog_title));
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear);

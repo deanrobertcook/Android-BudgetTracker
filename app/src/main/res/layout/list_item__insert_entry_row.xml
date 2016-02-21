@@ -20,10 +20,11 @@
 
         <org.theronin.expensetracker.view.MoneyEditText
             android:id="@+id/amount_edit_layout"
-            android:layout_width="160dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:maxLength="13"
-            android:textSize="24sp"
+            android:textSize="21sp"
             android:inputType="number"/>
 
         <TextView
@@ -35,7 +36,7 @@
             android:layout_height="match_parent"
             android:maxLines="1"
             android:ellipsize="end"
-            android:textSize="18sp"/>
+            android:textSize="16sp"/>
 
     </LinearLayout>
 

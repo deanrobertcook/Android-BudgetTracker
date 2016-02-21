@@ -122,4 +122,7 @@
 
     <string name="category_separator_frequency">TOP CATEGORIES</string>
     <string name="category_separator_alphabetical">BY ALPHABETICAL ORDER</string>
+    <string name="add_entry_dialog_title">Add Expense Items</string>
+    <string name="entry_add_another_item">ADD ANOTHER ITEM</string>
+    <string name="empty_category_hint">Select Category</string>
 </resources>

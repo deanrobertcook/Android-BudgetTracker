@@ -19,11 +19,19 @@
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:padding="@dimen/material_default_margin">
+            android:paddingTop="@dimen/material_default_margin"
+            android:paddingBottom="@dimen/material_default_margin"
+            android:paddingLeft="8dp"
+            android:paddingRight="@dimen/material_default_margin">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="76dp">
+                android:layout_height="76dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="32dp"
+                    android:layout_height="match_parent"/>
 
                 <FrameLayout
                     android:layout_width="0dp"
@@ -89,7 +97,8 @@
                     android:layout_height="match_parent"/>
 
                 <TextView
-                    android:layout_width="160dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:textSize="13sp"
@@ -98,7 +107,8 @@
                     android:text="@string/enter_amount"/>
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:textSize="13sp"
@@ -115,20 +125,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
-            <FrameLayout
+            <LinearLayout
                 android:id="@+id/add_entry_row_button"
                 android:clickable="true"
-                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:paddingLeft="@dimen/material_default_margin"
+                android:paddingRight="@dimen/material_default_margin"
+                android:layout_width="wrap_content"
                 android:layout_height="56dp"
                 android:background="@drawable/list_item_selector">
 
                 <ImageView
                     android:src="@drawable/ic_add_black"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"/>
 
-            </FrameLayout>
+                <TextView
+                    android:text="@string/entry_add_another_item"
+                    android:textSize="13dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/text_color_secondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

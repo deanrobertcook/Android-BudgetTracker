@@ -1,10 +1,11 @@
 package org.theronin.expensetracker.pages.main;
 
+import org.apache.commons.lang.WordUtils;
 import org.theronin.expensetracker.R;
 
 public enum MainPage {
-    ENTRIES(R.drawable.ic_entry_unselected, R.drawable.ic_entry_selected),
-    CATEGORIES(R.drawable.ic_category_unselected, R.drawable.ic_category_selected);
+    MANAGE_EXPENSES(R.drawable.ic_entry_unselected, R.drawable.ic_entry_selected),
+    OVERVIEW(R.drawable.ic_category_unselected, R.drawable.ic_category_selected);
 
     public String title;
     public int id;
@@ -12,7 +13,7 @@ public enum MainPage {
     public int selectedIconResId;
 
     MainPage(int unselectedIconResId, int selectedIconResId) {
-        this.title = name().substring(0, 1) + name().substring(1).toLowerCase();
+        this.title = WordUtils.capitalize(name().replace("_", " ").toLowerCase());
         this.id = ordinal();
         this.unselectedIconResId = unselectedIconResId;
         this.selectedIconResId = selectedIconResId;

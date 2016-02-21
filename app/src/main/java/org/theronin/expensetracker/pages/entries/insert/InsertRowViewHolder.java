@@ -29,8 +29,7 @@ public class InsertRowViewHolder implements View.OnClickListener {
         clearButton.setOnClickListener(this);
         moneyEditText = (MoneyEditText) rowView.findViewById(R.id.amount_edit_layout);
         categorySelectorTextView = (TextView) rowView.findViewById(R.id.tv__add_entry_category);
-        //TODO move to string resource
-        categorySelectorTextView.setText("----");
+        categorySelectorTextView.setHint(parent.getContext().getString(R.string.empty_category_hint));
         categorySelectorTextView.setOnClickListener(this);
         moneyEditText.setAmount(0);
     }

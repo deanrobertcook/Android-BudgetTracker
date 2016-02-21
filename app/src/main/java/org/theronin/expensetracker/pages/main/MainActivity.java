@@ -82,7 +82,7 @@ public class MainActivity extends InjectedActivity implements
     }
 
     private MainPage findCurrentPage(Bundle savedInstanceState) {
-        MainPage defaultPage = MainPage.ENTRIES;
+        MainPage defaultPage = MainPage.MANAGE_EXPENSES;
         if (savedInstanceState != null) {
             int currentPageId = savedInstanceState.getInt(CURRENT_PAGE_KEY, -1);
             if (currentPageId > -1) {
@@ -100,7 +100,7 @@ public class MainActivity extends InjectedActivity implements
         navDrawer.setSelection(page.id);
 
         switch (page) {
-            case ENTRIES:
+            case MANAGE_EXPENSES:
                 Timber.d("Creating Entries List");
                 EntryListFragment entryListFragment = (EntryListFragment)
                         getFragmentManager().findFragmentByTag(EntryListFragment.TAG);
@@ -119,7 +119,7 @@ public class MainActivity extends InjectedActivity implements
                         .commit();
                 return true;
 
-            case CATEGORIES:
+            case OVERVIEW:
                 Timber.d("Creating Categories List");
                 CategoryListFragment categoryListFragment = (CategoryListFragment)
                         getFragmentManager().findFragmentByTag(CategoryListFragment.TAG);
