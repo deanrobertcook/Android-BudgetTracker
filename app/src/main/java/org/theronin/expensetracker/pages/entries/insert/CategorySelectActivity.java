@@ -225,7 +225,6 @@ public class CategorySelectActivity extends InjectedActivity implements
                         presenter.startMerge(category);
                     }
                 })
-                .setNegativeButton(R.string.category_merge_dialog__negative_button, null)
                 .show();
     }
 
@@ -240,7 +239,6 @@ public class CategorySelectActivity extends InjectedActivity implements
                         presenter.onCategoryDeleted(category);
                     }
                 })
-                .setNegativeButton(R.string.category_delete_dialog__negative_button, null)
                 .show();
     }
 }

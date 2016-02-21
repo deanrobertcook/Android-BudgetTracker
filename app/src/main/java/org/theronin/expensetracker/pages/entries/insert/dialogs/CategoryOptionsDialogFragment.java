@@ -47,7 +47,6 @@ public class CategoryOptionsDialogFragment extends DialogFragment implements Vie
         layout.findViewById(R.id.delete).setOnClickListener(this);
 
         builder.setTitle(getActivity().getString(R.string.category_options_dialog__title, category.getDisplayName()))
-                .setNegativeButton(R.string.cancel, null)
                 .setView(layout);
 
         return builder.create();
