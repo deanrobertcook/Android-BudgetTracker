@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.apache.commons.lang.WordUtils;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.comparators.CategoryTotalComparator;
 import org.theronin.expensetracker.model.Category;
@@ -54,7 +53,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
         vH.totalDisplay.setCurrency(homeCurrency);
         vH.totalDisplay.setAmount(category.getTotal());
-        vH.nameTextView.setText(WordUtils.capitalize(category.getName()));
+        vH.nameTextView.setText(category.getDisplayName());
 
         vH.dateSinceTextView.setText(String.format(context.getString(R.string.date_since), DateUtils.getDisplayFormattedDate(category.utcFirstEntryDate)));
     }

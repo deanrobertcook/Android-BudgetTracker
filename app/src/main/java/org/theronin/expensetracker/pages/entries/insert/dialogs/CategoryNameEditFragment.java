@@ -11,20 +11,21 @@ import android.view.View;
 import android.widget.EditText;
 
 import org.theronin.expensetracker.R;
+import org.theronin.expensetracker.model.Category;
 
 public class CategoryNameEditFragment extends DialogFragment {
 
     public static final String TAG = CategoryNameEditFragment.class.getName();
-    private static final String ARG_CATEGORY_NAME = "CATEGORY_NAME";
+    private static final String ARG_CATEGORY = "CATEGORY";
 
     private Container container;
 
-    public static CategoryNameEditFragment newInstance(String categoryName) {
+    public static CategoryNameEditFragment newInstance(Category category) {
         CategoryNameEditFragment fragment = new CategoryNameEditFragment();
 
-        if (categoryName != null) {
+        if (category != null) {
             Bundle args = new Bundle();
-            args.putString(ARG_CATEGORY_NAME, categoryName);
+            args.putSerializable(ARG_CATEGORY, category);
             fragment.setArguments(args);
         }
 
@@ -39,24 +40,24 @@ public class CategoryNameEditFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final String categoryName = getArguments() == null ? null : getArguments().getString(ARG_CATEGORY_NAME);
+        final Category category = getArguments() == null ? null : (Category) getArguments().getSerializable(ARG_CATEGORY);
 
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         final View layout = inflater.inflate(R.layout.dialog__category_name, null, false);
         final EditText editText = (EditText) layout.findViewById(R.id.edit_category);
 
-        if (categoryName != null) {
-            editText.setText(categoryName);
-            editText.setSelection(categoryName.length());
+        if (category != null) {
+            editText.setText(category.getDisplayName());
+            editText.setSelection(category.getDisplayName().length());
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(categoryName == null ? R.string.category_name_dialog__title_new : R.string.category_name_dialog__title_edit)
-                .setPositiveButton(categoryName == null ? R.string.category_name_dialog__positive_button_new : R.string.category_name_dialog__positive_button_edit, new
+        builder.setTitle(category == null ? R.string.category_name_dialog__title_new : R.string.category_name_dialog__title_edit)
+                .setPositiveButton(category == null ? R.string.category_name_dialog__positive_button_new : R.string.category_name_dialog__positive_button_edit, new
                         DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                container.onPositiveButtonClicked(categoryName, editText.getText().toString());
+                                container.onPositiveButtonClicked(category, editText.getText().toString());
                             }
                         })
                 .setView(layout);
@@ -65,6 +66,6 @@ public class CategoryNameEditFragment extends DialogFragment {
     }
 
     public interface Container {
-        void onPositiveButtonClicked(String oldCategoryName, String newCategoryName);
+        void onPositiveButtonClicked(Category category, String newCategoryName);
     }
 }

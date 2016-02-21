@@ -1,6 +1,8 @@
 package org.theronin.expensetracker.model;
 
-public abstract class Entity {
+import java.io.Serializable;
+
+public abstract class Entity implements Serializable {
 
     protected long id;
 

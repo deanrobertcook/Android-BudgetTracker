@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.TextView;
 
-import org.apache.commons.lang.WordUtils;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.utils.DateUtils;
@@ -78,7 +77,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
 
         setCurrentAmount(vH, entry);
 
-        vH.categoryTextView.setText(WordUtils.capitalize(entry.getCategory().getName()));
+        vH.categoryTextView.setText(entry.getCategory().getDisplayName());
 
         setHomeAmount(vH, entry);
 

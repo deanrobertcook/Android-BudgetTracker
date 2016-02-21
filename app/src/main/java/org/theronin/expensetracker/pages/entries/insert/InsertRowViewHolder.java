@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.apache.commons.lang.WordUtils;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.view.MoneyEditText;
@@ -42,7 +41,7 @@ public class InsertRowViewHolder implements View.OnClickListener {
 
     public void setCategory(Category category) {
         this.category = category;
-        categorySelectorTextView.setText(WordUtils.capitalize(category.getName()));
+        categorySelectorTextView.setText(category.getDisplayName());
     }
 
     public Category getCategory() {

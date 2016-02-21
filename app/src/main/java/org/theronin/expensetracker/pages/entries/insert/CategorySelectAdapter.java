@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.apache.commons.lang.WordUtils;
-import org.theronin.expensetracker.BuildConfig;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.comparators.CategoryAlphabeticalComparator;
 import org.theronin.expensetracker.comparators.CategoryFrequencyComparator;
@@ -124,27 +122,13 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
     public void onBindViewHolder(ViewHolder vh, int position) {
         final Category category = categories.get(position);
 
+        vh.setCategory(category);
         vh.setSeparatorVisible(getItemViewType(position) == VIEW_TYPE_WITH_SEPARATOR);
 
-        vh.categoryNameView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onCategorySelected(category);
-            }
-        });
+        vh.categoryNameView.setOnClickListener(vh);
+        vh.moreButton.setOnClickListener(vh);
 
-        vh.moreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onMoreButtonSelected(category);
-            }
-        });
-
-        String text = WordUtils.capitalize(category.getName());
-        if (BuildConfig.DEBUG) {
-            text += String.format(" (%d)", category.frequency);
-        }
-        vh.categoryNameView.setText(text);
+        vh.categoryNameView.setText(category.getDisplayNameWithFrequency());
         vh.setMoreOptionsVisible(moreButtonsVisible);
         vh.setHighlighted(position == selectedPosition);
     }
@@ -159,33 +143,30 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
         notifyDataSetChanged();
     }
 
-    public void setCategoryHighlighted(String categoryName) {
-        if (categoryName == null) {
+    public void setCategoryHighlighted(Category category) {
+        if (category == null) {
             selectedPosition = -1;
             return;
         }
-        int i = 0;
-        for (Category category : categories) {
-            if (category.getName().equals(categoryName)) {
-                selectedPosition = i;
-                notifyDataSetChanged();
-                return;
-            }
-            i++;
-        }
+        selectedPosition = categories.indexOf(category);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final View separator;
         public final TextView categoryNameView;
         public final View moreButton;
+        private Category category;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.separator = itemView.findViewById(R.id.separator);
             this.categoryNameView = (TextView) itemView.findViewById(R.id.category_name);
             this.moreButton = itemView.findViewById(R.id.more);
+        }
+
+        public void setCategory(Category category) {
+            this.category = category;
         }
 
         public void setHighlighted(boolean highlighted) {
@@ -210,6 +191,18 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
                 separator.setVisibility(View.VISIBLE);
             } else {
                 separator.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.category_name:
+                    listener.onCategorySelected(category);
+                    break;
+                case R.id.more:
+                    listener.onMoreButtonSelected(category);
+                    break;
             }
         }
     }

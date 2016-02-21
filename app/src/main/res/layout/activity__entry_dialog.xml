@@ -117,6 +117,7 @@
 
             <FrameLayout
                 android:id="@+id/add_entry_row_button"
+                android:clickable="true"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:background="@drawable/list_item_selector">

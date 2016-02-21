@@ -1,5 +1,6 @@
 package org.theronin.expensetracker.model;
 
+import org.apache.commons.lang.WordUtils;
 import org.theronin.expensetracker.utils.DateUtils;
 
 public class Category extends Entity {
@@ -12,7 +13,6 @@ public class Category extends Entity {
 
     private int missingEntries = 1;
     public Category(String name) {
-        //TODO check what a good default date is.
         this(name, 0);
     }
 
@@ -30,7 +30,7 @@ public class Category extends Entity {
 
     public Category(long id, String name, long utcFirstEntryDate, long frequency) {
         this.id = id;
-        this.name = name;
+        setName(name);
         this.utcFirstEntryDate = utcFirstEntryDate;
         this.frequency = frequency;
     }
@@ -39,8 +39,22 @@ public class Category extends Entity {
         return name;
     }
 
+    public String getDisplayName() {
+        return WordUtils.capitalize(getName());
+    }
+
+    public String getDisplayNameWithFrequency() {
+        return String.format("%s (%d)", getDisplayName(), frequency);
+    }
+
     public void setName(String name) {
-        this.name = name;
+        this.name = sanitiseName(name);
+    }
+
+    private String sanitiseName(String categoryName) {
+        categoryName = categoryName.toLowerCase();
+        categoryName = categoryName.trim();
+        return categoryName;
     }
 
     @Override

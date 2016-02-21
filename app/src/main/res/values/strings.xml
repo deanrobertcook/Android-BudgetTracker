@@ -59,23 +59,23 @@
     <string name="category_name_dialog__positive_button_edit">Update</string>
     <string name="category_name_dialog__hint">Category Name</string>
 
-    <string name="category_delete_dialog__title">Delete Category: %s?</string>
+    <string name="category_delete_dialog__title">Delete Category: \"%s\"?</string>
     <string name="category_delete_dialog__message">Deleting a category cannot be undone, and all entries under this category will also be deleted. Perhaps you want to merge instead?</string>
     <string name="category_delete_dialog__positive_button">DELETE</string>
     <string name="category_delete_dialog__negative_button">CANCEL</string>
 
-    <string name="category_merge_dialog__title">Merge Category: %s?</string>
-    <string name="category_merge_dialog__message">Merging two categories cannot be undone and you run the risk of making them too general. This can be useful if you realize you have duplicate category names.</string>
+    <string name="category_merge_dialog__title">Merge Category: \"%s\"?</string>
+    <string name="category_merge_dialog__message">Merging two categories cannot be undone and you run the risk of losing specific information about your spending habits.\n\nMerging can be useful if you realize you have duplicate category names, or you\'re sure you won\'t care about keeping track of this category.</string>
     <string name="category_merge_dialog__positive_button">MERGE</string>
     <string name="category_merge_dialog__negative_button">CANCEL</string>
 
-    <string name="category_options_dialog__title">Category: %s</string>
+    <string name="category_options_dialog__title">Category: \"%s\"</string>
     <string name="category_options_edit_name">Edit name</string>
     <string name="category_options_merge">Merge with another category </string>
     <string name="category_options_delete">Delete category</string>
 
     <string name="empty_category_name_error">Please enter a name for the new category.</string>
-    <string name="duplicate_category_error">The category %s already exists.</string>
+    <string name="duplicate_category_error">The category \"%s\" already exists.</string>
     <string name="category_creation_success">Category successfully added.</string>
     <string name="category_update_success">Category successfully updated.</string>
     <string name="delete_selection_dialog_title">Delete Selection?</string>
@@ -110,6 +110,6 @@
 
     <string name="content_authority">com.theronin.expensetracker.provider</string>
     <string name="sync_account_type">org.theronin</string>
-    <string name="merging_categories">Merging %s to:</string>
+    <string name="merging_categories">Merging \"%s\" to:</string>
     <string name="select_category_dialog_header">Select a Category</string>
 </resources>

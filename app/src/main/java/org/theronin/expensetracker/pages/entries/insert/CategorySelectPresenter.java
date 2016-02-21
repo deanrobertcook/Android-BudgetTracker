@@ -1,8 +1,5 @@
 package org.theronin.expensetracker.pages.entries.insert;
 
-import android.support.annotation.NonNull;
-
-import org.theronin.expensetracker.data.Contract.CategoryView;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.data.source.DataSourceCategory;
 import org.theronin.expensetracker.model.Category;
@@ -10,7 +7,6 @@ import org.theronin.expensetracker.pages.entries.insert.CategorySelectAdapter.Ca
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class CategorySelectPresenter implements CategorySelectedListener {
 
@@ -18,7 +14,7 @@ public class CategorySelectPresenter implements CategorySelectedListener {
     private final CategorySelectUI categorySelectUI;
 
     private boolean mergeMode;
-    private String mergeFromCategory;
+    private Category mergeFrom;
 
     public CategorySelectPresenter(AbsDataSource<Category> dataSourceCategory,
 
@@ -27,54 +23,42 @@ public class CategorySelectPresenter implements CategorySelectedListener {
         this.categorySelectUI = categorySelectUI;
     }
 
-    public void onNameChange(String oldCategoryName, String newCategoryName) {
+    public void onNameChange(Category category, String newCategoryName) {
         if (newCategoryName == null || newCategoryName.length() == 0) {
             categorySelectUI.showCategoryEmptyCategoryNameError();
             return;
         }
-        if (oldCategoryName == null) {
+        if (category == null) {
             onCategoryCreated(newCategoryName);
         } else {
-            onCategoryUpdated(oldCategoryName, newCategoryName);
+            onCategoryUpdated(category, newCategoryName);
         }
     }
 
     private void onCategoryCreated(String categoryName) {
-        String sanitisedCategoryName = sanitiseCategoryName(categoryName);
-        long id = dataSourceCategory.insert(new Category(sanitisedCategoryName)).getId();
+        Category category = new Category(categoryName);
+        long id = dataSourceCategory.insert(category).getId();
 
         if (id == -1) {
-            categorySelectUI.showCategoryDuplicateError(categoryName);
+            categorySelectUI.showCategoryDuplicateError(category);
             return;
         }
 
         categorySelectUI.showCategoryCreationSuccess();
-        categorySelectUI.returnCategoryResult(sanitisedCategoryName);
+        categorySelectUI.returnCategoryResult(category);
     }
 
-    private void onCategoryUpdated(String oldCategoryName, String newCategoryName) {
-        Category category = getCategory(sanitiseCategoryName(oldCategoryName));
-        category.setName(sanitiseCategoryName(newCategoryName));
+    private void onCategoryUpdated(Category category, String newCategoryName) {
+        category.setName(newCategoryName);
         if (!dataSourceCategory.update(category)) {
-            categorySelectUI.showCategoryDuplicateError(newCategoryName);
+            categorySelectUI.showCategoryDuplicateError(category);
         } else {
             categorySelectUI.showCategoryUpdateSuccess();
         }
     }
 
-    @NonNull
-    private Category getCategory(String sanitisedOldCategoryName) {
-        List<Category> categories = dataSourceCategory.query(CategoryView.COL_CATEGORY_NAME + " = ?",
-                new String[]{sanitisedOldCategoryName}, null);
-
-        if (categories.size() != 1) {
-            throw new IllegalStateException("The requested old category should exist, and there should only be 1");
-        }
-        return categories.get(0);
-    }
-
-    public void onCategoryDeleted(String categoryName) {
-        dataSourceCategory.delete(getCategory(sanitiseCategoryName(categoryName)));
+    public void onCategoryDeleted(Category category) {
+        dataSourceCategory.delete(category);
     }
 
     public void onCreateCategoryButtonSelected() {
@@ -84,21 +68,15 @@ public class CategorySelectPresenter implements CategorySelectedListener {
     @Override
     public void onCategorySelected(Category category) {
         if (mergeMode) {
-            finishMerge(category.getName());
+            finishMerge(category);
         } else {
-            categorySelectUI.returnCategoryResult(category.getName());
+            categorySelectUI.returnCategoryResult(category);
         }
     }
 
     @Override
     public void onMoreButtonSelected(Category category) {
         categorySelectUI.displayCategoryOptionsDialog(category);
-    }
-
-    private String sanitiseCategoryName(String categoryName) {
-        categoryName = categoryName.toLowerCase();
-        categoryName = categoryName.trim();
-        return categoryName;
     }
 
     public void onBackButtonPressed() {
@@ -109,31 +87,31 @@ public class CategorySelectPresenter implements CategorySelectedListener {
         }
     }
 
-    public void startMerge(String categoryName) {
+    public void startMerge(Category category) {
         this.mergeMode = true;
-        this.mergeFromCategory = categoryName;
+        this.mergeFrom = category;
         categorySelectUI.setMergeCancelButtonVisible(true);
-        categorySelectUI.setMergeHeaderVisible(mergeFromCategory, true);
+        categorySelectUI.setMergeHeaderVisible(mergeFrom, true);
         categorySelectUI.setCreateButtonVisible(false);
         categorySelectUI.setMoreOptionsVisible(false);
-        categorySelectUI.setMergingCategoryHighlighted(categoryName);
+        categorySelectUI.setMergingCategoryHighlighted(category);
     }
 
     public boolean inMergeMode() {
         return mergeMode;
     }
 
-    public void finishMerge(String categoryName) {
-        Category from = getCategory(sanitiseCategoryName(mergeFromCategory));
-        Category to = getCategory(sanitiseCategoryName(categoryName));
-
-        ((DataSourceCategory) dataSourceCategory).mergeCategories(new ArrayList<>(Arrays.asList(from)), to);
+    public void finishMerge(Category mergeTo) {
+        if (mergeFrom == null) {
+            throw new IllegalStateException("mergeFrom should not be null when finishMerge is called");
+        }
+        ((DataSourceCategory) dataSourceCategory).mergeCategories(new ArrayList<>(Arrays.asList(mergeFrom)), mergeTo);
         cancelMerge();
     }
 
     public void cancelMerge() {
         this.mergeMode = false;
-        this.mergeFromCategory = null;
+        this.mergeFrom = null;
         categorySelectUI.setMergeCancelButtonVisible(false);
         categorySelectUI.setMergeHeaderVisible(null, false);
         categorySelectUI.setCreateButtonVisible(true);
@@ -142,7 +120,7 @@ public class CategorySelectPresenter implements CategorySelectedListener {
     }
 
     public interface CategorySelectUI {
-        void showCategoryDuplicateError(String categoryName);
+        void showCategoryDuplicateError(Category category);
 
         void showCategoryCreationSuccess();
 
@@ -150,13 +128,13 @@ public class CategorySelectPresenter implements CategorySelectedListener {
 
         void showCategoryEmptyCategoryNameError();
 
-        void returnCategoryResult(String categoryName);
+        void returnCategoryResult(Category category);
 
         void displayCategoryCreateDialog();
 
         void displayCategoryOptionsDialog(Category category);
 
-        void setMergeHeaderVisible(String categoryName, boolean visible);
+        void setMergeHeaderVisible(Category category, boolean visible);
 
         void setMergeCancelButtonVisible(boolean visible);
 
@@ -164,6 +142,6 @@ public class CategorySelectPresenter implements CategorySelectedListener {
 
         void setMoreOptionsVisible(boolean visible);
 
-        void setMergingCategoryHighlighted(String categoryName);
+        void setMergingCategoryHighlighted(Category category);
     }
 }

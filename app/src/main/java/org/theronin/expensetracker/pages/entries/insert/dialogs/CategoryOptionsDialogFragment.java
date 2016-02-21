@@ -8,22 +8,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import org.apache.commons.lang.WordUtils;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.model.Category;
 
 public class CategoryOptionsDialogFragment extends DialogFragment implements View.OnClickListener {
 
     public static final String TAG = CategoryOptionsDialogFragment.class.getName();
-    private static final String ARG_CATEGORY_NAME = "CATEGORY_NAME";
+    private static final String ARG_CATEGORY = "CATEGORY";
 
     private Container container;
-    private String categoryName;
+    private Category category;
 
     public static CategoryOptionsDialogFragment newInstance(Category category) {
         CategoryOptionsDialogFragment fragment = new CategoryOptionsDialogFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_CATEGORY_NAME, category.getName());
+        args.putSerializable(ARG_CATEGORY, category);
         fragment.setArguments(args);
         return fragment;
     }
@@ -36,7 +35,7 @@ public class CategoryOptionsDialogFragment extends DialogFragment implements Vie
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        categoryName = getArguments().getString(ARG_CATEGORY_NAME);
+        category = (Category) getArguments().getSerializable(ARG_CATEGORY);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -47,7 +46,7 @@ public class CategoryOptionsDialogFragment extends DialogFragment implements Vie
         layout.findViewById(R.id.merge).setOnClickListener(this);
         layout.findViewById(R.id.delete).setOnClickListener(this);
 
-        builder.setTitle(getActivity().getString(R.string.category_options_dialog__title, WordUtils.capitalize(categoryName)))
+        builder.setTitle(getActivity().getString(R.string.category_options_dialog__title, category.getDisplayName()))
                 .setNegativeButton(R.string.cancel, null)
                 .setView(layout);
 
@@ -58,23 +57,23 @@ public class CategoryOptionsDialogFragment extends DialogFragment implements Vie
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.edit:
-                container.onEditClicked(categoryName);
+                container.onEditClicked(category);
                 break;
             case R.id.merge:
-                container.onMergeClicked(categoryName);
+                container.onMergeClicked(category);
                 break;
             case R.id.delete:
-                container.onDeleteClicked(categoryName);
+                container.onDeleteClicked(category);
                 break;
         }
         dismiss();
     }
 
     public interface Container {
-        void onEditClicked(String categoryName);
+        void onEditClicked(Category category);
 
-        void onMergeClicked(String categoryName);
+        void onMergeClicked(Category category);
 
-        void onDeleteClicked(String categoryName);
+        void onDeleteClicked(Category category);
     }
 }

@@ -47,8 +47,6 @@ public class EntryDialogActivity extends InjectedActivity
     private LinearLayout inputRowsLayout;
     private List<InsertRowViewHolder> inputRows;
 
-    private View addEntryRowButton;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,9 +76,7 @@ public class EntryDialogActivity extends InjectedActivity
         inputRows = new ArrayList<>();
         addInputRow();
 
-        addEntryRowButton = findViewById(R.id.add_entry_row_button);
-        addEntryRowButton.setClickable(true);
-        addEntryRowButton.setOnClickListener(this);
+        findViewById(R.id.add_entry_row_button).setOnClickListener(this);
     }
 
     private void setCurrentCurrency(Currency currency) {
@@ -122,8 +118,8 @@ public class EntryDialogActivity extends InjectedActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            String categorySelectedName = data.getExtras().getString(CategorySelectActivity.CATEGORY_NAME_KEY);
-            inputRows.get(requestCode).setCategory(new Category(categorySelectedName));
+            inputRows.get(requestCode).setCategory(
+                    (Category) data.getExtras().getSerializable(CategorySelectActivity.CATEGORY_KEY));
         }
     }
 

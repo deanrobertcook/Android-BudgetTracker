@@ -49,7 +49,7 @@ public class CategoryLoader extends DataLoader<Category> implements AbsDataSourc
             Iterator<Entry> entryIterator = allEntries.iterator();
             while (entryIterator.hasNext()) {
                 Entry entry = entryIterator.next();
-                if (category.getName().equals(entry.getCategory().getName())) {
+                if (category.equals(entry.getCategory())) {
                     entryIterator.remove();
                     if (entry.getHomeAmount() == -1) {
                         //TODO could have a more elegant way of handling missing entry rate data
