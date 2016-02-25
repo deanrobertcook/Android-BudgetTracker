@@ -24,6 +24,7 @@ import org.theronin.expensetracker.model.ExchangeRate;
 import org.theronin.expensetracker.pages.entries.insert.CategorySelectActivity;
 import org.theronin.expensetracker.pages.entries.insert.EntryDialogActivity;
 import org.theronin.expensetracker.pages.entries.list.EntryListFragment;
+import org.theronin.expensetracker.pages.main.DebugActivity;
 import org.theronin.expensetracker.pages.main.MainActivity;
 
 import javax.inject.Singleton;
@@ -33,6 +34,7 @@ import dagger.Provides;
 
 @Module(injects = {
         MainActivity.class,
+        DebugActivity.class,
         EntryListFragment.class,
         EntryDialogActivity.class,
         CategorySelectActivity.class,

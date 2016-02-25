@@ -2,6 +2,7 @@ package org.theronin.expensetracker.pages.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,15 +14,12 @@ import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.parse.ParseUser;
 
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.dagger.InjectedActivity;
-import org.theronin.expensetracker.data.Contract;
-import org.theronin.expensetracker.data.backend.entry.SyncState;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.pages.categories.CategoryListFragment;
@@ -43,9 +41,8 @@ public class MainActivity extends InjectedActivity implements
         FileBackupAgent.Listener,
         Drawer.OnDrawerItemClickListener {
 
-    private static final String TAG = MainActivity.class.getName();
-    private static final int SETTINGS_ID = 3;
-
+    //TODO find cleaner way of showing settings once nav drawer is closed
+    public static final int SHOW_SETTINGS_DELAY = 300;
     @Inject AbsDataSource<Entry> entryDataSource;
 
     private Toolbar toolbar;
@@ -57,6 +54,8 @@ public class MainActivity extends InjectedActivity implements
     private final static String CURRENT_PAGE_KEY = "CURRENT_PAGE";
     private MainPage currentPage;
 
+    private Handler handler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +63,7 @@ public class MainActivity extends InjectedActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__basic);
 
+        handler = new Handler();
         toolbar = (Toolbar) findViewById(R.id.tb__toolbar);
         //TODO figure out why having this here prevents "BudgetTracker" from appearing...
         toolbar.setTitle("");
@@ -101,7 +101,6 @@ public class MainActivity extends InjectedActivity implements
 
         switch (page) {
             case MANAGE_EXPENSES:
-                Timber.d("Creating Entries List");
                 EntryListFragment entryListFragment = (EntryListFragment)
                         getFragmentManager().findFragmentByTag(EntryListFragment.TAG);
 
@@ -120,7 +119,6 @@ public class MainActivity extends InjectedActivity implements
                 return true;
 
             case OVERVIEW:
-                Timber.d("Creating Categories List");
                 CategoryListFragment categoryListFragment = (CategoryListFragment)
                         getFragmentManager().findFragmentByTag(CategoryListFragment.TAG);
 
@@ -136,6 +134,15 @@ public class MainActivity extends InjectedActivity implements
                                 categoryListFragment,
                                 CategoryListFragment.TAG)
                         .commit();
+                return true;
+            case SETTINGS:
+                navDrawer.closeDrawer();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        showSettings();
+                    }
+                }, SHOW_SETTINGS_DELAY);
                 return true;
             default:
                 return false;
@@ -157,9 +164,7 @@ public class MainActivity extends InjectedActivity implements
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withAccountHeader(accountHeader)
-                .addDrawerItems(buildPrimaryDrawerItems())
-                .addDrawerItems(new DividerDrawerItem())
-                .addDrawerItems(buildSettingsItem())
+                .addDrawerItems(assembleDrawerItems())
                 .build();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -168,30 +173,13 @@ public class MainActivity extends InjectedActivity implements
         return drawer;
     }
 
-    private PrimaryDrawerItem[] buildPrimaryDrawerItems() {
-        PrimaryDrawerItem[] drawerItems = new PrimaryDrawerItem[MainPage.values().length];
-
-        for (int i = 0; i < MainPage.values().length; i++) {
-            MainPage page = MainPage.values()[i];
-            drawerItems[i] = new PrimaryDrawerItem()
-                    .withName(page.title)
-                    .withIdentifier(page.ordinal())
-                    .withIcon(page.unselectedIconResId)
-                    .withSelectedIcon(page.selectedIconResId)
-                    .withOnDrawerItemClickListener(this);
-        }
-
-        return drawerItems;
-    }
-
-    //TODO refactor this out
-    private PrimaryDrawerItem buildSettingsItem() {
-        return new PrimaryDrawerItem()
-                .withName("Settings")
-                .withIdentifier(SETTINGS_ID)
-                .withIcon(R.drawable.ic_settings_selected)
-                .withSelectedIcon(R.drawable.ic_settings_unselected)
-                .withOnDrawerItemClickListener(this);
+    private IDrawerItem[] assembleDrawerItems() {
+        return new IDrawerItem[]{
+                MainPage.MANAGE_EXPENSES.navItem(this),
+                MainPage.OVERVIEW.navItem(this),
+                new DividerDrawerItem(),
+                MainPage.SETTINGS.navItem(this)
+        };
     }
 
     @Override
@@ -224,15 +212,11 @@ public class MainActivity extends InjectedActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         if (selectMode) {
             getMenuInflater().inflate(R.menu.menu_select_mode, menu);
-        } else {
-            toolbar.setTitle(currentPage.title);
+            return true;
         }
-        return true;
-    }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
+        toolbar.setTitle(currentPage.title);
+        return false;
     }
 
     @Override
@@ -257,21 +241,6 @@ public class MainActivity extends InjectedActivity implements
     private void showSettings() {
         Intent settingsIntent = new Intent(this, SettingsActivity.class);
         startActivity(settingsIntent);
-    }
-
-    private void backupEntries() {
-        //TODO tidy this up
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                new FileBackupAgent().backupEntries(entryDataSource
-                        .query(Contract.EntryView.COL_SYNC_STATUS + " NOT IN (?)", new String[]{SyncState.deleteStateSelection()}, null));
-            }
-        }).start();
-    }
-
-    private void restoreEntries() {
-        new FileBackupAgent().restoreEntriesFromBackup(this);
     }
 
     private void deleteSelection() {
@@ -300,15 +269,8 @@ public class MainActivity extends InjectedActivity implements
 
     @Override
     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-
-        if (drawerItem.getIdentifier() == SETTINGS_ID) {
-            navDrawer.closeDrawer();
-            showSettings();
-            return true;
-        }
-
         //The AccountHeader in the navigation view also has a position
-        MainPage page = MainPage.valueOf(position - 1);
+        MainPage page = MainPage.valueOf(drawerItem.getIdentifier());
         return setPage(page);
     }
 
