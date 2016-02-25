@@ -1,26 +1,19 @@
 package org.theronin.expensetracker.pages.settings;
 
 import android.os.Bundle;
-import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.SupportedCurrencies;
 
 public class SettingsFragment extends PreferenceFragment
-        implements OnPreferenceChangeListener, TextWatcher {
-
-    public static final String TAG = SettingsFragment.class.getName();
+        implements OnPreferenceChangeListener {
 
     private ListPreference homeCurrencyPreference;
     private ListPreference currentCurrencyPreference;
-
-    private EditTextPreference monthlyLimitPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,10 +25,6 @@ public class SettingsFragment extends PreferenceFragment
 
         currentCurrencyPreference = (ListPreference) findPreference(getString(R.string.pref_current_currency_key));
         setCurrencyPreference(currentCurrencyPreference);
-
-        monthlyLimitPreference = (EditTextPreference) findPreference(getString(R.string.pref_monthly_limit_key));
-        monthlyLimitPreference.getEditText().addTextChangedListener(this);
-        updateMonthlyLimitPreferenceSummary(monthlyLimitPreference.getText());
     }
 
     private void setCurrencyPreference(ListPreference currencyPreference) {
@@ -67,28 +56,5 @@ public class SettingsFragment extends PreferenceFragment
             summary = String.format(getString(R.string.pref_current_currency_summary), newValue);
         }
         preference.setSummary(summary);
-    }
-
-    private void updateMonthlyLimitPreferenceSummary(String newLimit) {
-        long amount = newLimit.isEmpty() ? 0 : Long.parseLong(newLimit);
-        String summary = amount > 0 ?
-                String.format(getString(R.string.pref_monthly_limit_summary), newLimit) :
-                getString(R.string.pref_monthly_limit_summary_off);
-        monthlyLimitPreference.setSummary(summary);
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        updateMonthlyLimitPreferenceSummary(s.toString());
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
     }
 }

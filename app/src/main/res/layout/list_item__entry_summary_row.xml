@@ -38,22 +38,6 @@
                 android:layout_gravity="right|center_vertical"
                 android:layout_height="26dp"/>
 
-            <TextView
-                android:id="@+id/separator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:visibility="gone"
-                android:textSize="24dp"
-                android:text="/"/>
-
-            <org.theronin.expensetracker.view.AmountView
-                android:id="@+id/adl__summary_monthly_limit"
-                android:layout_width="wrap_content"
-                android:visibility="gone"
-                android:layout_gravity="right|center_vertical"
-                android:layout_height="26dp"/>
-
         </LinearLayout>
 
     </FrameLayout>

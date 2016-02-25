@@ -22,7 +22,6 @@ import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.pages.entries.insert.EntryDialogActivity;
 import org.theronin.expensetracker.pages.main.MainActivity;
 import org.theronin.expensetracker.utils.DateUtils;
-import org.theronin.expensetracker.utils.Prefs;
 import org.theronin.expensetracker.view.AmountView;
 
 import java.util.ArrayList;
@@ -50,8 +49,6 @@ public class EntryListFragment extends InjectedFragment implements
 
     private TextView summaryTitleTextView;
     private AmountView summaryDisplay;
-    private View limitSeparator;
-    private AmountView summaryLimit;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,8 +73,6 @@ public class EntryListFragment extends InjectedFragment implements
 
         summaryTitleTextView = (TextView) rootView.findViewById(R.id.tv__summary_row_title);
         summaryDisplay = (AmountView) rootView.findViewById(R.id.adl__summary_row_amount);
-        limitSeparator = rootView.findViewById(R.id.separator);
-        summaryLimit = (AmountView) rootView.findViewById(R.id.adl__summary_monthly_limit);
 
         adapter = new EntriesAdapter(getActivity(), this);
         recyclerView.setAdapter(adapter);
@@ -88,17 +83,6 @@ public class EntryListFragment extends InjectedFragment implements
         summaryTitleTextView.setText(getString(R.string.total_summary_month, DateUtils.getMonth(date)));
         summaryDisplay.setAmount(adapter.getMonthSummary(date), false);
         summaryDisplay.setCurrency(getHomeCurrency(getActivity()));
-
-        long limit = Prefs.getMonthlyLimit(getActivity());
-        if (limit == 0) {
-            limitSeparator.setVisibility(View.GONE);
-            summaryLimit.setVisibility(View.GONE);
-        } else {
-            limitSeparator.setVisibility(View.VISIBLE);
-            summaryLimit.setVisibility(View.VISIBLE);
-            summaryLimit.setCurrency(getHomeCurrency(getActivity()));
-            summaryLimit.setAmount(limit, false);
-        }
     }
 
     @Override

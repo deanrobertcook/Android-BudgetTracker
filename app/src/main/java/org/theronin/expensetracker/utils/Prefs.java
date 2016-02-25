@@ -26,12 +26,6 @@ public class Prefs {
         return new SupportedCurrencies().findCurrency(currencyCode);
     }
 
-    public static long getMonthlyLimit(Context context) {
-        String value = PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(context.getString(R.string.pref_monthly_limit_key), "0");
-        return value.isEmpty() ? 0 : Long.parseLong(value);
-    }
-
     public static boolean hasWelcomeScreenBeenShown(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
                 .getBoolean(context.getString(R.string.pref_welcome_screen_has_been_shown), false);

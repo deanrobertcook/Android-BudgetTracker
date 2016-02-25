@@ -14,14 +14,6 @@
     <string name="pref_current_currency_title">Current Currency</string>
     <string name="pref_current_currency_summary">All new entries will be stored in: %s</string>
 
-    <string name="pref_cat_budget_setting_title">Budget Settings</string>
-
-    <string name="pref_monthly_limit_key">monthly_limit</string>
-    <string name="pref_monthly_limit_title">Monthly Limit</string>
-    <string name="pref_monthly_limit_summary">You will be warned when you exceed %s for the month</string>
-    <string name="pref_monthly_limit_summary_off">You do not have a monthly limit set</string>
-    <string name="pref_monthly_limit_default">0</string>
-
     <string name="settings_activity">Settings</string>
 
     <string name="entries_activity">Entries</string>
