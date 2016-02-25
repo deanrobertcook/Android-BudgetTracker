@@ -12,18 +12,17 @@ import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.parse.ParseUser;
 
-import org.theronin.expensetracker.BuildConfig;
-import org.theronin.expensetracker.PlayGroundActivity;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.dagger.InjectedActivity;
 import org.theronin.expensetracker.data.Contract;
-import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.data.backend.entry.SyncState;
+import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.pages.categories.CategoryListFragment;
 import org.theronin.expensetracker.pages.entries.list.EntriesAdapter.SelectionListener;
@@ -45,6 +44,7 @@ public class MainActivity extends InjectedActivity implements
         Drawer.OnDrawerItemClickListener {
 
     private static final String TAG = MainActivity.class.getName();
+    private static final int SETTINGS_ID = 3;
 
     @Inject AbsDataSource<Entry> entryDataSource;
 
@@ -149,6 +149,7 @@ public class MainActivity extends InjectedActivity implements
         AccountHeader accountHeader = new AccountHeaderBuilder()
                 .withActivity(this)
                 .addProfiles(profile)
+                .withOnlyMainProfileImageVisible(true)
                 .withHeaderBackground(getDrawable(R.color.primary))
                 .build();
 
@@ -157,6 +158,8 @@ public class MainActivity extends InjectedActivity implements
                 .withToolbar(toolbar)
                 .withAccountHeader(accountHeader)
                 .addDrawerItems(buildPrimaryDrawerItems())
+                .addDrawerItems(new DividerDrawerItem())
+                .addDrawerItems(buildSettingsItem())
                 .build();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -167,20 +170,6 @@ public class MainActivity extends InjectedActivity implements
 
     private PrimaryDrawerItem[] buildPrimaryDrawerItems() {
         PrimaryDrawerItem[] drawerItems = new PrimaryDrawerItem[MainPage.values().length];
-
-        if (BuildConfig.DEBUG) {
-            drawerItems = new PrimaryDrawerItem[MainPage.values().length + 1];
-            drawerItems[drawerItems.length - 1] = new PrimaryDrawerItem()
-                    .withName("PlayGround")
-                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                        @Override
-                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                            Intent intent = new Intent(MainActivity.this, PlayGroundActivity.class);
-                            startActivity(intent);
-                            return true;
-                        }
-                    });
-        }
 
         for (int i = 0; i < MainPage.values().length; i++) {
             MainPage page = MainPage.values()[i];
@@ -193,6 +182,16 @@ public class MainActivity extends InjectedActivity implements
         }
 
         return drawerItems;
+    }
+
+    //TODO refactor this out
+    private PrimaryDrawerItem buildSettingsItem() {
+        return new PrimaryDrawerItem()
+                .withName("Settings")
+                .withIdentifier(SETTINGS_ID)
+                .withIcon(R.drawable.ic_settings_selected)
+                .withSelectedIcon(R.drawable.ic_settings_unselected)
+                .withOnDrawerItemClickListener(this);
     }
 
     @Override
@@ -227,7 +226,6 @@ public class MainActivity extends InjectedActivity implements
             getMenuInflater().inflate(R.menu.menu_select_mode, menu);
         } else {
             toolbar.setTitle(currentPage.title);
-            getMenuInflater().inflate(R.menu.menu_main, menu);
         }
         return true;
     }
@@ -242,16 +240,6 @@ public class MainActivity extends InjectedActivity implements
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.action_settings:
-                showSettings();
-                return true;
-            case R.id.action_backup:
-                backupEntries();
-                return true;
-            case R.id.action_restore:
-                restoreEntries();
-                return true;
-
             /**
              * We can count on their being a SelectionListener ONLY if these menu items exist
              */
@@ -312,6 +300,13 @@ public class MainActivity extends InjectedActivity implements
 
     @Override
     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+
+        if (drawerItem.getIdentifier() == SETTINGS_ID) {
+            navDrawer.closeDrawer();
+            showSettings();
+            return true;
+        }
+
         //The AccountHeader in the navigation view also has a position
         MainPage page = MainPage.valueOf(position - 1);
         return setPage(page);
