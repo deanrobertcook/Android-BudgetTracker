@@ -68,6 +68,6 @@ public class SignInFragment extends LaunchFragment {
 
     @Override
     public void onBackPressed() {
-        setPage(LaunchPage.WELCOME);
+        setPage(LaunchPage.CREATE_ACCOUNT);
     }
 }

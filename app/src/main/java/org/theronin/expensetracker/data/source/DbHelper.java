@@ -23,26 +23,30 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static DbHelper instance;
 
-    private Context context;
     private String currentDatabaseName;
 
     public static synchronized DbHelper getInstance(Context context, String databaseName) {
-        //TODO check to see if there's anything I need to do when the database changes
-        if (instance == null ||
-                databaseName == null || //for testing purposes, where we use an in-memory DB
-                !databaseName.equals(instance.currentDatabaseName)) {
-            if (instance != null) {
-                instance.close();
-            }
+        if (instance == null || !databaseName.equals(instance.currentDatabaseName)) {
+            closeInstance();
             instance = new DbHelper(context.getApplicationContext(), databaseName);
         }
         return instance;
     }
 
+    public static synchronized DbHelper getInMemoryInstance(Context context) {
+        return getInstance(context, null);
+    }
+
+    private static void closeInstance() {
+        if (instance != null) {
+            instance.close();
+        }
+        instance = null;
+    }
+
     private DbHelper(Context context, String databaseName) {
         super(context, databaseName, null, DATABASE_VERSION);
         this.currentDatabaseName = databaseName;
-        this.context = context;
     }
 
     @Override

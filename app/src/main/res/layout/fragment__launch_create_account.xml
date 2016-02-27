@@ -27,6 +27,14 @@
         android:layout_height="wrap_content"
         android:hint="@string/hint_password"
         android:inputType="textPassword"
+        android:layout_marginTop="@dimen/material_default_margin"/>
+
+    <EditText
+        android:id="@+id/et__confirm_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_confirm_password"
+        android:inputType="textPassword"
         android:layout_marginBottom="@dimen/material_default_margin"
         android:layout_marginTop="@dimen/material_default_margin"/>
 

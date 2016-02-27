@@ -11,6 +11,14 @@ import java.util.Map;
 
 public class TrackingUtils {
 
+    /**
+     * For the default user
+     * @param user
+     */
+    public static void setUserDetails(String user) {
+        Localytics.setCustomerId(user);
+    }
+
     public static void setUserDetails(ParseUser user) {
         Localytics.setCustomerId(user.getObjectId());
         Localytics.setCustomerEmail(user.getEmail());

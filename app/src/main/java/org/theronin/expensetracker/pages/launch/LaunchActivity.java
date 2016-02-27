@@ -59,12 +59,10 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
 
     private boolean startApplication(LaunchPage page) {
         if (page == LaunchPage.ENTER_APP) {
-            if (ParseUser.getCurrentUser() == null) {
-                throw new IllegalStateException("The app can only be entered when there is a signed in user");
-            }
             //Create or Set the database for the user:
-            ((CustomApplication) getApplication()).setDatabase();
-            TrackingUtils.setUserDetails(ParseUser.getCurrentUser());
+            CustomApplication application = ((CustomApplication) getApplication());
+            TrackingUtils.setUserDetails(application.getSignedInUser());
+            application.setDatabase();
 
             Intent startAppIntent = new Intent(this, BuildConfig.DEBUG ? DebugActivity.class : MainActivity.class);
             startActivity(startAppIntent);

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -19,6 +20,7 @@ public class CreateAccountFragment extends LaunchFragment {
 
     private EditText emailField;
     private EditText passwordField;
+    private EditText confirmPasswordField;
 
     @Nullable
     @Override
@@ -26,6 +28,7 @@ public class CreateAccountFragment extends LaunchFragment {
         View view = inflater.inflate(R.layout.fragment__launch_create_account, container, false);
         emailField = (EditText) view.findViewById(R.id.et__email);
         passwordField = (EditText) view.findViewById(R.id.et__password);
+        confirmPasswordField = (EditText) view.findViewById(R.id.et__confirm_password);
         return view;
     }
 
@@ -43,12 +46,18 @@ public class CreateAccountFragment extends LaunchFragment {
     public void onPositiveButtonClicked() {
         Timber.d("email: " + emailField.getText().toString());
         Timber.d("password: " + passwordField.getText().toString());
-        //TODO handle input credentials properly
+
+        String password = passwordField.getText().toString();
+        String confirmPassword = confirmPasswordField.getText().toString();
+
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(getActivity(), "Passwords do not match!", Toast.LENGTH_SHORT).show();
+        }
+
         ParseUser user = new ParseUser();
         user.setEmail(emailField.getText().toString());
-        //TODO how can I disable usernames?
         user.setUsername(emailField.getText().toString());
-        user.setPassword(passwordField.getText().toString());
+        user.setPassword(password);
 
         user.signUpInBackground(new SignUpCallback() {
             @Override
@@ -56,6 +65,7 @@ public class CreateAccountFragment extends LaunchFragment {
                 if (e == null) {
                     setPage(LaunchPage.ENTER_APP);
                 } else {
+                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
             }
@@ -69,6 +79,6 @@ public class CreateAccountFragment extends LaunchFragment {
 
     @Override
     public void onBackPressed() {
-        setPage(LaunchPage.SIGN_IN);
+        setPage(LaunchPage.SKIP_ACCOUNT);
     }
 }

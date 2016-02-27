@@ -16,6 +16,8 @@ import timber.log.Timber;
 
 public class CustomApplication extends Application implements InjectedComponent {
 
+    public static final String DEFAULT_USER = "DEFAULT_USER";
+
     private ObjectGraph graph;
 
     @Override
@@ -44,8 +46,12 @@ public class CustomApplication extends Application implements InjectedComponent 
     }
 
     public void setDatabase() {
-        DbHelper dbHelper = DbHelper.getInstance(getApplicationContext(), getDatabaseName());
+        DbHelper dbHelper = DbHelper.getInstance(getApplicationContext(), getSignedInUser());
         graph = ObjectGraph.create(new AppModule(this, dbHelper));
+    }
+
+    public String getSignedInUser() {
+        return ParseUser.getCurrentUser() == null ? DEFAULT_USER : ParseUser.getCurrentUser().getObjectId();
     }
 
     @Override
@@ -55,13 +61,5 @@ public class CustomApplication extends Application implements InjectedComponent 
                     " means the database is also not ready");
         }
         graph.inject(object);
-    }
-
-    private String getDatabaseName() {
-        if (ParseUser.getCurrentUser() == null) {
-            throw new IllegalStateException("The current user is null, there is no database " +
-                    "that can be created or retrieved");
-        }
-        return ParseUser.getCurrentUser().getObjectId();
     }
 }

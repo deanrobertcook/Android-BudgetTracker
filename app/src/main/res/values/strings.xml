@@ -94,13 +94,23 @@
     <string name="create_account">CREATE ACCOUNT</string>
 
     <string name="launch_welcome_title">Welcome to Expense Tracker!</string>
-    <string name="launch_welcome_message">Put some description of how to use the app here.</string>
+    <string name="launch_welcome_message">Keep track of your daily spending habits with this easy-to-use tool.
+        \n\nCreate expense items under your own custom categories and let the application keep track of this information,
+        summarizing what you spend each day.
+    </string>
+
+    <string name="launch_skip_account_title">Create an Account?</string>
+    <string name="launch_skip_account_body">You can choose to skip account registration now and try out the app.
+        Note that without an account your data cannot be synced with other devices.
+        \n\nIf you choose to create an account later, any entries you create in the meantime will be transferred to your new account.</string>
+
     <string name="hint_password">Password</string>
-    <string name="launch_sign_in_title">Sign in with an existing account</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="launch_sign_in_title">Sign in With an Existing Account</string>
     <string name="hint_username">Username</string>
     <string name="hint_email">Email</string>
-    <string name="launch_create_account_title">Create a new account</string>
-    <string name="existing_account">EXISTING ACCOUNT</string>
+    <string name="launch_create_account_title">Create a New Account</string>
+    <string name="existing_account">EXISTING ACCOUNT?</string>
     <string name="sign_up">SIGN UP</string>
 
 
@@ -117,4 +127,6 @@
     <string name="add_entry_dialog_title">Add Expense Items</string>
     <string name="entry_add_another_item">ADD ANOTHER ITEM</string>
     <string name="empty_category_hint">Select Category</string>
+    <string name="continue_to_registration">CONTINUE</string>
+    <string name="sign_up_later">SIGN UP LATER</string>
 </resources>

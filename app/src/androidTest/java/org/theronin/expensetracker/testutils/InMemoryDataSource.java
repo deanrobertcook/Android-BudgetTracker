@@ -22,7 +22,7 @@ public class InMemoryDataSource {
 
     public InMemoryDataSource() {
         Context context = InstrumentationRegistry.getTargetContext();
-        DbHelper dbHelper = DbHelper.getInstance(context, null);
+        DbHelper dbHelper = DbHelper.getInMemoryInstance(context);
 
         this.exchangeRateDataSource = new DataSourceExchangeRate(context, dbHelper);
         this.categoryDataSource = new DataSourceCategory(context, dbHelper);

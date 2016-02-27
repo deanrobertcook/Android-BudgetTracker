@@ -8,32 +8,40 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.theronin.expensetracker.R;
-import org.theronin.expensetracker.utils.Prefs;
 
-public class WelcomeFragment extends LaunchFragment {
+public class SkipAccountFragment extends LaunchFragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment__launch_basic, container, false);
-        ((TextView) view.findViewById(R.id.fragment_launch_title)).setText(R.string.launch_welcome_title);
-        ((TextView) view.findViewById(R.id.fragment_launch_body)).setText(R.string.launch_welcome_message);
+        ((TextView) view.findViewById(R.id.fragment_launch_title)).setText(R.string.launch_skip_account_title);
+        ((TextView) view.findViewById(R.id.fragment_launch_body)).setText(R.string.launch_skip_account_body);
         return view;
     }
 
     @Override
     public String getPositiveButtonText() {
-        return getActivity().getString(R.string.next);
+        return getActivity().getString(R.string.continue_to_registration);
     }
 
     @Override
     public void onPositiveButtonClicked() {
-        Prefs.setWelcomeScreenShown(getActivity());
-        setPage(LaunchPage.SKIP_ACCOUNT);
+        setPage(LaunchPage.CREATE_ACCOUNT);
     }
 
     @Override
     public void onBackPressed() {
-        getActivity().finish();
+        setPage(LaunchPage.WELCOME);
+    }
+
+    @Override
+    public void onNegativeButtonClicked() {
+        setPage(LaunchPage.ENTER_APP);
+    }
+
+    @Override
+    public String getNegativeButtonText() {
+        return getActivity().getString(R.string.sign_up_later);
     }
 }
