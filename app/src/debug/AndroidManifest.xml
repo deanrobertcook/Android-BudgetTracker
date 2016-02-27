@@ -1,9 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     package="org.theronin.expensetracker"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application>
+
+        <meta-data
+            android:name="LOCALYTICS_APP_KEY"
+            android:value="@string/localytics_api_key_staging"
+            tools:replace="android:value"/>
+
+        <meta-data
+            android:name="com.parse.APPLICATION_ID"
+            android:value="@string/parse_app_id_staging"
+            tools:replace="android:value"/>
+        <meta-data
+            android:name="com.parse.CLIENT_KEY"
+            android:value="@string/parse_client_key_staging"
+            tools:replace="android:value"/>
+
         <activity android:name=".pages.main.DebugActivity"/>
+
+        <activity
+            android:name=".pages.launch.LaunchActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+            <intent-filter>
+                <data android:scheme="@string/localytics_main_scheme_staging"/>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+        </activity>
+
     </application>
 </manifest>

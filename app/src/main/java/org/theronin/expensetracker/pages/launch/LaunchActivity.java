@@ -15,6 +15,7 @@ import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.pages.main.DebugActivity;
 import org.theronin.expensetracker.pages.main.MainActivity;
 import org.theronin.expensetracker.utils.Prefs;
+import org.theronin.expensetracker.utils.TrackingUtils;
 
 public class LaunchActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -63,6 +64,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
             }
             //Create or Set the database for the user:
             ((CustomApplication) getApplication()).setDatabase();
+            TrackingUtils.setUserDetails(ParseUser.getCurrentUser());
 
             Intent startAppIntent = new Intent(this, BuildConfig.DEBUG ? DebugActivity.class : MainActivity.class);
             startActivity(startAppIntent);
@@ -79,8 +81,6 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
             return LaunchPage.SIGN_IN;
         }
         return LaunchPage.ENTER_APP;
-        //return the welcome page to manually test signing in with different users
-//        return LaunchPage.WELCOME;
     }
 
     @Override

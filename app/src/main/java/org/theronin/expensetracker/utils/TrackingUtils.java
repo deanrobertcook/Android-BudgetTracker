@@ -1,6 +1,7 @@
 package org.theronin.expensetracker.utils;
 
 import com.localytics.android.Localytics;
+import com.parse.ParseUser;
 
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Entry;
@@ -9,6 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TrackingUtils {
+
+    public static void setUserDetails(ParseUser user) {
+        Localytics.setCustomerId(user.getObjectId());
+        Localytics.setCustomerEmail(user.getEmail());
+    }
 
     public static void addEntryDialogOpened() {
         Localytics.tagEvent("Entry Dialog Opened");
