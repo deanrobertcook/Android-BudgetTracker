@@ -2,6 +2,7 @@ package org.theronin.expensetracker;
 
 import android.app.Application;
 
+import com.localytics.android.LocalyticsActivityLifecycleCallbacks;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseInstallation;
@@ -23,7 +24,7 @@ public class CustomApplication extends Application implements InjectedComponent 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
-
+        registerActivityLifecycleCallbacks(new LocalyticsActivityLifecycleCallbacks(this));
         setupParse();
     }
 

@@ -22,14 +22,13 @@ import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.pages.entries.insert.EntryDialogActivity;
 import org.theronin.expensetracker.pages.main.MainActivity;
 import org.theronin.expensetracker.utils.DateUtils;
+import org.theronin.expensetracker.utils.TrackingUtils;
 import org.theronin.expensetracker.view.AmountView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import timber.log.Timber;
 
 import static org.theronin.expensetracker.utils.Prefs.getHomeCurrency;
 
@@ -54,7 +53,6 @@ public class EntryListFragment extends InjectedFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLoaderManager().initLoader(ENTRY_LOADER_ID, null, this);
-        Timber.d("onCreate()");
     }
 
     @Override
@@ -89,7 +87,7 @@ public class EntryListFragment extends InjectedFragment implements
     public void onClick(View button) {
         switch (button.getId()) {
             case R.id.fab__add_entry_button:
-                Timber.d("FAB clicked!");
+                TrackingUtils.addEntryDialogOpened();
                 Intent intent = new Intent(getActivity(), EntryDialogActivity.class);
                 getActivity().startActivity(intent);
         }
@@ -120,28 +118,24 @@ public class EntryListFragment extends InjectedFragment implements
 
     @Override
     public void onEnterSelectMode() {
-        Timber.d("onEnterSelectMode");
         ((MainActivity) getActivity()).setSelectMode(true);
         getActivity().invalidateOptionsMenu();
     }
 
     @Override
     public void onExitSelectMode() {
-        Timber.d("onExitSelectMode");
         ((MainActivity) getActivity()).setSelectMode(false);
         getActivity().invalidateOptionsMenu();
     }
 
     @Override
     public void onItemSelected(int count, String amount) {
-        Timber.d(count + " items selected");
         String display = count == 1 ? (count + " entry: " + amount) : (count + " entries: " + amount);
         ((MainActivity) getActivity()).getSupportActionBar().setTitle(display);
     }
 
     @Override
     public void deleteSelection() {
-        Timber.d("deleteSelection");
         int count = adapter.getSelection().size();
         DeleteSelectionDialogFragment dialogFragment = DeleteSelectionDialogFragment.newInstance(this, count);
         dialogFragment.show(getFragmentManager(), DeleteSelectionDialogFragment.TAG);
@@ -149,7 +143,6 @@ public class EntryListFragment extends InjectedFragment implements
 
     @Override
     public void onDeleteSelectionConfirmed() {
-        Timber.d("onDeleteSelectionConfirmed");
         //TODO abstract away the mark as deleted functionality
         ((DataSourceEntry) entryDataSource).bulkMarkAsDeleted(adapter.getSelection());
 
@@ -159,7 +152,6 @@ public class EntryListFragment extends InjectedFragment implements
 
     @Override
     public void cancelSelection() {
-        Timber.d("cancelSelection");
         adapter.exitSelectMode();
     }
 

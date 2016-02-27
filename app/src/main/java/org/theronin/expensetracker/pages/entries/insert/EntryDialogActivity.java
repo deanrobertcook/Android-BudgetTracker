@@ -22,6 +22,7 @@ import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.pages.reusable.DatePickerFragment;
 import org.theronin.expensetracker.utils.DateUtils;
+import org.theronin.expensetracker.utils.TrackingUtils;
 import org.theronin.expensetracker.utils.TransitionUtils;
 
 import java.util.ArrayList;
@@ -87,6 +88,7 @@ public class EntryDialogActivity extends InjectedActivity
     }
 
     private void addInputRow() {
+        TrackingUtils.extraInputRowCreated();
         InsertRowViewHolder viewHolder = new InsertRowViewHolder(inputRowsLayout, this, inputRows.size());
         inputRows.add(viewHolder);
         inputRowsLayout.addView(viewHolder.rowView);
@@ -112,6 +114,7 @@ public class EntryDialogActivity extends InjectedActivity
 
     @Override
     public void onRowSelectCategoryFieldClicked(int rowIndex) {
+        TrackingUtils.categoryFieldClicked();
         Intent intent = new Intent(EntryDialogActivity.this, CategorySelectActivity.class);
         startActivityForResult(intent, rowIndex, TransitionUtils.getLeftTransitionAnimation(this));
     }
@@ -233,6 +236,7 @@ public class EntryDialogActivity extends InjectedActivity
                     new Currency(getCurrentCurrency(this).code)
             );
 
+            TrackingUtils.entryCreated(entry);
             entriesToInsert.add(entry);
         }
 

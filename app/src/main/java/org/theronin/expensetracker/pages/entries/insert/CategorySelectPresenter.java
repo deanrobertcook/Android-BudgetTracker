@@ -4,6 +4,7 @@ import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.data.source.DataSourceCategory;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.pages.entries.insert.CategorySelectAdapter.CategorySelectedListener;
+import org.theronin.expensetracker.utils.TrackingUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +39,7 @@ public class CategorySelectPresenter implements CategorySelectedListener {
 
     private void onCategoryCreated(String categoryName) {
         Category category = new Category(categoryName);
+        TrackingUtils.categoryCreated(category);
         long id = dataSourceCategory.insert(category).getId();
 
         if (id == -1) {
@@ -50,6 +52,7 @@ public class CategorySelectPresenter implements CategorySelectedListener {
     }
 
     private void onCategoryUpdated(Category category, String newCategoryName) {
+        TrackingUtils.categoryUpdated(category, newCategoryName);
         category.setName(newCategoryName);
         if (!dataSourceCategory.update(category)) {
             categorySelectUI.showCategoryDuplicateError(category);
@@ -59,6 +62,7 @@ public class CategorySelectPresenter implements CategorySelectedListener {
     }
 
     public void onCategoryDeleted(Category category) {
+        TrackingUtils.categoryDeleted(category);
         dataSourceCategory.delete(category);
     }
 
@@ -111,6 +115,7 @@ public class CategorySelectPresenter implements CategorySelectedListener {
             throw new IllegalStateException("finishMerge should only be called after a merge is started and a category " +
                     "has been selected");
         }
+        TrackingUtils.categoriesMerged(mergeFrom, mergeTo);
         ((DataSourceCategory) dataSourceCategory).mergeCategories(new ArrayList<>(Arrays.asList(mergeFrom)), mergeTo);
         cancelMerge();
     }

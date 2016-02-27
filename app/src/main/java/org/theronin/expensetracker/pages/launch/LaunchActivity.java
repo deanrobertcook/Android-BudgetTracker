@@ -35,6 +35,12 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
         setPage(getFirstPageToDisplay());
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
     /**
      * Set the current launch page. Setting a null page will trigger the main portion of the app.
      * @param page the page to display, or null to enter the app.
