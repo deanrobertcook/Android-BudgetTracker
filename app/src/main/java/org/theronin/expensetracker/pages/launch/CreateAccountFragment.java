@@ -30,7 +30,7 @@ public class CreateAccountFragment extends LaunchFragment {
 
     @Override
     public String getPositiveButtonText() {
-        return getActivity().getString(R.string.sign_up);
+        return getActivity().getString(R.string.sign_up_caps);
     }
 
     @Override

@@ -36,6 +36,11 @@ public class DefaultUser extends User {
     }
 
     @Override
+    public void requestChangePassword(Callback callback) {
+        throw new NotImplementedException("There is no password to change for the default user");
+    }
+
+    @Override
     public User setEmail(String email) {
         throw new NotImplementedException("Can't set an email on the default user");
     }

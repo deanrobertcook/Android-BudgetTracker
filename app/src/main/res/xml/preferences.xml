@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
+        android:title="@string/pref_cat_account_settings">
+        <org.theronin.expensetracker.view.AddAccountPreference
+            android:key="@string/pref_account_add_key"
+            android:title="@string/pref_account_add_title"
+            android:summary="@string/pref_account_add_summary"/>
+
+        <org.theronin.expensetracker.view.ChangePasswordPreference
+            android:key="@string/pref_account_change_password_key"
+            android:title="@string/pref_account_change_password_title"
+            android:summary="@string/pref_account_change_password_summary"/>
+
+    </PreferenceCategory>
+    <PreferenceCategory
         android:title="@string/pref_cat_currency_title">
         <ListPreference
             android:key="@string/pref_home_currency_key"

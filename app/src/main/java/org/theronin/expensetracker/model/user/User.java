@@ -17,6 +17,8 @@ public abstract class User {
 
     public abstract boolean canSync();
 
+    public abstract void requestChangePassword(Callback callback);
+
     public User setEmail(String email) {
         //TODO more email validation
         this.email = email;

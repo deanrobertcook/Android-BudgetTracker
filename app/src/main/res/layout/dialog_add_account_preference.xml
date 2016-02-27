@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/material_dialog_default_margin"
+    android:paddingRight="@dimen/material_dialog_default_margin"
+    >
+
+    <EditText
+        android:id="@+id/et__email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/material_default_margin"
+        android:hint="@string/hint_email"
+        android:inputType="textEmailAddress"
+        />
+
+    <EditText
+        android:id="@+id/et__password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/material_default_margin"
+        android:hint="@string/hint_password"
+        android:inputType="textPassword"/>
+
+    <EditText
+        android:id="@+id/et__confirm_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/material_default_margin"
+        android:layout_marginTop="@dimen/material_default_margin"
+        android:hint="@string/hint_confirm_password"
+        android:inputType="textPassword"/>
+
+</LinearLayout>

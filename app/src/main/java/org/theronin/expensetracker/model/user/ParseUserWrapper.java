@@ -3,6 +3,7 @@ package org.theronin.expensetracker.model.user;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.RequestPasswordResetCallback;
 import com.parse.SignUpCallback;
 
 public class ParseUserWrapper extends User {
@@ -35,6 +36,20 @@ public class ParseUserWrapper extends User {
     @Override
     public boolean canSync() {
         return this.parseUser != null;
+    }
+
+    @Override
+    public void requestChangePassword(final Callback callback) {
+        ParseUser.requestPasswordResetInBackground(getEmail(), new RequestPasswordResetCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    callback.onSuccess();
+                } else {
+                    callback.onFailure(e);
+                }
+            }
+        });
     }
 
     @Override

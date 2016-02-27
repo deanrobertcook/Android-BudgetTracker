@@ -28,12 +28,12 @@ public class SignInFragment extends LaunchFragment {
 
     @Override
     public String getPositiveButtonText() {
-        return getActivity().getString(R.string.sign_in);
+        return getActivity().getString(R.string.sign_in_caps);
     }
 
     @Override
     public String getTertiaryButtonText() {
-        return getActivity().getString(R.string.create_account);
+        return getActivity().getString(R.string.create_account_caps);
     }
 
     @Override

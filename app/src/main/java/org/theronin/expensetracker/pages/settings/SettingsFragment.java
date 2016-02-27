@@ -8,9 +8,15 @@ import android.preference.PreferenceFragment;
 
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.SupportedCurrencies;
+import org.theronin.expensetracker.model.user.UserManager;
+import org.theronin.expensetracker.view.AddAccountPreference;
+import org.theronin.expensetracker.view.ChangePasswordPreference;
 
 public class SettingsFragment extends PreferenceFragment
         implements OnPreferenceChangeListener {
+
+    private AddAccountPreference addAccountPreference;
+    private ChangePasswordPreference changePasswordPreference;
 
     private ListPreference homeCurrencyPreference;
     private ListPreference currentCurrencyPreference;
@@ -20,11 +26,25 @@ public class SettingsFragment extends PreferenceFragment
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
+        setUpAccountPreferences();
+
         homeCurrencyPreference = (ListPreference) findPreference(getString(R.string.pref_home_currency_key));
         setCurrencyPreference(homeCurrencyPreference);
 
         currentCurrencyPreference = (ListPreference) findPreference(getString(R.string.pref_current_currency_key));
         setCurrencyPreference(currentCurrencyPreference);
+    }
+
+    private void setUpAccountPreferences() {
+        addAccountPreference = (AddAccountPreference) findPreference(getString(R.string.pref_account_add_key));
+        addAccountPreference.setEnabled(defaultUser());
+
+        changePasswordPreference = (ChangePasswordPreference) findPreference(getString(R.string.pref_account_change_password_key));
+        changePasswordPreference.setEnabled(!defaultUser());
+    }
+
+    private boolean defaultUser() {
+        return !UserManager.getUser(getActivity()).canSync();
     }
 
     private void setCurrencyPreference(ListPreference currencyPreference) {

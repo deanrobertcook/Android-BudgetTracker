@@ -3,6 +3,17 @@
 
     <string name="shared_preferences_key">org.theronin.budgettracker.PREFERENCES</string>
 
+    <string name="pref_cat_account_settings">Account Settings</string>
+
+    <string name="pref_account_add_key">add_account</string>
+    <string name="pref_account_add_title">Add Account</string>
+    <string name="pref_account_add_summary">Add an account to be able to save and sync your data</string>
+
+
+    <string name="pref_account_change_password_key">pref_account_change_password_key</string>
+    <string name="pref_account_change_password_title">Change Password</string>
+    <string name="pref_account_change_password_summary">Change the password associated with your account.</string>
+
     <string name="pref_cat_currency_title">Currency Settings</string>
 
     <string name="pref_home_currency_key">home_currency</string>
@@ -89,9 +100,11 @@
     <string name="accept">ACCEPT</string>
 
     <string name="next">NEXT</string>
-    <string name="sign_in">SIGN IN</string>
+    <string name="sign_in_caps">SIGN IN</string>
+    <string name="sign_in">Sign In</string>
     <string name="back">BACK</string>
-    <string name="create_account">CREATE ACCOUNT</string>
+    <string name="create_account_caps">CREATE ACCOUNT</string>
+    <string name="create_account">Create Acount</string>
 
     <string name="launch_welcome_title">Welcome to Expense Tracker!</string>
     <string name="launch_welcome_message">Keep track of your daily spending habits with this easy-to-use tool.
@@ -111,7 +124,7 @@
     <string name="hint_email">Email</string>
     <string name="launch_create_account_title">Create a New Account</string>
     <string name="existing_account">EXISTING ACCOUNT?</string>
-    <string name="sign_up">SIGN UP</string>
+    <string name="sign_up_caps">SIGN UP</string>
 
 
     <string name="pref_welcome_screen_has_been_shown">pref_welcome_screen_has_been_shown</string>
@@ -129,4 +142,7 @@
     <string name="empty_category_hint">Select Category</string>
     <string name="continue_to_registration">CONTINUE</string>
     <string name="sign_up_later">SIGN UP LATER</string>
+    <string name="dialog_change_password_title">Change Password?</string>
+    <string name="dialog_change_password_body">This action will send an email to your address for further instructions on how to change your password.</string>
+    <string name="send_caps">SEND</string>
 </resources>

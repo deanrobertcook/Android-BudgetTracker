@@ -20,4 +20,8 @@ public class NullUser extends User {
     public boolean canSync() {
         return false;
     }
+
+    @Override
+    public void requestChangePassword(Callback callback) {
+    }
 }
