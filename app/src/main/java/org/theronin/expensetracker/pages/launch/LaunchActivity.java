@@ -7,11 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.parse.ParseUser;
-
 import org.theronin.expensetracker.BuildConfig;
 import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.R;
+import org.theronin.expensetracker.model.user.UserManager;
 import org.theronin.expensetracker.pages.main.DebugActivity;
 import org.theronin.expensetracker.pages.main.MainActivity;
 import org.theronin.expensetracker.utils.Prefs;
@@ -60,9 +59,8 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
     private boolean startApplication(LaunchPage page) {
         if (page == LaunchPage.ENTER_APP) {
             //Create or Set the database for the user:
-            CustomApplication application = ((CustomApplication) getApplication());
-            TrackingUtils.setUserDetails(application.getSignedInUser());
-            application.setDatabase();
+            TrackingUtils.setUserDetails(UserManager.getUser(this));
+            ((CustomApplication) getApplication()).setDatabase();
 
             Intent startAppIntent = new Intent(this, BuildConfig.DEBUG ? DebugActivity.class : MainActivity.class);
             startActivity(startAppIntent);
@@ -75,8 +73,8 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
         if (!Prefs.hasWelcomeScreenBeenShown(this)) {
             return LaunchPage.WELCOME;
         }
-        if (ParseUser.getCurrentUser() == null) {
-            return LaunchPage.SIGN_IN;
+        if (!UserManager.signedIn(this)) {
+            return LaunchPage.SKIP_ACCOUNT;
         }
         return LaunchPage.ENTER_APP;
     }

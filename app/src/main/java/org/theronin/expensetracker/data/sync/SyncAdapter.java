@@ -12,6 +12,7 @@ import org.theronin.expensetracker.data.backend.entry.EntryRemoteSync;
 import org.theronin.expensetracker.data.backend.entry.EntrySyncCoordinator;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Entry;
+import org.theronin.expensetracker.model.user.UserManager;
 import org.theronin.expensetracker.utils.Prefs;
 
 import java.util.List;
@@ -53,6 +54,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             return;
         }
 
+        if (!UserManager.getUser(getContext()).canSync()) {
+            return;
+        }
+
         pushEntries();
         pullEntries();
 
@@ -61,12 +66,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private void pushEntries() {
         Timber.d("pushEntries");
         List<Entry> allEntries = entryDataSource.query();
-        EntrySyncCoordinator entrySyncCoordinator = new EntrySyncCoordinator(entryDataSource, remoteSync);
+        EntrySyncCoordinator entrySyncCoordinator = new EntrySyncCoordinator(
+                UserManager.getUser(getContext()), entryDataSource, remoteSync);
         entrySyncCoordinator.syncEntries(allEntries);
     }
 
     private void pullEntries() {
-        new EntrySyncCoordinator(entryDataSource, remoteSync).findEntries(Prefs.getLastSyncTime(getContext()));
+        new EntrySyncCoordinator(UserManager.getUser(getContext()),
+                entryDataSource, remoteSync).findEntries(Prefs.getLastSyncTime(getContext()));
         Prefs.setLastSyncTime(System.currentTimeMillis(), getContext());
     }
 }

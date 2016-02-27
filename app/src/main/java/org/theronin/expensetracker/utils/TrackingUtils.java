@@ -1,26 +1,18 @@
 package org.theronin.expensetracker.utils;
 
 import com.localytics.android.Localytics;
-import com.parse.ParseUser;
 
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Entry;
+import org.theronin.expensetracker.model.user.User;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class TrackingUtils {
 
-    /**
-     * For the default user
-     * @param user
-     */
-    public static void setUserDetails(String user) {
-        Localytics.setCustomerId(user);
-    }
-
-    public static void setUserDetails(ParseUser user) {
-        Localytics.setCustomerId(user.getObjectId());
+    public static void setUserDetails(User user) {
+        Localytics.setCustomerId(user.getId());
         Localytics.setCustomerEmail(user.getEmail());
     }
 

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.theronin.expensetracker.R;
+import org.theronin.expensetracker.model.user.DefaultUser;
 
 public class SkipAccountFragment extends LaunchFragment {
 
@@ -37,6 +38,7 @@ public class SkipAccountFragment extends LaunchFragment {
 
     @Override
     public void onNegativeButtonClicked() {
+        new DefaultUser(getActivity()).signIn(null); //sign in as the default user.
         setPage(LaunchPage.ENTER_APP);
     }
 

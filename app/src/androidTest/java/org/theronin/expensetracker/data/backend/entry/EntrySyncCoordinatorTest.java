@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.data.source.DataSourceEntry;
 import org.theronin.expensetracker.model.Entry;
+import org.theronin.expensetracker.model.user.User;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,13 +26,17 @@ public class EntrySyncCoordinatorTest {
 
     private AbsDataSource<Entry> entryAbsDataSource;
     private EntryRemoteSync remoteSync;
+    private User mockUser;
     private EntrySyncCoordinator entrySyncCoordinator;
 
     @Before
     public void setup() {
         entryAbsDataSource = mock(DataSourceEntry.class);
         remoteSync = mock(EntryRemoteSync.class);
-        entrySyncCoordinator = new EntrySyncCoordinator(entryAbsDataSource, remoteSync);
+        mockUser = mock(User.class);
+        when(mockUser.canSync()).thenReturn(true);
+
+        entrySyncCoordinator = new EntrySyncCoordinator(mockUser, entryAbsDataSource, remoteSync);
     }
 
     @Test @SmallTest

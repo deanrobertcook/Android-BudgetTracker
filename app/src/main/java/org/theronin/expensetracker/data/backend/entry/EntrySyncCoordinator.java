@@ -2,6 +2,7 @@ package org.theronin.expensetracker.data.backend.entry;
 
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Entry;
+import org.theronin.expensetracker.model.user.User;
 import org.theronin.expensetracker.utils.DebugUtils;
 
 import java.util.ArrayList;
@@ -16,13 +17,21 @@ public class EntrySyncCoordinator {
 
     private final AbsDataSource<Entry> dataSource;
     private final EntryRemoteSync remoteSync;
+    private final User user;
 
-    public EntrySyncCoordinator(AbsDataSource<Entry> dataSource, EntryRemoteSync remoteSync) {
+    public EntrySyncCoordinator(
+            User user,
+            AbsDataSource<Entry> dataSource,
+            EntryRemoteSync remoteSync) {
+        this.user = user;
         this.dataSource = dataSource;
         this.remoteSync = remoteSync;
     }
 
     public void syncEntries(List<Entry> entitiesToSync) {
+        if (!user.canSync()) {
+            return;
+        }
         List<Entry> toAddOrUpdate = new ArrayList<>();
         List<Entry> toDeleteRemote = new ArrayList<>();
         List<Entry> toDeleteLocal = new ArrayList<>();

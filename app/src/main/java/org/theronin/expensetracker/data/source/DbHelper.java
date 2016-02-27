@@ -26,7 +26,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private String currentDatabaseName;
 
     public static synchronized DbHelper getInstance(Context context, String databaseName) {
-        if (instance == null || !databaseName.equals(instance.currentDatabaseName)) {
+        if (instance == null || databaseName == null || !databaseName.equals(instance.currentDatabaseName)) {
             closeInstance();
             instance = new DbHelper(context.getApplicationContext(), databaseName);
         }

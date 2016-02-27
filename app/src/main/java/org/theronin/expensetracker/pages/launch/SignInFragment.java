@@ -8,24 +8,20 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.parse.LogInCallback;
-import com.parse.ParseException;
-import com.parse.ParseUser;
-
 import org.theronin.expensetracker.R;
-
-import timber.log.Timber;
+import org.theronin.expensetracker.model.user.ParseUserWrapper;
+import org.theronin.expensetracker.model.user.User;
 
 public class SignInFragment extends LaunchFragment {
 
-    private EditText userNameOrEmailField;
+    private EditText emailField;
     private EditText passwordField;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment__launch_sign_in, container, false);
-        userNameOrEmailField = (EditText) view.findViewById(R.id.et__email);
+        emailField = (EditText) view.findViewById(R.id.et__email);
         passwordField = (EditText) view.findViewById(R.id.et__password);
         return view;
     }
@@ -42,21 +38,19 @@ public class SignInFragment extends LaunchFragment {
 
     @Override
     public void onPositiveButtonClicked() {
-        Timber.d("userNameOrEmail: " + userNameOrEmailField.getText().toString());
-        Timber.d("password: " + passwordField.getText().toString());
-
-        ParseUser.logInInBackground(
-                userNameOrEmailField.getText().toString(),
-                passwordField.getText().toString(),
-                new LogInCallback() {
+        new ParseUserWrapper()
+                .setEmail(emailField.getText().toString())
+                .setPassword(passwordField.getText().toString())
+                .signIn(new User.Callback() {
                     @Override
-                    public void done(ParseUser user, ParseException e) {
-                        if (e == null) {
-                            setPage(LaunchPage.ENTER_APP);
-                        } else {
-                            e.printStackTrace();
-                            Toast.makeText(getActivity(), "Couldn't log in", Toast.LENGTH_SHORT).show();
-                        }
+                    public void onSuccess() {
+                        setPage(LaunchPage.ENTER_APP);
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getActivity(), "Couldn't log in", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

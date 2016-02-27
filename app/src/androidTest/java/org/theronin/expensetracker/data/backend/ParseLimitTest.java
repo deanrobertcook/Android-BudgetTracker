@@ -15,6 +15,7 @@ import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.ExchangeRate;
+import org.theronin.expensetracker.model.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,9 @@ public class ParseLimitTest {
         int numEntriesToSync = 2000;
         AbsDataSource<Entry> absDataSource = mock(DataSourceEntry.class);
         ParseEntryRemoteSync remoteSync = new ParseEntryRemoteSync();
-        EntrySyncCoordinator coordinator = new EntrySyncCoordinator(absDataSource, remoteSync);
+        User mockUser = mock(User.class);
+        when(mockUser.canSync()).thenReturn(true);
+        EntrySyncCoordinator coordinator = new EntrySyncCoordinator(mockUser, absDataSource, remoteSync);
 
         coordinator.syncEntries(createEntries(numEntriesToSync));
     }

@@ -10,6 +10,17 @@ import org.theronin.expensetracker.model.Currency;
 public class Prefs {
 
     private static final String PREF_LAST_SYNC_CHECK_KEY = "PREF_LAST_SYNC_CHECK";
+    private static final String PREF_LOGGED_IN_AS_DEFAULT = "PREF_LOGGED_IN_AS_DEFAULT";
+
+    public static void logInAsDefaultUser(Context context) {
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit().putBoolean(PREF_LOGGED_IN_AS_DEFAULT, true).apply();
+    }
+
+    public static boolean loggedInAsDefaultUser(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(PREF_LOGGED_IN_AS_DEFAULT, false);
+    }
 
     public static Currency getHomeCurrency(Context context) {
         return getCurrency(R.string.pref_home_currency_key, context);

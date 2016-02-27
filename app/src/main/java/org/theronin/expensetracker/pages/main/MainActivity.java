@@ -16,12 +16,12 @@ import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.parse.ParseUser;
 
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.dagger.InjectedActivity;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.model.Entry;
+import org.theronin.expensetracker.model.user.UserManager;
 import org.theronin.expensetracker.pages.categories.CategoryListFragment;
 import org.theronin.expensetracker.pages.entries.list.EntriesAdapter.SelectionListener;
 import org.theronin.expensetracker.pages.entries.list.EntryListFragment;
@@ -151,7 +151,7 @@ public class MainActivity extends InjectedActivity implements
 
     private Drawer buildNavigationDrawer() {
         ProfileDrawerItem profile = new ProfileDrawerItem()
-                .withEmail(ParseUser.getCurrentUser().getEmail());
+                .withEmail(UserManager.getUser(this).getEmail());
 
         AccountHeader accountHeader = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -193,7 +193,7 @@ public class MainActivity extends InjectedActivity implements
     }
 
     private boolean isUserSessionValid() {
-        if (ParseUser.getCurrentUser() == null) {
+        if (!UserManager.signedIn(this)) {
             Timber.d("User session has expired");
             Intent signInIntent = new Intent(this, LaunchActivity.class);
             startActivity(signInIntent);

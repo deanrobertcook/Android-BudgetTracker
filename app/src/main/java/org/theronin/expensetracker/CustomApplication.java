@@ -6,10 +6,10 @@ import com.localytics.android.LocalyticsActivityLifecycleCallbacks;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseInstallation;
-import com.parse.ParseUser;
 
 import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.data.source.DbHelper;
+import org.theronin.expensetracker.model.user.UserManager;
 
 import dagger.ObjectGraph;
 import timber.log.Timber;
@@ -46,12 +46,9 @@ public class CustomApplication extends Application implements InjectedComponent 
     }
 
     public void setDatabase() {
-        DbHelper dbHelper = DbHelper.getInstance(getApplicationContext(), getSignedInUser());
+        DbHelper dbHelper = DbHelper.getInstance(getApplicationContext(),
+                UserManager.getUser(getApplicationContext()).getId());
         graph = ObjectGraph.create(new AppModule(this, dbHelper));
-    }
-
-    public String getSignedInUser() {
-        return ParseUser.getCurrentUser() == null ? DEFAULT_USER : ParseUser.getCurrentUser().getObjectId();
     }
 
     @Override
