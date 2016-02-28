@@ -18,12 +18,12 @@
 
     <string name="pref_home_currency_key">home_currency</string>
     <string name="pref_home_currency_title">Home Currency</string>
-    <string name="pref_home_currency_summary">The currency you use at home. This should be the currency you\'re most familiar with.\nEvery expense item will be converted back to: %s. </string>
+    <string name="pref_home_currency_summary">The currency you use at home. This should be the currency you\'re most familiar with.\nEvery expense item will be converted back to: %s.</string>
     <string name="pref_currency_default">EUR</string>
 
     <string name="pref_current_currency_key">current_currency</string>
     <string name="pref_current_currency_title">Current Currency</string>
-    <string name="pref_current_currency_summary">The currency you are using currently. Change this value if you travel or buy online.\nAll new expense items will be stored in: %s. </string>
+    <string name="pref_current_currency_summary">The currency you are using currently. Change this value if you travel or buy online.\nAll new expense items will be stored in: %s.</string>
 
     <string name="settings_activity">Settings</string>
 
