@@ -54,16 +54,16 @@ public class AddAccountPreference extends DialogPreference {
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        dialog.dismiss();
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE:
                 if (dialog == createAccountDialog) {
-                    createUser();
+                    createUser(dialog);
                 } else if (dialog == signupDialog) {
-                    signInUser();
+                    signInUser(dialog);
                 }
                 break;
             case DialogInterface.BUTTON_NEUTRAL:
+                dialog.dismiss();
                 if (dialog == createAccountDialog) {
                     showSignInDialog();
                 } else if (dialog == signupDialog) {
@@ -77,43 +77,56 @@ public class AddAccountPreference extends DialogPreference {
         this.listener = listener;
     }
 
-    private void createUser() {
+    private void createUser(DialogInterface dialog) {
         assertListenerAvailable();
-        new ParseUserWrapper()
-                .setEmail(emailEditText.getText().toString())
-                .setNewPassword(
-                        passwordEditText.getText().toString(),
-                        confirmEditText.getText().toString()
-                )
-                .createAccount(new User.Callback() {
-                    @Override
-                    public void onSuccess() {
-                        listener.onAccountAdded();
-                    }
+        try {
+            new ParseUserWrapper(getContext())
+                    .setEmail(emailEditText.getText().toString())
+                    .setNewPassword(
+                            passwordEditText.getText().toString(),
+                            confirmEditText.getText().toString()
+                    )
+                    .createAccount(new User.Callback() {
+                        @Override
+                        public void onSuccess() {
+                            listener.onAccountAdded();
+                        }
 
-                    @Override
-                    public void onFailure(Exception e) {
-                        Toast.makeText(getContext(), "Something went wrong signing up", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        @Override
+                        public void onFailure(Exception e) {
+                            if (e.getMessage().contains("has already been taken")) {
+                                Toast.makeText(getContext(), getContext().getString(R.string.credentials_taken), Toast.LENGTH_SHORT).show();
+                            }
+                            Toast.makeText(getContext(), getContext().getString(R.string.failed_create_account), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+            dialog.dismiss();
+        } catch (User.InputException e) {
+            Toast.makeText(getContext(), e.getUserWarning(), Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void signInUser() {
+    private void signInUser(DialogInterface dialog) {
         assertListenerAvailable();
-        new ParseUserWrapper()
-                .setEmail(emailEditText.getText().toString())
-                .setPassword(passwordEditText.getText().toString())
-                .signIn(new User.Callback() {
-                    @Override
-                    public void onSuccess() {
-                        listener.onAccountAdded();
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        Toast.makeText(getContext(), "Something went wrong signing in", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        try {
+            new ParseUserWrapper(getContext())
+                    .setEmail(emailEditText.getText().toString())
+                    .setPassword(passwordEditText.getText().toString())
+                    .signIn(new User.Callback() {
+                        @Override
+                        public void onSuccess() {
+                            listener.onAccountAdded();
+                        }
+                        @Override
+                        public void onFailure(Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), getContext().getString(R.string.failed_sign_in), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+            dialog.dismiss();
+        } catch (User.InputException e) {
+            Toast.makeText(getContext(), e.getUserWarning(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void assertListenerAvailable() {

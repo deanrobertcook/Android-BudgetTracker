@@ -1,5 +1,7 @@
 package org.theronin.expensetracker.model.user;
 
+import android.content.Context;
+
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -10,11 +12,12 @@ public class ParseUserWrapper extends User {
 
     private ParseUser parseUser;
 
-    public ParseUserWrapper() {
-        this.parseUser = new ParseUser();
+    public ParseUserWrapper(Context context) {
+        this(context, new ParseUser());
     }
 
-    public ParseUserWrapper(ParseUser parseUser) {
+    public ParseUserWrapper(Context context, ParseUser parseUser) {
+        super(context);
         this.parseUser = parseUser;
     }
 
@@ -53,7 +56,7 @@ public class ParseUserWrapper extends User {
     }
 
     @Override
-    public void createAccount(final Callback callback) {
+    public void createAccount(final Callback callback) throws NoInternetException {
         super.createAccount(callback);
         parseUser.setEmail(email);
         parseUser.setUsername(email);
@@ -71,7 +74,7 @@ public class ParseUserWrapper extends User {
     }
 
     @Override
-    public void signIn(final Callback callback) {
+    public void signIn(final Callback callback) throws NoInternetException {
         super.signIn(callback);
         ParseUser.logInInBackground(
                 email,

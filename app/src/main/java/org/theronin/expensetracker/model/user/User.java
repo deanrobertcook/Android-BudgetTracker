@@ -1,13 +1,22 @@
 package org.theronin.expensetracker.model.user;
 
+import android.content.Context;
+import android.util.Patterns;
+
+import org.theronin.expensetracker.R;
+import org.theronin.expensetracker.utils.NetworkUtils;
+
 //TODO custom exceptions here to flag the UI
 public abstract class User {
 
+    public static final int PASSWORD_MIN_LENGTH = 8;
     protected String email;
     protected String password;
     protected boolean passwordConfirmed;
 
     private Callback callback;
+
+    protected Context context;
 
     public abstract String getId();
 
@@ -19,46 +28,54 @@ public abstract class User {
 
     public abstract void requestChangePassword(Callback callback);
 
-    public User setEmail(String email) {
-        //TODO more email validation
+    public User(Context context) {
+        this.context = context == null ? null : context.getApplicationContext();
+    }
+
+    public User setEmail(String email) throws InvalidEmailException, NoInternetException {
+        assertConnectedToInternet();
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            throw new InvalidEmailException();
+        }
         this.email = email;
         return this;
     }
 
-    public User setPassword(String password) {
+    public User setPassword(String password) throws NoInternetException {
+        assertConnectedToInternet();
         this.password = password;
         return this;
     }
 
-    public User setNewPassword(String password, String confirmPassword) {
-        if (password.length() < 8) {
-            throw new IllegalArgumentException("New passwords need to be at least 8 characters");
+    public User setNewPassword(String password, String confirmPassword)
+            throws ShortPasswordException,
+            PasswordsDontMatchException,
+            NoInternetException {
+        assertConnectedToInternet();
+        if (password.length() < PASSWORD_MIN_LENGTH) {
+            throw new ShortPasswordException();
         }
-        //TODO more password validation
         if (!password.equals(confirmPassword)) {
-            throw new IllegalArgumentException("Passwords do not match");
+            throw new PasswordsDontMatchException();
         }
         this.password = password;
         passwordConfirmed = true;
         return this;
     }
 
-    public void createAccount(Callback callback) {
+    public void createAccount(Callback callback) throws NoInternetException {
+        assertConnectedToInternet();
         this.callback = callback;
-        if (email == null || password == null) {
-            callback.onFailure(new IllegalStateException("Email or password not set!"));
-            return;
-        }
-        if (!passwordConfirmed) {
-            callback.onFailure(new IllegalStateException("To create an account, ensure that the password has been confirmed"));
-            return;
-        }
     }
 
-    public void signIn(Callback callback) {
+    public void signIn(Callback callback) throws NoInternetException {
+        assertConnectedToInternet();
         this.callback = callback;
-        if (email == null || password == null) {
-            callback.onFailure(new IllegalStateException("Email or password not set!"));
+    }
+
+    private void assertConnectedToInternet() throws NoInternetException {
+        if (!NetworkUtils.isNetworkConnected(context)) {
+            throw new NoInternetException();
         }
     }
 
@@ -66,5 +83,50 @@ public abstract class User {
         void onSuccess();
 
         void onFailure(Exception e);
+    }
+
+    public abstract class InputException extends Exception {
+        public abstract String getUserWarning();
+    }
+
+    public class InvalidEmailException extends InputException {
+        @Override
+        public String getUserWarning() {
+            return context.getString(R.string.invalid_email);
+        }
+    }
+
+    public class ShortPasswordException extends InputException {
+        @Override
+        public String getUserWarning() {
+            return context.getString(R.string.password_to_short, PASSWORD_MIN_LENGTH);
+        }
+    }
+    public class PasswordsDontMatchException extends InputException {
+        @Override
+        public String getUserWarning() {
+            return context.getString(R.string.passwords_dont_match);
+        }
+    }
+
+    public class NoInternetException extends InputException {
+        @Override
+        public String getUserWarning() {
+            return context.getString(R.string.no_internet);
+        }
+    }
+
+    public class FailedSignInException extends InputException {
+        @Override
+        public String getUserWarning() {
+            return context.getString(R.string.failed_sign_in);
+        }
+    }
+
+    public class FailedCreateAccountException extends InputException {
+        @Override
+        public String getUserWarning() {
+            return context.getString(R.string.failed_create_account);
+        }
     }
 }

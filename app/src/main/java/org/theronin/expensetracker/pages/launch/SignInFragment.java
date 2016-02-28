@@ -38,21 +38,24 @@ public class SignInFragment extends LaunchFragment {
 
     @Override
     public void onPositiveButtonClicked() {
-        new ParseUserWrapper()
-                .setEmail(emailField.getText().toString())
-                .setPassword(passwordField.getText().toString())
-                .signIn(new User.Callback() {
-                    @Override
-                    public void onSuccess() {
-                        setPage(LaunchPage.ENTER_APP);
-                    }
+        try {
+            new ParseUserWrapper(getActivity())
+                    .setEmail(emailField.getText().toString())
+                    .setPassword(passwordField.getText().toString())
+                    .signIn(new User.Callback() {
+                        @Override
+                        public void onSuccess() {
+                            setPage(LaunchPage.ENTER_APP);
+                        }
 
-                    @Override
-                    public void onFailure(Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(getActivity(), "Couldn't log in", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        @Override
+                        public void onFailure(Exception e) {
+                            Toast.makeText(getActivity(), getActivity().getString(R.string.failed_sign_in), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } catch (User.InputException e) {
+            Toast.makeText(getActivity(), e.getUserWarning(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

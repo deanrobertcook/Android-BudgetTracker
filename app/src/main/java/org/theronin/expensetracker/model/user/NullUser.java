@@ -1,6 +1,10 @@
 package org.theronin.expensetracker.model.user;
 
 public class NullUser extends User {
+    public NullUser() {
+        super(null);
+    }
+
     @Override
     public String getId() {
         return null;

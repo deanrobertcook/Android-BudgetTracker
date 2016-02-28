@@ -35,7 +35,7 @@ public class UserManager {
     public static User getUser(Context context) {
         if (ParseUser.getCurrentUser() != null) {
             Timber.v("Returning parse user");
-            return new ParseUserWrapper(ParseUser.getCurrentUser());
+            return new ParseUserWrapper(context, ParseUser.getCurrentUser());
         } else if (Prefs.loggedInAsDefaultUser(context)) {
             Timber.v("Returning default user");
             return new DefaultUser(context);

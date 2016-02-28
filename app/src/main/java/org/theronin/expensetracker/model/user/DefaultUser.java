@@ -9,10 +9,8 @@ public class DefaultUser extends User {
 
     public static final String USER_NAME = "DEFAULT_USER";
 
-    private final Context context;
-
     public DefaultUser(Context context) {
-        this.context = context.getApplicationContext();
+        super(context);
     }
 
     @Override

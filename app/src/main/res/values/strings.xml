@@ -18,12 +18,12 @@
 
     <string name="pref_home_currency_key">home_currency</string>
     <string name="pref_home_currency_title">Home Currency</string>
-    <string name="pref_home_currency_summary">All summaries will be converted to: %s</string>
+    <string name="pref_home_currency_summary">The currency you use at home. This should be the currency you\'re most familiar with.\nEvery expense item will be converted back to: %s. </string>
     <string name="pref_currency_default">EUR</string>
 
     <string name="pref_current_currency_key">current_currency</string>
     <string name="pref_current_currency_title">Current Currency</string>
-    <string name="pref_current_currency_summary">All new entries will be stored in: %s</string>
+    <string name="pref_current_currency_summary">The currency you are using currently. Change this value if you travel or buy online.\nAll new expense items will be stored in: %s. </string>
 
     <string name="settings_activity">Settings</string>
 
@@ -145,4 +145,11 @@
     <string name="dialog_change_password_title">Change Password?</string>
     <string name="dialog_change_password_body">This action will send an email to your address for further instructions on how to change your password.</string>
     <string name="send_caps">SEND</string>
+    <string name="invalid_email">Please provide a valid email address</string>
+    <string name="password_to_short">Please provide a password with least %d characters</string>
+    <string name="passwords_dont_match">Please check that your passwords match and try again</string>
+    <string name="no_internet">Please check your internet connection and try again</string>
+    <string name="failed_sign_in">Failed to sign in. Please check your credentials and try again.</string>
+    <string name="failed_create_account">Failed to create a new account. Please try again later.</string>
+    <string name="credentials_taken">That email address is already in use.</string>
 </resources>
