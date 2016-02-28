@@ -36,8 +36,17 @@ import static org.theronin.expensetracker.data.Contract.EntryView.INDEX_SYNC_STA
 public class DataSourceEntry extends AbsDataSource<Entry> implements
         DataSourceCategory.UpdateListener {
 
-    AbsDataSource<Category> categoryAbsDataSource;
-    AbsDataSource<Currency> currencyAbsDataSource;
+    private AbsDataSource<Category> categoryAbsDataSource;
+    private AbsDataSource<Currency> currencyAbsDataSource;
+
+    public static DataSourceEntry newInstance(Context context, DbHelper helper) {
+        context = context.getApplicationContext();
+        return new DataSourceEntry(
+                context, helper,
+                new DataSourceCategory(context, helper),
+                new DataSourceCurrency(context, helper)
+        );
+    }
 
     public DataSourceEntry(Context context,
                            DbHelper dbHelper,

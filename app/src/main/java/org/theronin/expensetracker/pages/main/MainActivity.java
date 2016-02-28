@@ -3,11 +3,11 @@ package org.theronin.expensetracker.pages.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -18,32 +18,22 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import org.theronin.expensetracker.R;
-import org.theronin.expensetracker.dagger.InjectedActivity;
-import org.theronin.expensetracker.data.source.AbsDataSource;
-import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.user.UserManager;
 import org.theronin.expensetracker.pages.categories.CategoryListFragment;
 import org.theronin.expensetracker.pages.entries.list.EntriesAdapter.SelectionListener;
 import org.theronin.expensetracker.pages.entries.list.EntryListFragment;
 import org.theronin.expensetracker.pages.launch.LaunchActivity;
 import org.theronin.expensetracker.pages.settings.SettingsActivity;
-import org.theronin.expensetracker.task.FileBackupAgent;
 import org.theronin.expensetracker.utils.SyncUtils;
-
-import java.util.List;
-
-import javax.inject.Inject;
 
 import timber.log.Timber;
 
 
-public class MainActivity extends InjectedActivity implements
-        FileBackupAgent.Listener,
+public class MainActivity extends AppCompatActivity implements
         Drawer.OnDrawerItemClickListener {
 
     //TODO find cleaner way of showing settings once nav drawer is closed
     public static final int SHOW_SETTINGS_DELAY = 300;
-    @Inject AbsDataSource<Entry> entryDataSource;
 
     private Toolbar toolbar;
 
@@ -261,14 +251,6 @@ public class MainActivity extends InjectedActivity implements
 
     public void setSelectMode(boolean selectMode) {
         this.selectMode = selectMode;
-    }
-
-    @Override
-    public void onEntriesRestored(List<Entry> entries) {
-        if (entries.isEmpty()) {
-            Toast.makeText(this, "There were no entries to back up. Make sure permissions are set", Toast.LENGTH_SHORT).show();
-        }
-        entryDataSource.bulkInsert(entries);
     }
 
     @Override

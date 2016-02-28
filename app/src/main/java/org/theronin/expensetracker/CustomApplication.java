@@ -7,17 +7,12 @@ import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseInstallation;
 
-import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.data.source.DbHelper;
 import org.theronin.expensetracker.model.user.UserManager;
-import org.theronin.expensetracker.utils.SyncUtils;
 
-import dagger.ObjectGraph;
 import timber.log.Timber;
 
-public class CustomApplication extends Application implements InjectedComponent {
-
-    private ObjectGraph userGraph;
+public class CustomApplication extends Application  {
 
     @Override
     public void onCreate() {
@@ -44,25 +39,7 @@ public class CustomApplication extends Application implements InjectedComponent 
         ParseInstallation.getCurrentInstallation().saveInBackground();
     }
 
-    public void swapDatabase() {
-        DbHelper newHelper = DbHelper.renameDatabase(getApplicationContext(),
-                UserManager.getUser(getApplicationContext()).getId());
-        ObjectGraph.create(new UserModule(this, newHelper));
-        SyncUtils.requestSync(getApplicationContext());
-    }
-
     public void setDatabase() {
-        DbHelper dbHelper = DbHelper.getInstance(getApplicationContext(),
-                UserManager.getUser(getApplicationContext()).getId());
-        userGraph = ObjectGraph.create(new UserModule(this, dbHelper));
-    }
-
-    @Override
-    public void inject(Object object) {
-        if (userGraph == null) {
-            throw new IllegalStateException("The Object userGraph has not been established yet. This" +
-                    " means the database is also not ready");
-        }
-        userGraph.inject(object);
+        DbHelper.getInstance(getApplicationContext(), UserManager.getUser(getApplicationContext()).getId());
     }
 }

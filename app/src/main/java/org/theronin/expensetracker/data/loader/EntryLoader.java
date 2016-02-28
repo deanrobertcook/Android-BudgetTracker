@@ -2,24 +2,26 @@ package org.theronin.expensetracker.data.loader;
 
 import android.content.Context;
 
-import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.data.Contract.EntryView;
 import org.theronin.expensetracker.data.backend.entry.SyncState;
 import org.theronin.expensetracker.data.source.AbsDataSource;
+import org.theronin.expensetracker.data.source.DataSourceEntry;
+import org.theronin.expensetracker.data.source.DbHelper;
 import org.theronin.expensetracker.model.Entry;
+import org.theronin.expensetracker.model.user.UserManager;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 import timber.log.Timber;
 
 public class EntryLoader extends DataLoader<Entry> {
 
-    @Inject AbsDataSource<Entry> entryDataSource;
+    private AbsDataSource<Entry> entryDataSource;
 
-    public EntryLoader(Context context, InjectedComponent component) {
-        super(context, component);
+    public EntryLoader(Context context) {
+        super(context);
+        entryDataSource = DataSourceEntry.newInstance(getContext(),
+                DbHelper.getInstance(getContext(), UserManager.getUser(getContext()).getId()));
         setObservedDataSources(entryDataSource);
     }
 

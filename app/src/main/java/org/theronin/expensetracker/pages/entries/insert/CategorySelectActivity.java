@@ -8,6 +8,7 @@ import android.content.Loader;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -16,18 +17,18 @@ import android.view.View;
 import android.widget.Toast;
 
 import org.theronin.expensetracker.R;
-import org.theronin.expensetracker.dagger.InjectedActivity;
 import org.theronin.expensetracker.data.loader.CategoryLoader;
 import org.theronin.expensetracker.data.source.AbsDataSource;
+import org.theronin.expensetracker.data.source.DataSourceCategory;
+import org.theronin.expensetracker.data.source.DbHelper;
 import org.theronin.expensetracker.model.Category;
+import org.theronin.expensetracker.model.user.UserManager;
 import org.theronin.expensetracker.pages.entries.insert.dialogs.CategoryNameEditFragment;
 import org.theronin.expensetracker.pages.entries.insert.dialogs.CategoryOptionsDialogFragment;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
-public class CategorySelectActivity extends InjectedActivity implements
+public class CategorySelectActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<List<Category>>,
         CategorySelectPresenter.CategorySelectUI,
         CategoryNameEditFragment.Container,
@@ -38,7 +39,7 @@ public class CategorySelectActivity extends InjectedActivity implements
     public static final String RESULT_ACTION = "org.theronin.expensetracker.CATEGORY_SELECTED";
     private static final int CATEGORY_LOADER_ID = 1;
 
-    @Inject AbsDataSource<Category> dataSourceCategory;
+    private AbsDataSource<Category> dataSourceCategory;
 
     private CategorySelectAdapter selectAdapter;
     private CategorySelectPresenter presenter;
@@ -49,6 +50,10 @@ public class CategorySelectActivity extends InjectedActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        dataSourceCategory = new DataSourceCategory(this,
+                DbHelper.getInstance(this, UserManager.getUser(this).getId()));
+
         setContentView(R.layout.activity__category_select);
 
         getLoaderManager().initLoader(CATEGORY_LOADER_ID, null, this);
@@ -74,7 +79,7 @@ public class CategorySelectActivity extends InjectedActivity implements
 
     @Override
     public Loader<List<Category>> onCreateLoader(int id, Bundle args) {
-        return new CategoryLoader(this, this, false);
+        return new CategoryLoader(this, false);
     }
 
     @Override

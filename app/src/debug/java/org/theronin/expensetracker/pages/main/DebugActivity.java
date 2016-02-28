@@ -1,14 +1,34 @@
 package org.theronin.expensetracker.pages.main;
 
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.Contract;
 import org.theronin.expensetracker.data.backend.entry.SyncState;
+import org.theronin.expensetracker.data.source.AbsDataSource;
+import org.theronin.expensetracker.data.source.DataSourceEntry;
+import org.theronin.expensetracker.data.source.DbHelper;
+import org.theronin.expensetracker.model.Entry;
+import org.theronin.expensetracker.model.user.UserManager;
 import org.theronin.expensetracker.task.FileBackupAgent;
 
-public class DebugActivity extends MainActivity {
+import java.util.List;
+
+public class DebugActivity extends MainActivity implements
+        FileBackupAgent.Listener {
+
+
+    private AbsDataSource<Entry> entryDataSource;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        entryDataSource = DataSourceEntry.newInstance(this,
+                DbHelper.getInstance(this, UserManager.getUser(this).getId()));
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -47,4 +67,13 @@ public class DebugActivity extends MainActivity {
     private void restoreEntries() {
         new FileBackupAgent().restoreEntriesFromBackup(this);
     }
+
+    @Override
+    public void onEntriesRestored(List<Entry> entries) {
+        if (entries.isEmpty()) {
+            Toast.makeText(this, "There were no entries to back up. Make sure permissions are set", Toast.LENGTH_SHORT).show();
+        }
+        entryDataSource.bulkInsert(entries);
+    }
+
 }

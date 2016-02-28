@@ -1,31 +1,20 @@
 package org.theronin.expensetracker.data.backend.exchangerate;
 
+import android.app.IntentService;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import org.theronin.expensetracker.dagger.InjectedService;
-import org.theronin.expensetracker.data.source.AbsDataSource;
-import org.theronin.expensetracker.model.Currency;
-import org.theronin.expensetracker.model.Entry;
-import org.theronin.expensetracker.model.ExchangeRate;
+import org.theronin.expensetracker.data.source.DataSourceEntry;
+import org.theronin.expensetracker.data.source.DataSourceExchangeRate;
+import org.theronin.expensetracker.data.source.DbHelper;
+import org.theronin.expensetracker.model.user.UserManager;
 import org.theronin.expensetracker.utils.Prefs;
 
-import javax.inject.Inject;
-
-import timber.log.Timber;
-
-public class ExchangeRateDownloadService extends InjectedService {
-
-    @Inject AbsDataSource<ExchangeRate> exchangeRateAbsDataSource;
-    @Inject AbsDataSource<Entry> entryAbsDataSource;
-    @Inject ExchangeRateDownloader downloader;
-
+public class ExchangeRateDownloadService extends IntentService {
     private boolean isStarted = false;
 
     private ExchangeRateSyncCoordinator syncCoordinator;
-
-    private Currency homeCurrency;
 
     public ExchangeRateDownloadService() {
         super(ExchangeRateDownloadService.class.getName());
@@ -33,13 +22,13 @@ public class ExchangeRateDownloadService extends InjectedService {
 
     @Override
     public void onCreate() {
-        Timber.i("onCreate()");
         super.onCreate();
-
-        homeCurrency = Prefs.getHomeCurrency(this);
-
+        DbHelper helper = DbHelper.getInstance(this, UserManager.getUser(this).getId());
         syncCoordinator = new ExchangeRateSyncCoordinator(
-                entryAbsDataSource, exchangeRateAbsDataSource, downloader, homeCurrency);
+                DataSourceEntry.newInstance(this, helper),
+                new DataSourceExchangeRate(this, helper),
+                new ParseExchangeRateDownloader(),
+                Prefs.getHomeCurrency(this));
 
         super.onCreate();
     }
@@ -56,7 +45,6 @@ public class ExchangeRateDownloadService extends InjectedService {
         }
         isStarted = true;
 
-        Timber.i("Performing download of exchange rates");
         syncCoordinator.downloadExchangeRates();
     }
 

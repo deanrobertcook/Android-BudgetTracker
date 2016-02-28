@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,11 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.theronin.expensetracker.R;
-import org.theronin.expensetracker.dagger.InjectedActivity;
 import org.theronin.expensetracker.data.source.AbsDataSource;
+import org.theronin.expensetracker.data.source.DataSourceEntry;
+import org.theronin.expensetracker.data.source.DbHelper;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
+import org.theronin.expensetracker.model.user.UserManager;
 import org.theronin.expensetracker.pages.reusable.DatePickerFragment;
 import org.theronin.expensetracker.utils.DateUtils;
 import org.theronin.expensetracker.utils.TrackingUtils;
@@ -29,17 +32,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import static org.theronin.expensetracker.utils.Prefs.getCurrentCurrency;
 
-public class EntryDialogActivity extends InjectedActivity
+public class EntryDialogActivity extends AppCompatActivity
         implements View.OnClickListener,
         DatePickerFragment.Container, InsertRowViewHolder.RowClickListener {
 
     private static final String TAG = EntryDialogActivity.class.getName();
 
-    @Inject AbsDataSource<Entry> entryDataSource;
+    private AbsDataSource<Entry> entryDataSource;
 
     private TextView currencySymbolTextView;
     private TextView currencyCodeTextView;
@@ -53,6 +54,10 @@ public class EntryDialogActivity extends InjectedActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        entryDataSource = DataSourceEntry.newInstance(this,
+                DbHelper.getInstance(this, UserManager.getUser(this).getId()));
+
         setContentView(R.layout.activity__entry_dialog);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tb__toolbar);

@@ -6,11 +6,12 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 
-import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.SupportedCurrencies;
+import org.theronin.expensetracker.data.source.DbHelper;
 import org.theronin.expensetracker.model.user.UserManager;
 import org.theronin.expensetracker.utils.Prefs;
+import org.theronin.expensetracker.utils.SyncUtils;
 import org.theronin.expensetracker.view.AddAccountPreference;
 import org.theronin.expensetracker.view.ChangePasswordPreference;
 public class SettingsFragment extends PreferenceFragment
@@ -83,6 +84,8 @@ public class SettingsFragment extends PreferenceFragment
     public void onAccountAdded() {
         Prefs.setLoggedInAsDefaultUser(getActivity(), false);
         setAccountPreferences();
-        ((CustomApplication) getActivity().getApplication()).swapDatabase();
+        DbHelper.renameDatabase(getActivity(),
+                UserManager.getUser(getActivity()).getId());
+        SyncUtils.requestSync(getActivity());
     }
 }

@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.theronin.expensetracker.R;
-import org.theronin.expensetracker.dagger.InjectedActivity;
 import org.theronin.expensetracker.data.loader.CategoryLoader;
 import org.theronin.expensetracker.model.Category;
 
@@ -51,7 +50,7 @@ public class CategoryListFragment extends Fragment implements
 
     @Override
     public Loader<List<Category>> onCreateLoader(int id, Bundle args) {
-        return new CategoryLoader(getActivity(), (InjectedActivity) getActivity(), true);
+        return new CategoryLoader(getActivity(), true);
     }
 
     @Override

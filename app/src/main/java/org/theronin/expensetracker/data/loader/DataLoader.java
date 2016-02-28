@@ -4,18 +4,18 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.content.Intent;
 
-import org.theronin.expensetracker.dagger.InjectedComponent;
 import org.theronin.expensetracker.data.backend.exchangerate.ExchangeRateDownloadService;
 import org.theronin.expensetracker.data.source.AbsDataSource;
+import org.theronin.expensetracker.data.source.DataSourceExchangeRate;
+import org.theronin.expensetracker.data.source.DbHelper;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.ExchangeRate;
+import org.theronin.expensetracker.model.user.UserManager;
 import org.theronin.expensetracker.utils.Prefs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import timber.log.Timber;
 
@@ -27,14 +27,15 @@ public abstract class DataLoader<T> extends AsyncTaskLoader<List<T>> implements
 
     protected final CurrencyConverter currencyConverter;
 
-    @Inject AbsDataSource<ExchangeRate> exchangeRateDataSource;
+    private AbsDataSource<ExchangeRate> exchangeRateDataSource;
     private List<T> data;
 
-    public DataLoader(Context context, InjectedComponent component) {
+    public DataLoader(Context context) {
         super(context);
         Timber.tag(getClass().getName()).v("DataLoader initialising.");
-        component.inject(this);
 
+        exchangeRateDataSource = new DataSourceExchangeRate(getContext(),
+                DbHelper.getInstance(getContext(), UserManager.getUser(getContext()).getId()));
         this.dataSources = new ArrayList<>();
         setObservedDataSources(exchangeRateDataSource);
 

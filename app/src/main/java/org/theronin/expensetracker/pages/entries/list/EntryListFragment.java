@@ -1,5 +1,6 @@
 package org.theronin.expensetracker.pages.entries.list;
 
+import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
@@ -14,11 +15,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.theronin.expensetracker.R;
-import org.theronin.expensetracker.dagger.InjectedFragment;
 import org.theronin.expensetracker.data.loader.EntryLoader;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.data.source.DataSourceEntry;
+import org.theronin.expensetracker.data.source.DbHelper;
 import org.theronin.expensetracker.model.Entry;
+import org.theronin.expensetracker.model.user.UserManager;
 import org.theronin.expensetracker.pages.entries.insert.EntryDialogActivity;
 import org.theronin.expensetracker.pages.main.MainActivity;
 import org.theronin.expensetracker.utils.DateUtils;
@@ -28,11 +30,9 @@ import org.theronin.expensetracker.view.AmountView;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import static org.theronin.expensetracker.utils.Prefs.getHomeCurrency;
 
-public class EntryListFragment extends InjectedFragment implements
+public class EntryListFragment extends Fragment implements
         View.OnClickListener,
         EntriesAdapter.SelectionListener,
         LoaderManager.LoaderCallbacks<List<Entry>>,
@@ -42,7 +42,7 @@ public class EntryListFragment extends InjectedFragment implements
 
     private static final int ENTRY_LOADER_ID = 0;
 
-    @Inject AbsDataSource<Entry> entryDataSource;
+    private AbsDataSource<Entry> entryDataSource;
 
     private EntriesAdapter adapter;
 
@@ -53,6 +53,9 @@ public class EntryListFragment extends InjectedFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLoaderManager().initLoader(ENTRY_LOADER_ID, null, this);
+
+        entryDataSource = DataSourceEntry.newInstance(getActivity(),
+                DbHelper.getInstance(getActivity(), UserManager.getUser(getActivity()).getId()));
     }
 
     @Override
@@ -95,7 +98,7 @@ public class EntryListFragment extends InjectedFragment implements
 
     @Override
     public Loader<List<Entry>> onCreateLoader(int id, Bundle args) {
-        return new EntryLoader(getActivity(), this);
+        return new EntryLoader(getActivity());
     }
 
     @Override
