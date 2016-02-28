@@ -3,6 +3,8 @@ package org.theronin.expensetracker.data.loader;
 import android.content.Context;
 
 import org.theronin.expensetracker.data.Contract.CategoryView;
+import org.theronin.expensetracker.data.Contract.EntryView;
+import org.theronin.expensetracker.data.backend.entry.SyncState;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.data.source.DataManager;
 import org.theronin.expensetracker.model.Category;
@@ -35,7 +37,9 @@ public class CategoryLoader extends DataLoader<Category> implements AbsDataSourc
         if (!calculateTotals) {
             return categories;
         } else {
-            List<Entry> allEntries = entryDataSource.query();
+            //TODO move this particular query into its own method
+            List<Entry> allEntries = entryDataSource.query(
+                    EntryView.COL_SYNC_STATUS + " NOT IN (" + SyncState.deleteStateSelection() + ")", null, null);
             assignHomeAmountsToEntries(allEntries);
 
             calculateTotals(categories, allEntries);

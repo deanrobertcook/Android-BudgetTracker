@@ -117,7 +117,7 @@ public class DataSourceEntry extends AbsDataSource<Entry> implements
                     EntryTable.COL_GLOBAL_ID + " IN (" + createEntryGlobalIdsInClause(entities) + ")",
                     null);
         }
-
+        categoryAbsDataSource.setDataInvalid(false);
         return count;
     }
 
