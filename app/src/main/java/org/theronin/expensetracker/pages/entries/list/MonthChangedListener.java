@@ -31,8 +31,12 @@ public class MonthChangedListener extends RecyclerView.OnScrollListener {
         Entry topVisibleEntry = adapter.getEntryAt(position);
         Entry lastEntry = dy > 0 ? adapter.getEntryAt(position - 1) : adapter.getEntryAt(position + 1);
 
-        if (topVisibleEntry != null && lastEntry == null ||
-                !DateUtils.sameMonth(topVisibleEntry.utcDate, lastEntry.utcDate)) {
+        if (topVisibleEntry == null) {
+            callback.onMonthChanged(null);
+            return;
+        }
+
+        if (lastEntry == null || !DateUtils.sameMonth(topVisibleEntry.utcDate, lastEntry.utcDate)) {
             callback.onMonthChanged(topVisibleEntry);
         }
     }

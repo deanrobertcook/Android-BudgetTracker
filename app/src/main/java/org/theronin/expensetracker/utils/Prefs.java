@@ -11,6 +11,7 @@ public class Prefs {
 
     private static final String PREF_LAST_SYNC_CHECK_KEY = "PREF_LAST_SYNC_CHECK";
     private static final String PREF_LOGGED_IN_AS_DEFAULT = "PREF_LOGGED_IN_AS_DEFAULT";
+    private static final String PREF_SHOWN_HINT_ITEMS = "PREF_SHOWN_HINT_ITEMS";
 
     public static void setLoggedInAsDefaultUser(Context context, boolean loggedIn) {
         PreferenceManager.getDefaultSharedPreferences(context)
@@ -54,5 +55,15 @@ public class Prefs {
     public static void setLastSyncTime(long lastSyncTime, Context context) {
         PreferenceManager.getDefaultSharedPreferences(context).edit()
                 .putLong(PREF_LAST_SYNC_CHECK_KEY, lastSyncTime).apply();
+    }
+
+    public static boolean shownHintItems(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(PREF_SHOWN_HINT_ITEMS, false);
+    }
+
+    public static void setShownHintItems(Context context) {
+        PreferenceManager.getDefaultSharedPreferences(context).edit()
+                .putBoolean(PREF_SHOWN_HINT_ITEMS, true).apply();
     }
 }

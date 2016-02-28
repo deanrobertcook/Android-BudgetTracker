@@ -19,14 +19,19 @@ import org.theronin.expensetracker.data.loader.EntryLoader;
 import org.theronin.expensetracker.data.source.AbsDataSource;
 import org.theronin.expensetracker.data.source.DataManager;
 import org.theronin.expensetracker.data.source.DataSourceEntry;
+import org.theronin.expensetracker.model.Category;
+import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
+import org.theronin.expensetracker.model.ExchangeRate;
 import org.theronin.expensetracker.pages.entries.insert.EntryDialogActivity;
 import org.theronin.expensetracker.pages.main.MainActivity;
 import org.theronin.expensetracker.utils.DateUtils;
+import org.theronin.expensetracker.utils.Prefs;
 import org.theronin.expensetracker.utils.TrackingUtils;
 import org.theronin.expensetracker.view.AmountView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.theronin.expensetracker.utils.Prefs.getHomeCurrency;
@@ -53,6 +58,9 @@ public class EntryListFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         getLoaderManager().initLoader(ENTRY_LOADER_ID, null, this);
         entryDataSource = DataManager.getInstance().getDataSourceEntry();
+        if (!Prefs.shownHintItems(getActivity())) {
+            showHintItems();
+        }
     }
 
     @Override
@@ -158,6 +166,35 @@ public class EntryListFragment extends Fragment implements
 
     @Override
     public void onMonthChanged(Entry lastEntry) {
-        setMonthSummary(lastEntry.utcDate);
+        setMonthSummary(lastEntry == null ? System.currentTimeMillis() : lastEntry.utcDate);
+    }
+
+    private void showHintItems() {
+        AbsDataSource<Category> categoryDataSource = DataManager.getInstance().getDataSourceCategory();
+        AbsDataSource<Entry> entryDataSource = DataManager.getInstance().getDataSourceEntry();
+        AbsDataSource<ExchangeRate> exchangeRateDataSource = DataManager.getInstance().getDataSourceExchangeRate();
+
+        Currency eur = new Currency("EUR");
+        Currency usd = new Currency("USD");
+
+        //TODO fix this to work without the internet...
+//        exchangeRateDataSource.bulkInsert(Arrays.asList(
+//                new ExchangeRate(1, "EUR", DateUtils.getUtcTime("2016-02-14"), 0.888429, -1, -1),
+//                new ExchangeRate(1, "USD", DateUtils.getUtcTime("2016-02-14"), 1, -1, -1)
+//        ));
+
+        Category groceries = new Category("groceries");
+        Category chocolate = new Category("chocolate");
+        Category books = new Category("books");
+
+        categoryDataSource.bulkInsert(Arrays.asList(groceries, chocolate, books));
+
+        entryDataSource.bulkInsert(Arrays.asList(
+                new Entry(DateUtils.getUtcTime("2016-02-28"), 250, chocolate, eur),
+                new Entry(DateUtils.getUtcTime("2016-02-28"), 1060, groceries, eur),
+                new Entry(DateUtils.getUtcTime("2016-02-21"), 1540, groceries, eur),
+                new Entry(DateUtils.getUtcTime("2016-02-14"), 3500, books, usd)
+        ));
+        Prefs.setShownHintItems(getActivity());
     }
 }
