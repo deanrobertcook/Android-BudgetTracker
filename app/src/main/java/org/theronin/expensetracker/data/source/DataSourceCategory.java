@@ -147,7 +147,7 @@ public class DataSourceCategory extends AbsDataSource<Category> {
         for (Category category : from) {
             delete(category);
         }
-        setDataInValid();
+        setDataInvalid();
     }
 
     /**

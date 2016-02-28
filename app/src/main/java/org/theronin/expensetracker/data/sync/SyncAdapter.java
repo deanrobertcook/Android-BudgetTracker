@@ -11,10 +11,7 @@ import org.theronin.expensetracker.data.backend.entry.EntryRemoteSync;
 import org.theronin.expensetracker.data.backend.entry.EntrySyncCoordinator;
 import org.theronin.expensetracker.data.backend.entry.ParseEntryRemoteSync;
 import org.theronin.expensetracker.data.source.AbsDataSource;
-import org.theronin.expensetracker.data.source.DataSourceCategory;
-import org.theronin.expensetracker.data.source.DataSourceCurrency;
-import org.theronin.expensetracker.data.source.DataSourceEntry;
-import org.theronin.expensetracker.data.source.DbHelper;
+import org.theronin.expensetracker.data.source.DataManager;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.user.UserManager;
 import org.theronin.expensetracker.utils.Prefs;
@@ -34,15 +31,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     public SyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
         super(context, autoInitialize, allowParallelSyncs);
-        this.remoteSync = new ParseEntryRemoteSync();
 
-        DbHelper helper = DbHelper.getInstance(getContext(), UserManager.getUser(getContext()).getId());
-        this.entryDataSource = new DataSourceEntry(
-                getContext(),
-                helper,
-                new DataSourceCategory(getContext(), helper),
-                new DataSourceCurrency(getContext(), helper)
-        );
+        this.remoteSync = new ParseEntryRemoteSync();
+        this.entryDataSource = DataManager.getInstance().getDataSourceEntry();
     }
 
     @Override

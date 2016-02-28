@@ -39,15 +39,6 @@ public class DataSourceEntry extends AbsDataSource<Entry> implements
     private AbsDataSource<Category> categoryAbsDataSource;
     private AbsDataSource<Currency> currencyAbsDataSource;
 
-    public static DataSourceEntry newInstance(Context context, DbHelper helper) {
-        context = context.getApplicationContext();
-        return new DataSourceEntry(
-                context, helper,
-                new DataSourceCategory(context, helper),
-                new DataSourceCurrency(context, helper)
-        );
-    }
-
     public DataSourceEntry(Context context,
                            DbHelper dbHelper,
                            AbsDataSource<Category> categoryAbsDataSource,

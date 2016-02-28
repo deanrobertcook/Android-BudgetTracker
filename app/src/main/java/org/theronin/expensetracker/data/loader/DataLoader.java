@@ -6,11 +6,9 @@ import android.content.Intent;
 
 import org.theronin.expensetracker.data.backend.exchangerate.ExchangeRateDownloadService;
 import org.theronin.expensetracker.data.source.AbsDataSource;
-import org.theronin.expensetracker.data.source.DataSourceExchangeRate;
-import org.theronin.expensetracker.data.source.DbHelper;
+import org.theronin.expensetracker.data.source.DataManager;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.ExchangeRate;
-import org.theronin.expensetracker.model.user.UserManager;
 import org.theronin.expensetracker.utils.Prefs;
 
 import java.util.ArrayList;
@@ -34,8 +32,7 @@ public abstract class DataLoader<T> extends AsyncTaskLoader<List<T>> implements
         super(context);
         Timber.tag(getClass().getName()).v("DataLoader initialising.");
 
-        exchangeRateDataSource = new DataSourceExchangeRate(getContext(),
-                DbHelper.getInstance(getContext(), UserManager.getUser(getContext()).getId()));
+        exchangeRateDataSource = DataManager.getInstance().getDataSourceExchangeRate();
         this.dataSources = new ArrayList<>();
         setObservedDataSources(exchangeRateDataSource);
 

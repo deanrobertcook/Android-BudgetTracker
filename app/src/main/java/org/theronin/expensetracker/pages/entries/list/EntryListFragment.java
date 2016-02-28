@@ -17,10 +17,9 @@ import android.widget.Toast;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.loader.EntryLoader;
 import org.theronin.expensetracker.data.source.AbsDataSource;
+import org.theronin.expensetracker.data.source.DataManager;
 import org.theronin.expensetracker.data.source.DataSourceEntry;
-import org.theronin.expensetracker.data.source.DbHelper;
 import org.theronin.expensetracker.model.Entry;
-import org.theronin.expensetracker.model.user.UserManager;
 import org.theronin.expensetracker.pages.entries.insert.EntryDialogActivity;
 import org.theronin.expensetracker.pages.main.MainActivity;
 import org.theronin.expensetracker.utils.DateUtils;
@@ -53,9 +52,7 @@ public class EntryListFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLoaderManager().initLoader(ENTRY_LOADER_ID, null, this);
-
-        entryDataSource = DataSourceEntry.newInstance(getActivity(),
-                DbHelper.getInstance(getActivity(), UserManager.getUser(getActivity()).getId()));
+        entryDataSource = DataManager.getInstance().getDataSourceEntry();
     }
 
     @Override

@@ -5,10 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import org.theronin.expensetracker.data.source.DataSourceEntry;
-import org.theronin.expensetracker.data.source.DataSourceExchangeRate;
-import org.theronin.expensetracker.data.source.DbHelper;
-import org.theronin.expensetracker.model.user.UserManager;
+import org.theronin.expensetracker.data.source.DataManager;
 import org.theronin.expensetracker.utils.Prefs;
 
 public class ExchangeRateDownloadService extends IntentService {
@@ -23,10 +20,9 @@ public class ExchangeRateDownloadService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        DbHelper helper = DbHelper.getInstance(this, UserManager.getUser(this).getId());
         syncCoordinator = new ExchangeRateSyncCoordinator(
-                DataSourceEntry.newInstance(this, helper),
-                new DataSourceExchangeRate(this, helper),
+                DataManager.getInstance().getDataSourceEntry(),
+                DataManager.getInstance().getDataSourceExchangeRate(),
                 new ParseExchangeRateDownloader(),
                 Prefs.getHomeCurrency(this));
 

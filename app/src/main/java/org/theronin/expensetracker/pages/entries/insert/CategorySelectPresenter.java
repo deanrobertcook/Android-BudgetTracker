@@ -19,7 +19,6 @@ public class CategorySelectPresenter implements CategorySelectedListener {
     private Category mergeTo;
 
     public CategorySelectPresenter(AbsDataSource<Category> dataSourceCategory,
-
                                    CategorySelectUI categorySelectUI) {
         this.dataSourceCategory = dataSourceCategory;
         this.categorySelectUI = categorySelectUI;

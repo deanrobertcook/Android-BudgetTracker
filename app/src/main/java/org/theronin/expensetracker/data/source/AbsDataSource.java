@@ -32,6 +32,12 @@ public abstract class AbsDataSource<T extends Entity> {
         this.observers = new HashSet<>();
     }
 
+    //Use when the database changes
+    public void setDbHelper(DbHelper helper) {
+        this.dbHelper = helper;
+        setDataInvalid(false); //DataManager will call sync later.
+    }
+
     public interface Observer {
         void onDataSourceChanged();
     }
@@ -53,12 +59,18 @@ public abstract class AbsDataSource<T extends Entity> {
      * This method should be called after an insert, delete, or update method is called on the data
      * source, to signal any observers that the underlying data source will now be out of date
      */
-    public void setDataInValid() {
+    public void setDataInvalid() {
+        setDataInvalid(true);
+    }
+
+    public void setDataInvalid(boolean requestSync) {
         Timber.i(this.getClass().toString() + " data set as invalid");
         for (Observer observer : observers) {
             observer.onDataSourceChanged();
         }
-        SyncUtils.requestSync(context);
+        if (requestSync) {
+            SyncUtils.requestSync(context);
+        }
     }
 
     /**
@@ -73,7 +85,7 @@ public abstract class AbsDataSource<T extends Entity> {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         try {
             entity.setId(insertOperation(db, entity));
-            setDataInValid();
+            setDataInvalid();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -105,7 +117,7 @@ public abstract class AbsDataSource<T extends Entity> {
                 entity.setId(insertOperation(db, entity));
             }
             db.setTransactionSuccessful();
-            setDataInValid();
+            setDataInvalid();
         } finally {
             db.endTransaction();
         }
@@ -125,7 +137,7 @@ public abstract class AbsDataSource<T extends Entity> {
         Timber.i("bulkDelete " + entities.size() + " " + entities.get(0).getClass().getSimpleName() + "s");
         DebugUtils.printList(getClass().getName(), entities);
         int numDeleted = deleteOperation(dbHelper.getWritableDatabase(), entities);
-        setDataInValid();
+        setDataInvalid();
         return numDeleted;
     }
 
@@ -135,7 +147,7 @@ public abstract class AbsDataSource<T extends Entity> {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         int affected = updateOperation(db, entity);
         if (affected > 0) {
-            setDataInValid();
+            setDataInvalid();
         }
         return affected > 0;
     }
@@ -155,7 +167,7 @@ public abstract class AbsDataSource<T extends Entity> {
                 updateOperation(db, entity);
             }
             db.setTransactionSuccessful();
-            setDataInValid();
+            setDataInvalid();
         } finally {
             db.endTransaction();
         }

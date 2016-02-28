@@ -18,11 +18,8 @@ import android.widget.Toast;
 
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.loader.CategoryLoader;
-import org.theronin.expensetracker.data.source.AbsDataSource;
-import org.theronin.expensetracker.data.source.DataSourceCategory;
-import org.theronin.expensetracker.data.source.DbHelper;
+import org.theronin.expensetracker.data.source.DataManager;
 import org.theronin.expensetracker.model.Category;
-import org.theronin.expensetracker.model.user.UserManager;
 import org.theronin.expensetracker.pages.entries.insert.dialogs.CategoryNameEditFragment;
 import org.theronin.expensetracker.pages.entries.insert.dialogs.CategoryOptionsDialogFragment;
 
@@ -39,8 +36,6 @@ public class CategorySelectActivity extends AppCompatActivity implements
     public static final String RESULT_ACTION = "org.theronin.expensetracker.CATEGORY_SELECTED";
     private static final int CATEGORY_LOADER_ID = 1;
 
-    private AbsDataSource<Category> dataSourceCategory;
-
     private CategorySelectAdapter selectAdapter;
     private CategorySelectPresenter presenter;
 
@@ -50,9 +45,6 @@ public class CategorySelectActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        dataSourceCategory = new DataSourceCategory(this,
-                DbHelper.getInstance(this, UserManager.getUser(this).getId()));
 
         setContentView(R.layout.activity__category_select);
 
@@ -68,7 +60,7 @@ public class CategorySelectActivity extends AppCompatActivity implements
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab__add_category_button);
         floatingActionButton.setOnClickListener(this);
 
-        presenter = new CategorySelectPresenter(dataSourceCategory, this);
+        presenter = new CategorySelectPresenter(DataManager.getInstance().getDataSourceCategory(), this);
         selectAdapter = new CategorySelectAdapter(this, presenter);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);

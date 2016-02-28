@@ -5,10 +5,8 @@ import android.content.Context;
 import org.theronin.expensetracker.data.Contract.EntryView;
 import org.theronin.expensetracker.data.backend.entry.SyncState;
 import org.theronin.expensetracker.data.source.AbsDataSource;
-import org.theronin.expensetracker.data.source.DataSourceEntry;
-import org.theronin.expensetracker.data.source.DbHelper;
+import org.theronin.expensetracker.data.source.DataManager;
 import org.theronin.expensetracker.model.Entry;
-import org.theronin.expensetracker.model.user.UserManager;
 
 import java.util.List;
 
@@ -20,8 +18,7 @@ public class EntryLoader extends DataLoader<Entry> {
 
     public EntryLoader(Context context) {
         super(context);
-        entryDataSource = DataSourceEntry.newInstance(getContext(),
-                DbHelper.getInstance(getContext(), UserManager.getUser(getContext()).getId()));
+        entryDataSource = DataManager.getInstance().getDataSourceEntry();
         setObservedDataSources(entryDataSource);
     }
 

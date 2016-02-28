@@ -84,8 +84,7 @@ public class SettingsFragment extends PreferenceFragment
     public void onAccountAdded() {
         Prefs.setLoggedInAsDefaultUser(getActivity(), false);
         setAccountPreferences();
-        DbHelper.renameDatabase(getActivity(),
-                UserManager.getUser(getActivity()).getId());
+        DbHelper.renameDatabase(getActivity(), UserManager.getUser(getActivity()).getId());
         SyncUtils.requestSync(getActivity());
     }
 }

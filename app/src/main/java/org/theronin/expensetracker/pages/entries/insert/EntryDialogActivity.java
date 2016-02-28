@@ -17,12 +17,10 @@ import android.widget.Toast;
 
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.source.AbsDataSource;
-import org.theronin.expensetracker.data.source.DataSourceEntry;
-import org.theronin.expensetracker.data.source.DbHelper;
+import org.theronin.expensetracker.data.source.DataManager;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Currency;
 import org.theronin.expensetracker.model.Entry;
-import org.theronin.expensetracker.model.user.UserManager;
 import org.theronin.expensetracker.pages.reusable.DatePickerFragment;
 import org.theronin.expensetracker.utils.DateUtils;
 import org.theronin.expensetracker.utils.TrackingUtils;
@@ -55,8 +53,7 @@ public class EntryDialogActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        entryDataSource = DataSourceEntry.newInstance(this,
-                DbHelper.getInstance(this, UserManager.getUser(this).getId()));
+        entryDataSource = DataManager.getInstance().getDataSourceEntry();
 
         setContentView(R.layout.activity__entry_dialog);
 

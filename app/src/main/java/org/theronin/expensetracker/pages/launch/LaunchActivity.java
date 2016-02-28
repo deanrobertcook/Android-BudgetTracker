@@ -8,8 +8,8 @@ import android.view.View;
 import android.widget.Button;
 
 import org.theronin.expensetracker.BuildConfig;
-import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.R;
+import org.theronin.expensetracker.data.source.DbHelper;
 import org.theronin.expensetracker.model.user.UserManager;
 import org.theronin.expensetracker.pages.main.DebugActivity;
 import org.theronin.expensetracker.pages.main.MainActivity;
@@ -60,7 +60,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
         if (page == LaunchPage.ENTER_APP) {
             //Create or Set the database for the user:
             TrackingUtils.setUserDetails(UserManager.getUser(this));
-            ((CustomApplication) getApplication()).setDatabase();
+            DbHelper.setUp(this, UserManager.getUser(this).getId());
 
             Intent startAppIntent = new Intent(this, BuildConfig.DEBUG ? DebugActivity.class : MainActivity.class);
             startActivity(startAppIntent);

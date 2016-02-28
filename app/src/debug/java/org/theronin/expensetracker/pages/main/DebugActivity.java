@@ -9,10 +9,8 @@ import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.Contract;
 import org.theronin.expensetracker.data.backend.entry.SyncState;
 import org.theronin.expensetracker.data.source.AbsDataSource;
-import org.theronin.expensetracker.data.source.DataSourceEntry;
-import org.theronin.expensetracker.data.source.DbHelper;
+import org.theronin.expensetracker.data.source.DataManager;
 import org.theronin.expensetracker.model.Entry;
-import org.theronin.expensetracker.model.user.UserManager;
 import org.theronin.expensetracker.task.FileBackupAgent;
 
 import java.util.List;
@@ -26,8 +24,7 @@ public class DebugActivity extends MainActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        entryDataSource = DataSourceEntry.newInstance(this,
-                DbHelper.getInstance(this, UserManager.getUser(this).getId()));
+        entryDataSource = DataManager.getInstance().getDataSourceEntry();
     }
 
     @Override

@@ -7,9 +7,6 @@ import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseInstallation;
 
-import org.theronin.expensetracker.data.source.DbHelper;
-import org.theronin.expensetracker.model.user.UserManager;
-
 import timber.log.Timber;
 
 public class CustomApplication extends Application  {
@@ -37,9 +34,5 @@ public class CustomApplication extends Application  {
         ParseACL.setDefaultACL(defaultACL, true);
 
         ParseInstallation.getCurrentInstallation().saveInBackground();
-    }
-
-    public void setDatabase() {
-        DbHelper.getInstance(getApplicationContext(), UserManager.getUser(getApplicationContext()).getId());
     }
 }

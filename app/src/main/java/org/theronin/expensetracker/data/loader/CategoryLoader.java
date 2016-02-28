@@ -4,14 +4,10 @@ import android.content.Context;
 
 import org.theronin.expensetracker.data.Contract.CategoryView;
 import org.theronin.expensetracker.data.source.AbsDataSource;
-import org.theronin.expensetracker.data.source.DataSourceCategory;
-import org.theronin.expensetracker.data.source.DataSourceCurrency;
-import org.theronin.expensetracker.data.source.DataSourceEntry;
-import org.theronin.expensetracker.data.source.DbHelper;
+import org.theronin.expensetracker.data.source.DataManager;
 import org.theronin.expensetracker.model.Category;
 import org.theronin.expensetracker.model.Entry;
 import org.theronin.expensetracker.model.NullCategory;
-import org.theronin.expensetracker.model.user.UserManager;
 
 import java.util.Iterator;
 import java.util.List;
@@ -26,13 +22,8 @@ public class CategoryLoader extends DataLoader<Category> implements AbsDataSourc
     public CategoryLoader(Context context, boolean calculateTotals) {
         super(context);
 
-        DbHelper helper = DbHelper.getInstance(getContext(), UserManager.getUser(getContext()).getId());
-        categoryDataSource = new DataSourceCategory(getContext(), helper);
-        entryDataSource = new DataSourceEntry(
-                getContext(), helper, categoryDataSource,
-                new DataSourceCurrency(getContext(), helper)
-        );
-
+        categoryDataSource = DataManager.getInstance().getDataSourceCategory();
+        entryDataSource = DataManager.getInstance().getDataSourceEntry();
         setObservedDataSources(categoryDataSource, entryDataSource);
         this.calculateTotals = calculateTotals;
     }

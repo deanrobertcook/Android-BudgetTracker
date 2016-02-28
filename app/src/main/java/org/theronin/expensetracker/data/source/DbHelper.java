@@ -17,8 +17,6 @@ import org.theronin.expensetracker.model.user.DefaultUser;
 import java.io.File;
 import java.util.List;
 
-import timber.log.Timber;
-
 public class DbHelper extends SQLiteOpenHelper {
 
     public static final String TAG = DbHelper.class.getName();
@@ -27,29 +25,21 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static DbHelper instance;
 
-    private String currentDatabaseName;
-
-    public static synchronized DbHelper getInstance(Context context, String databaseName) {
-        if (instance == null || databaseName == null || !databaseName.equals(instance.currentDatabaseName)) {
-            closeInstance();
-            instance = new DbHelper(context.getApplicationContext(), databaseName);
+    public static synchronized void setUp(Context context, String databaseName) {
+        if (instance != null) {
+            return;
         }
-        Timber.v("Instance path: " + instance.getReadableDatabase().getPath());
-        return instance;
+        instance = new DbHelper(context.getApplicationContext(), databaseName);
+        DataManager.setup(context, instance); //set up data sources to this new db.
     }
 
-    public static synchronized DbHelper renameDatabase(Context context, String newUserName) {
+    public static synchronized void renameDatabase(Context context, String newUserName) {
         closeInstance();
         File databaseFile = context.getDatabasePath(DefaultUser.USER_NAME);
         File newDatabaseFile = new File(databaseFile.getParentFile(), newUserName);
         databaseFile.renameTo(newDatabaseFile);
 
-        instance = new DbHelper(context.getApplicationContext(), newUserName);
-        return instance;
-    }
-
-    public static synchronized DbHelper getInMemoryInstance(Context context) {
-        return getInstance(context, null);
+        setUp(context, newUserName);
     }
 
     private static void closeInstance() {
@@ -61,7 +51,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private DbHelper(Context context, String databaseName) {
         super(context, databaseName, null, DATABASE_VERSION);
-        this.currentDatabaseName = databaseName;
     }
 
     @Override
