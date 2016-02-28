@@ -23,24 +23,20 @@ import timber.log.Timber;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
+    private final InjectedComponent injectedComponent;
     @Inject AbsDataSource<Entry> entryDataSource;
     @Inject EntryRemoteSync remoteSync;
 
-    //TODO fix this ugly hack to prevent the SyncAdapter from running in tests
-    private boolean execute;
-
     public SyncAdapter(Context context, InjectedComponent injectedComponent, boolean autoInitialize) {
-        this(context, autoInitialize, false);
-        try {
-            injectedComponent.inject(this);
-            execute = true;
-        } catch (IllegalStateException e) {
-            execute = false;
-        }
+        this(context, injectedComponent, autoInitialize, false);
     }
 
-    public SyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
+    public SyncAdapter(Context context,
+                       InjectedComponent injectedComponent,
+                       boolean autoInitialize,
+                       boolean allowParallelSyncs) {
         super(context, autoInitialize, allowParallelSyncs);
+        this.injectedComponent = injectedComponent;
         Timber.d("SyncAdapter created");
     }
 
@@ -50,10 +46,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                               String authority,
                               ContentProviderClient provider,
                               SyncResult syncResult) {
-        if (!execute) {
+
+        try {
+            injectedComponent.inject(this);
+        } catch (IllegalStateException e) {
             return;
         }
-
         if (!UserManager.getUser(getContext()).canSync()) {
             return;
         }

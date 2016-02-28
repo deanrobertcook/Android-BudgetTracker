@@ -189,6 +189,10 @@ public class MainActivity extends InjectedActivity implements
             finish();
             return;
         }
+
+        navDrawer = buildNavigationDrawer();
+        navDrawer.setSelection(currentPage.id);
+
         super.onStart();
     }
 

@@ -10,12 +10,19 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.theronin.expensetracker.R;
-
-import timber.log.Timber;
+import org.theronin.expensetracker.model.user.ParseUserWrapper;
+import org.theronin.expensetracker.model.user.User;
 
 public class AddAccountPreference extends DialogPreference {
+
+    private Listener listener;
+
+    public interface Listener {
+        void onAccountAdded();
+    }
 
     private Dialog createAccountDialog;
     private Dialog signupDialog;
@@ -66,33 +73,54 @@ public class AddAccountPreference extends DialogPreference {
         }
     }
 
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
     private void createUser() {
-        Timber.v("createUser!\n%s\n%s\n%s",
-                emailEditText.getText().toString(),
-                passwordEditText.getText().toString(),
-                confirmEditText.getText().toString());
-//        new ParseUserWrapper()
-//                .setEmail(emailEditText.getText().toString())
-//                .setNewPassword(
-//                        passwordEditText.getText().toString(),
-//                        confirmEditText.getText().toString()
-//                )
-//                .createAccount(new User.Callback() {
-//                    @Override
-//                    public void onSuccess() {
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Exception e) {
-//
-//                    }
-//                });
+        assertListenerAvailable();
+        new ParseUserWrapper()
+                .setEmail(emailEditText.getText().toString())
+                .setNewPassword(
+                        passwordEditText.getText().toString(),
+                        confirmEditText.getText().toString()
+                )
+                .createAccount(new User.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        listener.onAccountAdded();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(getContext(), "Something went wrong signing up", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void signInUser() {
-        Timber.v("signInUser!\n%s\n%s",
-                emailEditText.getText().toString(),
-                passwordEditText.getText().toString());
+        assertListenerAvailable();
+        new ParseUserWrapper()
+                .setEmail(emailEditText.getText().toString())
+                .setPassword(passwordEditText.getText().toString())
+                .signIn(new User.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        listener.onAccountAdded();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(getContext(), "Something went wrong signing in", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void assertListenerAvailable() {
+        if (listener == null) {
+            throw new IllegalStateException("There needs to be a listener to change the database on " +
+                                            "successfully adding an account");
+        }
     }
 
     private void showCreateAccountDialog() {

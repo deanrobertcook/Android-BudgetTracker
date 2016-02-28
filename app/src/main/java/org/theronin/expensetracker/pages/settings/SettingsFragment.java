@@ -6,14 +6,15 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 
+import org.theronin.expensetracker.CustomApplication;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.SupportedCurrencies;
 import org.theronin.expensetracker.model.user.UserManager;
+import org.theronin.expensetracker.utils.Prefs;
 import org.theronin.expensetracker.view.AddAccountPreference;
 import org.theronin.expensetracker.view.ChangePasswordPreference;
-
 public class SettingsFragment extends PreferenceFragment
-        implements OnPreferenceChangeListener {
+        implements OnPreferenceChangeListener, AddAccountPreference.Listener {
 
     private AddAccountPreference addAccountPreference;
     private ChangePasswordPreference changePasswordPreference;
@@ -26,7 +27,10 @@ public class SettingsFragment extends PreferenceFragment
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
-        setUpAccountPreferences();
+        addAccountPreference = (AddAccountPreference) findPreference(getString(R.string.pref_account_add_key));
+        addAccountPreference.setListener(this);
+        changePasswordPreference = (ChangePasswordPreference) findPreference(getString(R.string.pref_account_change_password_key));
+        setAccountPreferences();
 
         homeCurrencyPreference = (ListPreference) findPreference(getString(R.string.pref_home_currency_key));
         setCurrencyPreference(homeCurrencyPreference);
@@ -35,11 +39,8 @@ public class SettingsFragment extends PreferenceFragment
         setCurrencyPreference(currentCurrencyPreference);
     }
 
-    private void setUpAccountPreferences() {
-        addAccountPreference = (AddAccountPreference) findPreference(getString(R.string.pref_account_add_key));
+    private void setAccountPreferences() {
         addAccountPreference.setEnabled(defaultUser());
-
-        changePasswordPreference = (ChangePasswordPreference) findPreference(getString(R.string.pref_account_change_password_key));
         changePasswordPreference.setEnabled(!defaultUser());
     }
 
@@ -76,5 +77,12 @@ public class SettingsFragment extends PreferenceFragment
             summary = String.format(getString(R.string.pref_current_currency_summary), newValue);
         }
         preference.setSummary(summary);
+    }
+
+    @Override
+    public void onAccountAdded() {
+        Prefs.setLoggedInAsDefaultUser(getActivity(), false);
+        setAccountPreferences();
+        ((CustomApplication) getActivity().getApplication()).swapDatabase();
     }
 }

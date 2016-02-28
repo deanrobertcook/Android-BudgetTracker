@@ -12,9 +12,9 @@ public class Prefs {
     private static final String PREF_LAST_SYNC_CHECK_KEY = "PREF_LAST_SYNC_CHECK";
     private static final String PREF_LOGGED_IN_AS_DEFAULT = "PREF_LOGGED_IN_AS_DEFAULT";
 
-    public static void logInAsDefaultUser(Context context) {
+    public static void setLoggedInAsDefaultUser(Context context, boolean loggedIn) {
         PreferenceManager.getDefaultSharedPreferences(context)
-                .edit().putBoolean(PREF_LOGGED_IN_AS_DEFAULT, true).apply();
+                .edit().putBoolean(PREF_LOGGED_IN_AS_DEFAULT, loggedIn).apply();
     }
 
     public static boolean loggedInAsDefaultUser(Context context) {

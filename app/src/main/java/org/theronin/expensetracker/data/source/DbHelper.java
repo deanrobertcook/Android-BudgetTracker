@@ -12,8 +12,12 @@ import org.theronin.expensetracker.data.Contract.EntryView;
 import org.theronin.expensetracker.data.Contract.ExchangeRateTable;
 import org.theronin.expensetracker.data.SupportedCurrencies;
 import org.theronin.expensetracker.model.Currency;
+import org.theronin.expensetracker.model.user.DefaultUser;
 
+import java.io.File;
 import java.util.List;
+
+import timber.log.Timber;
 
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -30,6 +34,17 @@ public class DbHelper extends SQLiteOpenHelper {
             closeInstance();
             instance = new DbHelper(context.getApplicationContext(), databaseName);
         }
+        Timber.v("Instance path: " + instance.getReadableDatabase().getPath());
+        return instance;
+    }
+
+    public static synchronized DbHelper renameDatabase(Context context, String newUserName) {
+        closeInstance();
+        File databaseFile = context.getDatabasePath(DefaultUser.USER_NAME);
+        File newDatabaseFile = new File(databaseFile.getParentFile(), newUserName);
+        databaseFile.renameTo(newDatabaseFile);
+
+        instance = new DbHelper(context.getApplicationContext(), newUserName);
         return instance;
     }
 

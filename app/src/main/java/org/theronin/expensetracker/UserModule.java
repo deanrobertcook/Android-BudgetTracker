@@ -44,13 +44,13 @@ import dagger.Provides;
         CategoryLoader.class,
         DataLoader.class
 })
-public class AppModule {
+public class UserModule {
 
     private AbsDataSource<ExchangeRate> exchangeRateDataSource;
     private AbsDataSource<Category> categoryDataSource;
     private AbsDataSource<Entry> entryDataSource;
 
-    public AppModule(Context context, DbHelper dbHelper) {
+    public UserModule(Context context, DbHelper dbHelper) {
         this.exchangeRateDataSource = new DataSourceExchangeRate(context, dbHelper);
         this.categoryDataSource = new DataSourceCategory(context, dbHelper);
         AbsDataSource<Currency> currencyDataSource = new DataSourceCurrency(context, dbHelper);

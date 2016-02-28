@@ -57,11 +57,11 @@ public class DefaultUser extends User {
 
     @Override
     public void createAccount(Callback callback) {
-        Prefs.logInAsDefaultUser(context);
+        Prefs.setLoggedInAsDefaultUser(context, true);
     }
 
     @Override
     public void signIn(Callback callback) {
-        Prefs.logInAsDefaultUser(context);
+        Prefs.setLoggedInAsDefaultUser(context, true);
     }
 }

@@ -1,13 +1,18 @@
 package org.theronin.expensetracker.dagger;
 
-import android.app.Activity;
 import android.app.Fragment;
 
 public abstract class InjectedFragment extends Fragment implements InjectedComponent {
 
+//    @Override
+//    public void onAttach(Activity activity) {
+//        super.onAttach(activity);
+//        inject(this);
+//    }
+
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onStart() {
+        super.onStart();
         inject(this);
     }
 
