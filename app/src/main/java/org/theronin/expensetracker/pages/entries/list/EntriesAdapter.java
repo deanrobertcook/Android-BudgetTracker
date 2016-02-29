@@ -238,7 +238,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.ViewHold
         }
 
         private void setViewUnselected(View itemView) {
-            itemView.setBackground(context.getResources().getDrawable(R.drawable.list_item_selector, context.getTheme()));
+            itemView.setBackground(context.getResources().getDrawable(R.drawable.list_item_selector));
         }
 
         public void exitSelectMode() {

@@ -34,7 +34,7 @@
             android:layout_width="@dimen/welcome_image_width"
             android:layout_height="@dimen/welcome_image_height"
             android:layout_gravity="center"
-            android:src="@drawable/ic_edit"/>
+            android:src="@drawable/ic_category_selected"/>
 
     </FrameLayout>
 

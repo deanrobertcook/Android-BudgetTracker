@@ -35,12 +35,7 @@ public class AmountView extends ViewGroup {
     }
 
     public AmountView(Context context, AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr, 0);
-    }
-
-    public AmountView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-
+        super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.layout_amount_display, this, true);
 
         currencySymbol = (TextView) findViewById(R.id.currency__symbol);

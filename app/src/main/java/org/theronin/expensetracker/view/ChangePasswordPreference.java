@@ -20,17 +20,13 @@ public class ChangePasswordPreference extends DialogPreference {
     }
 
     public ChangePasswordPreference(Context context, AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr, 0);
-    }
-
-    public ChangePasswordPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
+        super(context, attrs, defStyleAttr);
         setDialogTitle(R.string.dialog_change_password_title);
         setDialogMessage(R.string.dialog_change_password_body);
         setPositiveButtonText(R.string.send_caps);
         setNegativeButtonText("");
     }
-
+    
     @Override
     protected void onDialogClosed(boolean positiveResult) {
         if (positiveResult) {

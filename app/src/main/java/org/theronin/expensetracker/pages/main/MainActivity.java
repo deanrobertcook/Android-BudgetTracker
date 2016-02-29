@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements
                 .withActivity(this)
                 .addProfiles(profile)
                 .withOnlyMainProfileImageVisible(true)
-                .withHeaderBackground(getDrawable(R.color.primary))
+                .withHeaderBackground(getResources().getDrawable(R.color.primary))
                 .build();
 
         Drawer drawer = new DrawerBuilder()

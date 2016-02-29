@@ -47,7 +47,7 @@ public class TrackingUtils {
     public static void categoriesMerged(Category from, Category to) {
         Localytics.tagEvent("Category Updated", mergedCategoryValues(from, to));
     }
-    
+
     public static void entryCreated(Entry entry) {
         Localytics.tagEvent("Entry Created", mapEntry(entry));
     }

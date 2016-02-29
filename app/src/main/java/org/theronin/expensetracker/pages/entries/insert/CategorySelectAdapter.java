@@ -177,8 +177,7 @@ public class CategorySelectAdapter extends RecyclerView.Adapter<CategorySelectAd
             if (highlighted) {
                 categoryNameView.setBackgroundColor(context.getResources().getColor(R.color.primary_light));
             } else {
-                categoryNameView.setBackground(context.getResources().
-                        getDrawable(R.drawable.list_item_selector, context.getTheme()));
+                categoryNameView.setBackground(context.getResources().getDrawable(R.drawable.list_item_selector));
             }
         }
 
