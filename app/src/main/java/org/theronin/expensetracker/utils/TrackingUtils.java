@@ -16,6 +16,10 @@ public class TrackingUtils {
         Localytics.setCustomerEmail(user.getEmail());
     }
 
+    public static void skipAccountCreation() {
+        Localytics.tagEvent("Account Creation Skipped");
+    }
+
     public static void addEntryDialogOpened() {
         Localytics.tagEvent("Entry Dialog Opened");
     }
@@ -43,7 +47,7 @@ public class TrackingUtils {
     public static void categoriesMerged(Category from, Category to) {
         Localytics.tagEvent("Category Updated", mergedCategoryValues(from, to));
     }
-
+    
     public static void entryCreated(Entry entry) {
         Localytics.tagEvent("Entry Created", mapEntry(entry));
     }

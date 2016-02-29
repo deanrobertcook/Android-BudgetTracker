@@ -7,11 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import org.theronin.expensetracker.BuildConfig;
 import org.theronin.expensetracker.R;
 import org.theronin.expensetracker.data.source.DbHelper;
 import org.theronin.expensetracker.model.user.UserManager;
-import org.theronin.expensetracker.pages.main.DebugActivity;
 import org.theronin.expensetracker.pages.main.MainActivity;
 import org.theronin.expensetracker.utils.Prefs;
 import org.theronin.expensetracker.utils.TrackingUtils;
@@ -62,7 +60,8 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
             TrackingUtils.setUserDetails(UserManager.getUser(this));
             DbHelper.setUp(this, UserManager.getUser(this).getId());
 
-            Intent startAppIntent = new Intent(this, BuildConfig.DEBUG ? DebugActivity.class : MainActivity.class);
+//            Intent startAppIntent = new Intent(this, BuildConfig.DEBUG ? DebugActivity.class : MainActivity.class);
+            Intent startAppIntent = new Intent(this, MainActivity.class);
             startActivity(startAppIntent);
             return true;
         }
